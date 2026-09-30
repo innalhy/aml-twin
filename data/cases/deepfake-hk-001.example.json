@@ -1,0 +1,268 @@
+{
+  "schema_version": "0.1",
+  "case_id": "deepfake-hk-001",
+  "title": "深偽視像開戶 — 香港虛擬銀行（示範劇本）",
+  "locale": "zh-Hant",
+  "summary": "合成培訓案例。新客戶以視像 KYC 申請開戶，畫面上已有兩項規則訊號。若開戶成功，短時間內出現第三者大額入帳並拆往場外加密貨幣交易商。學員要先跟規則，再決定上報或加強審查。本檔沒有真實客戶資料，也沒有媒體檔。",
+  "start_node_id": "n_intake",
+  "teaching": {
+    "level": "chan-1-scripted-mirror",
+    "rules_before_ai": true,
+    "acceptable_dispositions": [
+      "onboarding_rejected",
+      "blocked_by_rule",
+      "str_drafted",
+      "edd_hold"
+    ],
+    "poor_dispositions": ["false_positive_cleared"]
+  },
+  "rules": [
+    {
+      "id": "R1_LIVENESS_TWICE",
+      "when": "kyc.liveness_failures >= 2",
+      "then": "block_onboarding",
+      "note": "連續兩次活體失敗就不得開戶。覆寫必須成為事件，不能默默通過。"
+    },
+    {
+      "id": "R2_SIGNALS_PLUS_BURST",
+      "when": "kyc.signals 至少兩項，且出現第三者突發入帳並拆出",
+      "then": "require_edd_or_str",
+      "note": "規則先於任何模型分數。不得把此案直接結為誤報。"
+    }
+  ],
+  "initial_twin_state": {
+    "phase": "onboarding",
+    "customer": {
+      "id": "SYN-HK-001",
+      "display_name": "合成客戶甲",
+      "segment": "new_to_bank"
+    },
+    "kyc": {
+      "channel": "video",
+      "status": "unreviewed",
+      "liveness_failures": 0,
+      "signals": ["blink_interval_irregular", "lighting_inconsistent"]
+    },
+    "account": {
+      "opened": false
+    },
+    "transactions": [],
+    "risk": {
+      "score": 20,
+      "flags": []
+    },
+    "disposition": null
+  },
+  "nodes": [
+    {
+      "id": "n_intake",
+      "type": "scene",
+      "title": "視像 KYC 進件",
+      "prompt": "合成客戶提交身份證明影像與一段視像。規則引擎已記下眨眼節奏不規則與光源不一致，尚未決定是否開戶。",
+      "media_ref": "data/media/deepfake-hk-001/kyc-clip.mp4",
+      "next": "n_kyc_review",
+      "twin_patch": {
+        "phase": "kyc_review"
+      }
+    },
+    {
+      "id": "n_kyc_review",
+      "type": "decision",
+      "title": "是否接受這次視像",
+      "prompt": "兩項訊號仍在。你要接受視像、要求重做活體，還是拒絕開戶？",
+      "choices": [
+        {
+          "id": "pass_video",
+          "label": "接受視像並開戶",
+          "next": "n_burst",
+          "rationale": "忽略已記錄的訊號。之後若出現資金突發，R2 會要求上報或加強審查。",
+          "effects": {
+            "kyc.status": "passed",
+            "account.opened": true,
+            "risk.flags_add": ["KYC_SIGNALS_WAIVED"],
+            "risk.score_delta": 25
+          }
+        },
+        {
+          "id": "redo_liveness",
+          "label": "要求重做活體檢測",
+          "next": "n_liveness_retry",
+          "rationale": "先取第二次觀察，再讓 R1 判斷。",
+          "effects": {
+            "kyc.status": "retry_requested"
+          }
+        },
+        {
+          "id": "reject_onboarding",
+          "label": "拒絕開戶",
+          "next": "n_outcome_reject",
+          "rationale": "訊號已足夠停止開戶，不必等交易。",
+          "effects": {
+            "kyc.status": "rejected",
+            "risk.flags_add": ["ONBOARDING_REJECTED"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_liveness_retry",
+      "type": "scene",
+      "title": "第二次活體仍失敗",
+      "prompt": "重做後仍是相同兩項訊號。規則 R1：連續兩次失敗不得開戶。",
+      "next": "n_liveness_decision",
+      "twin_patch": {
+        "kyc.liveness_failures": 2,
+        "kyc.status": "liveness_failed"
+      }
+    },
+    {
+      "id": "n_liveness_decision",
+      "type": "decision",
+      "title": "要不要覆寫 R1",
+      "prompt": "規則要求拒絕開戶。覆寫可以繼續，但必須留在事件軌上。",
+      "choices": [
+        {
+          "id": "follow_r1",
+          "label": "依規則拒絕開戶",
+          "next": "n_outcome_blocked",
+          "rationale": "規則先於個別判斷。",
+          "effects": {
+            "kyc.status": "blocked_by_rule",
+            "risk.flags_add": ["R1_BLOCK"]
+          }
+        },
+        {
+          "id": "override_r1",
+          "label": "覆寫規則並開戶",
+          "next": "n_burst",
+          "rationale": "允許的教學分支。覆寫本身是事件，不是把規則刪掉。",
+          "effects": {
+            "kyc.status": "passed_by_override",
+            "account.opened": true,
+            "risk.flags_add": ["R1_OVERRIDDEN"],
+            "risk.score_delta": 40
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_burst",
+      "type": "scene",
+      "title": "開戶後的資金突發",
+      "prompt": "開戶後短時間內，一筆第三者大額入帳隨即拆成兩筆，轉往場外加密貨幣交易商。規則 R2：有深偽訊號又有這類突發時，不得直接當誤報結案。",
+      "next": "n_alert_triage",
+      "twin_patch": {
+        "phase": "alert_triage",
+        "transactions": [
+          {
+            "id": "TX-1",
+            "kind": "third_party_in",
+            "amount_hkd": 480000
+          },
+          {
+            "id": "TX-2",
+            "kind": "split_out_otc",
+            "amount_hkd": 230000
+          },
+          {
+            "id": "TX-3",
+            "kind": "split_out_otc",
+            "amount_hkd": 240000
+          }
+        ],
+        "risk.flags_add": ["THIRD_PARTY_BURST"]
+      }
+    },
+    {
+      "id": "n_alert_triage",
+      "type": "decision",
+      "title": "如何處理這宗警報",
+      "prompt": "R2 已滿足。選擇上報、加強審查並凍結，或結為誤報。",
+      "choices": [
+        {
+          "id": "file_str",
+          "label": "草擬可疑交易報告",
+          "next": "n_outcome_str",
+          "rationale": "符合 R2 的上報出口。",
+          "effects": {
+            "risk.flags_add": ["STR_DRAFTED"]
+          }
+        },
+        {
+          "id": "edd_hold",
+          "label": "加強盡職審查並暫停出帳",
+          "next": "n_outcome_edd",
+          "rationale": "符合 R2 的另一個出口。戶口先停，再補證據。",
+          "effects": {
+            "account.holds": ["outbound"],
+            "risk.flags_add": ["EDD_HOLD"]
+          }
+        },
+        {
+          "id": "clear_alert",
+          "label": "結為誤報",
+          "next": "n_outcome_miss",
+          "rationale": "教學上的較差路徑。規則已要求不得這樣結案。",
+          "effects": {
+            "risk.flags_add": ["R2_IGNORED"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_outcome_reject",
+      "type": "outcome",
+      "title": "開戶被拒",
+      "prompt": "未開戶。訊號留在孿生狀態，沒有後續交易。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "onboarding_rejected"
+      }
+    },
+    {
+      "id": "n_outcome_blocked",
+      "type": "outcome",
+      "title": "規則截停開戶",
+      "prompt": "R1 截停。事件軌應看得到兩次活體失敗，而不是事後口述。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "blocked_by_rule"
+      }
+    },
+    {
+      "id": "n_outcome_str",
+      "type": "outcome",
+      "title": "已草擬可疑交易報告",
+      "prompt": "上報出口。若先前覆寫過 R1，覆寫旗標仍留在狀態裡。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "str_drafted"
+      }
+    },
+    {
+      "id": "n_outcome_edd",
+      "type": "outcome",
+      "title": "加強審查並暫停出帳",
+      "prompt": "戶口開了，但出帳暫停，等待加強審查。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "edd_hold"
+      }
+    },
+    {
+      "id": "n_outcome_miss",
+      "type": "outcome",
+      "title": "誤報結案",
+      "prompt": "較差路徑。R2 被忽略，儀表板之後應把這次 session 標成未跟規則。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "false_positive_cleared"
+      }
+    }
+  ]
+}
