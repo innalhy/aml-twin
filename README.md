@@ -37,7 +37,7 @@ Classroom demo. One API and one web client.
 | Cases | One JSON script, `data/cases/deepfake-hk-001.example.json`. | Stay on `packages/schemas/script.schema.json`. A rule’s `when` text is for a person to read until a state machine exists. |
 | Media | `data/media/.gitkeep` only. Large video is gitignored. | Scripts may set `media_ref` to a local path. Binaries stay out of git. |
 | Contract | `packages/schemas/script.schema.json` (schema `0.1`). | One script format. |
-| Docs | `docs/architecture.md`, `docs/comp3424-mapping.md`, `docs/cloudflare.md`. | `docs/phases/` next. See [Implementation phases](#implementation-phases). |
+| Docs | `docs/architecture.md`, `docs/comp3424-mapping.md`, `docs/cloudflare.md`, [`docs/phases/`](docs/phases/README.md). | Slice checklists live in the phase docs. See [Implementation phases](#implementation-phases). |
 | Deploy | Wrangler config for Pages (`frontend/wrangler.jsonc`) and the Worker (`workers/api/wrangler.jsonc`). | Pages serves the Vite build. The Worker serves the API. |
 
 Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, Kafka, a microservice split, a Unity project, and a live bank connection.
@@ -53,7 +53,12 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 ├── docs/
 │   ├── architecture.md          # case → script → decision → twin → events
 │   ├── cloudflare.md            # Pages, Worker, custom domain
-│   └── comp3424-mapping.md      # Chan Level 1/2, mirroring, shadowing, threading
+│   ├── comp3424-mapping.md      # Chan Level 1/2, mirroring, shadowing, threading
+│   └── phases/
+│       ├── README.md            # how agents use the phase plans
+│       ├── PHASE1.md            # Chan Level 1 MVP slices
+│       ├── PHASE2.md            # Chan Level 2 slices
+│       └── PHASE3.md            # vision only; not the course demo
 ├── workers/
 │   └── api/                     # demo API (Cloudflare Worker, Hono)
 │       ├── README.md
@@ -137,13 +142,19 @@ Steps for Pages, the Worker, and a custom domain already on your Cloudflare acco
 
 ### Planned phases
 
-`docs/phases/` is not in this tree yet. Those notes land next. Until then:
+Plans for coding agents are in [`docs/phases/`](docs/phases/README.md). Do not implement from that folder until the owner names a phase and a slice.
 
-**Phase 1 — MVP (Chan Level 1).** A readable mirror of one synthetic case. `deepfake-hk-001.example.json` and `packages/schemas/script.schema.json` are in the repo. The Worker and the Pages app are health and placeholder stubs. Session routes, the scenario player, and the dashboard are not built.
+| Doc | Chan level | Goal |
+| --- | --- | --- |
+| [Phase 1](docs/phases/PHASE1.md) | Level 1 (scripted mirror) | One Deepfake HK case end-to-end on Cloudflare (Worker + Pages) |
+| [Phase 2](docs/phases/PHASE2.md) | Level 2 (near-realtime bidirectional) | Configurable rules, more case types, realtime twin updates, audit export |
+| [Phase 3](docs/phases/PHASE3.md) | Level 3 (vision) | ML assist and live connectors. Not the COMP3424 demo |
 
-**Phase 2 — Chan Level 2.** Still the same Worker. A training session shadows the trainee: a choice becomes an event, the event updates twin state, and the dashboard reads that state. Two paths through the example case must show different dispositions, and the ordered events must be replayable. Not built. See [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md).
+**Phase 1 — MVP (Chan Level 1).** A readable mirror of one synthetic case. `deepfake-hk-001.example.json` and `packages/schemas/script.schema.json` are in the repo. The Worker and the Pages app are health and placeholder stubs. Session routes, the scenario player, and the dashboard are not built. Slices: [`docs/phases/PHASE1.md`](docs/phases/PHASE1.md).
 
-**Phase 3 — vision.** An optional Unity face on the same API, and a model that explains a decision only after rules-before-AI has fired. No live bank control and no second twin. Outside the current demo build.
+**Phase 2 — Chan Level 2.** Still the same Worker. A training session shadows the trainee: a choice becomes an event, the event updates twin state, and the dashboard reads that state. Two paths through the example case must show different dispositions, and the ordered events must be replayable. Not built. Course mapping: [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md). Slices: [`docs/phases/PHASE2.md`](docs/phases/PHASE2.md).
+
+**Phase 3 — vision.** ML assist and optional connectors after rules-before-AI, plus an optional Unity face on the same API. No live bank control and no second twin. Outside the COMP3424 demo. See [`docs/phases/PHASE3.md`](docs/phases/PHASE3.md).
 
 In this scaffold, mirroring is the example JSON. Shadowing and threading are Level 2 and are not built.
 
@@ -160,7 +171,7 @@ Short rules for classmates and coding agents. The full agreement is [`AGENTS.md`
 7. Do not commit secrets, API keys, `.env` files, Cloudflare account identifiers, or large media.
 8. If the script shape changes, `deepfake-hk-001.example.json` must still validate against `packages/schemas/script.schema.json`, and the schema or docs must say what changed.
 
-Read next: [`docs/architecture.md`](docs/architecture.md), [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md), [`docs/cloudflare.md`](docs/cloudflare.md), [`data/cases/deepfake-hk-001.example.json`](data/cases/deepfake-hk-001.example.json), [`packages/schemas/script.schema.json`](packages/schemas/script.schema.json).
+Read next: [`docs/architecture.md`](docs/architecture.md), [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md), [`docs/cloudflare.md`](docs/cloudflare.md), [`docs/phases/README.md`](docs/phases/README.md), [`data/cases/deepfake-hk-001.example.json`](data/cases/deepfake-hk-001.example.json), [`packages/schemas/script.schema.json`](packages/schemas/script.schema.json).
 
 ## License
 
