@@ -49,6 +49,7 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 ├── README.md
 ├── AGENTS.md
 ├── .gitignore
+├── Mindmap.png                  # course sketch for reference; not the build contract
 ├── docs/
 │   ├── architecture.md          # case → script → decision → twin → events
 │   ├── cloudflare.md            # Pages, Worker, custom domain
@@ -88,6 +89,8 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 ```
 
 `frontend/package-lock.json` and `workers/api/package-lock.json` are tracked. `frontend/dist/`, `node_modules/`, `.venv/`, `.env`, and files under `data/media/` other than `.gitkeep` are not.
+
+`Mindmap.png` is a course planning sketch at the repo root. Use it as a picture of topics. The sections in this README, and `AGENTS.md`, are the contract for what this demo runs.
 
 ## Run locally
 
