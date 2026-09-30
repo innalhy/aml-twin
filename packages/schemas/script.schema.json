@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/innalhy/aml-twin/packages/schemas/script.schema.json",
+  "title": "TwinAML case script",
+  "description": "Minimal contract for a COMP3424 case. initial_twin_state is the mirror. nodes are the script. Rule predicates are human-readable strings until the state machine exists. effects are opaque patches, not an executable language.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "case_id",
+    "title",
+    "start_node_id",
+    "initial_twin_state",
+    "nodes"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "0.1"
+    },
+    "case_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "locale": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "start_node_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "teaching": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/rule"
+      }
+    },
+    "initial_twin_state": {
+      "type": "object"
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/node"
+      }
+    }
+  },
+  "$defs": {
+    "rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "when", "then"],
+      "properties": {
+        "id": { "type": "string" },
+        "when": {
+          "type": "string",
+          "description": "Readable predicate. Not evaluated by this schema."
+        },
+        "then": { "type": "string" },
+        "note": { "type": "string" }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "title"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": {
+          "enum": ["scene", "decision", "outcome"]
+        },
+        "title": { "type": "string" },
+        "prompt": { "type": "string" },
+        "media_ref": {
+          "type": "string",
+          "description": "Repo-relative path. Large binaries under data/media are gitignored."
+        },
+        "next": { "type": "string" },
+        "terminal": { "type": "boolean" },
+        "twin_patch": { "type": "object" },
+        "choices": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/choice" }
+        }
+      }
+    },
+    "choice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "next"],
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "next": { "type": "string" },
+        "rationale": { "type": "string" },
+        "effects": {
+          "type": "object",
+          "description": "Patch the future state machine may apply. Keys are a convention, not a DSL."
+        }
+      }
+    }
+  }
+}
