@@ -71,13 +71,15 @@ data/media/**
 *.wav
 *.mp3
 *.flac
-# 若要把細 demo 片入 git，可改為只 ignore 大檔，例如：
+# To commit a short demo clip later, ignore only the raw originals, for example:
 # data/media/raw/
 
-# --- Docker / infra local ---
-docker-compose.override.yml
+# --- Cloudflare ---
+.wrangler/
+.dev.vars
+.dev.vars.*
 
-# --- Unity (若之後加入) ---
+# --- Unity (if a client is added later) ---
 unity-client/[Ll]ibrary/
 unity-client/[Tt]emp/
 unity-client/[Oo]bj/

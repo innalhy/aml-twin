@@ -1,66 +1,66 @@
-# COMP3424 對照
+# COMP3424 mapping
 
-科目：[COMP3424 Digital Twins: Simulation and Case Studies](https://www.polyu.edu.hk/comp/docdrive/ug/subject/COMP3424.pdf)（香港理工大學，3 學分）。科目要求理解數位孿生、模擬，以及如何把孿生接到人工智慧；應用場景包含政府與其他非工廠例子。TwinAML 用 **AML 模擬培訓** 當案例，而不是 FlexSim 產線。
+Subject: [COMP3424 Digital Twins: Simulation and Case Studies](https://www.polyu.edu.hk/comp/docdrive/ug/subject/COMP3424.pdf) (The Hong Kong Polytechnic University, 3 credits). The subject asks students to understand digital twins, simulation, and how to connect a twin to artificial intelligence. Application settings include government and other non-factory examples. TwinAML uses **AML simulation training** as the case, not a FlexSim production line.
 
-下面三組詞是本 demo 的教學合同。Chan Level 1 / Level 2 在這裡指兩級交付：先做出鏡像，再讓一次培訓跟上它。這是作業範圍，不是把工廠數位孿生的多級成熟度模型整套搬進來。Mirroring、shadowing、threading 採用工業數位孿生裡常見的三項能力講法（Jiang, Yin, Li, Luo, Kaynak, *Industrial applications of digital twins*, 2021；Saracco 的 mirror / shadow / thread）。三項能力都收在同一個簡化後端，不另起企業架構。
+The three terms below are the teaching contract for this demo. Chan Level 1 and Level 2 here mean two delivery stages: first build the mirror, then let one training session follow it. That is the assignment scope. It is not a wholesale import of a factory digital-twin maturity model. Mirroring, shadowing, and threading follow the three capabilities commonly described for industrial digital twins (Jiang, Yin, Li, Luo, Kaynak, *Industrial applications of digital twins*, 2021; Saracco's mirror / shadow / thread). All three live in the same simplified Worker. They do not justify a separate enterprise architecture.
 
-## Chan Level 1 — 劇本鏡像
+## Chan Level 1 — script mirror
 
-**本倉庫現在這一層。**
+**This repository is at this level.**
 
-Level 1 是一宗案例的數位模型。物理世界在這個 demo 裡不是工廠，而是一場合成調查：客戶、KYC 訊號、戶口、交易、風險旗標。
+Level 1 is the digital model of one case. The physical world in this demo is not a factory. It is a synthetic investigation: a customer, KYC signals, an account, transactions, and risk flags.
 
-- 鏡子就是 `data/cases/deepfake-hk-001.example.json` 的 `initial_twin_state` 加 `nodes`。
-- 還沒有 session runtime。人可以讀 JSON，說出孿生在任何決策之前相信什麼。
-- 分支是寫死的劇本，不是即時感測。
+- The mirror is `initial_twin_state` plus `nodes` in `data/cases/deepfake-hk-001.example.json`.
+- There is no session runtime yet. A person can read the JSON and say what the twin believes before any decision.
+- Branches are a written script, not live sensing.
 
-完成 Level 1 的判準：一份能通過 `packages/schemas/script.schema.json` 的案例檔，而且規則寫在檔內，不是寫在聊天裡。
+Level 1 is done when a case file validates against `packages/schemas/script.schema.json` and the rules are written in that file, not in a chat transcript.
 
-## Chan Level 2 — 培訓影子
+## Chan Level 2 — training shadow
 
-**下一階段，仍在同一個 FastAPI 應用裡。現在未做。**
+**Next stage, still inside the same Worker (`workers/api`). Not built yet.**
 
-Level 2 讓一次 session 陰影著學員。學員的選擇變成事件，事件更新孿生，儀表板只讀那份狀態。
+Level 2 lets one session shadow the trainee. The trainee's choices become events, events update the twin, and the dashboard only reads that state. The optional FastAPI app is a local stand-in for the same routes. It is not a second twin.
 
-- 資料方向：學員操作 → 決策事件 → 孿生狀態 → Web。
-- 孿生不會回頭控制真實銀行系統。沒有這條反向控制，它仍是 shadow，不是接上生產環境的雙向 twin。
-- 兩條不同選擇必須得到兩份不同的狀態快照。
+- Data direction: trainee action → decision event → twin state → web.
+- The twin does not reach back and control a real bank system. Without that reverse control it remains a shadow, not a bidirectional twin wired into production.
+- Two different choice paths must produce two different state snapshots.
 
-完成 Level 2 的判準：同一案例走「拒絕開戶」與「開戶後結為誤報」，儀表板看得到不同的 `disposition` 與旗標，而且順序事件可以重播。
+Level 2 is done when the same case can end as "onboarding refused" and as "opened, then cleared as a false positive", the dashboard shows different `disposition` values and flags, and the ordered events can be replayed.
 
-再往上（雙向控制真實系統、自主代理、Unity）不在這個 demo。
+Anything beyond that (bidirectional control of a real system, autonomous agents, Unity) is outside this demo.
 
-## Mirroring、shadowing、threading
+## Mirroring, shadowing, threading
 
-| 能力 | 在 TwinAML 裡 | 這次 scaffold 有沒有 |
+| Capability | In TwinAML | In this scaffold |
 | --- | --- | --- |
-| **Mirroring** | 把調查世界投影成離線模型：客戶、訊號、戶口、規則、劇本節點 | 有，在範例 JSON |
-| **Shadowing** | 學員一做決定，孿生就跟上。儀表板顯示當前狀態，而不是另一份手改數字 | 未做。Level 2 |
-| **Threading** | 把劇本版本、決策順序、覆寫、結局串成一條可回放的紀錄。解釋「為什麼出現這個旗標」時讀這條線，不靠記憶 | 未做。事件紀錄是 thread，不是跨系統資料湖 |
+| **Mirroring** | Project the investigation world into an offline model: customer, signals, account, rules, script nodes | Present, in the example JSON |
+| **Shadowing** | When the trainee decides, the twin follows. The dashboard shows current state, not a hand-edited copy of the numbers | Not built. Level 2 |
+| **Threading** | String the script version, decision order, overrides, and outcome into one replayable record. To explain why a flag appeared, read that line. Do not rely on memory | Not built. The event log is the thread. It is not a cross-system data lake |
 
-媒體檔不是孿生。影片只是節點上的 `media_ref`。大檔留在本機 `data/media/`。
+A media file is not the twin. A video is only a `media_ref` on a node. Large files stay in local `data/media/`.
 
 ## Rules before AI
 
-合規結論先由規則與狀態機產生。
+Compliance outcomes are produced by rules and the state machine first.
 
-範例裡：
+In the example:
 
-- **R1**：連續兩次活體失敗 → 不得開戶。學員可以覆寫，但 `R1_OVERRIDDEN` 必須留在狀態裡。
-- **R2**：已有深偽訊號，再加上第三者資金突發 → 必須上報或加強審查。直接結為誤報是較差路徑（`false_positive_cleared`）。
+- **R1**: two liveness failures in a row means the account must not be opened. A trainee may override, but `R1_OVERRIDDEN` must remain on the state.
+- **R2**: an existing deepfake signal plus a sudden third-party inflow means the case must be reported or subject to enhanced review. Clearing it straight to a false positive is the weaker path (`false_positive_cleared`).
 
-語言模型如果以後加進來，只能在規則觸發之後解釋或起草敘述。它不是評分本體，也不能在沒有覆寫事件的情況下改寫 `disposition`。這對應科目裡「把孿生接到 AI」的學習成果：接上去，但不跳過規則。
+If a language model is added later, it may explain or draft narrative only after a rule has fired. It is not the score of record, and it must not rewrite `disposition` without an override event. That matches the subject's learning outcome of connecting a twin to AI: connect it, and do not skip the rules.
 
-## 和科目其他題目的邊界
+## Boundary with other subject topics
 
-| 科目常見工具或題目 | 本 demo |
+| Common subject tool or topic | This demo |
 | --- | --- |
-| 離散事件模擬、FlexSim | 不做產線模擬。模擬是分支劇本加上狀態機 |
-| IoT 感測 | 學員決策就是輸入事件，沒有感測器 |
-| NVIDIA Omniverse、VR、元宇宙 | 不做。Web 是臉 |
-| Unity | 可選的以後客戶端，呼叫同一 API |
-| 人工智慧 / 機器學習 | 規則之後才考慮，而且不可取代規則 |
+| Discrete-event simulation, FlexSim | No production-line simulation. The simulation is a branching script plus a state machine. |
+| IoT sensing | The trainee's decision is the input event. There is no sensor. |
+| NVIDIA Omniverse, VR, metaverse | Not in scope. The web app is the face. |
+| Unity | Optional later client, calling the same API. |
+| Artificial intelligence / machine learning | Considered only after rules, and it cannot replace the rules. |
 
-## 學員可以怎麼講這份作業
+## How a trainee can describe the assignment
 
-TwinAML Level 1 把一宗香港深偽開戶案例做成可讀的數位鏡像。Level 2 會讓培訓 session 陰影這面鏡子，並用事件 thread 解釋每次風險旗標。判斷先走 R1 / R2，不走模型分數。
+TwinAML Level 1 turns one Hong Kong deepfake onboarding case into a readable digital mirror. Level 2 will let a training session shadow that mirror and use an event thread to explain each risk flag. Judgment follows R1 and R2, not a model score.

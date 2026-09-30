@@ -1,17 +1,19 @@
-# TwinAML API（佔位）
+# TwinAML API (local FastAPI alternative)
 
-一個 FastAPI 應用，之後負責：
+This folder is a local/dev alternative. The production demo uses the Cloudflare Worker in `workers/api`. FastAPI does not run natively on Workers, so do not treat this app as the deploy target.
 
-- 載入 `data/cases/` 的劇本（`script_json`）
-- 開設培訓 session
-- 收下學員決策
-- 用明確規則更新數位孿生狀態，並寫出事件
+The Worker will own the same future behaviour:
 
-現在只有 `GET /health`。沒有資料庫、沒有案例路由、沒有狀態機。
+- load a script (`script_json`) from `data/cases/`
+- open a training session
+- accept a trainee decision
+- update digital-twin state with explicit rules and write events
 
-## 執行
+Right now both sides only implement `GET /health`. There is no database, no case route, and no state machine here.
 
-在 `backend/` 目錄：
+## Run
+
+From `backend/`:
 
 ```bash
 python3 -m venv .venv
@@ -20,6 +22,8 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
 
-然後開啟 `http://127.0.0.1:8000/health`。
+Then open `http://127.0.0.1:8000/health`.
 
-預期回應：`{"status":"ok","service":"twinaml-api"}`。
+Expected response: `{"status":"ok","service":"twinaml-api"}`.
+
+The Worker returns the same JSON on `GET /health`. Prefer `workers/api` when you are checking the path the demo will deploy.
