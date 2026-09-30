@@ -1,44 +1,48 @@
 # TwinAML
 
-A digital twin for AML simulation training. COMP3424 course demo.
+Repository: [github.com/innalhy/aml-twin](https://github.com/innalhy/aml-twin)
 
-TwinAML lets a trainee make decisions inside one synthetic case. The backend holds the digital twin of that investigation: the customer, KYC signals, transactions, risk flags, and the outcome. The screen only plays that state back. The first example is a Hong Kong deepfake video onboarding case (`deepfake-hk-001`). Every record in it is synthetic.
+## What it is
 
-This is a course demo of a proprietary platform idea. It is not a bank production system and not an enterprise reference architecture.
+TwinAML is a COMP3424 course demo of a digital twin for AML simulation training. The platform idea is proprietary: this tree is a classroom demo, not a bank production system and not an open-source release. The worked example is one synthetic Hong Kong deepfake video-onboarding case, `deepfake-hk-001`; every record in it is synthetic. The twin is backend state plus the events that change it. The web app is the face that will render that state.
 
-## Platform and clients
+A trainee is meant to decide inside that one case. Rules in the script decide compliance outcomes (rules-before-AI). A language model, if one is added later, may explain a decision only after those rules have fired, and a human override must be stored as an event.
 
-The digital twin is backend state plus events. The web app is the face.
+What runs today is a scaffold. The Worker and the optional FastAPI app answer `GET /health`. The Pages app is a placeholder. The example script and its JSON Schema are in the repo. Session routes, the scenario player, and the dashboard are not built.
 
-| | Role |
-| --- | --- |
-| Demo API | One Cloudflare Worker in `workers/api`. It will load a script, open a session, accept a decision, update the twin with rules, and write events. |
-| Web client | React + Vite + TypeScript, deployed to Cloudflare Pages. A scenario player and a simple dashboard that read the same state. |
-| Local alternative | FastAPI in `backend/`. Useful for offline development. The production demo does not run it. |
-| Unity | An optional later client. Do not add a Unity project until one is requested. It does not own a second twin. |
+## Architecture
 
-The player must not compute compliance outcomes itself. Outcomes come from the rules in the script and from the state machine that will apply them.
+One Worker API and one Pages frontend. FastAPI is an optional local process.
 
-## Architecture Design 
-
-## Tech Stack
-
-For a classroom demo. Do not expand this into microservices.
-
-| Layer | Choice | Now |
+| Piece | Where | Role |
 | --- | --- | --- |
-| Demo API | Hono on a Cloudflare Worker (`workers/api`) | `GET /health` only |
-| Web | React + Vite + TypeScript on Cloudflare Pages (`frontend/`) | A placeholder page that builds |
-| Local API | FastAPI (`backend/`) | Optional. Same health JSON. Not the deploy path. |
-| Cases | JSON scripts and initial twin state in `data/cases/` | One deepfake branch |
-| Media | `data/media/` | Only `.gitkeep` is tracked. Large mp4 files stay out of git. |
-| Contract | `packages/schemas/script.schema.json` | Minimal JSON Schema for script nodes |
-| Docs | `docs/` | Architecture, course mapping, Cloudflare deploy |
-| Deploy | Cloudflare Pages + Workers | Config stubs. No Docker. |
+| Demo API | `workers/api` | Cloudflare Worker (Hono). Today: `GET /health`. Case load, sessions, decisions, the twin state machine, and events will be added on this Worker. |
+| Web | `frontend/` | React + Vite + TypeScript, deployed to Cloudflare Pages. Today: a placeholder page. The scenario player and the dashboard are not built. Both will read the same twin. |
+| Local API | `backend/` | Optional FastAPI stand-in for offline Python work. Same health JSON. The course demo deploys the Worker. |
+| Unity | — | Optional later face on the same API. This repo has no Unity project. |
 
-Do not add Docker, Kubernetes, Neo4j, Kafka, a service split, a Unity project, or a live bank connection.
+The web app does not keep a private copy of the case world. Compliance outcomes come from the rules in the script and from the state machine that will apply them.
 
-## Folder Structure
+The training-run diagram (case → script → decision → twin → events → dashboard) is in [`docs/architecture.md`](docs/architecture.md). The session calls in that diagram are not implemented. Course terms — mirroring, shadowing, threading, Chan Level 1, Chan Level 2, rules-before-AI — are mapped in [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md).
+
+## Tech stack
+
+Classroom demo. One API and one web client.
+
+| Layer | Current | Planned |
+| --- | --- | --- |
+| Demo API | Hono on a Cloudflare Worker (`workers/api`). `GET /health` only. | Load a case, open a session, accept a decision, apply rules, write events. Same Worker. |
+| Web | React + Vite + TypeScript (`frontend/`). Placeholder page that builds. Pages project name `twinaml-web`. | Scenario player and a simple dashboard that read the Worker’s twin state. |
+| Local API | FastAPI (`backend/`). Optional. `GET /health` with the same JSON. | May mirror the Worker routes for offline use. Stays off the deploy path. |
+| Cases | One JSON script, `data/cases/deepfake-hk-001.example.json`. | Stay on `packages/schemas/script.schema.json`. A rule’s `when` text is for a person to read until a state machine exists. |
+| Media | `data/media/.gitkeep` only. Large video is gitignored. | Scripts may set `media_ref` to a local path. Binaries stay out of git. |
+| Contract | `packages/schemas/script.schema.json` (schema `0.1`). | One script format. |
+| Docs | `docs/architecture.md`, `docs/comp3424-mapping.md`, `docs/cloudflare.md`. | `docs/phases/` next. See [Implementation phases](#implementation-phases). |
+| Deploy | Wrangler config for Pages (`frontend/wrangler.jsonc`) and the Worker (`workers/api/wrangler.jsonc`). | Pages serves the Vite build. The Worker serves the API. |
+
+Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, Kafka, a microservice split, a Unity project, and a live bank connection.
+
+## Repo layout
 
 ```
 .
@@ -46,23 +50,31 @@ Do not add Docker, Kubernetes, Neo4j, Kafka, a service split, a Unity project, o
 ├── AGENTS.md
 ├── .gitignore
 ├── docs/
-│   ├── architecture.md
-│   ├── cloudflare.md        # Pages, Worker, custom domain
-│   └── comp3424-mapping.md
+│   ├── architecture.md          # case → script → decision → twin → events
+│   ├── cloudflare.md            # Pages, Worker, custom domain
+│   └── comp3424-mapping.md      # Chan Level 1/2, mirroring, shadowing, threading
 ├── workers/
-│   └── api/                 # demo API (Cloudflare Worker)
-│       ├── src/index.ts     # GET /health
+│   └── api/                     # demo API (Cloudflare Worker, Hono)
+│       ├── README.md
+│       ├── package.json
+│       ├── src/index.ts         # GET /health
+│       ├── tsconfig.json
 │       └── wrangler.jsonc
-├── backend/                 # optional local FastAPI; not the demo deploy
+├── frontend/                    # Cloudflare Pages (Vite, React, TypeScript)
+│   ├── README.md
+│   ├── index.html
+│   ├── package.json
+│   ├── public/_redirects        # SPA fallback
+│   ├── src/                     # placeholder page
+│   ├── tsconfig.json
+│   ├── vite.config.ts
+│   └── wrangler.jsonc
+├── backend/                     # optional local FastAPI
 │   ├── README.md
 │   ├── requirements.txt
 │   └── app/
 │       ├── __init__.py
-│       └── main.py
-├── frontend/                # Cloudflare Pages site
-│   ├── README.md
-│   ├── wrangler.jsonc
-│   └── src/
+│       └── main.py              # GET /health
 ├── data/
 │   ├── cases/
 │   │   └── deepfake-hk-001.example.json
@@ -75,11 +87,13 @@ Do not add Docker, Kubernetes, Neo4j, Kafka, a service split, a Unity project, o
     └── .gitkeep
 ```
 
+`frontend/package-lock.json` and `workers/api/package-lock.json` are tracked. `frontend/dist/`, `node_modules/`, `.venv/`, `.env`, and files under `data/media/` other than `.gitkeep` are not.
+
 ## Run locally
 
-Start the Worker and the web app in two terminals. Do not use Docker.
+Start the Worker and the web app in two terminals. Docker is not a run path.
 
-Demo API, from `workers/api/`:
+Worker, from `workers/api/`:
 
 ```bash
 npm install
@@ -95,26 +109,55 @@ npm install
 npm run dev
 ```
 
-Open `http://127.0.0.1:5173`. The page shows the TwinAML scaffold. It is not a case player yet.
+Open `http://127.0.0.1:5173`. The page shows the TwinAML scaffold. It does not call the API. It is not a case player, and it has no dashboard.
 
-Optional FastAPI stand-in, from `backend/`: see `backend/README.md`. It returns the same health JSON on port 8000. Use it only when you want a local Python process. The course demo deploys the Worker.
+`npm run build` in `frontend/` typechecks, then writes `dist/`. Do not commit `dist/`.
+
+Optional FastAPI stand-in, from `backend/`:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+```
+
+`http://127.0.0.1:8000/health` returns the same JSON. Use it when you want a local Python process. The course demo deploys the Worker. Details: [`backend/README.md`](backend/README.md).
 
 ## Deploy
 
-The demo target is Cloudflare. Pages serves the Vite build. The Worker in `workers/api` is the API. Steps, including how to attach a domain you already have on Cloudflare, are in `docs/cloudflare.md`.
+The demo target is Cloudflare. Pages serves the Vite build. The Worker in `workers/api` is the API. Account ids, API tokens, and a real hostname are not stored in this repo.
 
-## Reminders:
+Steps for Pages, the Worker, and a custom domain already on your Cloudflare account are in [`docs/cloudflare.md`](docs/cloudflare.md).
 
-Rules for agents. The full agreement is `AGENTS.md`.
+## Implementation phases
 
-1. Change one small slice at a time. After it, you should be able to say what a trainee can now see.
-2. Stay on the stack above. Do not add Docker, Kubernetes, a database cluster, a message bus, or a second frontend.
-3. The case shape is `packages/schemas/script.schema.json` and `data/cases/deepfake-hk-001.example.json`.
-4. Rules come before AI. A model may explain a decision later. It must not quietly change the outcome.
-5. Docs and UI copy are English, supplement by Traditional Chinese. Keep course terms in English as well: mirroring, shadowing, threading, Chan Level 1, Chan Level 2.
-6. Do not commit secrets or large media.
+### Planned phases
 
-Architecture: `docs/architecture.md`. Course mapping: `docs/comp3424-mapping.md`.
+`docs/phases/` is not in this tree yet. Those notes land next. Until then:
+
+**Phase 1 — MVP (Chan Level 1).** A readable mirror of one synthetic case. `deepfake-hk-001.example.json` and `packages/schemas/script.schema.json` are in the repo. The Worker and the Pages app are health and placeholder stubs. Session routes, the scenario player, and the dashboard are not built.
+
+**Phase 2 — Chan Level 2.** Still the same Worker. A training session shadows the trainee: a choice becomes an event, the event updates twin state, and the dashboard reads that state. Two paths through the example case must show different dispositions, and the ordered events must be replayable. Not built. See [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md).
+
+**Phase 3 — vision.** An optional Unity face on the same API, and a model that explains a decision only after rules-before-AI has fired. No live bank control and no second twin. Outside the current demo build.
+
+In this scaffold, mirroring is the example JSON. Shadowing and threading are Level 2 and are not built.
+
+## Agent rules
+
+Short rules for classmates and coding agents. The full agreement is [`AGENTS.md`](AGENTS.md).
+
+1. Change one small slice at a time. After it, say what a trainee or reviewer can now see or run.
+2. Keep one Worker (`workers/api`), one Pages client (`frontend/`), and optional local FastAPI (`backend/`). Case scripts live in `data/cases/`. Notes live in `docs/`.
+3. Leave Docker, Kubernetes, Neo4j, Kafka, a service split, and Unity out unless the owner asks in that session.
+4. English is the primary language for docs and UI copy. Keep course terms in English: mirroring, shadowing, threading, Chan Level 1, Chan Level 2, rules-before-AI.
+5. The twin is backend state plus events. The web app renders that state.
+6. Rules decide compliance outcomes. A model may explain only after rules have fired. A human override is an event.
+7. Do not commit secrets, API keys, `.env` files, Cloudflare account identifiers, or large media.
+8. If the script shape changes, `deepfake-hk-001.example.json` must still validate against `packages/schemas/script.schema.json`, and the schema or docs must say what changed.
+
+Read next: [`docs/architecture.md`](docs/architecture.md), [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md), [`docs/cloudflare.md`](docs/cloudflare.md), [`data/cases/deepfake-hk-001.example.json`](data/cases/deepfake-hk-001.example.json), [`packages/schemas/script.schema.json`](packages/schemas/script.schema.json).
 
 ## License
 
