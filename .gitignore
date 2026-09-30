@@ -1,3 +1,6 @@
+# TwinAML COMP3424 demo.
+# Large media stays out of git. data/media/.gitkeep remains tracked.
+
 # --- OS ---
 .DS_Store
 Thumbs.db
@@ -62,8 +65,12 @@ data/media/**
 !data/media/**/*.md
 *.mp4
 *.mov
+*.mkv
+*.avi
+*.webm
 *.wav
 *.mp3
+*.flac
 # 若要把細 demo 片入 git，可改為只 ignore 大檔，例如：
 # data/media/raw/
 
