@@ -1,0 +1,94 @@
+# --- OS ---
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# --- Editors / IDE ---
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# --- Env & secrets ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+credentials/
+
+# --- Python / FastAPI ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+.cache/
+
+# --- Node / React (Vite) ---
+node_modules/
+frontend/dist/
+frontend/build/
+apps/*/dist/
+.npm/
+*.tsbuildinfo
+.vite/
+
+# --- Logs & local data ---
+*.log
+logs/
+tmp/
+temp/
+data/local/
+*.sqlite
+*.db
+
+# --- Media (keep small fixtures; ignore large binaries) ---
+data/media/**
+!data/media/.gitkeep
+!data/media/**/*.md
+*.mp4
+*.mov
+*.wav
+*.mp3
+# 若要把細 demo 片入 git，可改為只 ignore 大檔，例如：
+# data/media/raw/
+
+# --- Docker / infra local ---
+docker-compose.override.yml
+
+# --- Unity (若之後加入) ---
+unity-client/[Ll]ibrary/
+unity-client/[Tt]emp/
+unity-client/[Oo]bj/
+unity-client/[Bb]uild/
+unity-client/[Bb]uilds/
+unity-client/[Ll]ogs/
+unity-client/[Uu]ser[Ss]ettings/
+unity-client/MemoryCaptures/
+unity-client/Recordings/
+unity-client/*.csproj
+unity-client/*.sln
+unity-client/*.user
+unity-client/*.pidb
+unity-client/*.booproj
+unity-client/*.svd
+unity-client/*.pdb
+unity-client/*.mdb
+unity-client/*.opendb
+unity-client/*.VC.db
+unity-client/sysinfo.txt
+unity-client/crashlytics-build.txt
