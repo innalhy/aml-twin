@@ -2,8 +2,6 @@
 
 A digital twin for AML simulation training. COMP3424 course demo.
 
-Repository: [github.com/innalhy/aml-twin](https://github.com/innalhy/aml-twin)
-
 TwinAML lets a trainee make decisions inside one synthetic case. The backend holds the digital twin of that investigation: the customer, KYC signals, transactions, risk flags, and the outcome. The screen only plays that state back. The first example is a Hong Kong deepfake video onboarding case (`deepfake-hk-001`). Every record in it is synthetic.
 
 This is a course demo of a proprietary platform idea. It is not a bank production system and not an enterprise reference architecture.
@@ -21,7 +19,9 @@ The digital twin is backend state plus events. The web app is the face.
 
 The player must not compute compliance outcomes itself. Outcomes come from the rules in the script and from the state machine that will apply them.
 
-## Simplified stack
+## Architecture Design 
+
+## Tech Stack
 
 For a classroom demo. Do not expand this into microservices.
 
