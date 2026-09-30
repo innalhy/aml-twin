@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "twinaml-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-30",
+  // Session routes for the twin will be added in this Worker.
+  // Uncomment and replace the hostname after the zone is on your Cloudflare
+  // account. See docs/cloudflare.md. Do not commit account ids or tokens.
+  // "routes": [
+  //   { "pattern": "api.example.com", "custom_domain": true }
+  // ]
+}

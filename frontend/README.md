@@ -1,22 +1,36 @@
-# TwinAML Web（佔位）
+# TwinAML web (Cloudflare Pages)
 
-React + Vite + TypeScript。目標是劇本播放器與一個簡單儀表板，兩者都讀後端的孿生狀態。
+React + Vite + TypeScript. The target UI is a scenario player and a simple dashboard. Both will read twin state from the Worker in `workers/api`.
 
-現在的畫面只說明 scaffold 還在，不會呼叫 API，也沒有假資料儀表板。
+The current page only says the scaffold is in place. It does not call the API and it has no fake dashboard data.
 
-## 執行
+Deploy target: **Cloudflare Pages**. See `docs/cloudflare.md`. This package is not run in Docker.
 
-在 `frontend/` 目錄：
+## Run
+
+From `frontend/`:
 
 ```bash
 npm install
 npm run dev
 ```
 
-開發伺服器預設在 `http://127.0.0.1:5173`。
+The dev server defaults to `http://127.0.0.1:5173`.
 
 ```bash
 npm run build
 ```
 
-會先做 TypeScript 檢查，再產生 `dist/`。`dist/` 不要提交。
+The build typechecks with TypeScript, then writes `dist/`. Do not commit `dist/`.
+
+## Deploy
+
+Dashboard build settings: root directory `frontend`, build command `npm run build`, output directory `dist`.
+
+From this directory, after a build, a logged-in Wrangler can upload the site:
+
+```bash
+npx wrangler pages deploy dist --project-name twinaml-web
+```
+
+`wrangler.jsonc` names the Pages project `twinaml-web` and points at `./dist`. Attach your domain with the steps in `docs/cloudflare.md`.
