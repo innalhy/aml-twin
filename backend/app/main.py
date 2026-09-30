@@ -1,6 +1,7 @@
-"""Runnable API placeholder.
+"""Local FastAPI stand-in.
 
-The only route is a health check so the scaffold can be started.
+The COMP3424 demo deploys the Worker in workers/api. This app only mirrors
+GET /health for offline Python development. FastAPI does not run on Workers.
 """
 
 from fastapi import FastAPI

@@ -1,11 +1,11 @@
 const surfaces = [
   {
-    name: "劇本播放器",
-    detail: "依 data/cases 的節點前進。尚未接上 API。",
+    name: "Scenario player",
+    detail: "Walks nodes from data/cases. Not connected to the API yet.",
   },
   {
-    name: "儀表板",
-    detail: "顯示同一個孿生狀態與事件。尚未接上 API。",
+    name: "Dashboard",
+    detail: "Shows the same twin state and events. Not connected to the API yet.",
   },
 ];
 
@@ -15,7 +15,8 @@ export function App() {
       <p className="eyebrow">COMP3424 demo · scaffold</p>
       <h1>TwinAML</h1>
       <p className="lead">
-        數位孿生 AML 模擬培訓。這個頁面只是 Web 客戶端佔位，播放器與儀表板都還沒做。
+        Digital twin for AML simulation training. This page is the web client
+        placeholder. The player and the dashboard are not built yet.
       </p>
       <ul>
         {surfaces.map((item) => (
@@ -26,8 +27,8 @@ export function App() {
         ))}
       </ul>
       <p className="note">
-        範例劇本：<code>data/cases/deepfake-hk-001.example.json</code>
-        。API 佔位：<code>GET /health</code>。
+        Example script: <code>data/cases/deepfake-hk-001.example.json</code>.
+        API stub: <code>GET /health</code> on the Cloudflare Worker.
       </p>
     </main>
   );

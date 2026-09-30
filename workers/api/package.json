@@ -1,0 +1,19 @@
+{
+  "name": "twinaml-api",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "typecheck": "tsc --noEmit",
+    "deploy": "wrangler deploy",
+    "types": "wrangler types"
+  },
+  "dependencies": {
+    "hono": "^4.10.2"
+  },
+  "devDependencies": {
+    "typescript": "~5.8.3",
+    "wrangler": "^4.42.0"
+  }
+}
