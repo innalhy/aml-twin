@@ -38,13 +38,12 @@ For a classroom demo. Do not expand this into microservices.
 
 Do not add Docker, Kubernetes, Neo4j, Kafka, a service split, a Unity project, or a live bank connection.
 
-## Folders
+## Folder Structure
 
 ```
 .
 ├── README.md
 ├── AGENTS.md
-├── AGENT.md                 # points at AGENTS.md
 ├── .gitignore
 ├── docs/
 │   ├── architecture.md
@@ -104,15 +103,15 @@ Optional FastAPI stand-in, from `backend/`: see `backend/README.md`. It returns 
 
 The demo target is Cloudflare. Pages serves the Vite build. The Worker in `workers/api` is the API. Steps, including how to attach a domain you already have on Cloudflare, are in `docs/cloudflare.md`.
 
-## Vibe-coding
+## Reminders:
 
-Short rules for agents and for yourself. The full agreement is `AGENTS.md`.
+Rules for agents. The full agreement is `AGENTS.md`.
 
 1. Change one small slice at a time. After it, you should be able to say what a trainee can now see.
 2. Stay on the stack above. Do not add Docker, Kubernetes, a database cluster, a message bus, or a second frontend.
 3. The case shape is `packages/schemas/script.schema.json` and `data/cases/deepfake-hk-001.example.json`.
 4. Rules come before AI. A model may explain a decision later. It must not quietly change the outcome.
-5. Docs and UI copy are English. Keep course terms in English as well: mirroring, shadowing, threading, Chan Level 1, Chan Level 2.
+5. Docs and UI copy are English, supplement by Traditional Chinese. Keep course terms in English as well: mirroring, shadowing, threading, Chan Level 1, Chan Level 2.
 6. Do not commit secrets or large media.
 
 Architecture: `docs/architecture.md`. Course mapping: `docs/comp3424-mapping.md`.
