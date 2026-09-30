@@ -1,10 +1,12 @@
-# TwinAML 架構（簡化）
+# TwinAML architecture (simplified)
 
-TwinAML 是一個培訓用數位孿生，不是銀行生產系統。孿生本體在後端：一份案例狀態，加上會改變它的事件。Web 只是臉。Unity 之後可以換一張臉，不另做一套狀態。
+TwinAML is a digital twin for training. It is not a bank production system. The twin lives in the backend: one case state, plus the events that change it. The web app is only the face. Unity can later be another face. It does not get a second copy of the state.
 
-這個 demo 故意保持單應用。不拆微服務，不接 Neo4j 或 Kafka。
+This demo stays one API and one web client on purpose. It does not split into microservices, and it does not use Neo4j, Kafka, Docker, or Kubernetes.
 
-## 一條培訓是怎麼走的
+The demo API is a Cloudflare Worker (`workers/api`). FastAPI in `backend/` is an optional local stand-in with the same health check. It is not the deployed demo.
+
+## How one training run moves
 
 ```mermaid
 flowchart LR
@@ -17,17 +19,17 @@ flowchart LR
   twin --> player["Web scenario player"]
 ```
 
-1. **Case** — `data/cases/*.json` 載入一宗合成案例。
-2. **Script** — `nodes` 是劇本：場景、決策、結局。`start_node_id` 是入口。
-3. **Decision** — 學員在決策節點選一個 `choice`。
-4. **Twin** — 狀態機把該選項的 `effects` 和節點的 `twin_patch` 打進孿生狀態。規則先判斷，模型以後才可以解釋。
-5. **Events** — 每一次選擇、覆寫、結局都是事件。事件序列就是這次 session 的 thread。
-6. **Dashboard** — Web 讀同一份狀態與事件，給播放器與簡單儀表板。播放器不另存一份真相。
+1. **Case** — `data/cases/*.json` loads one synthetic case.
+2. **Script** — `nodes` are the scenario: scenes, decisions, and outcomes. `start_node_id` is the entry.
+3. **Decision** — the trainee picks one `choice` on a decision node.
+4. **Twin** — the state machine applies that choice's `effects` and the node's `twin_patch` to the twin state. Rules judge first. A model may explain only after that.
+5. **Events** — each choice, override, and outcome is an event. The event sequence is the thread of that session.
+6. **Dashboard** — the web app reads the same state and events for the player and a simple dashboard. The player does not keep a second source of truth.
 
 ```mermaid
 sequenceDiagram
   participant Script as Case script
-  participant API as FastAPI
+  participant API as Worker API
   participant Twin as Twin state
   participant Web as Web client
   Script->>API: load script and initial state
@@ -40,32 +42,35 @@ sequenceDiagram
   Note over Web: Player and dashboard read the same twin
 ```
 
-## 現在實際有什麼
+The session routes in that diagram are not implemented yet. The Worker currently exposes `GET /health` only. Those routes will be added on the Worker, not in a second service.
 
-| 部分 | 狀態 |
+## What exists now
+
+| Piece | Status |
 | --- | --- |
-| 劇本 JSON 與 JSON Schema | 有。見 `deepfake-hk-001.example.json` |
-| FastAPI | 只有 `GET /health` |
-| 狀態機、session、事件紀錄 | 未做 |
-| Web 播放器與儀表板 | 未做。`frontend/` 是可啟動的佔位頁 |
-| `data/media/` | 只追蹤 `.gitkeep`。劇本裡的 `media_ref` 指向本機檔案 |
+| Script JSON and JSON Schema | Present. See `deepfake-hk-001.example.json`. |
+| Cloudflare Worker | `GET /health` in `workers/api`. This is the demo API. |
+| FastAPI | Optional local alternative. `GET /health` only. |
+| State machine, sessions, event log | Not built. |
+| Web player and dashboard | Not built. `frontend/` is a placeholder that builds and deploys to Pages. |
+| `data/media/` | Only `.gitkeep` is tracked. `media_ref` values in a script point at local files. |
 
-規則的 `when` 目前是給人讀的句子，schema 不執行它們。等狀態機寫出來，再決定要不要換成可執行的條件。在那之前不要平行發明第二套劇本格式。
+A rule's `when` text is a sentence for a person to read. The schema does not execute it. When the state machine exists, decide then whether to replace those sentences with executable conditions. Until then, do not invent a second script format beside this one.
 
-## 狀態住在哪
+## Where state lives
 
-- **初始鏡像**：`initial_twin_state`。載入案例時，孿生等於這份物件。
-- **節點補丁**：進入節點時的 `twin_patch`（例如階段改成 `alert_triage`）。
-- **決策效果**：`choices[].effects`。鍵是約定（如 `risk.flags_add`），還不是正式 DSL。
-- **結局**：`type: outcome` 且 `terminal: true`。`disposition` 寫進孿生，session 結束。
+- **Initial mirror**: `initial_twin_state`. When a case loads, the twin equals this object.
+- **Node patch**: `twin_patch` applied when a node is entered (for example, stage becomes `alert_triage`).
+- **Decision effects**: `choices[].effects`. Keys are a convention (such as `risk.flags_add`), not a formal DSL yet.
+- **Outcome**: `type: outcome` and `terminal: true`. `disposition` is written onto the twin and the session ends.
 
-媒體不在 git。`n_intake` 的 `media_ref` 是 `data/media/deepfake-hk-001/kyc-clip.mp4`，檔案被 `.gitignore` 排除。沒有影片時，播放器之後應顯示缺檔，而不是中斷整個案例。
+Media is not in git. The `media_ref` on `n_intake` is `data/media/deepfake-hk-001/kyc-clip.mp4`, and that file is excluded by `.gitignore`. When the clip is missing, the player should later show a missing-file state. It should not abort the whole case.
 
-## 客戶端
+## Clients
 
-- **現在**：`frontend/`，React + Vite + TypeScript。目標畫面是劇本播放器加上一個讀孿生狀態的簡單儀表板。
-- **以後可選**：Unity 客戶端呼叫同一個 API。未要求之前不要加 Unity 專案。
+- **Now**: `frontend/`, React + Vite + TypeScript, deployed to Cloudflare Pages. The target UI is a scenario player plus a simple dashboard that reads twin state.
+- **Later, optional**: a Unity client calling the same Worker API. Do not add a Unity project until one is requested.
 
-## 明確不做
+## Explicitly out of scope
 
-Neo4j、Kafka、多服務拆分、真實核心銀行連線、以語言模型直接給合規結論、把大型 mp4 提交進 git。
+Neo4j, Kafka, Docker, Kubernetes, a multi-service split, a live core-banking connection, a language model that issues the compliance result directly, and committing large mp4 files to git.
