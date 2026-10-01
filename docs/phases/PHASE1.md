@@ -63,7 +63,7 @@ Deploy path: **Cloudflare Pages** (`frontend/`) + **Cloudflare Worker** (`worker
 - Confirm schema + the 11 example cases stay valid.
 - Document effect key conventions in `docs/architecture.md` or a short `docs/effects.md`.
 - **Done when:** agent can list every effect key used across the 11 scripts and how the future machine should apply them.
-- **Done:** [`docs/effects.md`](../effects.md) lists every effect key in `deepfake-hk-001` and the ten `hk-*.example.json` scripts, and the apply order (clone `initial_twin_state`, apply `twin_patch`, then apply choice `effects`). Check with `node scripts/validate-cases.mjs`.
+- **Done:** [`docs/effects.md`](../effects.md) lists every effect key in `deepfake-hk-001` and the ten `hk-*.example.json` scripts, and the apply order (clone `initial_twin_state`, apply `twin_patch`, then apply choice `effects`). `node scripts/validate-cases.mjs` checks the files and plays the eight `deepfake-hk-001` terminal paths in [`scripts/deepfake-paths.test.mjs`](../../scripts/deepfake-paths.test.mjs).
 
 ### P1-S2 — Twin state machine (library)
 - Pure TypeScript module under `workers/api` (or `packages/`) that: clone initial state → apply node patch → apply choice effects → advance node.
