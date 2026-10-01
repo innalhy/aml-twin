@@ -4,8 +4,8 @@ These documents are **plans for coding agents**. They define scope, slices, acce
 
 | Doc | Chan level | Goal |
 | --- | --- | --- |
-| [PHASE1.md](./PHASE1.md) | Level 1 (scripted mirror) | One Deepfake HK case end-to-end on Cloudflare (Worker + Pages) |
-| [PHASE2.md](./PHASE2.md) | Level 2 (near-realtime bidirectional) | Configurable rules, more case types, realtime twin updates, audit export |
+| [PHASE1.md](./PHASE1.md) | Level 1 (scripted mirror) | All 11 synthetic cases end-to-end on Cloudflare (Worker + Pages) |
+| [PHASE2.md](./PHASE2.md) | Level 2 (near-realtime bidirectional) | Configurable rules, case families beyond the 11, realtime twin updates, audit export |
 | [PHASE3.md](./PHASE3.md) | Level 3 (vision) | ML assist + live connectors — **not** for the COMP3424 demo |
 
 ## How an agent should use these files
