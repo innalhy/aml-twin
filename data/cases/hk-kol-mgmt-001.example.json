@@ -1,0 +1,276 @@
+{
+  "schema_version": "0.1",
+  "case_id": "hk-kol-mgmt-001",
+  "title": "網紅管理公司 — 前台戶口（示範劇本）",
+  "locale": "zh-Hant",
+  "summary": "合成培訓案例。一間聲稱經營網紅管理的公司沒有品牌合約，戶口卻收到像購物、投資、網戀話術的個人入帳，並快速轉出。關聯的另一間合成公司流水相似。學員決定加強審查、草擬可疑交易報告、建議凍結或退出，不得把入帳記成品牌合作。靈感來自公開的網紅管理公司前台簡述，不是真實客戶檔。",
+  "start_node_id": "n_profile",
+  "teaching": {
+    "level": "chan-1-scripted-mirror",
+    "rules_before_ai": true,
+    "case_kind": "public_record_inspired",
+    "disclaimer": "Synthetic training scenario inspired by public enforcement reporting. Not official case files; no real customer data.",
+    "themes": ["KOL management front", "third-party retail credits", "phone fraud", "investment fraud", "romance fraud"],
+    "sources": [
+      {
+        "label": "HK enforcement briefing on KOL management company accounts (URL not in the course brief)"
+      }
+    ],
+    "acceptable_dispositions": ["str_drafted", "freeze_recommended", "account_exit"],
+    "poor_dispositions": ["false_positive_cleared"]
+  },
+  "rules": [
+    {
+      "id": "R1_FRONT_COMPANY",
+      "when": "聲稱的網紅管理業務沒有合約或員工紀錄，且入帳來自零售第三者",
+      "then": "require_edd_or_exit",
+      "note": "不得在沒有合約時記成品牌合作。規則先於任何模型分數。"
+    },
+    {
+      "id": "R2_FRAUD_MIX",
+      "when": "入帳話術混合電話、投資或網戀模式，並快速轉出",
+      "then": "require_str_or_freeze_or_exit",
+      "note": "不得把這些入帳改記為品牌合作後結案。"
+    }
+  ],
+  "initial_twin_state": {
+    "phase": "periodic_review",
+    "customer": {
+      "id": "SYN-CORP-KOL-02",
+      "display_name": "合成網紅管理公司甲",
+      "segment": "corporate"
+    },
+    "related_customer": {
+      "id": "SYN-CORP-KOL-46",
+      "display_name": "合成網紅管理公司乙"
+    },
+    "kyc": {
+      "status": "basic_cdd_on_file",
+      "business_evidence": "missing",
+      "signals": ["no_contracts", "retail_inflows"]
+    },
+    "account": {
+      "id": "SYN-ACC-KOL-02",
+      "opened": true,
+      "holds": []
+    },
+    "transactions": [],
+    "risk": {
+      "score": 42,
+      "flags": []
+    },
+    "disposition": null
+  },
+  "nodes": [
+    {
+      "id": "n_profile",
+      "type": "scene",
+      "title": "網紅管理公司覆核",
+      "prompt": "合成網紅管理公司甲稱經營網紅管理。戶口收到大量個人入帳，沒有品牌合約，也沒有員工薪金紀錄。關聯的合成網紅管理公司乙流水相似。",
+      "next": "n_front_gate",
+      "twin_patch": {
+        "phase": "cdd_review",
+        "risk.flags_add": ["FRONT_PROFILE"]
+      }
+    },
+    {
+      "id": "n_front_gate",
+      "type": "decision",
+      "title": "業務說法要不要核",
+      "prompt": "合約與薪金都缺。你要做業務加強審查、退出關係，還是先記成品牌合作？",
+      "choices": [
+        {
+          "id": "edd_business",
+          "label": "索取管理合約並做加強審查",
+          "next": "n_norecords",
+          "rationale": "先取業務證據，再讓 R1 判斷。",
+          "effects": {
+            "kyc.status": "edd_ordered",
+            "risk.flags_add": ["EDD_ORDERED"]
+          }
+        },
+        {
+          "id": "exit_now",
+          "label": "退出客戶關係",
+          "next": "n_outcome_exit",
+          "rationale": "沒有合約的零售入帳已足夠退出。",
+          "effects": {
+            "risk.flags_add": ["RELATIONSHIP_EXIT"]
+          }
+        },
+        {
+          "id": "book_as_deals",
+          "label": "記成品牌合作",
+          "next": "n_norecords",
+          "rationale": "教學覆寫。沒有合約的事實不會因記帳名稱改變。",
+          "effects": {
+            "risk.flags_add": ["BOOKED_AS_BRAND"],
+            "risk.score_delta": 25
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_norecords",
+      "type": "scene",
+      "title": "交不出管理合約",
+      "prompt": "客戶交不出管理合約。入帳備註像購物、投資、網戀話術，不是品牌合作。規則 R1：這種前台必須加強審查或退出。",
+      "next": "n_r1_gate",
+      "twin_patch": {
+        "kyc.business_evidence": "missing",
+        "kyc.status": "evidence_failed",
+        "risk.flags_add": ["NO_BUSINESS_RECORD"]
+      }
+    },
+    {
+      "id": "n_r1_gate",
+      "type": "decision",
+      "title": "前台規則的出口",
+      "prompt": "R1 已滿足。暫停出帳、現在草擬可疑交易報告，還是接受口頭業務說明？",
+      "choices": [
+        {
+          "id": "hold",
+          "label": "暫停出帳並繼續加強審查",
+          "next": "n_mix",
+          "rationale": "符合 R1。先看會不會快速轉出。",
+          "effects": {
+            "account.holds": ["outbound"],
+            "risk.flags_add": ["EDD_HOLD"]
+          }
+        },
+        {
+          "id": "str_now",
+          "label": "草擬可疑交易報告",
+          "next": "n_outcome_str",
+          "rationale": "沒有合約又有零售第三者入帳，可以上報。",
+          "effects": {
+            "risk.flags_add": ["STR_DRAFTED"]
+          }
+        },
+        {
+          "id": "accept_verbal",
+          "label": "接受口頭說明並放行",
+          "next": "n_mix",
+          "rationale": "覆寫 R1。話術類型仍會觸發下一條規則。",
+          "effects": {
+            "risk.flags_add": ["R1_OVERRIDDEN"],
+            "risk.score_delta": 30
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_mix",
+      "type": "scene",
+      "title": "三類話術並快速轉出",
+      "prompt": "進一步對上電話、投資、網戀三類模式，款項快速轉出。規則 R2：不得把這些入帳改記成品牌合作。",
+      "next": "n_r2_gate",
+      "twin_patch": {
+        "phase": "alert_triage",
+        "transactions": [
+          {
+            "id": "TX-KOL-1",
+            "kind": "phone_style_in",
+            "amount_hkd": 90000
+          },
+          {
+            "id": "TX-KOL-2",
+            "kind": "investment_style_in",
+            "amount_hkd": 140000
+          },
+          {
+            "id": "TX-KOL-3",
+            "kind": "romance_style_in",
+            "amount_hkd": 80000
+          },
+          {
+            "id": "TX-KOL-4",
+            "kind": "rapid_out",
+            "amount_hkd": 290000
+          }
+        ],
+        "risk.flags_add": ["FRAUD_MIX"]
+      }
+    },
+    {
+      "id": "n_r2_gate",
+      "type": "decision",
+      "title": "混合得益怎麼記",
+      "prompt": "R2 已滿足。建議凍結並上報、退出關係，或維持品牌合作記帳？",
+      "choices": [
+        {
+          "id": "str_freeze",
+          "label": "建議凍結並草擬可疑交易報告",
+          "next": "n_outcome_freeze",
+          "rationale": "符合 R2。",
+          "effects": {
+            "account.holds": ["outbound"],
+            "risk.flags_add": ["STR_DRAFTED", "FREEZE_RECOMMENDED"]
+          }
+        },
+        {
+          "id": "exit_rel",
+          "label": "退出客戶關係",
+          "next": "n_outcome_exit",
+          "rationale": "符合 R2 的退出出口。",
+          "effects": {
+            "risk.flags_add": ["RELATIONSHIP_EXIT"]
+          }
+        },
+        {
+          "id": "clear_brand",
+          "label": "維持品牌合作並結案",
+          "next": "n_outcome_miss",
+          "rationale": "教學上的較差路徑。規則已要求不得這樣結案。",
+          "effects": {
+            "risk.flags_add": ["R2_IGNORED"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_outcome_str",
+      "type": "outcome",
+      "title": "已草擬可疑交易報告",
+      "prompt": "上報出口。公司甲與關聯公司乙的合成編號留在狀態裡。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "str_drafted"
+      }
+    },
+    {
+      "id": "n_outcome_freeze",
+      "type": "outcome",
+      "title": "已建議凍結並草擬報告",
+      "prompt": "出帳暫停，報告已草擬。品牌合作的記帳覆寫若發生過，旗標仍在。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "freeze_recommended"
+      }
+    },
+    {
+      "id": "n_outcome_exit",
+      "type": "outcome",
+      "title": "已退出客戶關係",
+      "prompt": "關係結束。沒有合約與混合話術的旗標留在孿生狀態。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "account_exit"
+      }
+    },
+    {
+      "id": "n_outcome_miss",
+      "type": "outcome",
+      "title": "當成品牌合作結案",
+      "prompt": "較差路徑。R2 被忽略。儀表板之後應把這次 session 標成未跟規則。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "false_positive_cleared"
+      }
+    }
+  ]
+}

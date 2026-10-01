@@ -1,0 +1,262 @@
+{
+  "schema_version": "0.1",
+  "case_id": "hk-crossborder-tel-001",
+  "title": "跨境電話騙案走廊 — 通訊員監察（示範劇本）",
+  "locale": "zh-Hant",
+  "summary": "合成培訓案例。一間香港公司在數週內向數十個內地個人戶口支付「佣金」，收款人與供應商名單不符。通訊員類型提示把這條走廊與電話騙案得益連結。學員以合規主任身份做走廊加強審查、草擬可疑交易報告、建議凍結或退出。靈感來自跨境電話騙案的公開簡述，不是真實客戶檔，也不是通訊員實檔。",
+  "start_node_id": "n_corridor",
+  "teaching": {
+    "level": "chan-1-scripted-mirror",
+    "rules_before_ai": true,
+    "case_kind": "public_record_inspired",
+    "disclaimer": "Synthetic training scenario inspired by public enforcement reporting. Not official case files; no real customer data.",
+    "themes": ["cross-border phone fraud", "correspondent awareness", "fan-out payments", "mainland personal accounts"],
+    "sources": [
+      {
+        "label": "HK Police context, April–June 2023 cross-border phone fraud, IRONSPLITTER-related (URL not in the course brief)"
+      }
+    ],
+    "acceptable_dispositions": ["str_drafted", "freeze_recommended", "account_exit"],
+    "poor_dispositions": ["false_positive_cleared"]
+  },
+  "rules": [
+    {
+      "id": "R1_FANOUT",
+      "when": "單一客戶向大量彼此無關的內地個人戶口付款，且沒有佣金合約",
+      "then": "require_edd_before_release",
+      "note": "不得當成一般跨境佣金放行。規則先於任何模型分數。"
+    },
+    {
+      "id": "R2_CORRIDOR_INDICATOR",
+      "when": "通訊員類型提示把同一走廊與電話騙案得益連結",
+      "then": "require_str_or_freeze_or_exit",
+      "note": "不得改口成代客繳費或家屬生活費後結案。提示是合成教學指標，不是真實情報。"
+    }
+  ],
+  "initial_twin_state": {
+    "phase": "correspondent_review",
+    "customer": {
+      "id": "SYN-CORP-CB-320",
+      "display_name": "合成顧問公司甲",
+      "segment": "corporate"
+    },
+    "kyc": {
+      "status": "basic_cdd_on_file",
+      "signals": ["payee_list_mismatch"]
+    },
+    "corridor": {
+      "direction": "HK-to-mainland-personal",
+      "stated_purpose": "commission",
+      "contract_evidence": "missing",
+      "indicator": "phone_fraud_typology"
+    },
+    "account": {
+      "id": "SYN-ACC-CB-320",
+      "opened": true,
+      "holds": []
+    },
+    "transactions": [],
+    "risk": {
+      "score": 48,
+      "flags": []
+    },
+    "disposition": null
+  },
+  "nodes": [
+    {
+      "id": "n_corridor",
+      "type": "scene",
+      "title": "佣金付往大量個人戶口",
+      "prompt": "合成顧問公司甲在數週內向數十個內地個人戶口付款，用途寫佣金。收款人與檔案上的供應商名單不符。",
+      "next": "n_corr_gate",
+      "twin_patch": {
+        "phase": "corridor_review",
+        "risk.flags_add": ["PAYEE_FANOUT"]
+      }
+    },
+    {
+      "id": "n_corr_gate",
+      "type": "decision",
+      "title": "走廊要不要展開",
+      "prompt": "名單已經對不上。你要做走廊加強審查、退出關係，還是當成一般跨境佣金？",
+      "choices": [
+        {
+          "id": "edd_corridor",
+          "label": "做走廊加強審查",
+          "next": "n_mismatch",
+          "rationale": "先核對合約與收款人關係。",
+          "effects": {
+            "kyc.status": "edd_ordered",
+            "risk.flags_add": ["EDD_ORDERED"]
+          }
+        },
+        {
+          "id": "exit_now",
+          "label": "退出客戶關係",
+          "next": "n_outcome_exit",
+          "rationale": "供應商名單對不上，可以不待下一筆就退出。",
+          "effects": {
+            "risk.flags_add": ["RELATIONSHIP_EXIT"]
+          }
+        },
+        {
+          "id": "treat_commission",
+          "label": "當成一般跨境佣金",
+          "next": "n_mismatch",
+          "rationale": "教學覆寫。沒有合約的事實仍在，R1 之後還要處理。",
+          "effects": {
+            "risk.flags_add": ["CORRIDOR_WAIVED"],
+            "risk.score_delta": 25
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_mismatch",
+      "type": "scene",
+      "title": "沒有佣金合約",
+      "prompt": "抽查沒有佣金合約，收款人彼此無商業關係。合成的通訊員類型提示把這條走廊與電話騙案得益連結。規則 R1：這種扇出不得當一般佣金放行。",
+      "next": "n_r1_gate",
+      "twin_patch": {
+        "corridor.contract_evidence": "missing",
+        "risk.flags_add": ["NO_COMMISSION_CONTRACT"]
+      }
+    },
+    {
+      "id": "n_r1_gate",
+      "type": "decision",
+      "title": "扇出規則是否放行",
+      "prompt": "R1 已滿足。暫停付款並繼續審查、現在草擬可疑交易報告，還是接受人口述的佣金？",
+      "choices": [
+        {
+          "id": "hold",
+          "label": "暫停對外付款並繼續審查",
+          "next": "n_indicator",
+          "rationale": "符合 R1。先停扇出。",
+          "effects": {
+            "account.holds": ["outbound"],
+            "risk.flags_add": ["EDD_HOLD"]
+          }
+        },
+        {
+          "id": "str_now",
+          "label": "草擬可疑交易報告",
+          "next": "n_outcome_str",
+          "rationale": "無合約的大量個人收款已足夠上報。",
+          "effects": {
+            "risk.flags_add": ["STR_DRAFTED"]
+          }
+        },
+        {
+          "id": "waive_commission",
+          "label": "接受口述佣金並放行",
+          "next": "n_indicator",
+          "rationale": "覆寫 R1。類型提示不會因此消失。",
+          "effects": {
+            "risk.flags_add": ["R1_OVERRIDDEN"],
+            "risk.score_delta": 30
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_indicator",
+      "type": "scene",
+      "title": "類型提示仍在",
+      "prompt": "客戶改口稱是代客繳費。電話騙案類型提示沒有撤下。規則 R2：走廊與得益指標並存時，不得當普通佣金或代繳結案。",
+      "next": "n_r2_gate",
+      "twin_patch": {
+        "phase": "alert_triage",
+        "transactions": [
+          {
+            "id": "TX-CB-1",
+            "kind": "fanout_mainland_personal",
+            "amount_hkd": 640000,
+            "payee_count": 40
+          }
+        ],
+        "risk.flags_add": ["PHONE_FRAUD_INDICATOR"]
+      }
+    },
+    {
+      "id": "n_r2_gate",
+      "type": "decision",
+      "title": "指標出現之後",
+      "prompt": "R2 已滿足。建議凍結並上報、退出關係，或接受代客繳費？",
+      "choices": [
+        {
+          "id": "str_freeze",
+          "label": "建議凍結並草擬可疑交易報告",
+          "next": "n_outcome_freeze",
+          "rationale": "符合 R2。",
+          "effects": {
+            "account.holds": ["outbound"],
+            "risk.flags_add": ["STR_DRAFTED", "FREEZE_RECOMMENDED"]
+          }
+        },
+        {
+          "id": "exit_rel",
+          "label": "退出客戶關係",
+          "next": "n_outcome_exit",
+          "rationale": "符合 R2 的退出出口。",
+          "effects": {
+            "risk.flags_add": ["RELATIONSHIP_EXIT"]
+          }
+        },
+        {
+          "id": "clear_agent",
+          "label": "接受代客繳費並結案",
+          "next": "n_outcome_miss",
+          "rationale": "教學上的較差路徑。規則已要求不得這樣結案。",
+          "effects": {
+            "risk.flags_add": ["R2_IGNORED"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_outcome_str",
+      "type": "outcome",
+      "title": "已草擬可疑交易報告",
+      "prompt": "上報出口。扇出與類型提示留在狀態，供覆核對照。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "str_drafted"
+      }
+    },
+    {
+      "id": "n_outcome_freeze",
+      "type": "outcome",
+      "title": "已建議凍結並草擬報告",
+      "prompt": "對外付款暫停，報告已草擬。若先前覆寫過 R1，覆寫旗標仍在。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "freeze_recommended"
+      }
+    },
+    {
+      "id": "n_outcome_exit",
+      "type": "outcome",
+      "title": "已退出客戶關係",
+      "prompt": "關係結束。走廊事實沒有被退出動作抹掉。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "account_exit"
+      }
+    },
+    {
+      "id": "n_outcome_miss",
+      "type": "outcome",
+      "title": "當成代客繳費結案",
+      "prompt": "較差路徑。R2 被忽略。儀表板之後應把這次 session 標成未跟規則。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "false_positive_cleared"
+      }
+    }
+  ]
+}
