@@ -1,0 +1,267 @@
+{
+  "schema_version": "0.1",
+  "case_id": "hk-hkma-cdd-001",
+  "title": "不完整盡職審查 — 銀行管控（示範劇本）",
+  "locale": "zh-Hant",
+  "summary": "合成培訓案例。公司客戶的開戶檔缺少實益擁有人，地址證明過期，關係經理卻要求提高轉帳限額。持續監測曾被關掉，關閉期間的警報沒有可疑交易報告。學員決定限制戶口、重做審查、上報並修復管控，不得事後補一筆已審視。靈感來自金管局公開的銀行管控缺失簡述，不是真實銀行客戶檔。",
+  "start_node_id": "n_onboard",
+  "teaching": {
+    "level": "chan-1-scripted-mirror",
+    "rules_before_ai": true,
+    "case_kind": "public_record_inspired",
+    "disclaimer": "Synthetic training scenario inspired by public enforcement reporting. Not official case files; no real customer data.",
+    "themes": ["CDD", "beneficial ownership", "ongoing monitoring", "STR failures"],
+    "sources": [
+      {
+        "label": "Clifford Chance briefing on HKMA penalties for four banks (November 2021, HK$44.2 million)",
+        "url": "https://www.cliffordchance.com/content/dam/cliffordchance/briefings/2021/11/hkma-penalises-four-banks-hk$44.2-million-for-money-laundering-control-failures-key-takeaways.pdf"
+      }
+    ],
+    "acceptable_dispositions": ["relationship_exit", "cdd_refreshed_and_str", "str_drafted"],
+    "poor_dispositions": ["monitoring_backdated"]
+  },
+  "rules": [
+    {
+      "id": "R1_CDD_INCOMPLETE",
+      "when": "實益擁有人缺失或地址證明過期",
+      "then": "restrict_and_refresh_cdd",
+      "note": "不得提高限額或擴大關係。規則先於任何模型分數。"
+    },
+    {
+      "id": "R2_MONITORING_AND_STR",
+      "when": "持續監測曾被關閉，且關閉期間警報已達內部門檻",
+      "then": "require_str_and_control_fix",
+      "note": "不得事後補一筆已審視來結案。上報與管控修復都要留在事件軌上。"
+    }
+  ],
+  "initial_twin_state": {
+    "phase": "cdd_review",
+    "customer": {
+      "id": "SYN-CORP-CDD-04",
+      "display_name": "合成公司客戶甲",
+      "segment": "corporate"
+    },
+    "file": {
+      "id": "SYN-FILE-CDD-442"
+    },
+    "kyc": {
+      "status": "incomplete",
+      "beneficial_owner": "missing",
+      "address_proof": "stale",
+      "signals": ["bo_missing", "stale_address"]
+    },
+    "monitoring": {
+      "status": "switched_off",
+      "alerts_over_threshold": 4
+    },
+    "account": {
+      "id": "SYN-ACC-CDD-04",
+      "opened": true,
+      "holds": [],
+      "transfer_limit": "standard"
+    },
+    "transactions": [],
+    "risk": {
+      "score": 44,
+      "flags": []
+    },
+    "disposition": null
+  },
+  "nodes": [
+    {
+      "id": "n_onboard",
+      "type": "scene",
+      "title": "開戶檔不完整",
+      "prompt": "覆核檔 SYN-FILE-CDD-442。合成公司客戶甲缺少實益擁有人，地址證明過期。關係經理要求提高轉帳限額。",
+      "next": "n_cdd_gate",
+      "twin_patch": {
+        "phase": "cdd_review"
+      }
+    },
+    {
+      "id": "n_cdd_gate",
+      "type": "decision",
+      "title": "限額要求能不能批",
+      "prompt": "客戶盡職審查不完整。你要限制戶口並重做審查、退出關係，還是先提高限額？",
+      "choices": [
+        {
+          "id": "refresh_restrict",
+          "label": "限制戶口並重做客戶盡職審查",
+          "next": "n_stale",
+          "rationale": "缺擁有人時不應擴大關係。",
+          "effects": {
+            "account.holds": ["limit_increase"],
+            "kyc.status": "refresh_ordered",
+            "risk.flags_add": ["CDD_REFRESH"]
+          }
+        },
+        {
+          "id": "exit_now",
+          "label": "退出客戶關係",
+          "next": "n_outcome_exit",
+          "rationale": "開戶檔不完整可以退出，不必先加限額。",
+          "effects": {
+            "risk.flags_add": ["RELATIONSHIP_EXIT"]
+          }
+        },
+        {
+          "id": "raise_limit",
+          "label": "先提高轉帳限額",
+          "next": "n_stale",
+          "rationale": "教學覆寫。擁有人仍然缺失，R1 之後還要處理。",
+          "effects": {
+            "account.transfer_limit": "raised",
+            "risk.flags_add": ["LIMIT_RAISED"],
+            "risk.score_delta": 30
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_stale",
+      "type": "scene",
+      "title": "擁有人仍然無法確認",
+      "prompt": "補件後仍無法確認實益擁有人，地址證明仍過期。規則 R1：擁有權缺失或過期時必須限制戶口並重做審查，不得擴大關係。",
+      "next": "n_r1_gate",
+      "twin_patch": {
+        "kyc.beneficial_owner": "missing",
+        "kyc.address_proof": "stale",
+        "kyc.status": "still_incomplete",
+        "risk.flags_add": ["CDD_INCOMPLETE"]
+      }
+    },
+    {
+      "id": "n_r1_gate",
+      "type": "decision",
+      "title": "要不要覆寫審查規則",
+      "prompt": "R1 已滿足。維持限制、退出關係，還是覆寫並維持已提高的便利？",
+      "choices": [
+        {
+          "id": "restrict",
+          "label": "維持限制並繼續重做審查",
+          "next": "n_monitoring",
+          "rationale": "符合 R1。",
+          "effects": {
+            "account.holds": ["outbound", "limit_increase"],
+            "account.transfer_limit": "standard",
+            "risk.flags_add": ["CDD_RESTRICTED"]
+          }
+        },
+        {
+          "id": "exit_rel",
+          "label": "退出客戶關係",
+          "next": "n_outcome_exit",
+          "rationale": "符合 R1 的退出出口。",
+          "effects": {
+            "risk.flags_add": ["RELATIONSHIP_EXIT"]
+          }
+        },
+        {
+          "id": "override_open",
+          "label": "覆寫規則並維持便利",
+          "next": "n_monitoring",
+          "rationale": "覆寫 R1。覆寫是事件，缺失的擁有人不會因此補上。",
+          "effects": {
+            "risk.flags_add": ["R1_OVERRIDDEN"],
+            "risk.score_delta": 35
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_monitoring",
+      "type": "scene",
+      "title": "監測曾被關掉",
+      "prompt": "持續監測曾被關掉。關閉期間有多筆警報達到內部門檻，但沒有可疑交易報告。規則 R2：必須上報並修復控制，不得事後補一筆已審視。",
+      "next": "n_r2_gate",
+      "twin_patch": {
+        "phase": "monitoring_review",
+        "monitoring.status": "switched_off",
+        "monitoring.alerts_over_threshold": 4,
+        "risk.flags_add": ["MONITORING_OFF", "ALERTS_UNREPORTED"]
+      }
+    },
+    {
+      "id": "n_r2_gate",
+      "type": "decision",
+      "title": "警報沒有報告",
+      "prompt": "R2 已滿足。重做審查並草擬報告、在限制下只草擬報告，或補記為當時已審視？",
+      "choices": [
+        {
+          "id": "do_both",
+          "label": "重做審查、修復監測並草擬可疑交易報告",
+          "next": "n_outcome_both",
+          "rationale": "符合 R2 的完整出口。審查與上報一起留下。",
+          "effects": {
+            "kyc.status": "refresh_ordered",
+            "monitoring.status": "restored",
+            "risk.flags_add": ["CDD_REFRESH", "STR_DRAFTED", "MONITORING_RESTORED"]
+          }
+        },
+        {
+          "id": "str_keep_restrict",
+          "label": "維持限制並草擬可疑交易報告",
+          "next": "n_outcome_str",
+          "rationale": "上報是必須的。限制還在，審查重做應在下一手看見旗標。",
+          "effects": {
+            "account.holds": ["outbound"],
+            "risk.flags_add": ["STR_DRAFTED"]
+          }
+        },
+        {
+          "id": "backdate",
+          "label": "補記為當時已審視並結案",
+          "next": "n_outcome_miss",
+          "rationale": "教學上的較差路徑。規則禁止事後補結案。",
+          "effects": {
+            "risk.flags_add": ["MONITORING_BACKDATED"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_outcome_exit",
+      "type": "outcome",
+      "title": "已退出客戶關係",
+      "prompt": "關係結束。不完整的客戶盡職審查留在檔案狀態，沒有被退出動作改成已完成。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "relationship_exit"
+      }
+    },
+    {
+      "id": "n_outcome_both",
+      "type": "outcome",
+      "title": "已重做審查並草擬報告",
+      "prompt": "監測恢復，可疑交易報告已草擬，審查重做留在事件軌。若先前提高過限額或覆寫過 R1，那些旗標仍在。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "cdd_refreshed_and_str"
+      }
+    },
+    {
+      "id": "n_outcome_str",
+      "type": "outcome",
+      "title": "已草擬可疑交易報告",
+      "prompt": "上報出口。戶口限制仍在。擁有人缺失沒有被報告動作自動補上。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "str_drafted"
+      }
+    },
+    {
+      "id": "n_outcome_miss",
+      "type": "outcome",
+      "title": "事後補記已審視",
+      "prompt": "較差路徑。R2 被事後補記繞過。關閉監測與未報告警報仍在孿生狀態。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "monitoring_backdated"
+      }
+    }
+  ]
+}

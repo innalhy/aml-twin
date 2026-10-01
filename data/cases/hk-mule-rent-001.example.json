@@ -1,0 +1,271 @@
+{
+  "schema_version": "0.1",
+  "case_id": "hk-mule-rent-001",
+  "title": "出租銀行戶口 — 社交平台招攬（示範劇本）",
+  "locale": "zh-Hant",
+  "summary": "合成培訓案例。零售客戶在社交平台表示可出租戶口，並稱安全、合法；戶口先收到小額試探入帳。學員決定約談、草擬可疑交易報告、暫停出帳或退出。只退出而不上報是不完整路徑。靈感來自警方公開的戶口租售執法簡述，不是真實客戶檔。",
+  "start_node_id": "n_alert",
+  "teaching": {
+    "level": "chan-1-scripted-mirror",
+    "rules_before_ai": true,
+    "case_kind": "public_record_inspired",
+    "disclaimer": "Synthetic training scenario inspired by public enforcement reporting. Not official case files; no real customer data.",
+    "themes": ["account rental", "social media recruitment", "mule account", "third-party control"],
+    "sources": [
+      {
+        "label": "HK Police press, April 2025 operation on account rental (URL not in the course brief)"
+      }
+    ],
+    "acceptable_dispositions": ["str_drafted", "freeze_recommended"],
+    "poor_dispositions": ["exit_without_str", "false_positive_cleared"]
+  },
+  "rules": [
+    {
+      "id": "R1_ACCOUNT_RENTAL",
+      "when": "客戶承認戶口交由第三者使用，或承認出租或出售戶口控制權",
+      "then": "refuse_or_exit_and_report",
+      "note": "不得維持一般使用。已有試探入帳時，只退出不上報並未滿足規則。"
+    },
+    {
+      "id": "R2_THIRD_PARTY_CONTROL",
+      "when": "戶口控制權在不明第三者，且已有第三者入帳",
+      "then": "require_str_or_freeze",
+      "note": "不得當成幫朋友或客戶服務。規則先於任何模型分數。"
+    }
+  ],
+  "initial_twin_state": {
+    "phase": "alert_triage",
+    "customer": {
+      "id": "SYN-HK-MR-170",
+      "display_name": "合成客戶乙",
+      "segment": "retail"
+    },
+    "kyc": {
+      "status": "basic_cdd_on_file",
+      "account_control": "unknown",
+      "signals": ["social_post_offering_account"]
+    },
+    "account": {
+      "id": "SYN-ACC-MR-170",
+      "opened": true,
+      "holds": []
+    },
+    "transactions": [
+      {
+        "id": "TX-MR-0",
+        "kind": "test_credit",
+        "amount_hkd": 1000
+      }
+    ],
+    "risk": {
+      "score": 40,
+      "flags": []
+    },
+    "disposition": null
+  },
+  "nodes": [
+    {
+      "id": "n_alert",
+      "type": "scene",
+      "title": "社交平台招攬警報",
+      "prompt": "合成客戶乙發文表示可出租銀行戶口，並寫「安全、合法」。戶口剛收到一筆小額試探入帳，付款人不是客戶本人。",
+      "next": "n_triage",
+      "twin_patch": {
+        "phase": "alert_triage",
+        "risk.flags_add": ["RENTAL_POST"]
+      }
+    },
+    {
+      "id": "n_triage",
+      "type": "decision",
+      "title": "警報怎麼開工",
+      "prompt": "帖文與試探入帳都在。你要約談客戶、現在上報並退出，還是把帖文當成玩笑關掉？",
+      "choices": [
+        {
+          "id": "interview",
+          "label": "約談客戶",
+          "next": "n_admission",
+          "rationale": "先取得控制權事實，再讓 R1 判斷。",
+          "effects": {
+            "kyc.status": "interview_open"
+          }
+        },
+        {
+          "id": "str_exit",
+          "label": "草擬可疑交易報告並退出",
+          "next": "n_outcome_str",
+          "rationale": "帖文加上試探入帳已足夠上報，不必等客戶承認。",
+          "effects": {
+            "risk.flags_add": ["STR_DRAFTED", "RELATIONSHIP_EXIT"]
+          }
+        },
+        {
+          "id": "dismiss_post",
+          "label": "當成社交玩笑結案",
+          "next": "n_credits",
+          "rationale": "教學上的較差起點。試探入帳仍在，後續入帳會觸發 R2。",
+          "effects": {
+            "risk.flags_add": ["POST_DISMISSED"],
+            "risk.score_delta": 20
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_admission",
+      "type": "scene",
+      "title": "客戶承認出租戶口",
+      "prompt": "客戶稱有公司支付租金，自己只負責交出驗證碼，對方說這很平常。戶口控制權不在客戶。規則 R1：承認出租就不得維持一般使用。",
+      "next": "n_r1_gate",
+      "twin_patch": {
+        "kyc.account_control": "third_party",
+        "kyc.status": "rental_admitted",
+        "risk.flags_add": ["RENTAL_ADMITTED"]
+      }
+    },
+    {
+      "id": "n_r1_gate",
+      "type": "decision",
+      "title": "承認出租之後",
+      "prompt": "R1 已滿足，而且試探入帳仍在。上報並退出、只退出不上報，還是加監控後繼續使用？",
+      "choices": [
+        {
+          "id": "exit_and_str",
+          "label": "草擬可疑交易報告並退出",
+          "next": "n_outcome_str",
+          "rationale": "符合 R1。控制權與試探入帳一起留下。",
+          "effects": {
+            "risk.flags_add": ["STR_DRAFTED", "RELATIONSHIP_EXIT"]
+          }
+        },
+        {
+          "id": "exit_only",
+          "label": "只退出，不上報",
+          "next": "n_outcome_exit_gap",
+          "rationale": "教學上的不完整路徑。退出沒有抹掉已發生的試探入帳。",
+          "effects": {
+            "risk.flags_add": ["EXIT_WITHOUT_STR"]
+          }
+        },
+        {
+          "id": "allow_monitor",
+          "label": "加監控後准許繼續使用",
+          "next": "n_credits",
+          "rationale": "覆寫 R1。覆寫是事件，不是把出租事實刪掉。",
+          "effects": {
+            "kyc.status": "passed_by_override",
+            "risk.flags_add": ["R1_OVERRIDDEN"],
+            "risk.score_delta": 35
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_credits",
+      "type": "scene",
+      "title": "試探之後的入帳",
+      "prompt": "試探入帳之後出現多筆第三者入帳，並要求盡快轉走。規則 R2：控制權在不明第三者且已有入帳時，不得當成幫朋友。",
+      "next": "n_r2_gate",
+      "twin_patch": {
+        "transactions": [
+          {
+            "id": "TX-MR-0",
+            "kind": "test_credit",
+            "amount_hkd": 1000
+          },
+          {
+            "id": "TX-MR-1",
+            "kind": "third_party_in",
+            "amount_hkd": 180000
+          },
+          {
+            "id": "TX-MR-2",
+            "kind": "third_party_in",
+            "amount_hkd": 240000
+          }
+        ],
+        "risk.flags_add": ["THIRD_PARTY_CONTROL"]
+      }
+    },
+    {
+      "id": "n_r2_gate",
+      "type": "decision",
+      "title": "入帳之後的處置",
+      "prompt": "R2 已滿足。暫停出帳並草擬報告、退出並上報，或結為幫忙朋友？",
+      "choices": [
+        {
+          "id": "freeze_str",
+          "label": "暫停出帳並草擬可疑交易報告",
+          "next": "n_outcome_freeze",
+          "rationale": "符合 R2 的止付並上報出口。",
+          "effects": {
+            "account.holds": ["outbound"],
+            "risk.flags_add": ["STR_DRAFTED", "FREEZE_RECOMMENDED"]
+          }
+        },
+        {
+          "id": "exit_and_str_late",
+          "label": "退出並草擬可疑交易報告",
+          "next": "n_outcome_str",
+          "rationale": "符合 R2 的另一出口。",
+          "effects": {
+            "risk.flags_add": ["STR_DRAFTED", "RELATIONSHIP_EXIT"]
+          }
+        },
+        {
+          "id": "clear_favour",
+          "label": "結為幫忙朋友",
+          "next": "n_outcome_miss",
+          "rationale": "教學上的較差路徑。規則已要求不得這樣結案。",
+          "effects": {
+            "risk.flags_add": ["R2_IGNORED"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_outcome_str",
+      "type": "outcome",
+      "title": "已草擬可疑交易報告",
+      "prompt": "上報出口。出租事實或帖文旗標留在狀態，沒有被退出動作清掉。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "str_drafted"
+      }
+    },
+    {
+      "id": "n_outcome_exit_gap",
+      "type": "outcome",
+      "title": "只退出而未上報",
+      "prompt": "較差路徑。關係結束了，但試探入帳與出租承認沒有進入可疑交易報告。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "exit_without_str"
+      }
+    },
+    {
+      "id": "n_outcome_freeze",
+      "type": "outcome",
+      "title": "已暫停出帳並草擬報告",
+      "prompt": "出帳暫停，報告已草擬。若先前覆寫過 R1，覆寫旗標仍在。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "freeze_recommended"
+      }
+    },
+    {
+      "id": "n_outcome_miss",
+      "type": "outcome",
+      "title": "當成幫忙朋友結案",
+      "prompt": "較差路徑。R2 被忽略。儀表板之後應把這次 session 標成未跟規則。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "false_positive_cleared"
+      }
+    }
+  ]
+}

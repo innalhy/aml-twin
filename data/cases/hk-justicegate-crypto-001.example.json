@@ -1,0 +1,274 @@
+{
+  "schema_version": "0.1",
+  "case_id": "hk-justicegate-crypto-001",
+  "title": "現金與場外加密貨幣 — 戶口套現（示範劇本）",
+  "locale": "zh-Hant",
+  "summary": "合成培訓案例。受薪客戶的戶口收集多筆入帳後，以現金提取及轉往場外加密貨幣交易商離開。客戶說不出與檔案相符的資金來源。學員決定加強審查、草擬可疑交易報告、建議凍結或退出。靈感來自公開的本地戶口套現簡述，不是真實客戶檔。",
+  "start_node_id": "n_pattern",
+  "teaching": {
+    "level": "chan-1-scripted-mirror",
+    "rules_before_ai": true,
+    "case_kind": "public_record_inspired",
+    "disclaimer": "Synthetic training scenario inspired by public enforcement reporting. Not official case files; no real customer data.",
+    "themes": ["cash withdrawal", "crypto OTC", "source of funds", "pass-through"],
+    "sources": [
+      {
+        "label": "HK enforcement briefing, JUSTICEGATE (October 2022–June 2023; URL not in the course brief)"
+      }
+    ],
+    "acceptable_dispositions": ["str_drafted", "freeze_recommended", "account_exit"],
+    "poor_dispositions": ["false_positive_cleared"]
+  },
+  "rules": [
+    {
+      "id": "R1_NO_SOURCE",
+      "when": "客戶無法提供與檔案相符的資金來源",
+      "then": "do_not_clear",
+      "note": "朋友換匯不是來源證明。不得在來源空白時結案。"
+    },
+    {
+      "id": "R2_CASH_AND_OTC",
+      "when": "入帳的主要去向是現金提取加上場外加密貨幣交易商",
+      "then": "require_str_or_freeze_or_exit",
+      "note": "不得當個人投資結案。規則先於任何模型分數。"
+    }
+  ],
+  "initial_twin_state": {
+    "phase": "alert_triage",
+    "customer": {
+      "id": "SYN-HK-JG-048",
+      "display_name": "合成客戶丁",
+      "segment": "retail_salary",
+      "profile": "salary"
+    },
+    "kyc": {
+      "status": "basic_cdd_on_file",
+      "source_of_funds": "unexplained",
+      "signals": ["volume_vs_salary"]
+    },
+    "account": {
+      "id": "SYN-ACC-JG-048",
+      "opened": true,
+      "holds": []
+    },
+    "crypto": {
+      "otc_counterparty": "SYN-OTC-JG-07"
+    },
+    "transactions": [],
+    "risk": {
+      "score": 50,
+      "flags": []
+    },
+    "disposition": null
+  },
+  "nodes": [
+    {
+      "id": "n_pattern",
+      "type": "scene",
+      "title": "受薪檔案對上大額進出",
+      "prompt": "合成客戶丁的檔案是受薪人士。數月內戶口收集多筆入帳，去向開始出現現金提取，以及轉往場外加密貨幣交易商 SYN-OTC-JG-07。",
+      "next": "n_ask",
+      "twin_patch": {
+        "phase": "source_review",
+        "risk.flags_add": ["VOLUME_VS_SALARY"]
+      }
+    },
+    {
+      "id": "n_ask",
+      "type": "decision",
+      "title": "要不要先問來源",
+      "prompt": "金額與受薪檔案不符。你要索取資金來源並做加強審查、先暫停出帳，還是註記為投資後關掉？",
+      "choices": [
+        {
+          "id": "sof_edd",
+          "label": "索取資金來源並做加強審查",
+          "next": "n_answer",
+          "rationale": "先取來源，再讓 R1 判斷能否結案。",
+          "effects": {
+            "kyc.status": "sof_requested",
+            "risk.flags_add": ["EDD_ORDERED"]
+          }
+        },
+        {
+          "id": "hold_first",
+          "label": "先暫停出帳再問來源",
+          "next": "n_answer",
+          "rationale": "止付與取證可以同時做。",
+          "effects": {
+            "account.holds": ["outbound"],
+            "kyc.status": "sof_requested",
+            "risk.flags_add": ["EDD_HOLD"]
+          }
+        },
+        {
+          "id": "clear_invest",
+          "label": "註記為投資並結案",
+          "next": "n_otc",
+          "rationale": "教學上的較差起點。來源仍是空白，現金與場外路徑會觸發 R2。",
+          "effects": {
+            "risk.flags_add": ["SOF_SKIPPED"],
+            "risk.score_delta": 25
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_answer",
+      "type": "scene",
+      "title": "說不出相符的來源",
+      "prompt": "客戶只稱朋友換匯，交不出與受薪檔案相符的證明。規則 R1：來源空白不得結案。",
+      "next": "n_r1_gate",
+      "twin_patch": {
+        "kyc.source_of_funds": "friend_fx_unsupported",
+        "kyc.status": "sof_failed",
+        "risk.flags_add": ["NO_SOURCE"]
+      }
+    },
+    {
+      "id": "n_r1_gate",
+      "type": "decision",
+      "title": "來源空白之後",
+      "prompt": "R1 已滿足。維持暫停並看去向、現在草擬可疑交易報告，還是接受朋友換匯？",
+      "choices": [
+        {
+          "id": "continue_hold",
+          "label": "維持暫停並核對去向",
+          "next": "n_otc",
+          "rationale": "符合 R1。先不要放行。",
+          "effects": {
+            "account.holds": ["outbound"],
+            "risk.flags_add": ["EDD_HOLD"]
+          }
+        },
+        {
+          "id": "str_now",
+          "label": "草擬可疑交易報告",
+          "next": "n_outcome_str",
+          "rationale": "來源與檔案已經不符，可以上報。",
+          "effects": {
+            "risk.flags_add": ["STR_DRAFTED"]
+          }
+        },
+        {
+          "id": "accept_friend",
+          "label": "接受朋友換匯",
+          "next": "n_otc",
+          "rationale": "覆寫 R1。空白來源沒有變成證明。",
+          "effects": {
+            "risk.flags_add": ["R1_OVERRIDDEN"],
+            "risk.score_delta": 30
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_otc",
+      "type": "scene",
+      "title": "現金與場外交易商",
+      "prompt": "兩筆轉往合成場外交易商 SYN-OTC-JG-07，其餘以現金提走。規則 R2：現金加場外加密貨幣是主要去向時，不得當投資結案。",
+      "next": "n_r2_gate",
+      "twin_patch": {
+        "phase": "alert_triage",
+        "transactions": [
+          {
+            "id": "TX-JG-1",
+            "kind": "third_party_in",
+            "amount_hkd": 520000
+          },
+          {
+            "id": "TX-JG-2",
+            "kind": "cash_withdrawal",
+            "amount_hkd": 200000
+          },
+          {
+            "id": "TX-JG-3",
+            "kind": "otc_crypto_out",
+            "amount_hkd": 300000,
+            "counterparty": "SYN-OTC-JG-07"
+          }
+        ],
+        "risk.flags_add": ["CASH_AND_OTC"]
+      }
+    },
+    {
+      "id": "n_r2_gate",
+      "type": "decision",
+      "title": "套現路徑的處置",
+      "prompt": "R2 已滿足。建議凍結並上報、退出關係，或結為投資？",
+      "choices": [
+        {
+          "id": "freeze_str",
+          "label": "建議凍結並草擬可疑交易報告",
+          "next": "n_outcome_freeze",
+          "rationale": "符合 R2 的止付並上報出口。",
+          "effects": {
+            "account.holds": ["outbound"],
+            "risk.flags_add": ["STR_DRAFTED", "FREEZE_RECOMMENDED"]
+          }
+        },
+        {
+          "id": "exit_rel",
+          "label": "退出客戶關係",
+          "next": "n_outcome_exit",
+          "rationale": "符合 R2 的退出出口。",
+          "effects": {
+            "risk.flags_add": ["RELATIONSHIP_EXIT"]
+          }
+        },
+        {
+          "id": "clear_invest_late",
+          "label": "結為個人投資",
+          "next": "n_outcome_miss",
+          "rationale": "教學上的較差路徑。規則已要求不得這樣結案。",
+          "effects": {
+            "risk.flags_add": ["R2_IGNORED"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_outcome_str",
+      "type": "outcome",
+      "title": "已草擬可疑交易報告",
+      "prompt": "上報出口。資金來源仍是未證實，留在狀態裡。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "str_drafted"
+      }
+    },
+    {
+      "id": "n_outcome_freeze",
+      "type": "outcome",
+      "title": "已建議凍結並草擬報告",
+      "prompt": "出帳暫停，報告已草擬。場外對手 SYN-OTC-JG-07 仍在狀態裡。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "freeze_recommended"
+      }
+    },
+    {
+      "id": "n_outcome_exit",
+      "type": "outcome",
+      "title": "已退出客戶關係",
+      "prompt": "關係結束。現金與場外去向的旗標留在孿生狀態。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "account_exit"
+      }
+    },
+    {
+      "id": "n_outcome_miss",
+      "type": "outcome",
+      "title": "當成投資結案",
+      "prompt": "較差路徑。R2 被忽略。儀表板之後應把這次 session 標成未跟規則。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "false_positive_cleared"
+      }
+    }
+  ]
+}

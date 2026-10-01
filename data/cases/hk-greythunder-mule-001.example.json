@@ -1,0 +1,270 @@
+{
+  "schema_version": "0.1",
+  "case_id": "hk-greythunder-mule-001",
+  "title": "騾子群組 — 假冒機構與投資得益（示範劇本）",
+  "locale": "zh-Hant",
+  "summary": "合成培訓案例。零售戶口與一個合成群組共用收款戶口及登入裝置。客戶稱在幫朋友處理官方退款與投資本金，但不認識付款人。學員要先按群組規則加強審查，再決定上報、凍結或退出。靈感來自公開的騾子群組簡述，不是真實客戶檔。",
+  "start_node_id": "n_link",
+  "teaching": {
+    "level": "chan-1-scripted-mirror",
+    "rules_before_ai": true,
+    "case_kind": "public_record_inspired",
+    "disclaimer": "Synthetic training scenario inspired by public enforcement reporting. Not official case files; no real customer data.",
+    "themes": ["mule cluster", "fake official", "investment fraud proceeds", "shared device"],
+    "sources": [
+      {
+        "label": "HK enforcement briefing, GREYTHUNDER (May–November 2022 activity; URL not in the course brief)"
+      }
+    ],
+    "acceptable_dispositions": ["str_drafted", "freeze_recommended", "account_exit"],
+    "poor_dispositions": ["false_positive_cleared"]
+  },
+  "rules": [
+    {
+      "id": "R1_MULE_CLUSTER",
+      "when": "戶口與群組共用收款戶口或登入裝置",
+      "then": "require_edd_before_release",
+      "note": "放行前必須加強審查。幫朋友不是群組事實的反證。"
+    },
+    {
+      "id": "R2_FRAUD_PROCEEDS",
+      "when": "入帳話術符合假冒機構或投資得益，並隨即彙集轉出",
+      "then": "require_str_or_freeze_or_exit",
+      "note": "不得接受「朋友的投資」作為結案理由。規則先於任何模型分數。"
+    }
+  ],
+  "initial_twin_state": {
+    "phase": "alert_triage",
+    "customer": {
+      "id": "SYN-HK-GT-033",
+      "display_name": "合成客戶戊",
+      "segment": "retail"
+    },
+    "kyc": {
+      "status": "basic_cdd_on_file",
+      "signals": ["shared_device", "shared_beneficiary"]
+    },
+    "cluster": {
+      "id": "SYN-CLUSTER-GT-06",
+      "link": "shared_device_and_beneficiary"
+    },
+    "account": {
+      "id": "SYN-ACC-GT-033",
+      "opened": true,
+      "holds": []
+    },
+    "transactions": [],
+    "risk": {
+      "score": 55,
+      "flags": []
+    },
+    "disposition": null
+  },
+  "nodes": [
+    {
+      "id": "n_link",
+      "type": "scene",
+      "title": "群組連上這個戶口",
+      "prompt": "合成客戶戊的戶口與合成群組 SYN-CLUSTER-GT-06 共用收款戶口及登入裝置。客戶稱只是幫朋友做投資。",
+      "next": "n_cluster_gate",
+      "twin_patch": {
+        "phase": "cluster_review",
+        "risk.flags_add": ["MULE_CLUSTER"]
+      }
+    },
+    {
+      "id": "n_cluster_gate",
+      "type": "decision",
+      "title": "群組連線要不要擋",
+      "prompt": "共用裝置與共用收款戶口都在。你要做加強審查、先限制出帳，還是因朋友說法而放行？",
+      "choices": [
+        {
+          "id": "edd_cluster",
+          "label": "對群組做加強審查",
+          "next": "n_story",
+          "rationale": "先聽說法，但群組事實不會因一句話消失。",
+          "effects": {
+            "kyc.status": "edd_ordered",
+            "risk.flags_add": ["EDD_ORDERED"]
+          }
+        },
+        {
+          "id": "restrict",
+          "label": "先限制出帳",
+          "next": "n_story",
+          "rationale": "限制與約談可以同時做。",
+          "effects": {
+            "account.holds": ["outbound"],
+            "risk.flags_add": ["EDD_HOLD"]
+          }
+        },
+        {
+          "id": "release_friend",
+          "label": "接受朋友說法並放行",
+          "next": "n_proceeds",
+          "rationale": "教學覆寫。群組連線仍在，後續得益會觸發 R2。",
+          "effects": {
+            "risk.flags_add": ["CLUSTER_WAIVED"],
+            "risk.score_delta": 30
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_story",
+      "type": "scene",
+      "title": "官方退款與投資本金",
+      "prompt": "客戶說朋友在處理官方退款和投資本金，自己不認識付款人。規則 R1：戶口屬於騾子群組時，放行前必須加強審查。",
+      "next": "n_r1_gate",
+      "twin_patch": {
+        "kyc.status": "story_recorded",
+        "risk.flags_add": ["UNKNOWN_PAYERS"]
+      }
+    },
+    {
+      "id": "n_r1_gate",
+      "type": "decision",
+      "title": "要不要覆寫群組規則",
+      "prompt": "R1 已滿足。維持限制、現在草擬可疑交易報告，還是接受幫忙投資？",
+      "choices": [
+        {
+          "id": "hold",
+          "label": "維持限制並繼續審查",
+          "next": "n_proceeds",
+          "rationale": "符合 R1。先看資金是不是隨即彙集轉出。",
+          "effects": {
+            "account.holds": ["outbound"],
+            "risk.flags_add": ["EDD_HOLD"]
+          }
+        },
+        {
+          "id": "str_now",
+          "label": "草擬可疑交易報告",
+          "next": "n_outcome_str",
+          "rationale": "不認識付款人，加上群組連線，可以上報。",
+          "effects": {
+            "risk.flags_add": ["STR_DRAFTED"]
+          }
+        },
+        {
+          "id": "accept_help",
+          "label": "接受幫忙投資並放行",
+          "next": "n_proceeds",
+          "rationale": "覆寫 R1。覆寫是事件，群組編號仍留在狀態。",
+          "effects": {
+            "risk.flags_add": ["R1_OVERRIDDEN"],
+            "risk.score_delta": 35
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_proceeds",
+      "type": "scene",
+      "title": "入帳隨即彙集轉出",
+      "prompt": "入帳備註與假冒機構、投資話術一致，款項隨即彙集轉出。規則 R2：不得用朋友的投資把這宗結案。",
+      "next": "n_r2_gate",
+      "twin_patch": {
+        "phase": "alert_triage",
+        "transactions": [
+          {
+            "id": "TX-GT-1",
+            "kind": "fake_official_style_in",
+            "amount_hkd": 150000
+          },
+          {
+            "id": "TX-GT-2",
+            "kind": "investment_style_in",
+            "amount_hkd": 210000
+          },
+          {
+            "id": "TX-GT-3",
+            "kind": "consolidation_out",
+            "amount_hkd": 340000
+          }
+        ],
+        "risk.flags_add": ["FRAUD_PROCEEDS"]
+      }
+    },
+    {
+      "id": "n_r2_gate",
+      "type": "decision",
+      "title": "得益轉出之後",
+      "prompt": "R2 已滿足。建議凍結並上報、退出關係，或結為朋友投資？",
+      "choices": [
+        {
+          "id": "str_freeze",
+          "label": "建議凍結並草擬可疑交易報告",
+          "next": "n_outcome_freeze",
+          "rationale": "符合 R2。",
+          "effects": {
+            "account.holds": ["outbound"],
+            "risk.flags_add": ["STR_DRAFTED", "FREEZE_RECOMMENDED"]
+          }
+        },
+        {
+          "id": "exit_rel",
+          "label": "退出客戶關係",
+          "next": "n_outcome_exit",
+          "rationale": "符合 R2 的退出出口。",
+          "effects": {
+            "risk.flags_add": ["RELATIONSHIP_EXIT"]
+          }
+        },
+        {
+          "id": "clear_friend",
+          "label": "結為朋友投資",
+          "next": "n_outcome_miss",
+          "rationale": "教學上的較差路徑。規則已要求不得這樣結案。",
+          "effects": {
+            "risk.flags_add": ["R2_IGNORED"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_outcome_str",
+      "type": "outcome",
+      "title": "已草擬可疑交易報告",
+      "prompt": "上報出口。群組 SYN-CLUSTER-GT-06 仍在狀態裡。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "str_drafted"
+      }
+    },
+    {
+      "id": "n_outcome_freeze",
+      "type": "outcome",
+      "title": "已建議凍結並草擬報告",
+      "prompt": "出帳暫停，報告已草擬。若先前覆寫過群組規則，覆寫旗標仍在。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "freeze_recommended"
+      }
+    },
+    {
+      "id": "n_outcome_exit",
+      "type": "outcome",
+      "title": "已退出客戶關係",
+      "prompt": "關係結束。共用裝置與得益旗標留在孿生狀態。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "account_exit"
+      }
+    },
+    {
+      "id": "n_outcome_miss",
+      "type": "outcome",
+      "title": "當成朋友投資結案",
+      "prompt": "較差路徑。R2 被忽略。儀表板之後應把這次 session 標成未跟規則。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "false_positive_cleared"
+      }
+    }
+  ]
+}

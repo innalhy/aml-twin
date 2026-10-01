@@ -1,0 +1,264 @@
+{
+  "schema_version": "0.1",
+  "case_id": "hk-ia-fwd-controls-001",
+  "title": "第三者保費 — 保險公司管控缺口（示範劇本）",
+  "locale": "zh-Hant",
+  "summary": "合成培訓案例。保險公司合規主任覆核一張保單：保費由未核實的第三者支付，政治人物篩查沒有結果，可疑交易工作紙打開後沒有處置。學員決定核實付款人、拒收保費、補管控或草擬可疑交易報告。不得把缺口當成歷史例外關掉。靈感來自保險業監管公開的管控缺失簡述，不是真實保單，也不是任何保險公司的客戶檔。",
+  "start_node_id": "n_file",
+  "teaching": {
+    "level": "chan-1-scripted-mirror",
+    "rules_before_ai": true,
+    "case_kind": "public_record_inspired",
+    "disclaimer": "Synthetic training scenario inspired by public enforcement reporting. Not official case files; no real customer data.",
+    "themes": ["insurer AML", "third-party premium", "PEP screening", "STR tracking"],
+    "sources": [
+      {
+        "label": "Insurance Business Asia, Hong Kong AML fine and insurer control scrutiny",
+        "url": "https://www.insurancebusinessmag.com/asia/news/life-insurance/hong-kong-aml-fine-puts-broker-and-insurer-controls-under-scrutiny-591045.aspx"
+      }
+    ],
+    "acceptable_dispositions": ["control_remediation", "str_drafted", "policy_exit"],
+    "poor_dispositions": ["false_positive_cleared"]
+  },
+  "rules": [
+    {
+      "id": "R1_PREMIUM_PAYER",
+      "when": "保費付款人不是保單持有人，也不是已核實的親屬或僱主",
+      "then": "verify_before_accept",
+      "note": "核實前不得入帳。規則先於任何模型分數。"
+    },
+    {
+      "id": "R2_PEP_AND_STR_LOG",
+      "when": "政治人物篩查缺失，或可疑交易工作紙沒有處置",
+      "then": "remediate_controls_and_escalate",
+      "note": "不得當成歷史例外關閉。補篩查與處理工作紙都要留在事件軌上。"
+    }
+  ],
+  "initial_twin_state": {
+    "phase": "policy_review",
+    "firm": {
+      "id": "SYN-INS-IA-01",
+      "display_name": "合成人壽甲"
+    },
+    "customer": {
+      "id": "SYN-POL-IA-195",
+      "display_name": "合成保單持有人甲",
+      "segment": "life_policy"
+    },
+    "premium": {
+      "payer_id": "SYN-PAY-IA-01",
+      "payer_relation": "unverified_third_party",
+      "accepted": false
+    },
+    "controls": {
+      "pep_screening": "missing",
+      "str_worksheet": "open_unowned"
+    },
+    "kyc": {
+      "status": "review_open",
+      "signals": ["third_party_premium", "pep_gap", "str_worksheet_open"]
+    },
+    "risk": {
+      "score": 38,
+      "flags": []
+    },
+    "disposition": null
+  },
+  "nodes": [
+    {
+      "id": "n_file",
+      "type": "scene",
+      "title": "保單定期覆核",
+      "prompt": "合成人壽甲覆核保單 SYN-POL-IA-195。保費由第三者 SYN-PAY-IA-01 支付，與持有人的關係未核實。政治人物篩查沒有結果。監測紀錄裡有一份未結案的可疑交易工作紙。",
+      "next": "n_premium_gate",
+      "twin_patch": {
+        "phase": "premium_review"
+      }
+    },
+    {
+      "id": "n_premium_gate",
+      "type": "decision",
+      "title": "第三者保費能不能入",
+      "prompt": "付款人尚未核實。你要先核實關係、拒收這筆保費，還是先入帳？",
+      "choices": [
+        {
+          "id": "verify_payer",
+          "label": "核實付款人與持有人的關係",
+          "next": "n_payer_gap",
+          "rationale": "先取關係，再讓 R1 判斷能否入帳。",
+          "effects": {
+            "kyc.status": "payer_check_open",
+            "risk.flags_add": ["PAYER_CHECK"]
+          }
+        },
+        {
+          "id": "reject_premium",
+          "label": "拒收保費並結束這張保單的收款",
+          "next": "n_outcome_exit",
+          "rationale": "未核實的第三者付款可以不入帳。",
+          "effects": {
+            "premium.accepted": false,
+            "risk.flags_add": ["PREMIUM_REJECTED"]
+          }
+        },
+        {
+          "id": "book_premium",
+          "label": "先入帳，稍後再核",
+          "next": "n_payer_gap",
+          "rationale": "教學覆寫。關係仍未核實，R1 不會因入帳而滿足。",
+          "effects": {
+            "premium.accepted": true,
+            "risk.flags_add": ["PREMIUM_BOOKED_EARLY"],
+            "risk.score_delta": 25
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_payer_gap",
+      "type": "scene",
+      "title": "付款人仍對不上",
+      "prompt": "付款人不是保單持有人，也不是已核實的親屬或僱主。規則 R1：第三者保費在核實前不得入帳。",
+      "next": "n_r1_gate",
+      "twin_patch": {
+        "premium.payer_relation": "unverified_third_party",
+        "kyc.status": "payer_unverified",
+        "risk.flags_add": ["THIRD_PARTY_PREMIUM"]
+      }
+    },
+    {
+      "id": "n_r1_gate",
+      "type": "decision",
+      "title": "核實失敗之後",
+      "prompt": "R1 已滿足。暫緩入帳、結束收款，還是照樣接受這位付款人？",
+      "choices": [
+        {
+          "id": "hold_premium",
+          "label": "暫緩入帳並繼續核實",
+          "next": "n_controls",
+          "rationale": "符合 R1。保費先不要確認。",
+          "effects": {
+            "premium.accepted": false,
+            "risk.flags_add": ["PREMIUM_HELD"]
+          }
+        },
+        {
+          "id": "exit_policy",
+          "label": "結束這張保單的收款",
+          "next": "n_outcome_exit",
+          "rationale": "符合 R1 的拒收出口。",
+          "effects": {
+            "premium.accepted": false,
+            "risk.flags_add": ["POLICY_EXIT"]
+          }
+        },
+        {
+          "id": "accept_payer",
+          "label": "接受未核實付款人",
+          "next": "n_controls",
+          "rationale": "覆寫 R1。篩查與工作紙缺口仍在下一幕。",
+          "effects": {
+            "premium.accepted": true,
+            "risk.flags_add": ["R1_OVERRIDDEN"],
+            "risk.score_delta": 30
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_controls",
+      "type": "scene",
+      "title": "篩查與工作紙都空著",
+      "prompt": "政治人物篩查仍是空白。可疑交易工作紙沒有負責人，也沒有結案或上報紀錄。規則 R2：缺篩查或工作紙沒有處置時，必須補管控並升級。",
+      "next": "n_r2_gate",
+      "twin_patch": {
+        "phase": "control_review",
+        "controls.pep_screening": "missing",
+        "controls.str_worksheet": "open_unowned",
+        "risk.flags_add": ["PEP_GAP", "STR_WORKSHEET_OPEN"]
+      }
+    },
+    {
+      "id": "n_r2_gate",
+      "type": "decision",
+      "title": "管控缺口怎麼補",
+      "prompt": "R2 已滿足。補做篩查並升級工作紙、按工作紙草擬可疑交易報告，或當成歷史例外關閉？",
+      "choices": [
+        {
+          "id": "remediate",
+          "label": "補做政治人物篩查並升級工作紙",
+          "next": "n_outcome_remediate",
+          "rationale": "符合 R2。兩項缺口都要留下處置，不能只寫稍後處理。",
+          "effects": {
+            "controls.pep_screening": "rerun_ordered",
+            "controls.str_worksheet": "escalated",
+            "risk.flags_add": ["CONTROL_REMEDIATION"]
+          }
+        },
+        {
+          "id": "file_str",
+          "label": "按工作紙草擬可疑交易報告",
+          "next": "n_outcome_str",
+          "rationale": "工作紙已開就應有處置。上報是 R2 的出口之一。",
+          "effects": {
+            "controls.str_worksheet": "str_drafted",
+            "risk.flags_add": ["STR_DRAFTED"]
+          }
+        },
+        {
+          "id": "close_legacy",
+          "label": "當成歷史例外關閉",
+          "next": "n_outcome_miss",
+          "rationale": "教學上的較差路徑。規則已要求不得這樣結案。",
+          "effects": {
+            "risk.flags_add": ["R2_IGNORED"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_outcome_exit",
+      "type": "outcome",
+      "title": "已拒收第三者保費",
+      "prompt": "這筆保費沒有確認入帳。付款人關係仍是未核實，留在狀態裡。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "policy_exit"
+      }
+    },
+    {
+      "id": "n_outcome_remediate",
+      "type": "outcome",
+      "title": "已下令補管控",
+      "prompt": "篩查重跑與工作紙升級都在事件軌上。若先前覆寫過 R1，覆寫旗標仍在。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "control_remediation"
+      }
+    },
+    {
+      "id": "n_outcome_str",
+      "type": "outcome",
+      "title": "已草擬可疑交易報告",
+      "prompt": "工作紙有了處置。政治人物篩查若仍是空白，狀態裡看得到，供下一手補做。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "str_drafted"
+      }
+    },
+    {
+      "id": "n_outcome_miss",
+      "type": "outcome",
+      "title": "當成歷史例外關閉",
+      "prompt": "較差路徑。R2 被忽略。空白篩查與未結工作紙仍在孿生狀態。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "false_positive_cleared"
+      }
+    }
+  ]
+}
