@@ -165,6 +165,12 @@ for (const file of files) {
   }
 }
 
+if (errors.length === 0) {
+  const { runDeepfakePathTests } = await import("./deepfake-paths.test.mjs");
+  const played = runDeepfakePathTests();
+  console.log(`Played ${played.assertedTerminalPaths} deepfake-hk-001 terminal paths.`);
+}
+
 if (errors.length > 0) {
   for (const line of errors) console.error(line);
   console.error(`${errors.length} error(s) in ${files.length} case file(s).`);
