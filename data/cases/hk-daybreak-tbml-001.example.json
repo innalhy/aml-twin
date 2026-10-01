@@ -1,0 +1,273 @@
+{
+  "schema_version": "0.1",
+  "case_id": "hk-daybreak-tbml-001",
+  "title": "假珠寶出口 — 貿易洗錢（示範劇本）",
+  "locale": "zh-Hant",
+  "summary": "合成培訓案例。一間申報經營印度與香港珠寶鑽石貿易的公司，付款人不是發票買家，亦沒有貨運證據。學員以金融機構合規主任身份，決定加強審查、暫停出帳、草擬可疑交易報告或退出關係。靈感來自海關公開的貿易洗錢執法簡述，不是真實客戶檔。",
+  "start_node_id": "n_file_open",
+  "teaching": {
+    "level": "chan-1-scripted-mirror",
+    "rules_before_ai": true,
+    "case_kind": "public_record_inspired",
+    "disclaimer": "Synthetic training scenario inspired by public enforcement reporting. Not official case files; no real customer data.",
+    "themes": ["trade-based money laundering", "shell company", "third-party payers", "jewellery export"],
+    "sources": [
+      {
+        "label": "Hong Kong Customs press release (January 2024 trade-based money laundering briefing)",
+        "url": "https://www.customs.gov.hk/en/customs-announcement/press-release/index_id_4080.html"
+      }
+    ],
+    "acceptable_dispositions": ["account_exit", "str_drafted", "freeze_recommended"],
+    "poor_dispositions": ["false_positive_cleared"]
+  },
+  "rules": [
+    {
+      "id": "R1_TRADE_DOC_GAP",
+      "when": "trade.shipment_evidence 缺失，且付款人不是發票上的買家",
+      "then": "require_edd_before_release",
+      "note": "放行前必須加強審查。不得把缺口當成單據在途。規則先於任何模型分數。"
+    },
+    {
+      "id": "R2_TBML_PASSTHROUGH",
+      "when": "貿易文件仍不合格，且同日拆往無貿易關係的戶口",
+      "then": "require_str_or_exit_or_freeze",
+      "note": "不得結為一般商業時差。覆寫必須留在事件軌上。"
+    }
+  ],
+  "initial_twin_state": {
+    "phase": "periodic_review",
+    "customer": {
+      "id": "SYN-CORP-DB-014",
+      "display_name": "合成出口公司甲",
+      "segment": "corporate_trade"
+    },
+    "kyc": {
+      "status": "basic_cdd_on_file",
+      "beneficial_owner": "unverified",
+      "signals": ["thin_operations", "third_party_payer"]
+    },
+    "trade": {
+      "declared_goods": "jewellery_diamond",
+      "corridor": "IN-HK",
+      "shipment_evidence": "missing"
+    },
+    "account": {
+      "id": "SYN-ACC-DB-014",
+      "opened": true,
+      "holds": []
+    },
+    "transactions": [],
+    "risk": {
+      "score": 35,
+      "flags": []
+    },
+    "disposition": null
+  },
+  "nodes": [
+    {
+      "id": "n_file_open",
+      "type": "scene",
+      "title": "珠寶出口公司覆核",
+      "prompt": "合成出口公司甲申報印度與香港之間的珠寶鑽石貿易。檔上已有兩項訊號：營運單薄，付款人不是發票買家。實益擁有人仍未核實。",
+      "next": "n_cdd_gate",
+      "twin_patch": {
+        "phase": "cdd_review"
+      }
+    },
+    {
+      "id": "n_cdd_gate",
+      "type": "decision",
+      "title": "先補哪個審查",
+      "prompt": "貨運證據未見，實益擁有人未核實。你要下令加強審查、退出關係，還是維持一般客戶盡職審查？",
+      "choices": [
+        {
+          "id": "order_edd",
+          "label": "下令加強審查並索取貨運包",
+          "next": "n_trade_gap",
+          "rationale": "兩項訊號已足夠停止一般覆核。",
+          "effects": {
+            "kyc.status": "edd_ordered",
+            "risk.flags_add": ["EDD_ORDERED"]
+          }
+        },
+        {
+          "id": "exit_now",
+          "label": "退出客戶關係",
+          "next": "n_outcome_exit",
+          "rationale": "空殼輪廓加上未核實擁有人，可以不待交易就退出。",
+          "effects": {
+            "kyc.status": "exit_started",
+            "risk.flags_add": ["RELATIONSHIP_EXIT"]
+          }
+        },
+        {
+          "id": "waive_cdd",
+          "label": "維持一般審查",
+          "next": "n_trade_gap",
+          "rationale": "教學覆寫。文件缺口仍在，R1 之後還要處理，覆寫本身是事件。",
+          "effects": {
+            "kyc.status": "cdd_waived",
+            "risk.flags_add": ["CDD_WAIVED"],
+            "risk.score_delta": 30
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_trade_gap",
+      "type": "scene",
+      "title": "發票與貨運對不上",
+      "prompt": "發票寫鑽石出口。沒有提單，沒有庫存紀錄，付款人是個人而不是買家。規則 R1：這種缺口不得在放行前略過。",
+      "next": "n_r1_gate",
+      "twin_patch": {
+        "trade.shipment_evidence": "missing",
+        "risk.flags_add": ["TRADE_DOC_GAP"]
+      }
+    },
+    {
+      "id": "n_r1_gate",
+      "type": "decision",
+      "title": "文件缺口怎麼處理",
+      "prompt": "R1 已滿足。暫停出帳並繼續加強審查、現在草擬可疑交易報告，還是接受「單據在途」？",
+      "choices": [
+        {
+          "id": "hold_and_edd",
+          "label": "暫停出帳並繼續加強審查",
+          "next": "n_fanout",
+          "rationale": "符合 R1。先停出帳，再看資金去向。",
+          "effects": {
+            "account.holds": ["outbound"],
+            "risk.flags_add": ["EDD_HOLD"]
+          }
+        },
+        {
+          "id": "draft_str",
+          "label": "草擬可疑交易報告",
+          "next": "n_outcome_str",
+          "rationale": "文件與付款人已經對不上，可以上報，不必等拆帳。",
+          "effects": {
+            "risk.flags_add": ["STR_DRAFTED"]
+          }
+        },
+        {
+          "id": "accept_timing",
+          "label": "接受單據在途並放行",
+          "next": "n_fanout",
+          "rationale": "教學上的較差覆寫。R1 被跨過，事件軌要留下覆寫旗標。",
+          "effects": {
+            "risk.flags_add": ["R1_OVERRIDDEN"],
+            "risk.score_delta": 25
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_fanout",
+      "type": "scene",
+      "title": "同日拆往無關戶口",
+      "prompt": "「出口貨款」同日拆往多個與貿易無關的個人戶口。另一間合成公司有相同模式。規則 R2：文件仍不合格又快速過帳時，不得當一般貿易結案。",
+      "next": "n_r2_gate",
+      "twin_patch": {
+        "phase": "alert_triage",
+        "transactions": [
+          {
+            "id": "TX-DB-1",
+            "kind": "third_party_export_in",
+            "amount_hkd": 860000
+          },
+          {
+            "id": "TX-DB-2",
+            "kind": "fanout_unrelated",
+            "amount_hkd": 420000
+          },
+          {
+            "id": "TX-DB-3",
+            "kind": "fanout_unrelated",
+            "amount_hkd": 430000
+          }
+        ],
+        "risk.flags_add": ["PASS_THROUGH"]
+      }
+    },
+    {
+      "id": "n_r2_gate",
+      "type": "decision",
+      "title": "過帳之後的處置",
+      "prompt": "R2 已滿足。草擬可疑交易報告並建議凍結、退出關係，或結為貿易時差？",
+      "choices": [
+        {
+          "id": "str_and_freeze",
+          "label": "草擬可疑交易報告並建議凍結",
+          "next": "n_outcome_freeze",
+          "rationale": "符合 R2 的上報並止付出口。",
+          "effects": {
+            "account.holds": ["outbound"],
+            "risk.flags_add": ["STR_DRAFTED", "FREEZE_RECOMMENDED"]
+          }
+        },
+        {
+          "id": "exit_rel",
+          "label": "退出客戶關係",
+          "next": "n_outcome_exit",
+          "rationale": "符合 R2 的退出出口。關係結束，旗標仍留在狀態。",
+          "effects": {
+            "risk.flags_add": ["RELATIONSHIP_EXIT"]
+          }
+        },
+        {
+          "id": "clear_trade",
+          "label": "結為貿易時差",
+          "next": "n_outcome_miss",
+          "rationale": "教學上的較差路徑。規則已要求不得這樣結案。",
+          "effects": {
+            "risk.flags_add": ["R2_IGNORED"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_outcome_exit",
+      "type": "outcome",
+      "title": "已退出客戶關係",
+      "prompt": "關係結束。審查訊號與任何覆寫旗標留在孿生狀態，沒有被清掉。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "account_exit"
+      }
+    },
+    {
+      "id": "n_outcome_str",
+      "type": "outcome",
+      "title": "已草擬可疑交易報告",
+      "prompt": "上報出口。貿易文件缺口仍在狀態裡，供覆核對照。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "str_drafted"
+      }
+    },
+    {
+      "id": "n_outcome_freeze",
+      "type": "outcome",
+      "title": "已建議凍結並草擬報告",
+      "prompt": "出帳暫停，可疑交易報告已草擬。若先前覆寫過 R1，覆寫旗標仍在。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "freeze_recommended"
+      }
+    },
+    {
+      "id": "n_outcome_miss",
+      "type": "outcome",
+      "title": "當成貿易時差結案",
+      "prompt": "較差路徑。R2 被忽略。儀表板之後應把這次 session 標成未跟規則。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "false_positive_cleared"
+      }
+    }
+  ]
+}

@@ -1,0 +1,265 @@
+{
+  "schema_version": "0.1",
+  "case_id": "hk-triad-cashflow-001",
+  "title": "無商業目的流水 — 有組織犯罪指標（示範劇本）",
+  "locale": "zh-Hant",
+  "summary": "合成培訓案例。本地公司戶口大額進出，沒有發票、合約或薪金對應。客戶稱是現金生意。內部類型指標把這組流水標為有組織犯罪得益。學員以合規主任身份決定暫停、草擬可疑交易報告、建議凍結或退出。這不是執法行動演練。靈感來自公開的有組織犯罪資金流簡述，不是真實客戶檔。",
+  "start_node_id": "n_flows",
+  "teaching": {
+    "level": "chan-1-scripted-mirror",
+    "rules_before_ai": true,
+    "case_kind": "public_record_inspired",
+    "disclaimer": "Synthetic training scenario inspired by public enforcement reporting. Not official case files; no real customer data.",
+    "themes": ["no commercial purpose", "organised-crime proceeds indicator", "cash-intensive flow"],
+    "sources": [
+      {
+        "label": "Public reporting on organised-crime cashflow through local accounts, joint OCST investigation context (URL not in the course brief)"
+      }
+    ],
+    "acceptable_dispositions": ["freeze_recommended", "account_exit"],
+    "incomplete_dispositions": ["str_drafted"],
+    "poor_dispositions": ["false_positive_cleared"]
+  },
+  "rules": [
+    {
+      "id": "R1_NO_COMMERCIAL_PURPOSE",
+      "when": "大額流水沒有發票、合約或薪金對應",
+      "then": "require_edd_hold",
+      "note": "口頭稱為現金生意不是憑證。放行前必須暫停並加強審查。"
+    },
+    {
+      "id": "R2_OC_INDICATOR",
+      "when": "內部類型指標標示有組織犯罪得益",
+      "then": "require_str_and_freeze",
+      "note": "不得在沒有證據時當一般現金生意結案。指標是合成教學標記。規則先於任何模型分數。"
+    }
+  ],
+  "initial_twin_state": {
+    "phase": "alert_triage",
+    "customer": {
+      "id": "SYN-CORP-OC-025",
+      "display_name": "合成貿易公司甲",
+      "segment": "corporate"
+    },
+    "kyc": {
+      "status": "basic_cdd_on_file",
+      "commercial_evidence": "missing",
+      "signals": ["no_invoice", "blank_purpose"]
+    },
+    "account": {
+      "id": "SYN-ACC-OC-025",
+      "opened": true,
+      "holds": []
+    },
+    "transactions": [],
+    "risk": {
+      "score": 60,
+      "flags": []
+    },
+    "disposition": null
+  },
+  "nodes": [
+    {
+      "id": "n_flows",
+      "type": "scene",
+      "title": "沒有憑證的大額進出",
+      "prompt": "合成貿易公司甲的戶口在短期內大額進出。沒有發票或薪金對應，交易對手是個人，用途欄空白。",
+      "next": "n_purpose_gate",
+      "twin_patch": {
+        "phase": "purpose_review",
+        "transactions": [
+          {
+            "id": "TX-OC-1",
+            "kind": "personal_in",
+            "amount_hkd": 500000
+          },
+          {
+            "id": "TX-OC-2",
+            "kind": "personal_out",
+            "amount_hkd": 470000
+          }
+        ],
+        "risk.flags_add": ["NO_INVOICE"]
+      }
+    },
+    {
+      "id": "n_purpose_gate",
+      "type": "decision",
+      "title": "空白用途怎麼問",
+      "prompt": "憑證缺失。你要索取商業目的、先暫停出帳，還是接受現金生意的標籤？",
+      "choices": [
+        {
+          "id": "edd",
+          "label": "索取發票或合約",
+          "next": "n_noinvoice",
+          "rationale": "先取憑證，再讓 R1 判斷。",
+          "effects": {
+            "kyc.status": "edd_ordered",
+            "risk.flags_add": ["EDD_ORDERED"]
+          }
+        },
+        {
+          "id": "hold_now",
+          "label": "先暫停出帳",
+          "next": "n_noinvoice",
+          "rationale": "空白用途已足夠先止付。",
+          "effects": {
+            "account.holds": ["outbound"],
+            "risk.flags_add": ["EDD_HOLD"]
+          }
+        },
+        {
+          "id": "cash_ok",
+          "label": "接受現金生意標籤",
+          "next": "n_indicator",
+          "rationale": "教學覆寫。沒有憑證的事實仍在，類型指標之後會觸發 R2。",
+          "effects": {
+            "risk.flags_add": ["CASH_LABEL_ACCEPTED"],
+            "risk.score_delta": 30
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_noinvoice",
+      "type": "scene",
+      "title": "仍然沒有發票",
+      "prompt": "客戶稱是現金生意，交不出發票、合約或稅務對照。規則 R1：沒有商業憑證的大額流水必須暫停並做加強審查。",
+      "next": "n_r1_gate",
+      "twin_patch": {
+        "kyc.commercial_evidence": "missing",
+        "kyc.status": "evidence_failed",
+        "risk.flags_add": ["NO_COMMERCIAL_PURPOSE"]
+      }
+    },
+    {
+      "id": "n_r1_gate",
+      "type": "decision",
+      "title": "要不要維持暫停",
+      "prompt": "R1 已滿足。維持暫停、退出關係，還是接受現金生意並放行？",
+      "choices": [
+        {
+          "id": "maintain_hold",
+          "label": "維持暫停並繼續審查",
+          "next": "n_indicator",
+          "rationale": "符合 R1。",
+          "effects": {
+            "account.holds": ["outbound"],
+            "risk.flags_add": ["EDD_HOLD"]
+          }
+        },
+        {
+          "id": "exit_rel",
+          "label": "退出客戶關係",
+          "next": "n_outcome_exit",
+          "rationale": "沒有憑證可以退出，不必等指標。",
+          "effects": {
+            "risk.flags_add": ["RELATIONSHIP_EXIT"]
+          }
+        },
+        {
+          "id": "accept_cash",
+          "label": "接受現金生意並放行",
+          "next": "n_indicator",
+          "rationale": "覆寫 R1。口頭標籤不是憑證。",
+          "effects": {
+            "account.holds": [],
+            "risk.flags_add": ["R1_OVERRIDDEN"],
+            "risk.score_delta": 35
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_indicator",
+      "type": "scene",
+      "title": "有組織犯罪得益指標",
+      "prompt": "內部類型指標把這組流水標為有組織犯罪得益。這是合成教學指標，不是執法行動。規則 R2：指標出現時必須草擬可疑交易報告並建議凍結。",
+      "next": "n_r2_gate",
+      "twin_patch": {
+        "phase": "alert_triage",
+        "risk.flags_add": ["OC_PROCEEDS_INDICATOR"]
+      }
+    },
+    {
+      "id": "n_r2_gate",
+      "type": "decision",
+      "title": "指標出現之後",
+      "prompt": "R2 已滿足。建議凍結並上報、只草擬報告，或當一般現金生意結案？",
+      "choices": [
+        {
+          "id": "str_freeze",
+          "label": "建議凍結並草擬可疑交易報告",
+          "next": "n_outcome_freeze",
+          "rationale": "符合 R2 的完整出口。",
+          "effects": {
+            "account.holds": ["outbound"],
+            "risk.flags_add": ["STR_DRAFTED", "FREEZE_RECOMMENDED"]
+          }
+        },
+        {
+          "id": "str_only",
+          "label": "草擬可疑交易報告",
+          "next": "n_outcome_str",
+          "rationale": "上報留下紀錄，但 R2 還要求建議凍結。這是不完整出口，不是結案。",
+          "effects": {
+            "risk.flags_add": ["STR_DRAFTED"]
+          }
+        },
+        {
+          "id": "clear_cash",
+          "label": "當一般現金生意結案",
+          "next": "n_outcome_miss",
+          "rationale": "教學上的較差路徑。規則已要求不得這樣結案。",
+          "effects": {
+            "risk.flags_add": ["R2_IGNORED"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_outcome_exit",
+      "type": "outcome",
+      "title": "已退出客戶關係",
+      "prompt": "關係結束。沒有商業憑證的旗標留在孿生狀態。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "account_exit"
+      }
+    },
+    {
+      "id": "n_outcome_freeze",
+      "type": "outcome",
+      "title": "已建議凍結並草擬報告",
+      "prompt": "出帳暫停，報告已草擬。有組織犯罪指標仍是類型標記，不是行動指令。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "freeze_recommended"
+      }
+    },
+    {
+      "id": "n_outcome_str",
+      "type": "outcome",
+      "title": "已草擬可疑交易報告",
+      "prompt": "上報出口。若出帳尚未暫停，狀態裡的指標仍要求覆核人員看見 R2。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "str_drafted"
+      }
+    },
+    {
+      "id": "n_outcome_miss",
+      "type": "outcome",
+      "title": "當成現金生意結案",
+      "prompt": "較差路徑。R2 被忽略。儀表板之後應把這次 session 標成未跟規則。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "false_positive_cleared"
+      }
+    }
+  ]
+}

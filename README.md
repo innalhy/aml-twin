@@ -32,7 +32,7 @@ Classroom demo. One API and one web client.
 | Demo API | Hono on a Cloudflare Worker (`workers/api`). `GET /health` only. | Load a case, open a session, accept a decision, apply rules, write events. Same Worker. |
 | Web | React + Vite + TypeScript (`frontend/`). Placeholder page that builds. Pages project name `twinaml-web`. | Scenario player and a simple dashboard that read the Worker’s twin state. |
 | Local API | FastAPI (`backend/`). Optional. `GET /health` with the same JSON. | May mirror the Worker routes for offline use. Stays off the deploy path. |
-| Cases | One JSON script, `data/cases/deepfake-hk-001.example.json`. | Stay on `packages/schemas/script.schema.json`. A rule’s `when` text is for a person to read until a state machine exists. |
+| Cases | JSON scripts in [`data/cases/`](data/cases/README.md). Worked example: `deepfake-hk-001.example.json`. | Stay on `packages/schemas/script.schema.json`. A rule’s `when` text is for a person to read until a state machine exists. |
 | Media | `data/media/.gitkeep` only. Large video is gitignored. | Scripts may set `media_ref` to a local path. Binaries stay out of git. |
 | Contract | `packages/schemas/script.schema.json` (schema `0.1`). | One script format. |
 | Docs | `docs/architecture.md`, `docs/comp3424-mapping.md`, `docs/cloudflare.md`, [`docs/phases/`](docs/phases/README.md). | Slice checklists live in the phase docs. See [Implementation phases](#implementation-phases). |
@@ -79,8 +79,10 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 │       ├── __init__.py
 │       └── main.py              # GET /health
 ├── data/
-│   ├── cases/
-│   │   └── deepfake-hk-001.example.json
+│   ├── cases/                   # index: data/cases/README.md
+│   │   ├── README.md
+│   │   ├── deepfake-hk-001.example.json
+│   │   └── hk-*.example.json
 │   └── media/
 │       └── .gitkeep
 ├── packages/
@@ -168,7 +170,7 @@ Short rules for classmates and coding agents. The full agreement is [`AGENTS.md`
 7. Do not commit secrets, API keys, `.env` files, Cloudflare account identifiers, or large media.
 8. If the script shape changes, `deepfake-hk-001.example.json` must still validate against `packages/schemas/script.schema.json`, and the schema or docs must say what changed.
 
-Read next: [`docs/architecture.md`](docs/architecture.md), [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md), [`docs/cloudflare.md`](docs/cloudflare.md), [`docs/phases/README.md`](docs/phases/README.md), [`data/cases/deepfake-hk-001.example.json`](data/cases/deepfake-hk-001.example.json), [`packages/schemas/script.schema.json`](packages/schemas/script.schema.json).
+Read next: [`docs/architecture.md`](docs/architecture.md), [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md), [`docs/cloudflare.md`](docs/cloudflare.md), [`docs/phases/README.md`](docs/phases/README.md), [`data/cases/README.md`](data/cases/README.md), [`data/cases/deepfake-hk-001.example.json`](data/cases/deepfake-hk-001.example.json), [`packages/schemas/script.schema.json`](packages/schemas/script.schema.json).
 
 ## License
 
