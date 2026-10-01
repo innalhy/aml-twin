@@ -90,7 +90,9 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 │   └── schemas/
 │       └── script.schema.json
 └── scripts/
-    ├── validate-cases.mjs       # schema + effect-key check (see docs/effects.md)
+    ├── validate-cases.mjs       # schema + effect-key check, then the path test
+    ├── apply-effects.mjs        # schema 0.1 patch apply used by the path test
+    ├── deepfake-paths.test.mjs  # eight deepfake-hk-001 terminal paths
     └── .gitkeep
 ```
 
@@ -132,6 +134,14 @@ uvicorn app.main:app --reload --port 8000
 ```
 
 `http://127.0.0.1:8000/health` returns the same JSON. Use it when you want a local Python process. The course demo deploys the Worker. Details: [`backend/README.md`](backend/README.md).
+
+Check the case scripts from the repo root:
+
+```bash
+node scripts/validate-cases.mjs
+```
+
+That checks schema `0.1` and the effect-key grammar, then plays the eight `deepfake-hk-001` endings. Details: [`docs/effects.md`](docs/effects.md).
 
 ## Deploy
 
