@@ -1,8 +1,6 @@
 # TwinAML
 
-Repository: [github.com/innalhy/aml-twin](https://github.com/innalhy/aml-twin)
-
-## What it is
+## What it is?
 
 TwinAML is a COMP3424 course demo of a digital twin for AML simulation training. The platform idea is proprietary: this tree is a classroom demo, not a bank production system and not an open-source release. The worked example is one synthetic Hong Kong deepfake video-onboarding case, `deepfake-hk-001`; every record in it is synthetic. The twin is backend state plus the events that change it. The web app is the face that will render that state.
 
@@ -45,7 +43,6 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 ## Repo layout
 
 ```
-.
 ├── README.md
 ├── AGENTS.md
 ├── .gitignore
