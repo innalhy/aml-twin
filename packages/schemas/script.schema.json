@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/innalhy/aml-twin/packages/schemas/script.schema.json",
   "title": "TwinAML case script",
-  "description": "Minimal contract for a COMP3424 case. initial_twin_state is the mirror. nodes are the script. Rule predicates are human-readable strings until the state machine exists. effects are opaque patches, not an executable language.",
+  "description": "Minimal contract for a COMP3424 case. initial_twin_state is the mirror. nodes are the script. Rule predicates are human-readable strings until the state machine exists. effects and twin_patch are patches. Apply rules for schema 0.1 are in docs/effects.md.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -89,7 +89,10 @@
         },
         "next": { "type": "string" },
         "terminal": { "type": "boolean" },
-        "twin_patch": { "type": "object" },
+        "twin_patch": {
+          "type": "object",
+          "description": "Patch applied when this node is entered, before any choice effects on the same node. Key conventions: docs/effects.md."
+        },
         "choices": {
           "type": "array",
           "items": { "$ref": "#/$defs/choice" }
@@ -107,7 +110,7 @@
         "rationale": { "type": "string" },
         "effects": {
           "type": "object",
-          "description": "Patch the future state machine may apply. Keys are a convention, not a DSL."
+          "description": "Patch applied after this node's twin_patch, when the trainee picks this choice. Key conventions: docs/effects.md."
         }
       }
     }
