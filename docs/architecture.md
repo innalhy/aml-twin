@@ -48,7 +48,7 @@ The session routes in that diagram are not implemented yet. The Worker currently
 
 | Piece | Status |
 | --- | --- |
-| Script JSON and JSON Schema | Present. See `deepfake-hk-001.example.json`. |
+| Script JSON and JSON Schema | Present. Eleven example cases. Effect keys are frozen in [`effects.md`](effects.md). |
 | Cloudflare Worker | `GET /health` in `workers/api`. This is the demo API. |
 | FastAPI | Optional local alternative. `GET /health` only. |
 | State machine, sessions, event log | Not built. |
@@ -59,10 +59,12 @@ A rule's `when` text is a sentence for a person to read. The schema does not exe
 
 ## Where state lives
 
-- **Initial mirror**: `initial_twin_state`. When a case loads, the twin equals this object.
-- **Node patch**: `twin_patch` applied when a node is entered (for example, stage becomes `alert_triage`).
-- **Decision effects**: `choices[].effects`. Keys are a convention (such as `risk.flags_add`), not a formal DSL yet.
-- **Outcome**: `type: outcome` and `terminal: true`. `disposition` is written onto the twin and the session ends.
+The session twin starts as a deep clone of `initial_twin_state`. Patches then accumulate on that clone. Full key rules, including every key used in the example cases, are in [`effects.md`](effects.md).
+
+- **Initial mirror**: `initial_twin_state`.
+- **Node patch**: on entry, apply `twin_patch` (for example, `phase` becomes `alert_triage`).
+- **Decision effects**: after that patch, apply the chosen `choices[].effects`. Dotted keys write nested fields (`kyc.status`). `risk.flags_add` appends onto `risk.flags`. `risk.score_delta` adds to `risk.score`. Any other key replaces the value at that path.
+- **Outcome**: `type: outcome` and `terminal: true`. The outcome `twin_patch` writes `disposition`, and the session ends.
 
 Media is not in git. The `media_ref` on `n_intake` is `data/media/deepfake-hk-001/kyc-clip.mp4`, and that file is excluded by `.gitignore`. When the clip is missing, the player should later show a missing-file state. It should not abort the whole case.
 
