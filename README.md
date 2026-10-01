@@ -34,8 +34,8 @@ Classroom demo. One API and one web client.
 | Local API | FastAPI (`backend/`). Optional. `GET /health` with the same JSON. | May mirror the Worker routes for offline use. Stays off the deploy path. |
 | Cases | JSON scripts in [`data/cases/`](data/cases/README.md). Worked example: `deepfake-hk-001.example.json`. | Stay on `packages/schemas/script.schema.json`. A rule’s `when` text is for a person to read until a state machine exists. |
 | Media | `data/media/.gitkeep` only. Large video is gitignored. | Scripts may set `media_ref` to a local path. Binaries stay out of git. |
-| Contract | `packages/schemas/script.schema.json` (schema `0.1`). | One script format. |
-| Docs | `docs/architecture.md`, `docs/comp3424-mapping.md`, `docs/cloudflare.md`, [`docs/phases/`](docs/phases/README.md). | Slice checklists live in the phase docs. See [Implementation phases](#implementation-phases). |
+| Contract | `packages/schemas/script.schema.json` (schema `0.1`). | One script format. Patch keys: [`docs/effects.md`](docs/effects.md). |
+| Docs | `docs/architecture.md`, `docs/effects.md`, `docs/comp3424-mapping.md`, `docs/cloudflare.md`, [`docs/phases/`](docs/phases/README.md). | Slice checklists live in the phase docs. See [Implementation phases](#implementation-phases). |
 | Deploy | Wrangler config for Pages (`frontend/wrangler.jsonc`) and the Worker (`workers/api/wrangler.jsonc`). | Pages serves the Vite build. The Worker serves the API. |
 
 Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, Kafka, a microservice split, a Unity project, and a live bank connection.
@@ -49,6 +49,7 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 ├── Mindmap.png                  # course sketch for reference; not the build contract
 ├── docs/
 │   ├── architecture.md          # case → script → decision → twin → events
+│   ├── effects.md               # twin_patch and choice effect keys
 │   ├── cloudflare.md            # Pages, Worker, custom domain
 │   ├── comp3424-mapping.md      # Chan Level 1/2, mirroring, shadowing, threading
 │   └── phases/
@@ -89,6 +90,7 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 │   └── schemas/
 │       └── script.schema.json
 └── scripts/
+    ├── validate-cases.mjs       # schema + effect-key check (see docs/effects.md)
     └── .gitkeep
 ```
 
@@ -170,7 +172,7 @@ Short rules for classmates and coding agents. The full agreement is [`AGENTS.md`
 7. Do not commit secrets, API keys, `.env` files, Cloudflare account identifiers, or large media.
 8. If the script shape changes, `deepfake-hk-001.example.json` must still validate against `packages/schemas/script.schema.json`, and the schema or docs must say what changed.
 
-Read next: [`docs/architecture.md`](docs/architecture.md), [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md), [`docs/cloudflare.md`](docs/cloudflare.md), [`docs/phases/README.md`](docs/phases/README.md), [`data/cases/README.md`](data/cases/README.md), [`data/cases/deepfake-hk-001.example.json`](data/cases/deepfake-hk-001.example.json), [`packages/schemas/script.schema.json`](packages/schemas/script.schema.json).
+Read next: [`docs/architecture.md`](docs/architecture.md), [`docs/effects.md`](docs/effects.md), [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md), [`docs/cloudflare.md`](docs/cloudflare.md), [`docs/phases/README.md`](docs/phases/README.md), [`data/cases/README.md`](data/cases/README.md), [`data/cases/deepfake-hk-001.example.json`](data/cases/deepfake-hk-001.example.json), [`packages/schemas/script.schema.json`](packages/schemas/script.schema.json).
 
 ## License
 

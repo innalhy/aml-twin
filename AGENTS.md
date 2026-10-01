@@ -31,6 +31,7 @@ This file is the working agreement for AI agents in **TwinAML**, a COMP3424 demo
 
 - `README.md` — what TwinAML is, the folder map, how to run the stubs.
 - `docs/architecture.md` — case → script → decision → twin → events → dashboard.
+- `docs/effects.md` — how `twin_patch` and `choices[].effects` apply (schema 0.1).
 - `docs/comp3424-mapping.md` — Chan Level 1/2, mirroring / shadowing / threading, rules-before-AI.
 - `docs/cloudflare.md` — Pages, the Worker, and a custom domain.
 - `data/cases/deepfake-hk-001.example.json` — the Level 1 example script.
