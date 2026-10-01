@@ -1,6 +1,6 @@
 # Phase 1 — MVP (Chan Level 1)
 
-**Status:** plan only. Do not implement until the owner says “start Phase 1” and names a slice.  
+**Status:** P1-S1 (script contract freeze) is done. Later slices stay unstarted until the owner names one.  
 **Audience:** coding agents.  
 **Chan level:** Level 1 — scripted case, offline-style mirror of `initial_twin_state`, not a live bank.
 
@@ -47,6 +47,7 @@ Deploy path: **Cloudflare Pages** (`frontend/`) + **Cloudflare Worker** (`worker
 - Confirm schema + example case stay valid.
 - Document effect key conventions in `docs/architecture.md` or a short `docs/effects.md`.
 - **Done when:** agent can list every effect key used in `deepfake-hk-001` and how the future machine should apply them.
+- **Done:** [`docs/effects.md`](../effects.md) lists every effect key in `deepfake-hk-001` and the ten `hk-*.example.json` scripts, and the apply order (clone `initial_twin_state`, apply `twin_patch`, then apply choice `effects`). Check with `node scripts/validate-cases.mjs`.
 
 ### P1-S2 — Twin state machine (library)
 - Pure TypeScript module under `workers/api` (or `packages/`) that: clone initial state → apply node patch → apply choice effects → advance node.
@@ -98,7 +99,7 @@ Deploy path: **Cloudflare Pages** (`frontend/`) + **Cloudflare Worker** (`worker
 
 ## Done slices
 
-- [ ] P1-S1
+- [x] P1-S1
 - [ ] P1-S2
 - [ ] P1-S3
 - [ ] P1-S4
