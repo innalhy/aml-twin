@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "case_id": "hk-greythunder-mule-001",
+  "case_id": "greythunder-mule-001",
   "title": "騾子群組 — 假冒機構與投資得益（示範劇本）",
   "locale": "zh-Hant",
   "summary": "合成培訓案例。零售戶口與一個合成群組共用收款戶口及登入裝置。客戶稱在幫朋友處理官方退款與投資本金，但不認識付款人。學員要先按群組規則加強審查，再決定上報、凍結或退出。靈感來自公開的騾子群組簡述，不是真實客戶檔。",
@@ -13,7 +13,7 @@
     "themes": ["mule cluster", "fake official", "investment fraud proceeds", "shared device"],
     "sources": [
       {
-        "label": "HK enforcement briefing, GREYTHUNDER (May–November 2022 activity; URL not in the course brief)"
+        "label": "Public enforcement briefing, GREYTHUNDER (May–November 2022 activity; URL not in the course brief)"
       }
     ],
     "acceptable_dispositions": ["str_drafted", "freeze_recommended", "account_exit"],
@@ -36,7 +36,7 @@
   "initial_twin_state": {
     "phase": "alert_triage",
     "customer": {
-      "id": "SYN-HK-GT-033",
+      "id": "SYN-GT-033",
       "display_name": "合成客戶戊",
       "segment": "retail"
     },
@@ -170,17 +170,17 @@
           {
             "id": "TX-GT-1",
             "kind": "fake_official_style_in",
-            "amount_hkd": 150000
+            "amount": 150000
           },
           {
             "id": "TX-GT-2",
             "kind": "investment_style_in",
-            "amount_hkd": 210000
+            "amount": 210000
           },
           {
             "id": "TX-GT-3",
             "kind": "consolidation_out",
-            "amount_hkd": 340000
+            "amount": 340000
           }
         ],
         "risk.flags_add": ["FRAUD_PROCEEDS"]

@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "case_id": "hk-justicegate-crypto-001",
+  "case_id": "justicegate-crypto-001",
   "title": "現金與場外加密貨幣 — 戶口套現（示範劇本）",
   "locale": "zh-Hant",
   "summary": "合成培訓案例。受薪客戶的戶口收集多筆入帳後，以現金提取及轉往場外加密貨幣交易商離開。客戶說不出與檔案相符的資金來源。學員決定加強審查、草擬可疑交易報告、建議凍結或退出。靈感來自公開的本地戶口套現簡述，不是真實客戶檔。",
@@ -13,7 +13,7 @@
     "themes": ["cash withdrawal", "crypto OTC", "source of funds", "pass-through"],
     "sources": [
       {
-        "label": "HK enforcement briefing, JUSTICEGATE (October 2022–June 2023; URL not in the course brief)"
+        "label": "Public enforcement briefing, JUSTICEGATE (October 2022–June 2023; URL not in the course brief)"
       }
     ],
     "acceptable_dispositions": ["str_drafted", "freeze_recommended", "account_exit"],
@@ -36,7 +36,7 @@
   "initial_twin_state": {
     "phase": "alert_triage",
     "customer": {
-      "id": "SYN-HK-JG-048",
+      "id": "SYN-JG-048",
       "display_name": "合成客戶丁",
       "segment": "retail_salary",
       "profile": "salary"
@@ -173,17 +173,17 @@
           {
             "id": "TX-JG-1",
             "kind": "third_party_in",
-            "amount_hkd": 520000
+            "amount": 520000
           },
           {
             "id": "TX-JG-2",
             "kind": "cash_withdrawal",
-            "amount_hkd": 200000
+            "amount": 200000
           },
           {
             "id": "TX-JG-3",
             "kind": "otc_crypto_out",
-            "amount_hkd": 300000,
+            "amount": 300000,
             "counterparty": "SYN-OTC-JG-07"
           }
         ],

@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "case_id": "hk-wiseword-amlmonth-001",
+  "case_id": "wiseword-amlmonth-001",
   "title": "多類型騾子戶口 — 一個月警報（示範劇本）",
   "locale": "zh-Hant",
   "summary": "合成培訓案例。同一零售戶口在一個覆核窗內收到兼職薪金、網戀贈與、賭博退回與購物退款，付款人都不是已知對手。學員不得用單一故事結案，快進快出時亦不得再等解釋。靈感來自警方公開的多類型騾子網絡簡述，不是真實客戶檔。",
@@ -13,7 +13,7 @@
     "themes": ["mule account", "job scam", "romance scam", "shopping scam", "gambling"],
     "sources": [
       {
-        "label": "HK Police press, August 2023 WISEWORD (URL not in the course brief)"
+        "label": "Police press, August 2023 WISEWORD (URL not in the course brief)"
       }
     ],
     "acceptable_dispositions": ["str_drafted", "freeze_recommended", "edd_hold"],
@@ -36,7 +36,7 @@
   "initial_twin_state": {
     "phase": "alert_triage",
     "customer": {
-      "id": "SYN-HK-WW-314",
+      "id": "SYN-WW-314",
       "display_name": "合成客戶丙",
       "segment": "retail"
     },
@@ -68,22 +68,22 @@
           {
             "id": "TX-WW-1",
             "kind": "job_style_credit",
-            "amount_hkd": 48000
+            "amount": 48000
           },
           {
             "id": "TX-WW-2",
             "kind": "romance_style_credit",
-            "amount_hkd": 70000
+            "amount": 70000
           },
           {
             "id": "TX-WW-3",
             "kind": "gambling_style_credit",
-            "amount_hkd": 36000
+            "amount": 36000
           },
           {
             "id": "TX-WW-4",
             "kind": "shopping_style_credit",
-            "amount_hkd": 22000
+            "amount": 22000
           }
         ],
         "risk.flags_add": ["MULTI_TYPOLOGY"]

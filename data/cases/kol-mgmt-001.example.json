@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "case_id": "hk-kol-mgmt-001",
+  "case_id": "kol-mgmt-001",
   "title": "網紅管理公司 — 前台戶口（示範劇本）",
   "locale": "zh-Hant",
   "summary": "合成培訓案例。一間聲稱經營網紅管理的公司沒有品牌合約，戶口卻收到像購物、投資、網戀話術的個人入帳，並快速轉出。關聯的另一間合成公司流水相似。學員決定加強審查、草擬可疑交易報告、建議凍結或退出，不得把入帳記成品牌合作。靈感來自公開的網紅管理公司前台簡述，不是真實客戶檔。",
@@ -13,7 +13,7 @@
     "themes": ["KOL management front", "third-party retail credits", "phone fraud", "investment fraud", "romance fraud"],
     "sources": [
       {
-        "label": "HK enforcement briefing on KOL management company accounts (URL not in the course brief)"
+        "label": "Public enforcement briefing on KOL management company accounts (URL not in the course brief)"
       }
     ],
     "acceptable_dispositions": ["str_drafted", "freeze_recommended", "account_exit"],
@@ -171,22 +171,22 @@
           {
             "id": "TX-KOL-1",
             "kind": "phone_style_in",
-            "amount_hkd": 90000
+            "amount": 90000
           },
           {
             "id": "TX-KOL-2",
             "kind": "investment_style_in",
-            "amount_hkd": 140000
+            "amount": 140000
           },
           {
             "id": "TX-KOL-3",
             "kind": "romance_style_in",
-            "amount_hkd": 80000
+            "amount": 80000
           },
           {
             "id": "TX-KOL-4",
             "kind": "rapid_out",
-            "amount_hkd": 290000
+            "amount": 290000
           }
         ],
         "risk.flags_add": ["FRAUD_MIX"]

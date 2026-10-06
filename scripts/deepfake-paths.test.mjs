@@ -1,5 +1,5 @@
 /**
- * Play every terminal path in deepfake-hk-001 and check the twin
+ * Play every terminal path in deepfake-001 and check the twin
  * docs/effects.md says the machine should produce.
  *
  * From the repo root:
@@ -14,7 +14,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { applyPatch, play } from "./apply-effects.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const casePath = join(root, "data/cases/deepfake-hk-001.example.json");
+const casePath = join(root, "data/cases/deepfake-001.example.json");
 
 const paths = [
   {
@@ -132,6 +132,7 @@ export function runDeepfakePathTests() {
     }
     if (path.transactions > 0) {
       assert.notEqual(twin.transactions, burst.twin_patch.transactions);
+      assert.deepEqual(twin.transactions.map((transaction) => transaction.amount), [480000, 230000, 240000]);
     }
     assert.deepEqual(twin.kyc.signals, ["blink_interval_irregular", "lighting_inconsistent"]);
   }
@@ -168,7 +169,7 @@ export function runDeepfakePathTests() {
 
 function main() {
   const played = runDeepfakePathTests();
-  console.log(`Played ${played.assertedTerminalPaths} deepfake-hk-001 terminal paths.`);
+  console.log(`Played ${played.assertedTerminalPaths} deepfake-001 terminal paths.`);
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

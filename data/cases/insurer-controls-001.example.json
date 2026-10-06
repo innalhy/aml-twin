@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "case_id": "hk-ia-fwd-controls-001",
+  "case_id": "insurer-controls-001",
   "title": "第三者保費 — 保險公司管控缺口（示範劇本）",
   "locale": "zh-Hant",
   "summary": "合成培訓案例。保險公司合規主任覆核一張保單：保費由未核實的第三者支付，政治人物篩查沒有結果，可疑交易工作紙打開後沒有處置。學員決定核實付款人、拒收保費、補管控或草擬可疑交易報告。不得把缺口當成歷史例外關掉。靈感來自保險業監管公開的管控缺失簡述，不是真實保單，也不是任何保險公司的客戶檔。",
@@ -13,8 +13,7 @@
     "themes": ["insurer AML", "third-party premium", "PEP screening", "STR tracking"],
     "sources": [
       {
-        "label": "Insurance Business Asia, Hong Kong AML fine and insurer control scrutiny",
-        "url": "https://www.insurancebusinessmag.com/asia/news/life-insurance/hong-kong-aml-fine-puts-broker-and-insurer-controls-under-scrutiny-591045.aspx"
+        "label": "Insurance Business Asia, AML fine and insurer control scrutiny"
       }
     ],
     "acceptable_dispositions": ["control_remediation", "str_drafted", "policy_exit"],

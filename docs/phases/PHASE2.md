@@ -41,7 +41,7 @@ Extend TwinAML so training decisions write back promptly to twin state (WebSocke
 - **Done when:** replay from events equals live twin for Phase 1 case.
 
 ### P2-S2 — Rules engine v1
-- Versioned rule packs under `packages/rules-packs/hk/` (or equivalent).
+- Versioned rule packs under `packages/rules-packs/default/` (or equivalent).
 - Evaluate named predicates (replace Phase 1 soft strings where needed).
 - **Done when:** R1/R2 and new pack tests pass without LLM.
 

@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
-  "case_id": "deepfake-hk-001",
-  "title": "深偽視像開戶 — 香港虛擬銀行（示範劇本）",
+  "case_id": "deepfake-001",
+  "title": "深偽視像開戶 — 虛擬銀行（示範劇本）",
   "locale": "zh-Hant",
   "summary": "合成培訓案例。新客戶以視像 KYC 申請開戶，畫面上已有兩項規則訊號。若開戶成功，短時間內出現第三者大額入帳並拆往場外加密貨幣交易商。學員要先跟規則，再決定上報或加強審查。本檔沒有真實客戶資料，也沒有媒體檔。",
   "start_node_id": "n_intake",
@@ -33,7 +33,7 @@
   "initial_twin_state": {
     "phase": "onboarding",
     "customer": {
-      "id": "SYN-HK-001",
+      "id": "SYN-001",
       "display_name": "合成客戶甲",
       "segment": "new_to_bank"
     },
@@ -59,7 +59,7 @@
       "type": "scene",
       "title": "視像 KYC 進件",
       "prompt": "合成客戶提交身份證明影像與一段視像。規則引擎已記下眨眼節奏不規則與光源不一致，尚未決定是否開戶。",
-      "media_ref": "data/media/deepfake-hk-001/kyc-clip.mp4",
+      "media_ref": "data/media/deepfake-001/kyc-clip.mp4",
       "next": "n_kyc_review",
       "twin_patch": {
         "phase": "kyc_review"
@@ -157,17 +157,17 @@
           {
             "id": "TX-1",
             "kind": "third_party_in",
-            "amount_hkd": 480000
+            "amount": 480000
           },
           {
             "id": "TX-2",
             "kind": "split_out_otc",
-            "amount_hkd": 230000
+            "amount": 230000
           },
           {
             "id": "TX-3",
             "kind": "split_out_otc",
-            "amount_hkd": 240000
+            "amount": 240000
           }
         ],
         "risk.flags_add": ["THIRD_PARTY_BURST"]

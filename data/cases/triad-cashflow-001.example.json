@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "case_id": "hk-triad-cashflow-001",
+  "case_id": "triad-cashflow-001",
   "title": "無商業目的流水 — 有組織犯罪指標（示範劇本）",
   "locale": "zh-Hant",
   "summary": "合成培訓案例。本地公司戶口大額進出，沒有發票、合約或薪金對應。客戶稱是現金生意。內部類型指標把這組流水標為有組織犯罪得益。學員以合規主任身份決定暫停、草擬可疑交易報告、建議凍結或退出。這不是執法行動演練。靈感來自公開的有組織犯罪資金流簡述，不是真實客戶檔。",
@@ -71,12 +71,12 @@
           {
             "id": "TX-OC-1",
             "kind": "personal_in",
-            "amount_hkd": 500000
+            "amount": 500000
           },
           {
             "id": "TX-OC-2",
             "kind": "personal_out",
-            "amount_hkd": 470000
+            "amount": 470000
           }
         ],
         "risk.flags_add": ["NO_INVOICE"]

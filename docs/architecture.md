@@ -66,7 +66,7 @@ The session twin starts as a deep clone of `initial_twin_state`. Patches then ac
 - **Decision effects**: after that patch, apply the chosen `choices[].effects`. Dotted keys write nested fields (`kyc.status`). `risk.flags_add` appends onto `risk.flags`. `risk.score_delta` adds to `risk.score`. Any other key replaces the value at that path.
 - **Outcome**: `type: outcome` and `terminal: true`. The outcome `twin_patch` writes `disposition`, and the session ends.
 
-Media is not in git. The `media_ref` on `n_intake` is `data/media/deepfake-hk-001/kyc-clip.mp4`, and that file is excluded by `.gitignore`. When the clip is missing, the player should later show a missing-file state. It should not abort the whole case.
+Media is not in git. The `media_ref` on `n_intake` is `data/media/deepfake-001/kyc-clip.mp4`, and that file is excluded by `.gitignore`. When the clip is missing, the player should later show a missing-file state. It should not abort the whole case.
 
 ## Clients
 

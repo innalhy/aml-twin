@@ -4,8 +4,8 @@ This page freezes how a future twin state machine applies `twin_patch` and `choi
 
 Inventory below covers every example script in [`data/cases/`](../data/cases/README.md):
 
-- `deepfake-hk-001.example.json`
-- the ten `hk-*.example.json` files
+- `deepfake-001.example.json`
+- the ten other `*.example.json` files
 
 The machine is not built in this slice. P1-S2 implements the rules on this page. Rules in `rules[].when` stay human-readable sentences. This applier does not parse them.
 
@@ -61,13 +61,13 @@ Only two special last segments exist in these files: `flags_add` (always `risk.f
 `account.holds` has no special suffix, so the array **replaces** `account.holds`.
 
 - `["outbound"]`, `["limit_increase"]`, and `["outbound", "limit_increase"]` are the full hold list after that choice.
-- `[]` clears holds. Used by `hk-wiseword-amlmonth-001` (`n_r2_gate` / `release`) and `hk-triad-cashflow-001` (`n_r1_gate` / `accept_cash`).
+- `[]` clears holds. Used by `wiseword-amlmonth-001` (`n_r2_gate` / `release`) and `triad-cashflow-001` (`n_r1_gate` / `accept_cash`).
 
-`transactions` is a top-level key. The array replaces `transactions`. A script that must keep earlier rows repeats them in the new array. `hk-mule-rent-001` does this: `initial_twin_state.transactions` holds `TX-MR-0`, and the `n_credits` patch writes `TX-MR-0` plus the later credits.
+`transactions` is a top-level key. The array replaces `transactions`. A script that must keep earlier rows repeats them in the new array. `mule-rent-001` does this: `initial_twin_state.transactions` holds `TX-MR-0`, and the `n_credits` patch writes `TX-MR-0` plus the later credits.
 
 ### One leaf that starts missing
 
-`deepfake-hk-001` choice `edd_hold` sets `account.holds` to `["outbound"]`. `initial_twin_state.account` on that script has `opened` only. The parent object `account` exists, so the replace creates `account.holds`. Every other dotted path in the eleven files already exists on `initial_twin_state`.
+`deepfake-001` choice `edd_hold` sets `account.holds` to `["outbound"]`. `initial_twin_state.account` on that script has `opened` only. The parent object `account` exists, so the replace creates `account.holds`. Every other dotted path in the eleven files already exists on `initial_twin_state`.
 
 ## Choice effect keys
 
@@ -76,13 +76,13 @@ These ten keys appear on `choices[].effects`. Counts are uses across the eleven 
 | Key | Uses | Value | Apply |
 | --- | --- | --- | --- |
 | `account.holds` | 25 | string array, or `[]` | Replace `account.holds`. |
-| `account.opened` | 2 | `true` | Replace `account.opened`. `deepfake-hk-001` only (`pass_video`, `override_r1`). |
-| `account.transfer_limit` | 2 | `"raised"` or `"standard"` | Replace. `hk-hkma-cdd-001` only. |
-| `controls.pep_screening` | 1 | `"rerun_ordered"` | Replace. `hk-ia-fwd-controls-001` `n_r2_gate` / `remediate`. |
-| `controls.str_worksheet` | 2 | `"escalated"` or `"str_drafted"` | Replace. `hk-ia-fwd-controls-001` only. |
+| `account.opened` | 2 | `true` | Replace `account.opened`. `deepfake-001` only (`pass_video`, `override_r1`). |
+| `account.transfer_limit` | 2 | `"raised"` or `"standard"` | Replace. `bank-cdd-001` only. |
+| `controls.pep_screening` | 1 | `"rerun_ordered"` | Replace. `insurer-controls-001` `n_r2_gate` / `remediate`. |
+| `controls.str_worksheet` | 2 | `"escalated"` or `"str_drafted"` | Replace. `insurer-controls-001` only. |
 | `kyc.status` | 20 | string | Replace `kyc.status`. All eleven cases. |
-| `monitoring.status` | 1 | `"restored"` | Replace. `hk-hkma-cdd-001` `n_r2_gate` / `do_both`. |
-| `premium.accepted` | 5 | boolean | Replace. `hk-ia-fwd-controls-001` only. |
+| `monitoring.status` | 1 | `"restored"` | Replace. `bank-cdd-001` `n_r2_gate` / `do_both`. |
+| `premium.accepted` | 5 | boolean | Replace. `insurer-controls-001` only. |
 | `risk.flags_add` | 95 | string array | Append onto `risk.flags`. All eleven cases. |
 | `risk.score_delta` | 22 | number `20`, `25`, `30`, `35`, or `40` | Add to `risk.score`. All eleven cases. |
 
@@ -99,20 +99,20 @@ These keys appear on `twin_patch`. Scenes and outcomes carry patches in these fi
 | `transactions` | 9 | array of transaction objects | Replace the whole array. |
 | `risk.flags_add` | 28 | string array | Append onto `risk.flags`. All eleven cases. |
 | `kyc.status` | 9 | string | Replace. |
-| `kyc.liveness_failures` | 1 | number `2` | Replace. `deepfake-hk-001` `n_liveness_retry`. |
-| `kyc.account_control` | 1 | `"third_party"` | Replace. `hk-mule-rent-001`. |
-| `kyc.address_proof` | 1 | `"stale"` | Replace. `hk-hkma-cdd-001`. |
-| `kyc.beneficial_owner` | 1 | `"missing"` | Replace. `hk-daybreak-tbml-001`. |
-| `kyc.business_evidence` | 1 | `"missing"` | Replace. `hk-kol-mgmt-001`. |
-| `kyc.commercial_evidence` | 1 | `"missing"` | Replace. `hk-triad-cashflow-001`. |
-| `kyc.source_of_funds` | 1 | `"friend_fx_unsupported"` | Replace. `hk-justicegate-crypto-001`. |
-| `monitoring.status` | 1 | `"switched_off"` | Replace. `hk-hkma-cdd-001`. |
-| `monitoring.alerts_over_threshold` | 1 | number `4` | Replace. `hk-hkma-cdd-001`. |
-| `controls.pep_screening` | 1 | `"missing"` | Replace. `hk-ia-fwd-controls-001`. |
-| `controls.str_worksheet` | 1 | `"open_unowned"` | Replace. `hk-ia-fwd-controls-001`. |
-| `premium.payer_relation` | 1 | `"unverified_third_party"` | Replace. `hk-ia-fwd-controls-001`. |
-| `corridor.contract_evidence` | 1 | `"missing"` | Replace. `hk-crossborder-tel-001`. |
-| `trade.shipment_evidence` | 1 | `"missing"` | Replace. `hk-daybreak-tbml-001`. |
+| `kyc.liveness_failures` | 1 | number `2` | Replace. `deepfake-001` `n_liveness_retry`. |
+| `kyc.account_control` | 1 | `"third_party"` | Replace. `mule-rent-001`. |
+| `kyc.address_proof` | 1 | `"stale"` | Replace. `bank-cdd-001`. |
+| `kyc.beneficial_owner` | 1 | `"missing"` | Replace. `daybreak-tbml-001`. |
+| `kyc.business_evidence` | 1 | `"missing"` | Replace. `kol-mgmt-001`. |
+| `kyc.commercial_evidence` | 1 | `"missing"` | Replace. `triad-cashflow-001`. |
+| `kyc.source_of_funds` | 1 | `"friend_fx_unsupported"` | Replace. `justicegate-crypto-001`. |
+| `monitoring.status` | 1 | `"switched_off"` | Replace. `bank-cdd-001`. |
+| `monitoring.alerts_over_threshold` | 1 | number `4` | Replace. `bank-cdd-001`. |
+| `controls.pep_screening` | 1 | `"missing"` | Replace. `insurer-controls-001`. |
+| `controls.str_worksheet` | 1 | `"open_unowned"` | Replace. `insurer-controls-001`. |
+| `premium.payer_relation` | 1 | `"unverified_third_party"` | Replace. `insurer-controls-001`. |
+| `corridor.contract_evidence` | 1 | `"missing"` | Replace. `crossborder-tel-001`. |
+| `trade.shipment_evidence` | 1 | `"missing"` | Replace. `daybreak-tbml-001`. |
 
 `kyc.status` strings written by scene patches in these files: `evidence_failed`, `liveness_failed`, `payer_unverified`, `rental_admitted`, `single_story`, `sof_failed`, `still_incomplete`, `story_recorded`. Same rule as choice effects: store the string.
 
@@ -126,10 +126,10 @@ Strings used:
 
 | `disposition` | Where the teaching lists live |
 | --- | --- |
-| `onboarding_rejected`, `blocked_by_rule`, `str_drafted`, `edd_hold`, `false_positive_cleared` | `deepfake-hk-001` |
-| `str_drafted`, `freeze_recommended`, `edd_hold`, `account_exit`, `relationship_exit`, `policy_exit`, `control_remediation`, `cdd_refreshed_and_str`, `exit_without_str`, `false_positive_cleared`, `monitoring_backdated` | the ten `hk-*` scripts |
+| `onboarding_rejected`, `blocked_by_rule`, `str_drafted`, `edd_hold`, `false_positive_cleared` | `deepfake-001` |
+| `str_drafted`, `freeze_recommended`, `edd_hold`, `account_exit`, `relationship_exit`, `policy_exit`, `control_remediation`, `cdd_refreshed_and_str`, `exit_without_str`, `false_positive_cleared`, `monitoring_backdated` | the ten other scripts |
 
-Meanings for the `hk-*` strings are in [`data/cases/README.md`](../data/cases/README.md). `teaching.acceptable_dispositions`, `teaching.poor_dispositions`, and (on `hk-triad-cashflow-001` only) `teaching.incomplete_dispositions` classify the stored string for the dashboard. The applier does not rewrite it.
+Meanings for the other disposition strings are in [`data/cases/README.md`](../data/cases/README.md). `teaching.acceptable_dispositions`, `teaching.poor_dispositions`, and (on `triad-cashflow-001` only) `teaching.incomplete_dispositions` classify the stored string for the dashboard. The applier does not rewrite it.
 
 An override stays on the twin as a flag, usually `R1_OVERRIDDEN` via `risk.flags_add`. The rule object stays in the script.
 
@@ -153,4 +153,4 @@ From the repo root:
 node scripts/validate-cases.mjs
 ```
 
-The script checks each `data/cases/*.example.json` file against `packages/schemas/script.schema.json`, checks that `start_node_id` and every `next` point at a node, and checks that every patch key follows the grammar above against that file's `initial_twin_state`. It then runs [`scripts/deepfake-paths.test.mjs`](../scripts/deepfake-paths.test.mjs), which clones `initial_twin_state` and plays all eight terminal paths of `deepfake-hk-001`. That file can also be run on its own. The Worker state machine is still P1-S2. If `ajv` is not already installed, the script installs `ajv@8` under the OS temp directory. It does not add a dependency to this repo. GitHub Actions runs the same command on push and pull request (`.github/workflows/cases.yml`).
+The script checks each `data/cases/*.example.json` file against `packages/schemas/script.schema.json`, checks that `start_node_id` and every `next` point at a node, and checks that every patch key follows the grammar above against that file's `initial_twin_state`. It then runs [`scripts/deepfake-paths.test.mjs`](../scripts/deepfake-paths.test.mjs), which clones `initial_twin_state` and plays all eight terminal paths of `deepfake-001`. That file can also be run on its own. The Worker state machine is still P1-S2. If `ajv` is not already installed, the script installs `ajv@8` under the OS temp directory. It does not add a dependency to this repo. GitHub Actions runs the same command on push and pull request (`.github/workflows/cases.yml`).

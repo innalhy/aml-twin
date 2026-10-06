@@ -24,7 +24,7 @@ Matches root `README.md` on main:
 - Worker (`workers/api`): `GET /health` only.
 - Frontend: placeholder page that builds.
 - Optional local API: FastAPI in `backend/`, same health JSON. Not the deploy path.
-- Cases: `data/cases/*.example.json` (`deepfake-hk-001` and ten `hk-*` scripts) + `packages/schemas/script.schema.json`. Effect keys: [`docs/effects.md`](../effects.md) (P1-S1).
+- Cases: `data/cases/*.example.json` (`deepfake-001` and ten other scripts) + `packages/schemas/script.schema.json`. Effect keys: [`docs/effects.md`](../effects.md) (P1-S1).
 - Docs: `docs/architecture.md`, `docs/comp3424-mapping.md`, `docs/cloudflare.md`.
 
 ## Suggested order

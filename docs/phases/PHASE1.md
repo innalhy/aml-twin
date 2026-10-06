@@ -10,21 +10,21 @@ Play the Phase 1 case library end-to-end on Cloudflare. The library is the **11*
 
 case script → training session → trainee decision → rules + state machine → twin update → event log → web player + simple dashboard.
 
-A session starts with a `case_id`. The Worker, the scenario player, and the dashboard load whichever of the 11 that id names. `deepfake-hk-001` is the original course example (video-KYC deepfake). The ten `hk-*` scripts are `public_record_inspired`. Names, amounts, and parties are synthetic. The index and disclaimer are in [`data/cases/README.md`](../../data/cases/README.md).
+A session starts with a `case_id`. The Worker, the scenario player, and the dashboard load whichever of the 11 that id names. `deepfake-001` is the original course example (video-KYC deepfake). The ten other scripts are `public_record_inspired`. Names, amounts, and parties are synthetic. The index and disclaimer are in [`data/cases/README.md`](../../data/cases/README.md).
 
 | case_id | Theme |
 | --- | --- |
-| `deepfake-hk-001` | Original course example: video-KYC deepfake |
-| `hk-daybreak-tbml-001` | TBML / shell / fake jewellery-diamond exports |
-| `hk-mule-rent-001` | Account rental |
-| `hk-wiseword-amlmonth-001` | One mule, several typologies |
-| `hk-justicegate-crypto-001` | Cash + crypto OTC |
-| `hk-greythunder-mule-001` | Mule cluster |
-| `hk-crossborder-tel-001` | Cross-border phone-fraud corridor |
-| `hk-kol-mgmt-001` | KOL / influencer front |
-| `hk-triad-cashflow-001` | Organised-crime cashflow indicators |
-| `hk-ia-fwd-controls-001` | Insurer controls (synthetic insurer) |
-| `hk-hkma-cdd-001` | Bank CDD / monitoring / STR (synthetic bank) |
+| `deepfake-001` | Original course example: video-KYC deepfake |
+| `daybreak-tbml-001` | TBML / shell / fake jewellery-diamond exports |
+| `mule-rent-001` | Account rental |
+| `wiseword-amlmonth-001` | One mule, several typologies |
+| `justicegate-crypto-001` | Cash + crypto OTC |
+| `greythunder-mule-001` | Mule cluster |
+| `crossborder-tel-001` | Cross-border phone-fraud corridor |
+| `kol-mgmt-001` | KOL / influencer front |
+| `triad-cashflow-001` | Organised-crime cashflow indicators |
+| `insurer-controls-001` | Insurer controls (synthetic insurer) |
+| `bank-cdd-001` | Bank CDD / monitoring / STR (synthetic bank) |
 
 Deploy path: **Cloudflare Pages** (`frontend/`) + **Cloudflare Worker** (`workers/api`). FastAPI in `backend/` stays optional local only, as in the root `README.md`.
 
@@ -45,7 +45,7 @@ Deploy path: **Cloudflare Pages** (`frontend/`) + **Cloudflare Worker** (`worker
 - Unity client.
 - New case families beyond the 11 scripts. Phase 2 adds mixer / peel-chain and synthetic-ID cases.
 - Live LLM judging disposition.
-- Real bank / HKMA / STR filing integration.
+- Real bank / regulator / STR filing integration.
 - Multi-tenant billing.
 - Session-time long video synthesis (HeyGen etc.).
 
@@ -63,7 +63,7 @@ Deploy path: **Cloudflare Pages** (`frontend/`) + **Cloudflare Worker** (`worker
 - Confirm schema + the 11 example cases stay valid.
 - Document effect key conventions in `docs/architecture.md` or a short `docs/effects.md`.
 - **Done when:** agent can list every effect key used across the 11 scripts and how the future machine should apply them.
-- **Done:** [`docs/effects.md`](../effects.md) lists every effect key in `deepfake-hk-001` and the ten `hk-*.example.json` scripts, and the apply order (clone `initial_twin_state`, apply `twin_patch`, then apply choice `effects`). `node scripts/validate-cases.mjs` checks the files and plays the eight `deepfake-hk-001` terminal paths in [`scripts/deepfake-paths.test.mjs`](../../scripts/deepfake-paths.test.mjs).
+- **Done:** [`docs/effects.md`](../effects.md) lists every effect key in `deepfake-001` and the ten other `*.example.json` scripts, and the apply order (clone `initial_twin_state`, apply `twin_patch`, then apply choice `effects`). `node scripts/validate-cases.mjs` checks the files and plays the eight `deepfake-001` terminal paths in [`scripts/deepfake-paths.test.mjs`](../../scripts/deepfake-paths.test.mjs).
 
 ### P1-S2 — Twin state machine (library)
 - Pure TypeScript module under `workers/api` (or `packages/`) that: clone initial state → apply node patch → apply choice effects → advance node.
@@ -107,7 +107,7 @@ Deploy path: **Cloudflare Pages** (`frontend/`) + **Cloudflare Worker** (`worker
 
 - Single source of truth: Worker twin + events. Frontend does not invent disposition.
 - Case library: the 11 `case_id` values in the table above. `POST /sessions` selects one of them.
-- Dispositions are per script: `teaching.acceptable_dispositions` and `teaching.poor_dispositions`. The list is in [`data/cases/README.md`](../../data/cases/README.md). `deepfake-hk-001` keeps `onboarding_rejected`, `blocked_by_rule`, `str_drafted`, `edd_hold`, and poor `false_positive_cleared`.
+- Dispositions are per script: `teaching.acceptable_dispositions` and `teaching.poor_dispositions`. The list is in [`data/cases/README.md`](../../data/cases/README.md). `deepfake-001` keeps `onboarding_rejected`, `blocked_by_rule`, `str_drafted`, `edd_hold`, and poor `false_positive_cleared`.
 
 ## Rough timeline (optional)
 

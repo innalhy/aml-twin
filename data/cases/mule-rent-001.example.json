@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "case_id": "hk-mule-rent-001",
+  "case_id": "mule-rent-001",
   "title": "出租銀行戶口 — 社交平台招攬（示範劇本）",
   "locale": "zh-Hant",
   "summary": "合成培訓案例。零售客戶在社交平台表示可出租戶口，並稱安全、合法；戶口先收到小額試探入帳。學員決定約談、草擬可疑交易報告、暫停出帳或退出。只退出而不上報是不完整路徑。靈感來自警方公開的戶口租售執法簡述，不是真實客戶檔。",
@@ -13,7 +13,7 @@
     "themes": ["account rental", "social media recruitment", "mule account", "third-party control"],
     "sources": [
       {
-        "label": "HK Police press, April 2025 operation on account rental (URL not in the course brief)"
+        "label": "Police press, April 2025 operation on account rental (URL not in the course brief)"
       }
     ],
     "acceptable_dispositions": ["str_drafted", "freeze_recommended"],
@@ -36,7 +36,7 @@
   "initial_twin_state": {
     "phase": "alert_triage",
     "customer": {
-      "id": "SYN-HK-MR-170",
+      "id": "SYN-MR-170",
       "display_name": "合成客戶乙",
       "segment": "retail"
     },
@@ -54,7 +54,7 @@
       {
         "id": "TX-MR-0",
         "kind": "test_credit",
-        "amount_hkd": 1000
+        "amount": 1000
       }
     ],
     "risk": {
@@ -171,17 +171,17 @@
           {
             "id": "TX-MR-0",
             "kind": "test_credit",
-            "amount_hkd": 1000
+            "amount": 1000
           },
           {
             "id": "TX-MR-1",
             "kind": "third_party_in",
-            "amount_hkd": 180000
+            "amount": 180000
           },
           {
             "id": "TX-MR-2",
             "kind": "third_party_in",
-            "amount_hkd": 240000
+            "amount": 240000
           }
         ],
         "risk.flags_add": ["THIRD_PARTY_CONTROL"]

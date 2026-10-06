@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "case_id": "hk-hkma-cdd-001",
+  "case_id": "bank-cdd-001",
   "title": "不完整盡職審查 — 銀行管控（示範劇本）",
   "locale": "zh-Hant",
   "summary": "合成培訓案例。公司客戶的開戶檔缺少實益擁有人，地址證明過期，關係經理卻要求提高轉帳限額。持續監測曾被關掉，關閉期間的警報沒有可疑交易報告。學員決定限制戶口、重做審查、上報並修復管控，不得事後補一筆已審視。靈感來自金管局公開的銀行管控缺失簡述，不是真實銀行客戶檔。",
@@ -13,8 +13,7 @@
     "themes": ["CDD", "beneficial ownership", "ongoing monitoring", "STR failures"],
     "sources": [
       {
-        "label": "Clifford Chance briefing on HKMA penalties for four banks (November 2021, HK$44.2 million)",
-        "url": "https://www.cliffordchance.com/content/dam/cliffordchance/briefings/2021/11/hkma-penalises-four-banks-hk$44.2-million-for-money-laundering-control-failures-key-takeaways.pdf"
+        "label": "Clifford Chance briefing on regulator penalties for four banks (November 2021)"
       }
     ],
     "acceptable_dispositions": ["relationship_exit", "cdd_refreshed_and_str", "str_drafted"],

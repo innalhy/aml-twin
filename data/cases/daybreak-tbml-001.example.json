@@ -1,9 +1,9 @@
 {
   "schema_version": "0.1",
-  "case_id": "hk-daybreak-tbml-001",
+  "case_id": "daybreak-tbml-001",
   "title": "假珠寶出口 — 貿易洗錢（示範劇本）",
   "locale": "zh-Hant",
-  "summary": "合成培訓案例。一間申報經營印度與香港珠寶鑽石貿易的公司，付款人不是發票買家，亦沒有貨運證據。學員以金融機構合規主任身份，決定加強審查、暫停出帳、草擬可疑交易報告或退出關係。靈感來自海關公開的貿易洗錢執法簡述，不是真實客戶檔。",
+  "summary": "合成培訓案例。一間申報經營跨境珠寶鑽石貿易的公司，付款人不是發票買家，亦沒有貨運證據。學員以金融機構合規主任身份，決定加強審查、暫停出帳、草擬可疑交易報告或退出關係。靈感來自海關公開的貿易洗錢執法簡述，不是真實客戶檔。",
   "start_node_id": "n_file_open",
   "teaching": {
     "level": "chan-1-scripted-mirror",
@@ -13,8 +13,7 @@
     "themes": ["trade-based money laundering", "shell company", "third-party payers", "jewellery export"],
     "sources": [
       {
-        "label": "Hong Kong Customs press release (January 2024 trade-based money laundering briefing)",
-        "url": "https://www.customs.gov.hk/en/customs-announcement/press-release/index_id_4080.html"
+        "label": "Customs press release (January 2024 trade-based money laundering briefing)"
       }
     ],
     "acceptable_dispositions": ["account_exit", "str_drafted", "freeze_recommended"],
@@ -48,7 +47,7 @@
     },
     "trade": {
       "declared_goods": "jewellery_diamond",
-      "corridor": "IN-HK",
+      "corridor": "cross-border",
       "shipment_evidence": "missing"
     },
     "account": {
@@ -68,7 +67,7 @@
       "id": "n_file_open",
       "type": "scene",
       "title": "珠寶出口公司覆核",
-      "prompt": "合成出口公司甲申報印度與香港之間的珠寶鑽石貿易。檔上已有兩項訊號：營運單薄，付款人不是發票買家。實益擁有人仍未核實。",
+      "prompt": "合成出口公司甲申報跨境珠寶鑽石貿易。檔上已有兩項訊號：營運單薄，付款人不是發票買家。實益擁有人仍未核實。",
       "next": "n_cdd_gate",
       "twin_patch": {
         "phase": "cdd_review"
@@ -173,17 +172,17 @@
           {
             "id": "TX-DB-1",
             "kind": "third_party_export_in",
-            "amount_hkd": 860000
+            "amount": 860000
           },
           {
             "id": "TX-DB-2",
             "kind": "fanout_unrelated",
-            "amount_hkd": 420000
+            "amount": 420000
           },
           {
             "id": "TX-DB-3",
             "kind": "fanout_unrelated",
-            "amount_hkd": 430000
+            "amount": 430000
           }
         ],
         "risk.flags_add": ["PASS_THROUGH"]

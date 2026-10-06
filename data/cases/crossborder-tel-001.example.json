@@ -1,9 +1,9 @@
 {
   "schema_version": "0.1",
-  "case_id": "hk-crossborder-tel-001",
+  "case_id": "crossborder-tel-001",
   "title": "跨境電話騙案走廊 — 通訊員監察（示範劇本）",
   "locale": "zh-Hant",
-  "summary": "合成培訓案例。一間香港公司在數週內向數十個內地個人戶口支付「佣金」，收款人與供應商名單不符。通訊員類型提示把這條走廊與電話騙案得益連結。學員以合規主任身份做走廊加強審查、草擬可疑交易報告、建議凍結或退出。靈感來自跨境電話騙案的公開簡述，不是真實客戶檔，也不是通訊員實檔。",
+  "summary": "合成培訓案例。一間公司在數週內向數十個內地個人戶口支付「佣金」，收款人與供應商名單不符。通訊員類型提示把這條走廊與電話騙案得益連結。學員以合規主任身份做走廊加強審查、草擬可疑交易報告、建議凍結或退出。靈感來自跨境電話騙案的公開簡述，不是真實客戶檔，也不是通訊員實檔。",
   "start_node_id": "n_corridor",
   "teaching": {
     "level": "chan-1-scripted-mirror",
@@ -13,7 +13,7 @@
     "themes": ["cross-border phone fraud", "correspondent awareness", "fan-out payments", "mainland personal accounts"],
     "sources": [
       {
-        "label": "HK Police context, April–June 2023 cross-border phone fraud, IRONSPLITTER-related (URL not in the course brief)"
+        "label": "Police context, April–June 2023 cross-border phone fraud, IRONSPLITTER-related (URL not in the course brief)"
       }
     ],
     "acceptable_dispositions": ["str_drafted", "freeze_recommended", "account_exit"],
@@ -45,7 +45,7 @@
       "signals": ["payee_list_mismatch"]
     },
     "corridor": {
-      "direction": "HK-to-mainland-personal",
+      "direction": "outbound-personal",
       "stated_purpose": "commission",
       "contract_evidence": "missing",
       "indicator": "phone_fraud_typology"
@@ -171,7 +171,7 @@
           {
             "id": "TX-CB-1",
             "kind": "fanout_mainland_personal",
-            "amount_hkd": 640000,
+            "amount": 640000,
             "payee_count": 40
           }
         ],

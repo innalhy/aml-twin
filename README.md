@@ -2,21 +2,21 @@
 
 ## What it is?
 
-TwinAML is a COMP3424 course demo of a digital twin for AML simulation training. The platform idea is proprietary: this tree is a classroom demo, not a bank production system and not an open-source release. The Phase 1 case library is **11** synthetic scripts under [`data/cases/`](data/cases/README.md). `deepfake-hk-001` is the original course example (video-KYC deepfake). The other ten are `public_record_inspired`. Every customer, account, and amount in them is synthetic. The full index and disclaimer are in [`data/cases/README.md`](data/cases/README.md). The twin is backend state plus the events that change it. The web app is the face that will render that state.
+TwinAML is a COMP3424 course demo of a digital twin for AML simulation training. The platform idea is proprietary: this tree is a classroom demo, not a bank production system and not an open-source release. The Phase 1 case library is **11** synthetic scripts under [`data/cases/`](data/cases/README.md). `deepfake-001` is the original course example (video-KYC deepfake). The other ten are `public_record_inspired`. Every customer, account, and amount in them is synthetic. The full index and disclaimer are in [`data/cases/README.md`](data/cases/README.md). The twin is backend state plus the events that change it. The web app is the face that will render that state.
 
 | case_id | Theme |
 | --- | --- |
-| `deepfake-hk-001` | Original course example: video-KYC deepfake |
-| `hk-daybreak-tbml-001` | TBML / shell / fake jewellery-diamond exports |
-| `hk-mule-rent-001` | Account rental |
-| `hk-wiseword-amlmonth-001` | One mule, several typologies |
-| `hk-justicegate-crypto-001` | Cash + crypto OTC |
-| `hk-greythunder-mule-001` | Mule cluster |
-| `hk-crossborder-tel-001` | Cross-border phone-fraud corridor |
-| `hk-kol-mgmt-001` | KOL / influencer front |
-| `hk-triad-cashflow-001` | Organised-crime cashflow indicators |
-| `hk-ia-fwd-controls-001` | Insurer controls (synthetic insurer) |
-| `hk-hkma-cdd-001` | Bank CDD / monitoring / STR (synthetic bank) |
+| `deepfake-001` | Original course example: video-KYC deepfake |
+| `daybreak-tbml-001` | TBML / shell / fake jewellery-diamond exports |
+| `mule-rent-001` | Account rental |
+| `wiseword-amlmonth-001` | One mule, several typologies |
+| `justicegate-crypto-001` | Cash + crypto OTC |
+| `greythunder-mule-001` | Mule cluster |
+| `crossborder-tel-001` | Cross-border phone-fraud corridor |
+| `kol-mgmt-001` | KOL / influencer front |
+| `triad-cashflow-001` | Organised-crime cashflow indicators |
+| `insurer-controls-001` | Insurer controls (synthetic insurer) |
+| `bank-cdd-001` | Bank CDD / monitoring / STR (synthetic bank) |
 
 A trainee is meant to choose one of those scripts by `case_id` and decide inside it. Rules in the script decide compliance outcomes (rules-before-AI). A language model, if one is added later, may explain a decision only after those rules have fired, and a human override must be stored as an event.
 
@@ -96,8 +96,8 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 ├── data/
 │   ├── cases/                   # index: data/cases/README.md
 │   │   ├── README.md
-│   │   ├── deepfake-hk-001.example.json
-│   │   └── hk-*.example.json
+│   │   ├── deepfake-001.example.json
+│   │   └── *.example.json
 │   └── media/
 │       └── .gitkeep
 ├── packages/
@@ -106,7 +106,7 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 └── scripts/
     ├── validate-cases.mjs       # schema + effect-key check, then the path test
     ├── apply-effects.mjs        # schema 0.1 patch apply used by the path test
-    ├── deepfake-paths.test.mjs  # eight deepfake-hk-001 terminal paths
+    ├── deepfake-paths.test.mjs  # eight deepfake-001 terminal paths
     └── .gitkeep
 ```
 
@@ -155,7 +155,7 @@ Check the case scripts from the repo root:
 node scripts/validate-cases.mjs
 ```
 
-That checks schema `0.1` and the effect-key grammar, then plays the eight `deepfake-hk-001` endings. Details: [`docs/effects.md`](docs/effects.md).
+That checks schema `0.1` and the effect-key grammar, then plays the eight `deepfake-001` endings. Details: [`docs/effects.md`](docs/effects.md).
 
 ## Deploy
 
@@ -181,7 +181,7 @@ Chan levels follow the course: Level 1 is a scripted mirror, Level 2 is a near-r
 
 In scope: load any of the 11 against `packages/schemas/script.schema.json`; session routes that take `case_id`; deterministic `twin_patch` and choice effects as in [`docs/effects.md`](docs/effects.md); English UI chrome (case prompts may stay Traditional Chinese); a missing `media_ref` file shows a missing-media state.
 
-Out of scope for Phase 1: Docker, Kubernetes, Neo4j, Kafka, a microservice split, Unity, a live language model that sets disposition, a real bank / HKMA / STR filing connection, multi-tenant billing, and session-time video synthesis. New mixer / peel-chain and synthetic-ID families beyond this library wait for Phase 2.
+Out of scope for Phase 1: Docker, Kubernetes, Neo4j, Kafka, a microservice split, Unity, a live language model that sets disposition, a real bank / regulator / STR filing connection, multi-tenant billing, and session-time video synthesis. New mixer / peel-chain and synthetic-ID families beyond this library wait for Phase 2.
 
 Current status: the 11 scripts and the effect-key contract are in the repo. P1-S1 is done. The Worker and the Pages app are still health and placeholder stubs. Session routes, the scenario player, and the dashboard are not built.
 
@@ -240,7 +240,7 @@ Short rules for classmates and coding agents. The full agreement is [`AGENTS.md`
 7. Do not commit secrets, API keys, `.env` files, Cloudflare account identifiers, or large media.
 8. If the script shape changes, every example case under `data/cases/` must still validate against `packages/schemas/script.schema.json`. Run `node scripts/validate-cases.mjs`. The schema or docs must say what changed.
 
-Read next: [`docs/architecture.md`](docs/architecture.md), [`docs/effects.md`](docs/effects.md), [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md), [`docs/cloudflare.md`](docs/cloudflare.md), [`docs/phases/README.md`](docs/phases/README.md), [`data/cases/README.md`](data/cases/README.md), [`data/cases/deepfake-hk-001.example.json`](data/cases/deepfake-hk-001.example.json), [`packages/schemas/script.schema.json`](packages/schemas/script.schema.json).
+Read next: [`docs/architecture.md`](docs/architecture.md), [`docs/effects.md`](docs/effects.md), [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md), [`docs/cloudflare.md`](docs/cloudflare.md), [`docs/phases/README.md`](docs/phases/README.md), [`data/cases/README.md`](data/cases/README.md), [`data/cases/deepfake-001.example.json`](data/cases/deepfake-001.example.json), [`packages/schemas/script.schema.json`](packages/schemas/script.schema.json).
 
 ## License
 
