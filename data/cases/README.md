@@ -14,6 +14,12 @@ These files are synthetic training scenarios. The ten `public_record_inspired` s
 
 `deepfake-001` is the original course example. It is synthetic as well, and it is not drawn from a public enforcement brief.
 
+## Detailed investigation evidence
+
+The [analyst evidence pack](../evidence/analyst-session-001/README.md) provides customer profiles, account and transaction tables, messages, invoice and contract records, KYC review logs, synthetic screening results, independent checks, and an instructor key. It pairs the deepfake narrative with a legitimate project-payment lookalike and includes four background alerts. Share only its `learner/` folder initially; the instructor controls the release of later evidence.
+
+The legitimate lookalike is separate authored evidence content, not the existing `false_positive_cleared` branch. That disposition remains a poor outcome in `deepfake-001`. The eleven case scripts, their rules, and their effects are unchanged. The evidence pack's pending-order schedule is a timed extension; the original deepfake script displays its transaction burst before the final decision.
+
 ## Index
 
 Titles below are short English labels. The JSON `title` and prompts are Traditional Chinese, matching `deepfake-001.example.json`.

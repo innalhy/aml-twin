@@ -1,0 +1,5 @@
+event_id,session_minute,customer_id,transaction_id,event_type,action_if_eligible,eligibility
+DUE-TX-2,18,SYN-001,TX-2,outgoing_order_due,"Execute once, then record executed_at and update the shared account balance",Account open; order pending; sufficient available balance; no outbound hold effective at or before the due timestamp
+DUE-TX-L-2,18,SYN-002,TX-L-2,outgoing_order_due,"Execute once, then record executed_at and update the shared account balance",Account open; order pending; sufficient available balance; no outbound hold effective at or before the due timestamp
+DUE-TX-3,23,SYN-001,TX-3,outgoing_order_due,"Execute once, then record executed_at and update the shared account balance",Account open; order pending; sufficient available balance; no outbound hold effective at or before the due timestamp
+DUE-TX-L-3,23,SYN-002,TX-L-3,outgoing_order_due,"Execute once, then record executed_at and update the shared account balance",Account open; order pending; sufficient available balance; no outbound hold effective at or before the due timestamp

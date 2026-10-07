@@ -1,0 +1,13 @@
+customer_id,request_id,title,service_minutes,prerequisite_evidence_id
+SYN-001,review_kyc_log,Review full KYC verification log,15,
+SYN-001,request_supporting_documents,Request project supporting documents,8,
+SYN-001,verify_payer,Verify payer and project authority independently,20,EV-006
+SYN-001,resolve_screening,Resolve the possible name match,5,
+SYN-001,verify_recipients,Verify recipient account holders and business activity,10,
+SYN-001,request_account_history,Request previous account or project history,12,
+SYN-002,review_kyc_log,Review full KYC verification log,15,
+SYN-002,request_supporting_documents,Request project supporting documents,8,
+SYN-002,verify_payer,Verify payer and project authority independently,20,EV-016
+SYN-002,resolve_screening,Resolve the possible name match,5,
+SYN-002,verify_recipients,Verify recipient account holders and business activity,10,
+SYN-002,request_account_history,Request previous account or project history,12,

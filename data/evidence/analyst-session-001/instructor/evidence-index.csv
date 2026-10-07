@@ -1,0 +1,25 @@
+evidence_id,customer_id,title,source,release,request_id,service_minutes,prerequisite_evidence_id,path
+EV-001,SYN-001,Account application,Customer submission,initial,,0,,learner/records/EV-001.md
+EV-002,SYN-001,Video verification intake summary,Onboarding operations,initial,,0,,learner/records/EV-002.md
+EV-003,SYN-001,Payment alert detail,Training bank monitoring,initial,,0,,learner/records/EV-003.md
+EV-004,SYN-001,Customer portal message,Customer correspondence,initial,,0,,learner/records/EV-004.md
+EV-005,SYN-001,Verification team response,Independent synthetic verification team,on_request,review_kyc_log,15,,instructor/release/records/EV-005.md
+EV-006,SYN-001,Project invoice supplied by customer,Customer submission,on_request,request_supporting_documents,8,,instructor/release/records/EV-006.md
+EV-007,SYN-001,Payer and invoice verification response,Independent synthetic registry and payer liaison,on_request,verify_payer,20,EV-006,instructor/release/records/EV-007.md
+EV-008,SYN-001,Name screening review,Synthetic screening desk,on_request,resolve_screening,5,,instructor/release/records/EV-008.md
+EV-009,SYN-001,Recipient business checks,Independent synthetic recipient registry,on_request,verify_recipients,10,,instructor/release/records/EV-009.md
+EV-010,SYN-001,Response to account history request,Customer correspondence,on_request,request_account_history,12,,instructor/release/records/EV-010.md
+EV-011,SYN-002,Account application,Customer submission,initial,,0,,learner/records/EV-011.md
+EV-012,SYN-002,Video verification intake summary,Onboarding operations,initial,,0,,learner/records/EV-012.md
+EV-013,SYN-002,Payment alert detail,Training bank monitoring,initial,,0,,learner/records/EV-013.md
+EV-014,SYN-002,Customer portal message,Customer correspondence,initial,,0,,learner/records/EV-014.md
+EV-015,SYN-002,Verification team response,Independent synthetic verification team,on_request,review_kyc_log,15,,instructor/release/records/EV-015.md
+EV-016,SYN-002,Project contract and supplier invoices,Customer submission,on_request,request_supporting_documents,8,,instructor/release/records/EV-016.md
+EV-017,SYN-002,Payer and contract verification response,Independent synthetic registry and payer liaison,on_request,verify_payer,20,EV-016,instructor/release/records/EV-017.md
+EV-018,SYN-002,Name screening review,Synthetic screening desk,on_request,resolve_screening,5,,instructor/release/records/EV-018.md
+EV-019,SYN-002,Recipient business checks,Independent synthetic recipient registry,on_request,verify_recipients,10,,instructor/release/records/EV-019.md
+EV-020,SYN-002,Prior project account statement,Independent synthetic previous institution,on_request,request_account_history,12,,instructor/release/records/EV-020.md
+EV-021,SYN-003,Expense reimbursement file,Existing bank file,initial,,0,,learner/records/EV-021.md
+EV-022,SYN-004,Translation invoice file,Existing bank file,initial,,0,,learner/records/EV-022.md
+EV-023,SYN-005,Club reserve transfer file,Existing bank file,initial,,0,,learner/records/EV-023.md
+EV-024,SYN-006,Repair order refund file,Existing bank file,initial,,0,,learner/records/EV-024.md

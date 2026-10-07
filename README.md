@@ -22,6 +22,12 @@ A trainee is meant to choose one of those scripts by `case_id` and decide inside
 
 What runs today is a scaffold. The Worker and the optional FastAPI app answer `GET /health`. The Pages app is a placeholder. The 11 scripts, the effect-key contract, and the JSON Schema are in the repo. Session routes, the scenario player, and the dashboard are not built.
 
+## Analyst investigation content
+
+The [paired evidence pack](data/evidence/analyst-session-001/README.md) adds detailed records for the deepfake case, a legitimate project-payment lookalike, and four background alerts. It contains 6 customer profiles, 24 accounts, 126 transfers, and 24 evidence documents. The [learner briefing](data/evidence/analyst-session-001/learner/START.md) is the starting point for a manual investigation exercise. Instructor answers and responses requiring further checks stay in a separate folder.
+
+This is authored content alongside the existing eleven scripts. The new lookalike is not yet a script in the case picker. No player, automated evidence-release endpoint, or FlexSim adapter is added. Validate the records with `python3 scripts/validate-evidence.py`; continue checking the existing scripts with `node scripts/validate-cases.mjs`.
+
 ## Architecture
 
 One Worker API and one Pages frontend. FastAPI is an optional local process.

@@ -1,0 +1,141 @@
+{
+  "pack_id": "analyst-session-001",
+  "synthetic": true,
+  "snapshot_at": "2026-04-15T11:12:00Z",
+  "scope": "Authored investigation evidence and timing fixtures. No live bank, screening vendor, video detector, session engine, or simulator integration.",
+  "cases": [
+    {
+      "customer_id": "SYN-001",
+      "case_kind": "deepfake_and_unexplained_pass_through",
+      "source_case_id": "deepfake-001",
+      "authored_truth": "The applicant is an impersonator using manipulated video and a fabricated project explanation. The third-party receipt and intended virtual-asset settlement payments are part of the authored laundering scenario. The learner is assessed on justified suspicion and evidence use, not on proving this hidden fact.",
+      "initial_evidence": [
+        "EV-001",
+        "EV-002",
+        "EV-003",
+        "EV-004"
+      ],
+      "decisive_evidence": [
+        "EV-005",
+        "EV-007",
+        "EV-009"
+      ],
+      "screening_evidence": "EV-008",
+      "expected_reasoning": [
+        "Two actual failed challenges were followed by an exception rather than successful identity verification.",
+        "The invoice client does not recognise the claimed project or collection authority.",
+        "The payer and intended recipients do not reconcile to the stated equipment purpose.",
+        "A resolved different-person screening match does not resolve the other concerns."
+      ],
+      "acceptable_actions": [
+        "Continue enhanced review with a documented provisional outbound hold under the fictional policy.",
+        "Escalate a reasoned concern and draft an internal suspicious-transaction narrative. A report alone does not suspend an order."
+      ],
+      "poor_actions": [
+        "Close solely because the possible name match was resolved.",
+        "Treat customer-supplied invoice arithmetic as independent verification.",
+        "Claim that a late hold reverses an executed payment.",
+        "State that blink or lighting observations alone prove a deepfake."
+      ],
+      "money_if_both_orders_execute": {
+        "incoming": 480000,
+        "outgoing": 470000,
+        "retained": 10000
+      }
+    },
+    {
+      "customer_id": "SYN-002",
+      "case_kind": "legitimate_project_payment_lookalike",
+      "source_case_id": null,
+      "authored_truth": "The applicant is the actual account holder. The first video sample was degraded. The project, payer, authority, supplier invoices, and prior operating pattern are genuine within the synthetic scenario.",
+      "initial_evidence": [
+        "EV-011",
+        "EV-012",
+        "EV-013",
+        "EV-014"
+      ],
+      "decisive_evidence": [
+        "EV-015",
+        "EV-017",
+        "EV-019"
+      ],
+      "corroborating_evidence": [
+        "EV-016",
+        "EV-020"
+      ],
+      "screening_evidence": "EV-018",
+      "expected_reasoning": [
+        "The repeat identity verification passed; the first sample was inconclusive, not two failed challenges.",
+        "The verified payer authorised the coordinator and the full project budget.",
+        "Recipient accounts, invoices, purpose, and sums reconcile.",
+        "Gross project receipts differ from the coordinator’s personal income."
+      ],
+      "acceptable_actions": [
+        "Request and review independent evidence, then close this alert with a documented explanation and release any temporary hold.",
+        "Use a proportionate provisional hold while material checks are outstanding; account for its duration."
+      ],
+      "poor_actions": [
+        "Clear on the first customer message without doing the checks.",
+        "Retain a restriction solely because the payment is large or splits quickly, after the stated concerns have been resolved.",
+        "Infer criminality from an initial low-quality capture or a name similarity."
+      ],
+      "money_if_both_orders_execute": {
+        "incoming": 480000,
+        "outgoing": 470000,
+        "retained": 10000
+      }
+    }
+  ],
+  "background_cases": [
+    {
+      "customer_id": "SYN-003",
+      "evidence_id": "EV-021",
+      "resolution": "8200 SCU reimbursement matches the prior expense; net is zero for REV0412."
+    },
+    {
+      "customer_id": "SYN-004",
+      "evidence_id": "EV-022",
+      "resolution": "Two 4000 SCU instalments reconcile to an 8000 SCU invoice."
+    },
+    {
+      "customer_id": "SYN-005",
+      "evidence_id": "EV-023",
+      "resolution": "12000 SCU reserve transfer matches ownership and club authorisation."
+    },
+    {
+      "customer_id": "SYN-006",
+      "evidence_id": "EV-024",
+      "resolution": "3200 SCU receipt and refund reconcile; net is zero for RP-0412."
+    }
+  ],
+  "rubric": [
+    {
+      "dimension": "Evidence use",
+      "points": 30,
+      "criteria": "Cite record IDs and distinguish customer claims from independent checks."
+    },
+    {
+      "dimension": "Reconciliation",
+      "points": 25,
+      "criteria": "Reconcile account holders, references, amounts, and declared purpose; explain similarities and differences between the two cases."
+    },
+    {
+      "dimension": "Reasoned action",
+      "points": 25,
+      "criteria": "Apply the supplied fictional policy to the evidence available when the action was taken; explain remaining uncertainty."
+    },
+    {
+      "dimension": "Timing and customer impact",
+      "points": 20,
+      "criteria": "Record pending versus executed orders, justify provisional controls, and release restrictions when the relevant concerns are resolved."
+    }
+  ],
+  "parameters": {
+    "initial_analyst_capacity": 1,
+    "comparison_analyst_capacity": 2,
+    "review_work_minutes": 6,
+    "tie_order": "At the same timestamp, accepted control decisions become effective before due-order checks.",
+    "request_timing": "Start after any prerequisite record is released and the request is accepted. External service delay does not hold an analyst resource; reviewing a completed response takes the stated review_work_minutes. One analyst can review only one item at a time.",
+    "repeat_run": "Reuse the same records and due times. Reset all decisions, released records, order states, and holds for each run."
+  }
+}

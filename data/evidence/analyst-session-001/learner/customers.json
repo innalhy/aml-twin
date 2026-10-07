@@ -1,0 +1,118 @@
+{
+  "synthetic": true,
+  "snapshot_at": "2026-04-15T11:12:00Z",
+  "unit_definition": "SCU means fictional scenario currency units. No real currency or jurisdiction is implied.",
+  "customers": [
+    {
+      "customer_id": "SYN-001",
+      "display_name": "Mira Solen",
+      "date_of_birth": "1994-02-18",
+      "occupation": "Event technician",
+      "employment_basis": "Employee; occasional project support",
+      "declared_monthly_income": 28000,
+      "expected_monthly_credits": 80000,
+      "expected_largest_credit": 40000,
+      "expected_payment_purpose": "Salary and reimbursement of project expenses",
+      "expected_counterparties": [
+        "Employer",
+        "Known project clients"
+      ],
+      "account_id": "SYN-A001",
+      "onboarded_at": "2026-04-15T10:45:00Z",
+      "unit": "SCU"
+    },
+    {
+      "customer_id": "SYN-002",
+      "display_name": "Nika Vale",
+      "date_of_birth": "1991-09-03",
+      "occupation": "Production purchasing coordinator",
+      "employment_basis": "Sole proprietor",
+      "declared_monthly_income": 28000,
+      "expected_monthly_credits": 520000,
+      "expected_largest_credit": 500000,
+      "expected_payment_purpose": "Project budgets received from clients and paid to suppliers; income is the retained fee",
+      "expected_counterparties": [
+        "Production clients",
+        "Equipment suppliers",
+        "Rental suppliers"
+      ],
+      "account_id": "SYN-A002",
+      "onboarded_at": "2026-04-15T10:50:00Z",
+      "unit": "SCU"
+    },
+    {
+      "customer_id": "SYN-003",
+      "display_name": "Tarin Voss",
+      "date_of_birth": "1988-06-21",
+      "occupation": "Operations coordinator",
+      "employment_basis": "Employee",
+      "declared_monthly_income": 40000,
+      "expected_monthly_credits": 50000,
+      "expected_largest_credit": 40000,
+      "expected_payment_purpose": "Salary and expenses",
+      "expected_counterparties": [
+        "Payroll",
+        "Landlord",
+        "Retailers"
+      ],
+      "account_id": "SYN-A003",
+      "onboarded_at": "2025-11-03T09:00:00Z",
+      "unit": "SCU"
+    },
+    {
+      "customer_id": "SYN-004",
+      "display_name": "Sela Moren",
+      "date_of_birth": "1996-04-12",
+      "occupation": "Translator",
+      "employment_basis": "Sole proprietor",
+      "declared_monthly_income": 32000,
+      "expected_monthly_credits": 60000,
+      "expected_largest_credit": 15000,
+      "expected_payment_purpose": "Client invoices paid in instalments",
+      "expected_counterparties": [
+        "Publishing clients",
+        "Software vendors"
+      ],
+      "account_id": "SYN-A004",
+      "onboarded_at": "2025-12-10T09:00:00Z",
+      "unit": "SCU"
+    },
+    {
+      "customer_id": "SYN-005",
+      "display_name": "Oren Vale",
+      "date_of_birth": "2002-01-24",
+      "occupation": "Student and club treasurer",
+      "employment_basis": "Student",
+      "declared_monthly_income": 6000,
+      "expected_monthly_credits": 40000,
+      "expected_largest_credit": 12000,
+      "expected_payment_purpose": "Club contributions and event expenses",
+      "expected_counterparties": [
+        "Club members",
+        "Venue supplier",
+        "Club reserve account"
+      ],
+      "account_id": "SYN-A005",
+      "onboarded_at": "2026-01-09T09:00:00Z",
+      "unit": "SCU"
+    },
+    {
+      "customer_id": "SYN-006",
+      "display_name": "Lio Fen",
+      "date_of_birth": "1990-11-08",
+      "occupation": "Electronics repairer",
+      "employment_basis": "Sole proprietor",
+      "declared_monthly_income": 24000,
+      "expected_monthly_credits": 70000,
+      "expected_largest_credit": 8000,
+      "expected_payment_purpose": "Repair charges, parts purchases, and refunds",
+      "expected_counterparties": [
+        "Repair customers",
+        "Parts supplier"
+      ],
+      "account_id": "SYN-A006",
+      "onboarded_at": "2026-01-12T09:00:00Z",
+      "unit": "SCU"
+    }
+  ]
+}
