@@ -1,0 +1,126 @@
+{
+  "scenario_id": "rejections",
+  "description": "Every rejection branch: unknown request (background customer and misspelt id), unknown decision, foreign/unknown/unreleased citations, release when not held; a retry after a rejected request is accepted.",
+  "pack_id": "analyst-session-001",
+  "contract_version": "1.0",
+  "run_until_minute": 30,
+  "actions": [
+    {
+      "at_minute": 0,
+      "customer_id": "SYN-003",
+      "action": "request",
+      "params": {
+        "request_id": "review_kyc_log"
+      }
+    },
+    {
+      "at_minute": 0,
+      "customer_id": "SYN-001",
+      "action": "request",
+      "params": {
+        "request_id": "review_kyc_lgo"
+      }
+    },
+    {
+      "at_minute": 1,
+      "customer_id": "SYN-001",
+      "action": "decide",
+      "params": {
+        "decision": "approve",
+        "evidence_ids": [
+          "EV-001"
+        ],
+        "note": "typo"
+      }
+    },
+    {
+      "at_minute": 1,
+      "customer_id": "SYN-001",
+      "action": "decide",
+      "params": {
+        "decision": "closure",
+        "evidence_ids": [
+          "EV-011"
+        ],
+        "note": "foreign record"
+      }
+    },
+    {
+      "at_minute": 1,
+      "customer_id": "SYN-001",
+      "action": "decide",
+      "params": {
+        "decision": "closure",
+        "evidence_ids": [
+          "EV-999"
+        ],
+        "note": "unknown record"
+      }
+    },
+    {
+      "at_minute": 1,
+      "customer_id": "SYN-001",
+      "action": "decide",
+      "params": {
+        "decision": "closure",
+        "evidence_ids": [
+          "EV-001",
+          "EV-005"
+        ],
+        "note": "unreleased record"
+      }
+    },
+    {
+      "at_minute": 2,
+      "customer_id": "SYN-001",
+      "action": "release",
+      "params": {
+        "note": "nothing to release"
+      }
+    },
+    {
+      "at_minute": 3,
+      "customer_id": "SYN-001",
+      "action": "request",
+      "params": {
+        "request_id": "verify_payer"
+      }
+    },
+    {
+      "at_minute": 3,
+      "customer_id": "SYN-001",
+      "action": "request",
+      "params": {
+        "request_id": "request_supporting_documents"
+      }
+    },
+    {
+      "at_minute": 11,
+      "customer_id": "SYN-001",
+      "action": "request",
+      "params": {
+        "request_id": "verify_payer"
+      }
+    },
+    {
+      "at_minute": 4,
+      "customer_id": "SYN-003",
+      "action": "hold",
+      "params": {
+        "reason": "Background customers may be held"
+      }
+    },
+    {
+      "at_minute": 5,
+      "customer_id": "SYN-003",
+      "action": "decide",
+      "params": {
+        "decision": "closure",
+        "evidence_ids": [
+          "EV-021"
+        ],
+        "note": "Reconciled"
+      }
+    }
+  ]
+}

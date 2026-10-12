@@ -1,0 +1,57 @@
+{
+  "scenario_id": "duplicate_actions_syn_002",
+  "description": "CONTRACT 7-E: repeated hold, request and release on SYN-002 produce rejection events only; one evidence release, one execution per order.",
+  "pack_id": "analyst-session-001",
+  "contract_version": "1.0",
+  "run_until_minute": 30,
+  "actions": [
+    {
+      "at_minute": 0,
+      "customer_id": "SYN-002",
+      "action": "request",
+      "params": {
+        "request_id": "request_supporting_documents"
+      }
+    },
+    {
+      "at_minute": 3,
+      "customer_id": "SYN-002",
+      "action": "request",
+      "params": {
+        "request_id": "request_supporting_documents"
+      }
+    },
+    {
+      "at_minute": 10,
+      "customer_id": "SYN-002",
+      "action": "hold",
+      "params": {
+        "reason": "Payer and recipients unverified"
+      }
+    },
+    {
+      "at_minute": 12,
+      "customer_id": "SYN-002",
+      "action": "hold",
+      "params": {
+        "reason": "Payer and recipients unverified"
+      }
+    },
+    {
+      "at_minute": 25,
+      "customer_id": "SYN-002",
+      "action": "release",
+      "params": {
+        "note": "Concerns resolved"
+      }
+    },
+    {
+      "at_minute": 26,
+      "customer_id": "SYN-002",
+      "action": "release",
+      "params": {
+        "note": "Concerns resolved"
+      }
+    }
+  ]
+}

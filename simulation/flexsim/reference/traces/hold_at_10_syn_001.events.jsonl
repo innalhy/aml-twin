@@ -1,0 +1,7 @@
+{"seq": "1", "sim_minute": "0", "customer_id": "", "account_id": "", "event_type": "run_start", "ref_id": "", "amount": "", "balance_after": "", "detail": "scenario_id=hold_at_10_syn_001;pack=analyst-session-001;contract=1.0"}
+{"seq": "2", "sim_minute": "10", "customer_id": "SYN-001", "account_id": "SYN-A001", "event_type": "hold_placed", "ref_id": "", "amount": "", "balance_after": "480000", "detail": "reason=Payer and recipients unverified"}
+{"seq": "3", "sim_minute": "18", "customer_id": "SYN-001", "account_id": "SYN-A001", "event_type": "order_held", "ref_id": "TX-2", "amount": "230000", "balance_after": "480000", "detail": "hold_since=10"}
+{"seq": "4", "sim_minute": "18", "customer_id": "SYN-002", "account_id": "SYN-A002", "event_type": "order_executed", "ref_id": "TX-L-2", "amount": "230000", "balance_after": "250000", "detail": "to=SYN-X05;trigger=due"}
+{"seq": "5", "sim_minute": "23", "customer_id": "SYN-001", "account_id": "SYN-A001", "event_type": "order_held", "ref_id": "TX-3", "amount": "240000", "balance_after": "480000", "detail": "hold_since=10"}
+{"seq": "6", "sim_minute": "23", "customer_id": "SYN-002", "account_id": "SYN-A002", "event_type": "order_executed", "ref_id": "TX-L-3", "amount": "240000", "balance_after": "10000", "detail": "to=SYN-X06;trigger=due"}
+{"seq": "7", "sim_minute": "30", "customer_id": "", "account_id": "", "event_type": "run_end", "ref_id": "", "amount": "", "balance_after": "", "detail": "final_minute=30"}

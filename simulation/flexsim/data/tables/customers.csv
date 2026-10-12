@@ -1,0 +1,7 @@
+customer_id,display_name,date_of_birth,occupation,employment_basis,declared_monthly_income,expected_monthly_credits,expected_largest_credit,expected_payment_purpose,expected_counterparties,account_id,onboarded_at,unit
+SYN-001,Mira Solen,1994-02-18,Event technician,Employee; occasional project support,28000,80000,40000,Salary and reimbursement of project expenses,Employer|Known project clients,SYN-A001,2026-04-15T10:45:00Z,SCU
+SYN-002,Nika Vale,1991-09-03,Production purchasing coordinator,Sole proprietor,28000,520000,500000,Project budgets received from clients and paid to suppliers; income is the retained fee,Production clients|Equipment suppliers|Rental suppliers,SYN-A002,2026-04-15T10:50:00Z,SCU
+SYN-003,Tarin Voss,1988-06-21,Operations coordinator,Employee,40000,50000,40000,Salary and expenses,Payroll|Landlord|Retailers,SYN-A003,2025-11-03T09:00:00Z,SCU
+SYN-004,Sela Moren,1996-04-12,Translator,Sole proprietor,32000,60000,15000,Client invoices paid in instalments,Publishing clients|Software vendors,SYN-A004,2025-12-10T09:00:00Z,SCU
+SYN-005,Oren Vale,2002-01-24,Student and club treasurer,Student,6000,40000,12000,Club contributions and event expenses,Club members|Venue supplier|Club reserve account,SYN-A005,2026-01-09T09:00:00Z,SCU
+SYN-006,Lio Fen,1990-11-08,Electronics repairer,Sole proprietor,24000,70000,8000,"Repair charges, parts purchases, and refunds",Repair customers|Parts supplier,SYN-A006,2026-01-12T09:00:00Z,SCU

@@ -1,0 +1,44 @@
+{
+  "scenario_id": "decision_does_not_hold_syn_001",
+  "description": "Escalation on SYN-001 at 10 is not a hold (both orders execute); a closure at 24 on a held account does not release it.",
+  "pack_id": "analyst-session-001",
+  "contract_version": "1.0",
+  "run_until_minute": 30,
+  "actions": [
+    {
+      "at_minute": 10,
+      "customer_id": "SYN-001",
+      "action": "decide",
+      "params": {
+        "decision": "escalation",
+        "evidence_ids": [
+          "EV-001",
+          "EV-002",
+          "EV-003"
+        ],
+        "note": "Escalating without a hold"
+      }
+    },
+    {
+      "at_minute": 21,
+      "customer_id": "SYN-001",
+      "action": "hold",
+      "params": {
+        "reason": "Hold placed after escalation"
+      }
+    },
+    {
+      "at_minute": 24,
+      "customer_id": "SYN-001",
+      "action": "decide",
+      "params": {
+        "decision": "closure",
+        "evidence_ids": [
+          "EV-001",
+          "EV-002"
+        ],
+        "note": "Closing without releasing"
+      }
+    }
+  ]
+}

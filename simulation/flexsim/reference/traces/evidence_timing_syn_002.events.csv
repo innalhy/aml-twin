@@ -1,0 +1,20 @@
+seq,sim_minute,customer_id,account_id,event_type,ref_id,amount,balance_after,detail
+1,0,,,run_start,,,,scenario_id=evidence_timing_syn_002;pack=analyst-session-001;contract=1.0
+2,0,SYN-002,SYN-A002,request_accepted,request_supporting_documents,,480000,due_minute=8
+3,0,SYN-002,SYN-A002,request_accepted,review_kyc_log,,480000,due_minute=15
+4,1,SYN-002,SYN-A002,request_accepted,request_account_history,,480000,due_minute=13
+5,2,SYN-002,SYN-A002,request_accepted,resolve_screening,,480000,due_minute=7
+6,5,SYN-002,SYN-A002,request_accepted,verify_recipients,,480000,due_minute=15
+7,7,SYN-002,SYN-A002,evidence_released,EV-018,,480000,request_id=resolve_screening;title=Name screening review
+8,8,SYN-002,SYN-A002,evidence_released,EV-016,,480000,request_id=request_supporting_documents;title=Project contract and supplier invoices
+9,8,SYN-002,SYN-A002,request_accepted,verify_payer,,480000,due_minute=28
+10,13,SYN-002,SYN-A002,evidence_released,EV-020,,480000,request_id=request_account_history;title=Prior project account statement
+11,15,SYN-002,SYN-A002,evidence_released,EV-015,,480000,request_id=review_kyc_log;title=Verification team response
+12,15,SYN-002,SYN-A002,evidence_released,EV-019,,480000,request_id=verify_recipients;title=Recipient business checks
+13,18,SYN-001,SYN-A001,order_executed,TX-2,230000,250000,to=SYN-X02;trigger=due
+14,18,SYN-002,SYN-A002,order_executed,TX-L-2,230000,250000,to=SYN-X05;trigger=due
+15,23,SYN-001,SYN-A001,order_executed,TX-3,240000,10000,to=SYN-X03;trigger=due
+16,23,SYN-002,SYN-A002,order_executed,TX-L-3,240000,10000,to=SYN-X06;trigger=due
+17,28,SYN-002,SYN-A002,evidence_released,EV-017,,10000,request_id=verify_payer;title=Payer and contract verification response
+18,29,SYN-002,SYN-A002,decision_recorded,D1,,10000,decision=continue_review;cites=EV-011|EV-012|EV-013|EV-014|EV-015|EV-016|EV-017|EV-018|EV-019|EV-020;note=All six responses reviewed
+19,30,,,run_end,,,,final_minute=30

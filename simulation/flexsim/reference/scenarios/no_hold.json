@@ -1,0 +1,8 @@
+{
+  "scenario_id": "no_hold",
+  "description": "CONTRACT 7-A: no learner action; both orders execute on each account, balances 10000.",
+  "pack_id": "analyst-session-001",
+  "contract_version": "1.0",
+  "run_until_minute": 30,
+  "actions": []
+}

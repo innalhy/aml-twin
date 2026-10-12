@@ -1,0 +1,8 @@
+{
+  "scenario_id": "reset",
+  "description": "CONTRACT 7-G: identical to no_hold; the test suite replays it on a used Run after reset() and expects the no_hold trace (seq restarts at 1).",
+  "pack_id": "analyst-session-001",
+  "contract_version": "1.0",
+  "run_until_minute": 30,
+  "actions": []
+}

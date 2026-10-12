@@ -1,0 +1,25 @@
+{
+  "scenario_id": "release_after_due_syn_002",
+  "description": "CONTRACT 7-D: hold SYN-002 at 10, release at 25 after both due minutes; both overdue orders execute exactly once with trigger=release.",
+  "pack_id": "analyst-session-001",
+  "contract_version": "1.0",
+  "run_until_minute": 30,
+  "actions": [
+    {
+      "at_minute": 10,
+      "customer_id": "SYN-002",
+      "action": "hold",
+      "params": {
+        "reason": "Payer and recipients unverified"
+      }
+    },
+    {
+      "at_minute": 25,
+      "customer_id": "SYN-002",
+      "action": "release",
+      "params": {
+        "note": "Concerns resolved"
+      }
+    }
+  ]
+}

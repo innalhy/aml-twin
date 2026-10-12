@@ -1,0 +1,52 @@
+{
+  "scenario_id": "advance_log_only",
+  "description": "Guided-mode clicks pre-recorded: `advance` is log-only (clock_advanced) and must not change balances or ordering versus hold_at_10_syn_001.",
+  "pack_id": "analyst-session-001",
+  "contract_version": "1.0",
+  "run_until_minute": 30,
+  "actions": [
+    {
+      "at_minute": 0,
+      "action": "advance",
+      "params": {
+        "to_minute": 8
+      }
+    },
+    {
+      "at_minute": 8,
+      "action": "advance",
+      "params": {
+        "to_minute": 10
+      }
+    },
+    {
+      "at_minute": 10,
+      "customer_id": "SYN-001",
+      "action": "hold",
+      "params": {
+        "reason": "Payer and recipients unverified"
+      }
+    },
+    {
+      "at_minute": 10,
+      "action": "advance",
+      "params": {
+        "to_minute": 18
+      }
+    },
+    {
+      "at_minute": 18,
+      "action": "advance",
+      "params": {
+        "to_minute": 23
+      }
+    },
+    {
+      "at_minute": 23,
+      "action": "advance",
+      "params": {
+        "to_minute": 30
+      }
+    }
+  ]
+}

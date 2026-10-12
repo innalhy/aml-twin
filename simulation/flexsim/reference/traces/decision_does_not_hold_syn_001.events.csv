@@ -1,0 +1,10 @@
+seq,sim_minute,customer_id,account_id,event_type,ref_id,amount,balance_after,detail
+1,0,,,run_start,,,,scenario_id=decision_does_not_hold_syn_001;pack=analyst-session-001;contract=1.0
+2,10,SYN-001,SYN-A001,decision_recorded,D1,,480000,decision=escalation;cites=EV-001|EV-002|EV-003;note=Escalating without a hold
+3,18,SYN-001,SYN-A001,order_executed,TX-2,230000,250000,to=SYN-X02;trigger=due
+4,18,SYN-002,SYN-A002,order_executed,TX-L-2,230000,250000,to=SYN-X05;trigger=due
+5,21,SYN-001,SYN-A001,hold_placed,,,250000,reason=Hold placed after escalation
+6,23,SYN-001,SYN-A001,order_held,TX-3,240000,250000,hold_since=21
+7,23,SYN-002,SYN-A002,order_executed,TX-L-3,240000,10000,to=SYN-X06;trigger=due
+8,24,SYN-001,SYN-A001,decision_recorded,D2,,250000,decision=closure;cites=EV-001|EV-002;note=Closing without releasing
+9,30,,,run_end,,,,final_minute=30

@@ -1,0 +1,189 @@
+{
+  "scenario_id": "release_after_due_syn_002",
+  "pack_id": "analyst-session-001",
+  "contract_version": "1.0",
+  "final_minute": "30",
+  "event_count": 10,
+  "accounts": {
+    "SYN-A001": {
+      "balance": 10000,
+      "held": false
+    },
+    "SYN-A002": {
+      "balance": 10000,
+      "held": false
+    },
+    "SYN-A003": {
+      "balance": 70977,
+      "held": false
+    },
+    "SYN-A004": {
+      "balance": 91655,
+      "held": false
+    },
+    "SYN-A005": {
+      "balance": 45936,
+      "held": false
+    },
+    "SYN-A006": {
+      "balance": 71133,
+      "held": false
+    }
+  },
+  "orders": {
+    "TX-2": {
+      "status": "executed",
+      "executed_minute": "18",
+      "overdue": false
+    },
+    "TX-L-2": {
+      "status": "executed",
+      "executed_minute": "25",
+      "overdue": true
+    },
+    "TX-3": {
+      "status": "executed",
+      "executed_minute": "23",
+      "overdue": false
+    },
+    "TX-L-3": {
+      "status": "executed",
+      "executed_minute": "25",
+      "overdue": true
+    }
+  },
+  "visible_evidence": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-011",
+    "EV-012",
+    "EV-013",
+    "EV-014",
+    "EV-021",
+    "EV-022",
+    "EV-023",
+    "EV-024"
+  ],
+  "requests": [],
+  "decisions": [],
+  "description": "CONTRACT 7-D: hold SYN-002 at 10, release at 25 after both due minutes; both overdue orders execute exactly once with trigger=release.",
+  "learner_debrief": {
+    "final_minute": "30",
+    "customers": {
+      "SYN-001": {
+        "account_id": "SYN-A001",
+        "timeline": [
+          {
+            "seq": 3,
+            "minute": "18",
+            "wall_clock": "2026-04-15T11:30:00Z",
+            "event_type": "order_executed",
+            "ref_id": "TX-2",
+            "detail": "to=SYN-X02;trigger=due"
+          },
+          {
+            "seq": 5,
+            "minute": "23",
+            "wall_clock": "2026-04-15T11:35:00Z",
+            "event_type": "order_executed",
+            "ref_id": "TX-3",
+            "detail": "to=SYN-X03;trigger=due"
+          }
+        ],
+        "holds": [],
+        "orders": {
+          "TX-2": {
+            "held_at_due": false,
+            "outcome": "executed at 18 (due)"
+          },
+          "TX-3": {
+            "held_at_due": false,
+            "outcome": "executed at 23 (due)"
+          }
+        },
+        "final_balance": 10000,
+        "requests": [],
+        "decisions": [],
+        "consistency_flags": []
+      },
+      "SYN-002": {
+        "account_id": "SYN-A002",
+        "timeline": [
+          {
+            "seq": 2,
+            "minute": "10",
+            "wall_clock": "2026-04-15T11:22:00Z",
+            "event_type": "hold_placed",
+            "ref_id": "",
+            "detail": "reason=Payer and recipients unverified"
+          },
+          {
+            "seq": 4,
+            "minute": "18",
+            "wall_clock": "2026-04-15T11:30:00Z",
+            "event_type": "order_held",
+            "ref_id": "TX-L-2",
+            "detail": "hold_since=10"
+          },
+          {
+            "seq": 6,
+            "minute": "23",
+            "wall_clock": "2026-04-15T11:35:00Z",
+            "event_type": "order_held",
+            "ref_id": "TX-L-3",
+            "detail": "hold_since=10"
+          },
+          {
+            "seq": 7,
+            "minute": "25",
+            "wall_clock": "2026-04-15T11:37:00Z",
+            "event_type": "hold_released",
+            "ref_id": "",
+            "detail": "note=Concerns resolved"
+          },
+          {
+            "seq": 8,
+            "minute": "25",
+            "wall_clock": "2026-04-15T11:37:00Z",
+            "event_type": "order_executed",
+            "ref_id": "TX-L-2",
+            "detail": "to=SYN-X05;trigger=release"
+          },
+          {
+            "seq": 9,
+            "minute": "25",
+            "wall_clock": "2026-04-15T11:37:00Z",
+            "event_type": "order_executed",
+            "ref_id": "TX-L-3",
+            "detail": "to=SYN-X06;trigger=release"
+          }
+        ],
+        "holds": [
+          {
+            "placed_minute": "10",
+            "position": "before first due",
+            "reason": "Payer and recipients unverified",
+            "released_minute": "25",
+            "duration_minutes": "15"
+          }
+        ],
+        "orders": {
+          "TX-L-2": {
+            "held_at_due": true,
+            "outcome": "held at due minute, released and executed at 25"
+          },
+          "TX-L-3": {
+            "held_at_due": true,
+            "outcome": "held at due minute, released and executed at 25"
+          }
+        },
+        "final_balance": 10000,
+        "requests": [],
+        "decisions": [],
+        "consistency_flags": []
+      }
+    }
+  }
+}

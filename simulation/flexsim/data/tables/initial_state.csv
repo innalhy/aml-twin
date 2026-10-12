@@ -1,0 +1,7 @@
+account_id,customer_id,holder_name,snapshot_balance,unit,account_status,executed_transfer_count,pending_order_ids,pending_outgoing_total
+SYN-A001,SYN-001,Mira Solen,480000,SCU,open,1,TX-2|TX-3,470000
+SYN-A002,SYN-002,Nika Vale,480000,SCU,open,1,TX-L-2|TX-L-3,470000
+SYN-A003,SYN-003,Tarin Voss,70977,SCU,open,30,,0
+SYN-A004,SYN-004,Sela Moren,91655,SCU,open,30,,0
+SYN-A005,SYN-005,Oren Vale,45936,SCU,open,30,,0
+SYN-A006,SYN-006,Lio Fen,71133,SCU,open,30,,0

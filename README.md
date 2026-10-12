@@ -26,7 +26,11 @@ What runs today is a scaffold. The Worker and the optional FastAPI app answer `G
 
 The [paired evidence pack](data/evidence/analyst-session-001/README.md) adds detailed records for the deepfake case, a legitimate project-payment lookalike, and four background alerts. It contains 6 customer profiles, 24 accounts, 126 transfers, and 24 evidence documents. The [learner briefing](data/evidence/analyst-session-001/learner/START.md) is the starting point for a manual investigation exercise. Instructor answers and responses requiring further checks stay in a separate folder.
 
-This is authored content alongside the existing eleven scripts. The new lookalike is not yet a script in the case picker. No player, automated evidence-release endpoint, or FlexSim adapter is added. Validate the records with `python3 scripts/validate-evidence.py`; continue checking the existing scripts with `node scripts/validate-cases.mjs`.
+This is authored content alongside the existing eleven scripts. The new lookalike is not yet a script in the case picker. No player or automated evidence-release endpoint is added to the web stack; the standalone FlexSim edition below is a separate runtime. Validate the records with `python3 scripts/validate-evidence.py`; continue checking the existing scripts with `node scripts/validate-cases.mjs`.
+
+### FlexSim edition
+
+[`simulation/flexsim/`](simulation/flexsim/README.md) is a standalone FlexSim edition of the same investigation exercise, built on this evidence pack. It is not an adapter to the Worker: FlexSim owns run-time state in that edition only, and nothing there reads or changes the web twin. It was authored on macOS, where the Python reference harness (contract tests, golden traces, trace comparer) is Mac-tested; nothing has run in FlexSim yet, and no model file exists. The Windows build and validation steps are in [`simulation/flexsim/windows/`](simulation/flexsim/windows/ASSEMBLY-STEPS.md).
 
 ## Architecture
 
@@ -109,11 +113,13 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 ├── packages/
 │   └── schemas/
 │       └── script.schema.json
-└── scripts/
-    ├── validate-cases.mjs       # schema + effect-key check, then the path test
-    ├── apply-effects.mjs        # schema 0.1 patch apply used by the path test
-    ├── deepfake-paths.test.mjs  # eight deepfake-001 terminal paths
-    └── .gitkeep
+├── scripts/
+│   ├── validate-cases.mjs       # schema + effect-key check, then the path test
+│   ├── apply-effects.mjs        # schema 0.1 patch apply used by the path test
+│   ├── deepfake-paths.test.mjs  # eight deepfake-001 terminal paths
+│   └── .gitkeep
+└── simulation/
+    └── flexsim/                 # standalone FlexSim edition: simulation/flexsim/README.md
 ```
 
 `frontend/package-lock.json` and `workers/api/package-lock.json` are tracked. `frontend/dist/`, `node_modules/`, `.venv/`, `.env`, and files under `data/media/` other than `.gitkeep` are not.

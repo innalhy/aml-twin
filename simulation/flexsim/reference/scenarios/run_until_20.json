@@ -1,0 +1,17 @@
+{
+  "scenario_id": "run_until_20",
+  "description": "Run ends at 20: TX-*3 (due 23) is never checked; an outstanding request stays requested and nothing is released after run end.",
+  "pack_id": "analyst-session-001",
+  "contract_version": "1.0",
+  "run_until_minute": 20,
+  "actions": [
+    {
+      "at_minute": 10,
+      "customer_id": "SYN-001",
+      "action": "request",
+      "params": {
+        "request_id": "review_kyc_log"
+      }
+    }
+  ]
+}

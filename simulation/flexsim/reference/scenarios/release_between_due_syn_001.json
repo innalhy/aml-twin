@@ -1,0 +1,25 @@
+{
+  "scenario_id": "release_between_due_syn_001",
+  "description": "CONTRACT 7-D2: hold SYN-001 at 10, release at 20; TX-*2 executes at release, TX-*3 waits for its own due minute.",
+  "pack_id": "analyst-session-001",
+  "contract_version": "1.0",
+  "run_until_minute": 30,
+  "actions": [
+    {
+      "at_minute": 10,
+      "customer_id": "SYN-001",
+      "action": "hold",
+      "params": {
+        "reason": "Payer and recipients unverified"
+      }
+    },
+    {
+      "at_minute": 20,
+      "customer_id": "SYN-001",
+      "action": "release",
+      "params": {
+        "note": "Concerns resolved"
+      }
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "scenario_id": "cross_account_isolation",
+  "description": "Hold, request, release and decide on SYN-001 only; every SYN-A002 row must equal the no_hold trace.",
+  "pack_id": "analyst-session-001",
+  "contract_version": "1.0",
+  "run_until_minute": 30,
+  "actions": [
+    {
+      "at_minute": 0,
+      "customer_id": "SYN-001",
+      "action": "request",
+      "params": {
+        "request_id": "request_supporting_documents"
+      }
+    },
+    {
+      "at_minute": 5,
+      "customer_id": "SYN-001",
+      "action": "hold",
+      "params": {
+        "reason": "Payer and recipients unverified"
+      }
+    },
+    {
+      "at_minute": 12,
+      "customer_id": "SYN-001",
+      "action": "decide",
+      "params": {
+        "decision": "continue_review",
+        "evidence_ids": [
+          "EV-001",
+          "EV-006"
+        ],
+        "note": "Waiting for checks"
+      }
+    },
+    {
+      "at_minute": 20,
+      "customer_id": "SYN-001",
+      "action": "release",
+      "params": {
+        "note": "Concerns resolved"
+      }
+    },
+    {
+      "at_minute": 27,
+      "customer_id": "SYN-001",
+      "action": "decide",
+      "params": {
+        "decision": "closure",
+        "evidence_ids": [
+          "EV-001",
+          "EV-006"
+        ],
+        "note": "Closed"
+      }
+    }
+  ]
+}

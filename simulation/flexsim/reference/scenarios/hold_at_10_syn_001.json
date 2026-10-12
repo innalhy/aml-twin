@@ -1,0 +1,17 @@
+{
+  "scenario_id": "hold_at_10_syn_001",
+  "description": "CONTRACT 7-B: hold SYN-001 before the first due minute; neither order executes (480000); the other account is untouched.",
+  "pack_id": "analyst-session-001",
+  "contract_version": "1.0",
+  "run_until_minute": 30,
+  "actions": [
+    {
+      "at_minute": 10,
+      "customer_id": "SYN-001",
+      "action": "hold",
+      "params": {
+        "reason": "Payer and recipients unverified"
+      }
+    }
+  ]
+}

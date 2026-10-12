@@ -73,6 +73,12 @@ Media is not in git. The `media_ref` on `n_intake` is `data/media/deepfake-001/k
 - **Now**: `frontend/`, React + Vite + TypeScript, deployed to Cloudflare Pages. The target UI is a scenario player plus a simple dashboard that reads twin state.
 - **Later, optional**: a Unity client calling the same Worker API. Do not add a Unity project until one is requested.
 
+## Standalone FlexSim edition
+
+[`simulation/flexsim/`](../simulation/flexsim/README.md) is a separate runtime, not a third client of the Worker. It runs the analyst investigation exercise from the evidence pack `data/evidence/analyst-session-001/` inside FlexSim, where Global Tables and FlexScript own the run state for that edition only. It follows one deterministic contract (`simulation/flexsim/CONTRACT.md`): snapshot tables plus an event log, with a Python reference harness that reproduces the same traces on the Mac for verification.
+
+It shares no state with the Worker and does not call it. For the web demo the rule above stands unchanged: the web twin is the single state owner, and the web app renders that state. The FlexSim edition is authored on macOS and is unverified in FlexSim at the time of writing.
+
 ## Explicitly out of scope
 
 Neo4j, Kafka, Docker, Kubernetes, a multi-service split, a live core-banking connection, a language model that issues the compliance result directly, and committing large mp4 files to git.

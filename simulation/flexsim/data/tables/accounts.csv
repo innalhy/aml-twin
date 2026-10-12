@@ -1,0 +1,25 @@
+account_id,holder_id,holder_name,institution,account_type,opened_at,opening_balance,opening_balance_at,unit
+SYN-A001,SYN-001,Mira Solen,TwinAML Training Bank,Customer account,2026-04-15T10:45:00Z,0,2026-04-15T10:45:00Z,SCU
+SYN-A002,SYN-002,Nika Vale,TwinAML Training Bank,Customer account,2026-04-15T10:50:00Z,0,2026-04-15T10:50:00Z,SCU
+SYN-A003,SYN-003,Tarin Voss,TwinAML Training Bank,Customer account,2025-11-03T09:00:00Z,50000,2026-03-16T00:00:00Z,SCU
+SYN-A004,SYN-004,Sela Moren,TwinAML Training Bank,Customer account,2025-12-10T09:00:00Z,50000,2026-03-16T00:00:00Z,SCU
+SYN-A005,SYN-005,Oren Vale,TwinAML Training Bank,Customer account,2026-01-09T09:00:00Z,50000,2026-03-16T00:00:00Z,SCU
+SYN-A006,SYN-006,Lio Fen,TwinAML Training Bank,Customer account,2026-01-12T09:00:00Z,50000,2026-03-16T00:00:00Z,SCU
+SYN-X01,,Corven Services,External synthetic institution,Business,,,,SCU
+SYN-X02,,Neris Settlement Desk,External synthetic institution,Business,,,,SCU
+SYN-X03,,Valen Settlement Desk,External synthetic institution,Business,,,,SCU
+SYN-X04,,Asterline Productions,External synthetic institution,Business,,,,SCU
+SYN-X05,,Neris Equipment Supply,External synthetic institution,Business,,,,SCU
+SYN-X06,,Valen Stage Rentals,External synthetic institution,Business,,,,SCU
+SYN-X07,,Orven Payroll,External synthetic institution,Business,,,,SCU
+SYN-X08,,Merren Property Services,External synthetic institution,Business,,,,SCU
+SYN-X09,,Everyday Retail Pool,External synthetic institution,Retail settlement pool,,,,SCU
+SYN-X10,,Utility Billing Pool,External synthetic institution,Utility settlement pool,,,,SCU
+SYN-X11,,Tavren Publishing,External synthetic institution,Business,,,,SCU
+SYN-X12,,Software Billing Pool,External synthetic institution,Business,,,,SCU
+SYN-X13,,Club Member Contributions,External synthetic institution,Collection pool,,,,SCU
+SYN-X14,,Aven Venue Services,External synthetic institution,Business,,,,SCU
+SYN-X15,,Club Reserve,External synthetic institution,Club account,,,,SCU
+SYN-X16,,Repair Customer Pool,External synthetic institution,Retail settlement pool,,,,SCU
+SYN-X17,,Parts Supplier Pool,External synthetic institution,Business,,,,SCU
+SYN-X18,,Expense Reimbursement Pool,External synthetic institution,Business,,,,SCU

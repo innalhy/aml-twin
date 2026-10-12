@@ -1,0 +1,251 @@
+{
+  "scenario_id": "decision_does_not_hold_syn_002",
+  "pack_id": "analyst-session-001",
+  "contract_version": "1.0",
+  "final_minute": "30",
+  "event_count": 9,
+  "accounts": {
+    "SYN-A001": {
+      "balance": 10000,
+      "held": false
+    },
+    "SYN-A002": {
+      "balance": 250000,
+      "held": true
+    },
+    "SYN-A003": {
+      "balance": 70977,
+      "held": false
+    },
+    "SYN-A004": {
+      "balance": 91655,
+      "held": false
+    },
+    "SYN-A005": {
+      "balance": 45936,
+      "held": false
+    },
+    "SYN-A006": {
+      "balance": 71133,
+      "held": false
+    }
+  },
+  "orders": {
+    "TX-2": {
+      "status": "executed",
+      "executed_minute": "18",
+      "overdue": false
+    },
+    "TX-L-2": {
+      "status": "executed",
+      "executed_minute": "18",
+      "overdue": false
+    },
+    "TX-3": {
+      "status": "executed",
+      "executed_minute": "23",
+      "overdue": false
+    },
+    "TX-L-3": {
+      "status": "pending",
+      "executed_minute": null,
+      "overdue": true
+    }
+  },
+  "visible_evidence": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-011",
+    "EV-012",
+    "EV-013",
+    "EV-014",
+    "EV-021",
+    "EV-022",
+    "EV-023",
+    "EV-024"
+  ],
+  "requests": [],
+  "decisions": [
+    {
+      "decision_id": "D1",
+      "minute": "10",
+      "customer_id": "SYN-002",
+      "decision": "escalation",
+      "evidence_ids": [
+        "EV-011",
+        "EV-012",
+        "EV-013"
+      ],
+      "note": "Escalating without a hold"
+    },
+    {
+      "decision_id": "D2",
+      "minute": "24",
+      "customer_id": "SYN-002",
+      "decision": "closure",
+      "evidence_ids": [
+        "EV-011",
+        "EV-012"
+      ],
+      "note": "Closing without releasing"
+    }
+  ],
+  "description": "Escalation on SYN-002 at 10 is not a hold (both orders execute); a closure at 24 on a held account does not release it.",
+  "learner_debrief": {
+    "final_minute": "30",
+    "customers": {
+      "SYN-001": {
+        "account_id": "SYN-A001",
+        "timeline": [
+          {
+            "seq": 3,
+            "minute": "18",
+            "wall_clock": "2026-04-15T11:30:00Z",
+            "event_type": "order_executed",
+            "ref_id": "TX-2",
+            "detail": "to=SYN-X02;trigger=due"
+          },
+          {
+            "seq": 6,
+            "minute": "23",
+            "wall_clock": "2026-04-15T11:35:00Z",
+            "event_type": "order_executed",
+            "ref_id": "TX-3",
+            "detail": "to=SYN-X03;trigger=due"
+          }
+        ],
+        "holds": [],
+        "orders": {
+          "TX-2": {
+            "held_at_due": false,
+            "outcome": "executed at 18 (due)"
+          },
+          "TX-3": {
+            "held_at_due": false,
+            "outcome": "executed at 23 (due)"
+          }
+        },
+        "final_balance": 10000,
+        "requests": [],
+        "decisions": [],
+        "consistency_flags": []
+      },
+      "SYN-002": {
+        "account_id": "SYN-A002",
+        "timeline": [
+          {
+            "seq": 2,
+            "minute": "10",
+            "wall_clock": "2026-04-15T11:22:00Z",
+            "event_type": "decision_recorded",
+            "ref_id": "D1",
+            "detail": "decision=escalation;cites=EV-011|EV-012|EV-013;note=Escalating without a hold"
+          },
+          {
+            "seq": 4,
+            "minute": "18",
+            "wall_clock": "2026-04-15T11:30:00Z",
+            "event_type": "order_executed",
+            "ref_id": "TX-L-2",
+            "detail": "to=SYN-X05;trigger=due"
+          },
+          {
+            "seq": 5,
+            "minute": "21",
+            "wall_clock": "2026-04-15T11:33:00Z",
+            "event_type": "hold_placed",
+            "ref_id": "",
+            "detail": "reason=Hold placed after escalation"
+          },
+          {
+            "seq": 7,
+            "minute": "23",
+            "wall_clock": "2026-04-15T11:35:00Z",
+            "event_type": "order_held",
+            "ref_id": "TX-L-3",
+            "detail": "hold_since=21"
+          },
+          {
+            "seq": 8,
+            "minute": "24",
+            "wall_clock": "2026-04-15T11:36:00Z",
+            "event_type": "decision_recorded",
+            "ref_id": "D2",
+            "detail": "decision=closure;cites=EV-011|EV-012;note=Closing without releasing"
+          }
+        ],
+        "holds": [
+          {
+            "placed_minute": "21",
+            "position": "between due minutes",
+            "reason": "Hold placed after escalation",
+            "released_minute": null,
+            "open_at_run_end": true,
+            "duration_minutes": "9"
+          }
+        ],
+        "orders": {
+          "TX-L-2": {
+            "held_at_due": false,
+            "outcome": "executed at 18 (due)"
+          },
+          "TX-L-3": {
+            "held_at_due": true,
+            "outcome": "held, still pending at run end"
+          }
+        },
+        "final_balance": 250000,
+        "requests": [],
+        "decisions": [
+          {
+            "decision_id": "D1",
+            "seq": 2,
+            "minute": "10",
+            "wall_clock": "2026-04-15T11:22:00Z",
+            "decision": "escalation",
+            "cites": [
+              "EV-011",
+              "EV-012",
+              "EV-013"
+            ],
+            "note": "Escalating without a hold",
+            "evidence_available": [
+              "EV-011",
+              "EV-012",
+              "EV-013",
+              "EV-014"
+            ],
+            "requests_outstanding": [],
+            "flags": []
+          },
+          {
+            "decision_id": "D2",
+            "seq": 8,
+            "minute": "24",
+            "wall_clock": "2026-04-15T11:36:00Z",
+            "decision": "closure",
+            "cites": [
+              "EV-011",
+              "EV-012"
+            ],
+            "note": "Closing without releasing",
+            "evidence_available": [
+              "EV-011",
+              "EV-012",
+              "EV-013",
+              "EV-014"
+            ],
+            "requests_outstanding": [],
+            "flags": []
+          }
+        ],
+        "consistency_flags": [
+          "escalation recorded while orders executed afterwards",
+          "hold still in place at run end after closure"
+        ]
+      }
+    }
+  }
+}

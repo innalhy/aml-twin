@@ -1,0 +1,17 @@
+{
+  "scenario_id": "hold_at_18_exact_due_syn_002",
+  "description": "CONTRACT 7-F: hold SYN-002 exactly at the first due minute; phase 2 precedes phase 3 so the order is held.",
+  "pack_id": "analyst-session-001",
+  "contract_version": "1.0",
+  "run_until_minute": 30,
+  "actions": [
+    {
+      "at_minute": 18,
+      "customer_id": "SYN-002",
+      "action": "hold",
+      "params": {
+        "reason": "Payer and recipients unverified"
+      }
+    }
+  ]
+}

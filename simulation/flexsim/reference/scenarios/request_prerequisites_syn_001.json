@@ -1,0 +1,58 @@
+{
+  "scenario_id": "request_prerequisites_syn_001",
+  "description": "CONTRACT 7-H: verify_payer rejected before EV-006 is released, accepted at 8 after docs arrive, payer response at 28; decision citing it at 20 rejected, at 28 recorded.",
+  "pack_id": "analyst-session-001",
+  "contract_version": "1.0",
+  "run_until_minute": 30,
+  "actions": [
+    {
+      "at_minute": 0,
+      "customer_id": "SYN-001",
+      "action": "request",
+      "params": {
+        "request_id": "verify_payer"
+      }
+    },
+    {
+      "at_minute": 0,
+      "customer_id": "SYN-001",
+      "action": "request",
+      "params": {
+        "request_id": "request_supporting_documents"
+      }
+    },
+    {
+      "at_minute": 8,
+      "customer_id": "SYN-001",
+      "action": "request",
+      "params": {
+        "request_id": "verify_payer"
+      }
+    },
+    {
+      "at_minute": 20,
+      "customer_id": "SYN-001",
+      "action": "decide",
+      "params": {
+        "decision": "escalation",
+        "evidence_ids": [
+          "EV-007"
+        ],
+        "note": "Contradictions remain"
+      }
+    },
+    {
+      "at_minute": 28,
+      "customer_id": "SYN-001",
+      "action": "decide",
+      "params": {
+        "decision": "escalation",
+        "evidence_ids": [
+          "EV-003",
+          "EV-007"
+        ],
+        "note": "Contradictions remain"
+      }
+    }
+  ]
+}

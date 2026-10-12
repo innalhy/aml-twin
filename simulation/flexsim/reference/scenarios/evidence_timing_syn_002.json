@@ -1,0 +1,78 @@
+{
+  "scenario_id": "evidence_timing_syn_002",
+  "description": "Evidence service times for SYN-002: docs 8 then payer 20 (release at 28); kyc 15 and recipients 10 both land at 15 in evidence_id order; screening 5; history 12. Payments never wait.",
+  "pack_id": "analyst-session-001",
+  "contract_version": "1.0",
+  "run_until_minute": 30,
+  "actions": [
+    {
+      "at_minute": 0,
+      "customer_id": "SYN-002",
+      "action": "request",
+      "params": {
+        "request_id": "request_supporting_documents"
+      }
+    },
+    {
+      "at_minute": 0,
+      "customer_id": "SYN-002",
+      "action": "request",
+      "params": {
+        "request_id": "review_kyc_log"
+      }
+    },
+    {
+      "at_minute": 1,
+      "customer_id": "SYN-002",
+      "action": "request",
+      "params": {
+        "request_id": "request_account_history"
+      }
+    },
+    {
+      "at_minute": 2,
+      "customer_id": "SYN-002",
+      "action": "request",
+      "params": {
+        "request_id": "resolve_screening"
+      }
+    },
+    {
+      "at_minute": 5,
+      "customer_id": "SYN-002",
+      "action": "request",
+      "params": {
+        "request_id": "verify_recipients"
+      }
+    },
+    {
+      "at_minute": 8,
+      "customer_id": "SYN-002",
+      "action": "request",
+      "params": {
+        "request_id": "verify_payer"
+      }
+    },
+    {
+      "at_minute": 29,
+      "customer_id": "SYN-002",
+      "action": "decide",
+      "params": {
+        "decision": "continue_review",
+        "evidence_ids": [
+          "EV-011",
+          "EV-012",
+          "EV-013",
+          "EV-014",
+          "EV-015",
+          "EV-016",
+          "EV-017",
+          "EV-018",
+          "EV-019",
+          "EV-020"
+        ],
+        "note": "All six responses reviewed"
+      }
+    }
+  ]
+}

@@ -1,0 +1,349 @@
+{
+  "scenario_id": "rejections",
+  "pack_id": "analyst-session-001",
+  "contract_version": "1.0",
+  "final_minute": "30",
+  "event_count": 19,
+  "accounts": {
+    "SYN-A001": {
+      "balance": 10000,
+      "held": false
+    },
+    "SYN-A002": {
+      "balance": 10000,
+      "held": false
+    },
+    "SYN-A003": {
+      "balance": 70977,
+      "held": true
+    },
+    "SYN-A004": {
+      "balance": 91655,
+      "held": false
+    },
+    "SYN-A005": {
+      "balance": 45936,
+      "held": false
+    },
+    "SYN-A006": {
+      "balance": 71133,
+      "held": false
+    }
+  },
+  "orders": {
+    "TX-2": {
+      "status": "executed",
+      "executed_minute": "18",
+      "overdue": false
+    },
+    "TX-L-2": {
+      "status": "executed",
+      "executed_minute": "18",
+      "overdue": false
+    },
+    "TX-3": {
+      "status": "executed",
+      "executed_minute": "23",
+      "overdue": false
+    },
+    "TX-L-3": {
+      "status": "executed",
+      "executed_minute": "23",
+      "overdue": false
+    }
+  },
+  "visible_evidence": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-006",
+    "EV-011",
+    "EV-012",
+    "EV-013",
+    "EV-014",
+    "EV-021",
+    "EV-022",
+    "EV-023",
+    "EV-024"
+  ],
+  "requests": [
+    {
+      "customer_id": "SYN-001",
+      "request_id": "request_supporting_documents",
+      "status": "completed",
+      "due_minute": "11"
+    },
+    {
+      "customer_id": "SYN-001",
+      "request_id": "verify_payer",
+      "status": "requested",
+      "due_minute": "31"
+    }
+  ],
+  "decisions": [
+    {
+      "decision_id": "D1",
+      "minute": "5",
+      "customer_id": "SYN-003",
+      "decision": "closure",
+      "evidence_ids": [
+        "EV-021"
+      ],
+      "note": "Reconciled"
+    }
+  ],
+  "description": "Every rejection branch: unknown request (background customer and misspelt id), unknown decision, foreign/unknown/unreleased citations, release when not held; a retry after a rejected request is accepted.",
+  "learner_debrief": {
+    "final_minute": "30",
+    "customers": {
+      "SYN-001": {
+        "account_id": "SYN-A001",
+        "timeline": [
+          {
+            "seq": 3,
+            "minute": "0",
+            "wall_clock": "2026-04-15T11:12:00Z",
+            "event_type": "request_rejected",
+            "ref_id": "review_kyc_lgo",
+            "detail": "reason=unknown_request"
+          },
+          {
+            "seq": 4,
+            "minute": "1",
+            "wall_clock": "2026-04-15T11:13:00Z",
+            "event_type": "decision_rejected",
+            "ref_id": "",
+            "detail": "reason=unknown_decision;decision=approve"
+          },
+          {
+            "seq": 5,
+            "minute": "1",
+            "wall_clock": "2026-04-15T11:13:00Z",
+            "event_type": "decision_rejected",
+            "ref_id": "",
+            "detail": "reason=evidence_not_available:EV-011;decision=closure"
+          },
+          {
+            "seq": 6,
+            "minute": "1",
+            "wall_clock": "2026-04-15T11:13:00Z",
+            "event_type": "decision_rejected",
+            "ref_id": "",
+            "detail": "reason=evidence_not_available:EV-999;decision=closure"
+          },
+          {
+            "seq": 7,
+            "minute": "1",
+            "wall_clock": "2026-04-15T11:13:00Z",
+            "event_type": "decision_rejected",
+            "ref_id": "",
+            "detail": "reason=evidence_not_available:EV-005;decision=closure"
+          },
+          {
+            "seq": 8,
+            "minute": "2",
+            "wall_clock": "2026-04-15T11:14:00Z",
+            "event_type": "release_rejected",
+            "ref_id": "",
+            "detail": "reason=not_held"
+          },
+          {
+            "seq": 9,
+            "minute": "3",
+            "wall_clock": "2026-04-15T11:15:00Z",
+            "event_type": "request_rejected",
+            "ref_id": "verify_payer",
+            "detail": "reason=prerequisite_missing:EV-006"
+          },
+          {
+            "seq": 10,
+            "minute": "3",
+            "wall_clock": "2026-04-15T11:15:00Z",
+            "event_type": "request_accepted",
+            "ref_id": "request_supporting_documents",
+            "detail": "due_minute=11"
+          },
+          {
+            "seq": 13,
+            "minute": "11",
+            "wall_clock": "2026-04-15T11:23:00Z",
+            "event_type": "evidence_released",
+            "ref_id": "EV-006",
+            "detail": "request_id=request_supporting_documents;title=Project invoice supplied by customer"
+          },
+          {
+            "seq": 14,
+            "minute": "11",
+            "wall_clock": "2026-04-15T11:23:00Z",
+            "event_type": "request_accepted",
+            "ref_id": "verify_payer",
+            "detail": "due_minute=31"
+          },
+          {
+            "seq": 15,
+            "minute": "18",
+            "wall_clock": "2026-04-15T11:30:00Z",
+            "event_type": "order_executed",
+            "ref_id": "TX-2",
+            "detail": "to=SYN-X02;trigger=due"
+          },
+          {
+            "seq": 17,
+            "minute": "23",
+            "wall_clock": "2026-04-15T11:35:00Z",
+            "event_type": "order_executed",
+            "ref_id": "TX-3",
+            "detail": "to=SYN-X03;trigger=due"
+          }
+        ],
+        "holds": [],
+        "orders": {
+          "TX-2": {
+            "held_at_due": false,
+            "outcome": "executed at 18 (due)"
+          },
+          "TX-3": {
+            "held_at_due": false,
+            "outcome": "executed at 23 (due)"
+          }
+        },
+        "final_balance": 10000,
+        "requests": [
+          {
+            "request_id": "review_kyc_lgo",
+            "minute": "0",
+            "accepted": false,
+            "reason": "unknown_request"
+          },
+          {
+            "request_id": "verify_payer",
+            "minute": "3",
+            "accepted": false,
+            "reason": "prerequisite_missing:EV-006"
+          },
+          {
+            "request_id": "request_supporting_documents",
+            "requested_minute": "3",
+            "completed_minute": "11",
+            "accepted": true
+          },
+          {
+            "request_id": "verify_payer",
+            "requested_minute": "11",
+            "completed_minute": "outstanding at run end",
+            "accepted": true
+          }
+        ],
+        "decisions": [],
+        "consistency_flags": []
+      },
+      "SYN-002": {
+        "account_id": "SYN-A002",
+        "timeline": [
+          {
+            "seq": 16,
+            "minute": "18",
+            "wall_clock": "2026-04-15T11:30:00Z",
+            "event_type": "order_executed",
+            "ref_id": "TX-L-2",
+            "detail": "to=SYN-X05;trigger=due"
+          },
+          {
+            "seq": 18,
+            "minute": "23",
+            "wall_clock": "2026-04-15T11:35:00Z",
+            "event_type": "order_executed",
+            "ref_id": "TX-L-3",
+            "detail": "to=SYN-X06;trigger=due"
+          }
+        ],
+        "holds": [],
+        "orders": {
+          "TX-L-2": {
+            "held_at_due": false,
+            "outcome": "executed at 18 (due)"
+          },
+          "TX-L-3": {
+            "held_at_due": false,
+            "outcome": "executed at 23 (due)"
+          }
+        },
+        "final_balance": 10000,
+        "requests": [],
+        "decisions": [],
+        "consistency_flags": []
+      },
+      "SYN-003": {
+        "account_id": "SYN-A003",
+        "timeline": [
+          {
+            "seq": 2,
+            "minute": "0",
+            "wall_clock": "2026-04-15T11:12:00Z",
+            "event_type": "request_rejected",
+            "ref_id": "review_kyc_log",
+            "detail": "reason=unknown_request"
+          },
+          {
+            "seq": 11,
+            "minute": "4",
+            "wall_clock": "2026-04-15T11:16:00Z",
+            "event_type": "hold_placed",
+            "ref_id": "",
+            "detail": "reason=Background customers may be held"
+          },
+          {
+            "seq": 12,
+            "minute": "5",
+            "wall_clock": "2026-04-15T11:17:00Z",
+            "event_type": "decision_recorded",
+            "ref_id": "D1",
+            "detail": "decision=closure;cites=EV-021;note=Reconciled"
+          }
+        ],
+        "holds": [
+          {
+            "placed_minute": "4",
+            "position": "no due minutes",
+            "reason": "Background customers may be held",
+            "released_minute": null,
+            "open_at_run_end": true,
+            "duration_minutes": "26"
+          }
+        ],
+        "orders": {},
+        "final_balance": 70977,
+        "requests": [
+          {
+            "request_id": "review_kyc_log",
+            "minute": "0",
+            "accepted": false,
+            "reason": "unknown_request"
+          }
+        ],
+        "decisions": [
+          {
+            "decision_id": "D1",
+            "seq": 12,
+            "minute": "5",
+            "wall_clock": "2026-04-15T11:17:00Z",
+            "decision": "closure",
+            "cites": [
+              "EV-021"
+            ],
+            "note": "Reconciled",
+            "evidence_available": [
+              "EV-021"
+            ],
+            "requests_outstanding": [],
+            "flags": []
+          }
+        ],
+        "consistency_flags": [
+          "hold still in place at run end after closure"
+        ]
+      }
+    }
+  }
+}

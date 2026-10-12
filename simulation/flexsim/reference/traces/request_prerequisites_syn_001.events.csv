@@ -1,0 +1,14 @@
+seq,sim_minute,customer_id,account_id,event_type,ref_id,amount,balance_after,detail
+1,0,,,run_start,,,,scenario_id=request_prerequisites_syn_001;pack=analyst-session-001;contract=1.0
+2,0,SYN-001,SYN-A001,request_rejected,verify_payer,,480000,reason=prerequisite_missing:EV-006
+3,0,SYN-001,SYN-A001,request_accepted,request_supporting_documents,,480000,due_minute=8
+4,8,SYN-001,SYN-A001,evidence_released,EV-006,,480000,request_id=request_supporting_documents;title=Project invoice supplied by customer
+5,8,SYN-001,SYN-A001,request_accepted,verify_payer,,480000,due_minute=28
+6,18,SYN-001,SYN-A001,order_executed,TX-2,230000,250000,to=SYN-X02;trigger=due
+7,18,SYN-002,SYN-A002,order_executed,TX-L-2,230000,250000,to=SYN-X05;trigger=due
+8,20,SYN-001,SYN-A001,decision_rejected,,,250000,reason=evidence_not_available:EV-007;decision=escalation
+9,23,SYN-001,SYN-A001,order_executed,TX-3,240000,10000,to=SYN-X03;trigger=due
+10,23,SYN-002,SYN-A002,order_executed,TX-L-3,240000,10000,to=SYN-X06;trigger=due
+11,28,SYN-001,SYN-A001,evidence_released,EV-007,,10000,request_id=verify_payer;title=Payer and invoice verification response
+12,28,SYN-001,SYN-A001,decision_recorded,D1,,10000,decision=escalation;cites=EV-003|EV-007;note=Contradictions remain
+13,30,,,run_end,,,,final_minute=30

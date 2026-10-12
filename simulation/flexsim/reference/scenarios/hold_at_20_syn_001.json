@@ -1,0 +1,17 @@
+{
+  "scenario_id": "hold_at_20_syn_001",
+  "description": "CONTRACT 7-C: hold SYN-001 between the due minutes; first executed, second held (250000).",
+  "pack_id": "analyst-session-001",
+  "contract_version": "1.0",
+  "run_until_minute": 30,
+  "actions": [
+    {
+      "at_minute": 20,
+      "customer_id": "SYN-001",
+      "action": "hold",
+      "params": {
+        "reason": "Payer and recipients unverified"
+      }
+    }
+  ]
+}

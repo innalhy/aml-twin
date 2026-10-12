@@ -1,0 +1,6 @@
+seq,sim_minute,customer_id,account_id,event_type,ref_id,amount,balance_after,detail
+1,0,,,run_start,,,,scenario_id=run_until_20;pack=analyst-session-001;contract=1.0
+2,10,SYN-001,SYN-A001,request_accepted,review_kyc_log,,480000,due_minute=25
+3,18,SYN-001,SYN-A001,order_executed,TX-2,230000,250000,to=SYN-X02;trigger=due
+4,18,SYN-002,SYN-A002,order_executed,TX-L-2,230000,250000,to=SYN-X05;trigger=due
+5,20,,,run_end,,,,final_minute=20

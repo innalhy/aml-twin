@@ -1,0 +1,7 @@
+alert_id,customer_id,account_id,created_at,priority,status,trigger_code,transaction_ids,summary
+AL-001,SYN-001,SYN-A001,2026-04-15T11:12:00Z,high,unassigned,NEW_ACCOUNT_CREDIT_AND_FANOUT,TX-1|TX-2|TX-3,New account received 480000 SCU with two pending outgoing orders totalling 470000 SCU; onboarding quality observations remain in the file.
+AL-002,SYN-002,SYN-A002,2026-04-15T11:12:00Z,high,unassigned,NEW_ACCOUNT_CREDIT_AND_FANOUT,TX-L-1|TX-L-2|TX-L-3,New account received 480000 SCU with two pending outgoing orders totalling 470000 SCU; onboarding quality observations remain in the file.
+AL-003,SYN-003,SYN-A003,2026-04-14T09:22:00Z,normal,unassigned,CREDIT_EXCEPTION,TX-B3-028|TX-B3-030,One non-payroll credit of 8200 SCU requires reconciliation.
+AL-004,SYN-004,SYN-A004,2026-04-14T09:29:00Z,normal,unassigned,REPEATED_REFERENCE,TX-B4-028|TX-B4-030,Two credits use invoice reference TR-042.
+AL-005,SYN-005,SYN-A005,2026-04-14T09:36:00Z,normal,unassigned,UNFAMILIAR_PAYEE,TX-B5-030,First transfer to the club reserve account in the supplied history.
+AL-006,SYN-006,SYN-A006,2026-04-14T09:43:00Z,normal,unassigned,REFUND_REVIEW,TX-B6-028|TX-B6-030,Refund of 3200 SCU needs matching to the original receipt.

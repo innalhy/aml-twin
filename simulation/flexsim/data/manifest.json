@@ -1,0 +1,170 @@
+{
+  "pack_id": "analyst-session-001",
+  "pack_path": "data/evidence/analyst-session-001",
+  "snapshot_at": "2026-04-15T11:12:00Z",
+  "generated_by": "simulation/flexsim/data/export_tables.py",
+  "tables": [
+    {
+      "name": "customers",
+      "file": "tables/customers.csv",
+      "rows": 6,
+      "columns": [
+        "customer_id",
+        "display_name",
+        "date_of_birth",
+        "occupation",
+        "employment_basis",
+        "declared_monthly_income",
+        "expected_monthly_credits",
+        "expected_largest_credit",
+        "expected_payment_purpose",
+        "expected_counterparties",
+        "account_id",
+        "onboarded_at",
+        "unit"
+      ],
+      "sources": [
+        "data/evidence/analyst-session-001/learner/customers.json"
+      ]
+    },
+    {
+      "name": "accounts",
+      "file": "tables/accounts.csv",
+      "rows": 24,
+      "columns": [
+        "account_id",
+        "holder_id",
+        "holder_name",
+        "institution",
+        "account_type",
+        "opened_at",
+        "opening_balance",
+        "opening_balance_at",
+        "unit"
+      ],
+      "sources": [
+        "data/evidence/analyst-session-001/learner/accounts.csv"
+      ]
+    },
+    {
+      "name": "transactions",
+      "file": "tables/transactions.csv",
+      "rows": 126,
+      "columns": [
+        "transaction_id",
+        "submitted_at",
+        "executed_at",
+        "scheduled_at",
+        "from_account",
+        "to_account",
+        "amount",
+        "unit",
+        "status",
+        "memo"
+      ],
+      "sources": [
+        "data/evidence/analyst-session-001/learner/transactions.csv"
+      ]
+    },
+    {
+      "name": "alerts",
+      "file": "tables/alerts.csv",
+      "rows": 6,
+      "columns": [
+        "alert_id",
+        "customer_id",
+        "account_id",
+        "created_at",
+        "priority",
+        "status",
+        "trigger_code",
+        "transaction_ids",
+        "summary"
+      ],
+      "sources": [
+        "data/evidence/analyst-session-001/learner/alerts.csv"
+      ]
+    },
+    {
+      "name": "request_catalog",
+      "file": "tables/request_catalog.csv",
+      "rows": 12,
+      "columns": [
+        "customer_id",
+        "request_id",
+        "title",
+        "service_minutes",
+        "prerequisite_evidence_id"
+      ],
+      "sources": [
+        "data/evidence/analyst-session-001/learner/request-catalog.csv"
+      ]
+    },
+    {
+      "name": "evidence_catalog",
+      "file": "tables/evidence_catalog.csv",
+      "rows": 24,
+      "columns": [
+        "evidence_id",
+        "customer_id",
+        "title",
+        "source",
+        "release",
+        "request_id",
+        "service_minutes",
+        "prerequisite_evidence_id",
+        "learner_path",
+        "instructor_path"
+      ],
+      "sources": [
+        "data/evidence/analyst-session-001/instructor/evidence-index.csv",
+        "data/evidence/analyst-session-001/learner/evidence-index.csv"
+      ]
+    },
+    {
+      "name": "due_events",
+      "file": "tables/due_events.csv",
+      "rows": 4,
+      "columns": [
+        "event_id",
+        "due_minute",
+        "due_at",
+        "customer_id",
+        "account_id",
+        "transaction_id",
+        "from_account",
+        "to_account",
+        "amount",
+        "unit",
+        "event_type",
+        "action_if_eligible",
+        "eligibility"
+      ],
+      "sources": [
+        "data/evidence/analyst-session-001/instructor/events.csv",
+        "data/evidence/analyst-session-001/learner/transactions.csv"
+      ]
+    },
+    {
+      "name": "initial_state",
+      "file": "tables/initial_state.csv",
+      "rows": 6,
+      "columns": [
+        "account_id",
+        "customer_id",
+        "holder_name",
+        "snapshot_balance",
+        "unit",
+        "account_status",
+        "executed_transfer_count",
+        "pending_order_ids",
+        "pending_outgoing_total"
+      ],
+      "sources": [
+        "data/evidence/analyst-session-001/learner/accounts.csv",
+        "data/evidence/analyst-session-001/learner/transactions.csv",
+        "data/evidence/analyst-session-001/learner/customers.json"
+      ]
+    }
+  ]
+}

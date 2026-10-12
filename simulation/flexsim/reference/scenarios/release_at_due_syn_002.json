@@ -1,0 +1,25 @@
+{
+  "scenario_id": "release_at_due_syn_002",
+  "description": "CONTRACT 4.3: hold SYN-002 at 10, release exactly at 18; the order due at 18 is left to phase 3 (trigger=due), exactly one execution.",
+  "pack_id": "analyst-session-001",
+  "contract_version": "1.0",
+  "run_until_minute": 30,
+  "actions": [
+    {
+      "at_minute": 10,
+      "customer_id": "SYN-002",
+      "action": "hold",
+      "params": {
+        "reason": "Payer and recipients unverified"
+      }
+    },
+    {
+      "at_minute": 18,
+      "customer_id": "SYN-002",
+      "action": "release",
+      "params": {
+        "note": "Concerns resolved"
+      }
+    }
+  ]
+}

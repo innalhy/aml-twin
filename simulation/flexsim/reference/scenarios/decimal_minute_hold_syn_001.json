@@ -1,0 +1,17 @@
+{
+  "scenario_id": "decimal_minute_hold_syn_001",
+  "description": "Decimal clock: hold SYN-001 at 17.5 (FlexSim time is a double); trace prints 17.5 and the order due at 18 is held.",
+  "pack_id": "analyst-session-001",
+  "contract_version": "1.0",
+  "run_until_minute": 30,
+  "actions": [
+    {
+      "at_minute": 17.5,
+      "customer_id": "SYN-001",
+      "action": "hold",
+      "params": {
+        "reason": "Payer and recipients unverified"
+      }
+    }
+  ]
+}

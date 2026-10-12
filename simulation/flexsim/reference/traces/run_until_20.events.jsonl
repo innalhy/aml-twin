@@ -1,0 +1,5 @@
+{"seq": "1", "sim_minute": "0", "customer_id": "", "account_id": "", "event_type": "run_start", "ref_id": "", "amount": "", "balance_after": "", "detail": "scenario_id=run_until_20;pack=analyst-session-001;contract=1.0"}
+{"seq": "2", "sim_minute": "10", "customer_id": "SYN-001", "account_id": "SYN-A001", "event_type": "request_accepted", "ref_id": "review_kyc_log", "amount": "", "balance_after": "480000", "detail": "due_minute=25"}
+{"seq": "3", "sim_minute": "18", "customer_id": "SYN-001", "account_id": "SYN-A001", "event_type": "order_executed", "ref_id": "TX-2", "amount": "230000", "balance_after": "250000", "detail": "to=SYN-X02;trigger=due"}
+{"seq": "4", "sim_minute": "18", "customer_id": "SYN-002", "account_id": "SYN-A002", "event_type": "order_executed", "ref_id": "TX-L-2", "amount": "230000", "balance_after": "250000", "detail": "to=SYN-X05;trigger=due"}
+{"seq": "5", "sim_minute": "20", "customer_id": "", "account_id": "", "event_type": "run_end", "ref_id": "", "amount": "", "balance_after": "", "detail": "final_minute=20"}
