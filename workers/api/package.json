@@ -9,7 +9,7 @@
     "dev": "npm run build:node && npm run start:node",
     "dev:worker": "wrangler dev",
     "typecheck": "tsc --noEmit",
-    "test": "node tests/engine.test.mjs",
+    "test": "node tests/engine.test.mjs && node tests/cases.test.mjs",
     "test:api": "node tests/api.test.mjs",
     "test:node": "npm run build:node && node --test tests/node-server.test.mjs",
     "deploy": "wrangler deploy",

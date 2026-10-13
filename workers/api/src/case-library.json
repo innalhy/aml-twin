@@ -1,0 +1,4214 @@
+{
+  "workflows": [
+    {
+      "number": 1,
+      "title": "Deepfake executive impersonation",
+      "method": "Fraudsters combine social engineering with digital synthesis. They persuade an employee who can authorise payments to complete a transfer that looks legitimate. They do not need to break into the bank or the IT system.",
+      "realWorld": [
+        {
+          "label": "Fraudster impersonates the CFO or another senior officer and sends the first email or message",
+          "decision": false
+        },
+        {
+          "label": "The message claims a confidential, urgent, or non-public acquisition or investment",
+          "decision": false
+        },
+        {
+          "label": "The employee doubts it at first, so the fraudster arranges a video meeting",
+          "decision": false
+        },
+        {
+          "label": "The video shows a digitally generated image of the CFO, a colleague, or management",
+          "decision": false
+        },
+        {
+          "label": "Authority, urgency, secrecy, and familiarity lead the employee to believe the payment is authorised",
+          "decision": false
+        },
+        {
+          "label": "The employee transfers the funds as instructed, often in several payments to several named accounts",
+          "decision": false
+        },
+        {
+          "label": "Mule accounts controlled by the fraudster receive the funds and move them on quickly",
+          "decision": false
+        }
+      ],
+      "role": "Finance officer or payment approver.",
+      "goal": "A video image is not proof that a payment was authorised. A high-risk payment must be checked on an independent channel that was set up in advance, such as a callback to a reserved phone number, or dual sign-off.",
+      "teaching": [
+        {
+          "label": "Trainee receives an urgent payment email from the CFO",
+          "decision": false
+        },
+        {
+          "label": "Trainee joins a video meeting and sees the amount and the payee",
+          "decision": false
+        },
+        {
+          "label": "Trainee decision",
+          "decision": true
+        },
+        {
+          "label": "A. Approve immediately: high risk, wrong handling",
+          "decision": false
+        },
+        {
+          "label": "B. Ask for more documents: medium risk, no live verification",
+          "decision": false
+        },
+        {
+          "label": "C. Verify with the CFO on an independent known channel or by phone: correct handling",
+          "decision": false
+        },
+        {
+          "label": "D. Escalate to compliance or the finance head for a second review: correct handling",
+          "decision": false
+        },
+        {
+          "label": "The system shows whether the funds were lost or stopped, and a risk analysis",
+          "decision": false
+        }
+      ],
+      "teachingNotes": [],
+      "caseIds": [
+        "deepfake-001"
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Crypto mixers and mule accounts",
+      "method": "The method has two stages. Mule accounts move the victim's funds through layers. A crypto mixer then breaks the direct on-chain link. The aim is to make it harder to connect the original fraud proceeds to the offender.",
+      "realWorld": [
+        {
+          "label": "Victim is deceived into transferring funds",
+          "decision": false
+        },
+        {
+          "label": "Funds enter a first-layer mule account",
+          "decision": false
+        },
+        {
+          "label": "The holder or controller quickly sends them to a second or third layer",
+          "decision": false
+        },
+        {
+          "label": "Funds are withdrawn, used to buy crypto, or sent to an overseas account",
+          "decision": false
+        },
+        {
+          "label": "The offender deposits the crypto into a mixer",
+          "decision": false
+        },
+        {
+          "label": "The mixer splits and mixes funds from many users",
+          "decision": false
+        },
+        {
+          "label": "The offender receives an equivalent amount, after fees, at a new anonymous address",
+          "decision": false
+        },
+        {
+          "label": "The direct on-chain link is broken, so the source is hard to read straight off the chain",
+          "decision": false
+        }
+      ],
+      "role": "Bank AML analyst, or compliance officer at a crypto exchange.",
+      "goal": "Weigh several red flags together, then choose enhanced due diligence, a stop on the transaction, or a draft suspicious transaction report.",
+      "teaching": [
+        {
+          "label": "The system shows the account: a sudden large credit, then transfers to many accounts or exchanges",
+          "decision": false
+        },
+        {
+          "label": "On-chain material shows the funds ending at mixer-linked addresses",
+          "decision": false
+        },
+        {
+          "label": "Trainee decision",
+          "decision": true
+        },
+        {
+          "label": "A. Close the case as a normal investment: high risk, red flags ignored",
+          "decision": false
+        },
+        {
+          "label": "B. Ask for source-of-funds evidence: enhanced due diligence, outbound payments limited",
+          "decision": false
+        },
+        {
+          "label": "C. Draft a suspicious transaction report and recommend a freeze",
+          "decision": false
+        },
+        {
+          "label": "D. Start an exit from the customer relationship",
+          "decision": false
+        },
+        {
+          "label": "The system checks whether the trainee saw that the flow does not match the customer, and the mixer link",
+          "decision": false
+        }
+      ],
+      "teachingNotes": [],
+      "caseIds": []
+    },
+    {
+      "number": 3,
+      "title": "Synthetic identity fraud",
+      "method": "A real identifier that has been stolen is combined with invented details to build a person who does not exist. The sequence is to assemble the identity, inflate the credit record, draw down the credit, and cash it out.",
+      "realWorld": [
+        {
+          "label": "Assemble the identity: a real identity number with a false name, address, and phone",
+          "decision": false
+        },
+        {
+          "label": "Inflate the credit file: manufactured repayment history, and a picture of steady income and a good score",
+          "decision": false
+        },
+        {
+          "label": "Apply for a card, a personal loan, or a bank account in that identity",
+          "decision": false
+        },
+        {
+          "label": "In a short time, spend, overdraw, borrow, or buy assets that can be resold",
+          "decision": false
+        },
+        {
+          "label": "Fake spending through a sham or complicit merchant turns the credit line into merchant funds, or the funds are withdrawn in cash",
+          "decision": false
+        },
+        {
+          "label": "Repayment stops and the identity disappears. The person does not exist, so the firm bears the loss",
+          "decision": false
+        }
+      ],
+      "role": "KYC reviewer, or an onboarding and credit reviewer.",
+      "goal": "At onboarding and at a credit application, see contradictions in the file, an abnormal credit trail, and a complicit-merchant pattern.",
+      "teaching": [
+        {
+          "label": "The trainee receives an account or card application from the synthetic-identity customer",
+          "decision": false
+        },
+        {
+          "label": "The trainee can open identity documents, the credit report, the address, the device address, and linked accounts",
+          "decision": false
+        },
+        {
+          "label": "Red flags: the identity number does not match the name, or the credit file shows a sudden manufactured rise",
+          "decision": false
+        },
+        {
+          "label": "Trainee decision",
+          "decision": true
+        },
+        {
+          "label": "A. Approve the account and the credit limit: high risk, the fraud is missed",
+          "decision": false
+        },
+        {
+          "label": "B. Ask for proof of a physical address and a further identity check: enhanced due diligence",
+          "decision": false
+        },
+        {
+          "label": "C. Refuse the account, mark a possible synthetic identity, and report it to internal compliance",
+          "decision": false
+        },
+        {
+          "label": "If approved, that identity later draws down the credit and then defaults and disappears",
+          "decision": false
+        },
+        {
+          "label": "If refused or sent to enhanced review, the account or credit does not open as applied for",
+          "decision": false
+        }
+      ],
+      "teachingNotes": [],
+      "caseIds": []
+    },
+    {
+      "number": 4,
+      "title": "Trade-based money laundering",
+      "method": "A criminal group uses international trade as cover. Goods are overpriced or invented, and the invoice does not match the shipping papers. Illegal funds cross a border as if they were trade payments.",
+      "realWorld": [
+        {
+          "label": "A shell company or trader files import or export papers, for example a claimed jewellery or diamond trade",
+          "decision": false
+        },
+        {
+          "label": "The declared corridor or the goods value does not match the size of the firm",
+          "decision": false
+        },
+        {
+          "label": "The payment comes from someone who is not the buyer on the invoice",
+          "decision": false
+        },
+        {
+          "label": "There is no bill of lading, customs record, or stock record for a real shipment",
+          "decision": false
+        },
+        {
+          "label": "The same day the money arrives, it is split to personal or overseas accounts that have nothing to do with the trade",
+          "decision": false
+        },
+        {
+          "label": "The funds have moved across a border. On the surface it looks like ordinary commerce",
+          "decision": false
+        }
+      ],
+      "role": "Trade-finance officer, or a corporate compliance reviewer.",
+      "goal": "See the gaps in the papers, including missing shipment evidence and a third-party payer. Do not treat those gaps as documents still in transit, or as an ordinary commercial delay.",
+      "teaching": [
+        {
+          "label": "The trainee reviews the firm's jewellery-export account and the transactions",
+          "decision": false
+        },
+        {
+          "label": "Two risks: no shipment evidence, and the buyer, seller, and payer do not match",
+          "decision": false
+        },
+        {
+          "label": "Trainee decision",
+          "decision": true
+        },
+        {
+          "label": "A. Accept documents in transit and release the payment: high risk, wrong handling",
+          "decision": false
+        },
+        {
+          "label": "B. Order enhanced due diligence and stop outbound payments: correct handling",
+          "decision": false
+        },
+        {
+          "label": "C. Draft a suspicious transaction report, or recommend exiting the relationship: correct handling",
+          "decision": false
+        },
+        {
+          "label": "If the payment is released, the later split triggers a breach alert",
+          "decision": false
+        },
+        {
+          "label": "If the case is held for review or reported, the outbound payment is not released on the trade file",
+          "decision": false
+        }
+      ],
+      "teachingNotes": [
+        "After a release, the check is whether the trainee followed the rules in the script. A later oral explanation is not that check."
+      ],
+      "caseIds": [
+        "daybreak-tbml-001"
+      ]
+    },
+    {
+      "number": 5,
+      "title": "Cross-border phone-fraud corridors",
+      "method": "A criminal group uses a cross-border remittance corridor, such as a Hong Kong company paying Mainland personal accounts. Nominal commission or a fee paid for a customer is the cover. Phone-fraud proceeds are fanned out quickly to many unrelated personal accounts.",
+      "realWorld": [
+        {
+          "label": "A Hong Kong company account pays large amounts to dozens of Mainland personal accounts in a short time",
+          "decision": false
+        },
+        {
+          "label": "The stated purpose is commission or a service fee",
+          "decision": false
+        },
+        {
+          "label": "Bank compliance or a correspondent indicator shows the payees are not on the supplier list in the file",
+          "decision": false
+        },
+        {
+          "label": "There is no real commercial contract, and the payees are not connected to each other",
+          "decision": false
+        },
+        {
+          "label": "The funds are a fan-out channel for cross-border phone-fraud proceeds",
+          "decision": false
+        },
+        {
+          "label": "The money is then split and withdrawn, which cuts the enforcement trail",
+          "decision": false
+        }
+      ],
+      "role": "Cross-border compliance officer, or a transaction-monitoring analyst.",
+      "goal": "Recognise a large set of personal payees with no contract, and a phone-fraud corridor indicator. Do not close the case on an oral story that the firm was paying a fee for a customer, or paying commission.",
+      "teaching": [
+        {
+          "label": "The system shows a corporate customer making frequent fan-out payments to many Mainland personal accounts",
+          "decision": false
+        },
+        {
+          "label": "The file has no commission contract, and a correspondent fraud-typology indicator has fired",
+          "decision": false
+        },
+        {
+          "label": "Trainee decision",
+          "decision": true
+        },
+        {
+          "label": "A. Accept the oral fee or commission story and close the case: high risk, wrong handling",
+          "decision": false
+        },
+        {
+          "label": "B. Stop outbound payments and run enhanced due diligence on the corridor: correct handling",
+          "decision": false
+        },
+        {
+          "label": "C. Recommend a freeze, draft a suspicious transaction report, or exit the relationship: correct handling",
+          "decision": false
+        },
+        {
+          "label": "If the oral story is accepted, the fan-out is cleared while it continues",
+          "decision": false
+        },
+        {
+          "label": "If payments are stopped or the case is reported, the corridor is not cleared on the oral story",
+          "decision": false
+        }
+      ],
+      "teachingNotes": [
+        "The check is whether the trainee holds the line when the indicators are already on the file, and refuses a passive close."
+      ],
+      "caseIds": [
+        "crossborder-tel-001"
+      ]
+    },
+    {
+      "number": 6,
+      "title": "Account rental and mule clusters",
+      "method": "A criminal group recruits people who need money, such as students or people on a low income, on social media. The offer is to rent or sell control of a bank account. After control passes, a small test credit arrives, and the account then becomes a hub for fraud proceeds.",
+      "realWorld": [
+        {
+          "label": "A criminal group posts on social media: earn at home, safe and legal, rent out your account",
+          "decision": false
+        },
+        {
+          "label": "A retail customer hands over online-banking login, a one-time code, or a password",
+          "decision": false
+        },
+        {
+          "label": "An unknown third party has full control of the account",
+          "decision": false
+        },
+        {
+          "label": "The account receives a small test credit",
+          "decision": false
+        },
+        {
+          "label": "In a short time, many victim payments arrive, for example from investment or romance fraud",
+          "decision": false
+        },
+        {
+          "label": "The funds are transferred, withdrawn, or sent to other mule accounts",
+          "decision": false
+        }
+      ],
+      "role": "Retail-bank risk officer, or a mule-monitoring specialist.",
+      "goal": "When account rental or third-party control is on the file, report it and stop payments. Closing the account without a suspicious transaction report is an incomplete exit.",
+      "teaching": [
+        {
+          "label": "An alert shows a retail customer offering the account on social media, and a small test credit has arrived",
+          "decision": false
+        },
+        {
+          "label": "In interview the customer admits the account was given to a third party",
+          "decision": false
+        },
+        {
+          "label": "Trainee decision",
+          "decision": true
+        },
+        {
+          "label": "A. Exit the relationship and close the account, with no suspicious transaction report: incomplete, wrong handling",
+          "decision": false
+        },
+        {
+          "label": "B. Accept that the customer was only helping a friend, and keep the account open under extra monitoring: high risk, wrong handling",
+          "decision": false
+        },
+        {
+          "label": "C. Stop outbound payments at once, draft a suspicious transaction report, and recommend a freeze: correct handling",
+          "decision": false
+        },
+        {
+          "label": "Closing without a report leaves the gap of exit without a report",
+          "decision": false
+        },
+        {
+          "label": "If the friend story is accepted, a third party still controls a live account",
+          "decision": false
+        },
+        {
+          "label": "If payments are stopped and a report is drafted, the control transfer is not left unreported",
+          "decision": false
+        }
+      ],
+      "teachingNotes": [
+        "The check is whether the trainee avoids the common gap of walking away from the customer and omitting the report."
+      ],
+      "caseIds": [
+        "mule-rent-001",
+        "greythunder-mule-001"
+      ]
+    },
+    {
+      "number": 7,
+      "title": "Cash and crypto OTC cashing-out",
+      "method": "A salary retail account collects many third-party credits, then the funds leave through large cash withdrawals and transfers to an over-the-counter crypto dealer. The aim is to cash out and move the money out of ordinary bank monitoring.",
+      "realWorld": [
+        {
+          "label": "A salary retail account collects many third-party credits of unclear origin in a short time",
+          "decision": false
+        },
+        {
+          "label": "The amount and frequency do not match the salary on file",
+          "decision": false
+        },
+        {
+          "label": "The money then moves on two high-risk paths: large cash withdrawals, and transfers to an over-the-counter crypto dealer",
+          "decision": false
+        },
+        {
+          "label": "When asked, the customer cannot give a source of funds that matches the file, and only says a friend exchanged currency",
+          "decision": false
+        },
+        {
+          "label": "The funds leave in cash and in crypto. The cash-out and the concealment are done",
+          "decision": false
+        }
+      ],
+      "role": "Retail-bank AML alert reviewer.",
+      "goal": "When the customer cannot show a source of funds that matches the file, do not accept that gap as an explanation. Cash plus an over-the-counter crypto dealer calls for a hold, a freeze recommendation, or a report.",
+      "teaching": [
+        {
+          "label": "The system shows large movements on a salary customer, including payments to an over-the-counter dealer",
+          "decision": false
+        },
+        {
+          "label": "Decision 1",
+          "decision": true
+        },
+        {
+          "label": "A. Note it as personal investment and close: a poor start, the risk is ignored",
+          "decision": false
+        },
+        {
+          "label": "B. Ask for source-of-funds evidence and run enhanced due diligence, or hold outbound payments first: correct handling",
+          "decision": false
+        },
+        {
+          "label": "The customer only says a friend exchanged currency and cannot prove it. Rule R1: a blank source must not be closed",
+          "decision": false
+        },
+        {
+          "label": "Decision 2",
+          "decision": true
+        },
+        {
+          "label": "A. Accept the friend-exchange story and release: overrides R1, wrong handling",
+          "decision": false
+        },
+        {
+          "label": "B. Keep the outbound hold, draft a suspicious transaction report, or recommend a freeze: matches R2",
+          "decision": false
+        }
+      ],
+      "teachingNotes": [
+        "The check is whether the trainee refuses a blank source, and whether cash plus an over-the-counter path is held or reported."
+      ],
+      "caseIds": [
+        "justicegate-crypto-001"
+      ]
+    },
+    {
+      "number": 8,
+      "title": "KOL management front company",
+      "method": "A criminal group sets up or controls a company that looks like influencer management, public relations, or entertainment. There are no brand contracts, no real business, and no payroll. The account takes in retail third-party funds, often tied to phone, investment, or romance fraud stories, and sends them out quickly.",
+      "realWorld": [
+        {
+          "label": "A shell influencer-management company declares an ordinary business",
+          "decision": false
+        },
+        {
+          "label": "The account often receives credits from individual retail third parties",
+          "decision": false
+        },
+        {
+          "label": "The company has no brand contracts and no payroll records",
+          "decision": false
+        },
+        {
+          "label": "The inflows match common fraud stories: romance, investment, and phone fraud",
+          "decision": false
+        },
+        {
+          "label": "The money is sent out quickly. The group's transfer of proceeds is done",
+          "decision": false
+        }
+      ],
+      "role": "Corporate compliance officer, or a company-account reviewer.",
+      "goal": "A front company with no contracts and no payroll must not have its retail credits, or a fraud story, relabelled as brand-cooperation income. Run enhanced due diligence, hold outbound payments, or draft a suspicious transaction report.",
+      "teaching": [
+        {
+          "label": "The system shows two influencer-management companies with similar flows, and no brand contracts or payroll",
+          "decision": false
+        },
+        {
+          "label": "Decision 1",
+          "decision": true
+        },
+        {
+          "label": "A. Follow the customer's words and record the credits as brand-cooperation income: a poor start, wrong handling",
+          "decision": false
+        },
+        {
+          "label": "B. Ask for the management contracts, run enhanced due diligence on the business, or exit the relationship: correct handling",
+          "decision": false
+        },
+        {
+          "label": "The flows match mixed phone, investment, and romance fraud, and the money leaves quickly. Rule R2 has fired",
+          "decision": false
+        },
+        {
+          "label": "Decision 2",
+          "decision": true
+        },
+        {
+          "label": "A. Keep the brand-cooperation label and close: ignores R2, wrong handling",
+          "decision": false
+        },
+        {
+          "label": "B. Recommend a freeze, draft a suspicious transaction report, or exit the relationship: correct handling",
+          "decision": false
+        }
+      ],
+      "teachingNotes": [
+        "The check is whether the trainee runs due diligence on the front business, and refuses to dress a mixed fraud story up as commercial income."
+      ],
+      "caseIds": [
+        "kol-mgmt-001"
+      ]
+    },
+    {
+      "number": 9,
+      "title": "Multi-typology mule account",
+      "method": "One retail mule account, inside a short window such as one month, receives proceeds from several fraud types: a part-time-job salary, a romance gift, a gambling top-up refund, a shopping refund. The payers do not know each other. When questioned, the customer offers one story, such as an online part-time job, while asking for a same-day near-full cash-out.",
+      "realWorld": [
+        {
+          "label": "Inside a one-month review window, one retail account receives several fraud types: part-time work, romance, gambling, and shopping",
+          "decision": false
+        },
+        {
+          "label": "The payers do not know each other, and they are not known counterparties",
+          "decision": false
+        },
+        {
+          "label": "When questioned, the customer offers one excuse, for example that everything is an online part-time salary, and cannot explain the other credits",
+          "decision": false
+        },
+        {
+          "label": "The customer then asks for a same-day large cash withdrawal or transfer, close to the full balance, in and out quickly",
+          "decision": false
+        },
+        {
+          "label": "The proceeds are split and moved. The multi-typology mule task is done",
+          "decision": false
+        }
+      ],
+      "role": "Senior transaction-monitoring analyst, or a retail risk officer.",
+      "goal": "When one account shows several fraud types, do not close on the customer's single story. A request to move almost the full balance the same day calls for a hold, a freeze recommendation, or a report.",
+      "teaching": [
+        {
+          "label": "An alert shows one retail account receiving four suspicious credit types inside one month",
+          "decision": false
+        },
+        {
+          "label": "Decision 1",
+          "decision": true
+        },
+        {
+          "label": "A. Treat the four credits as unrelated noise, or accept the single part-time story and release: a poor start, wrong handling",
+          "decision": false
+        },
+        {
+          "label": "B. Treat them as one typology on the same account, hold outbound payments, and run enhanced due diligence: correct handling",
+          "decision": false
+        },
+        {
+          "label": "The customer asks to move almost the full balance out in cash the same day. Rule R2: a rapid in-and-out must not wait for another explanation",
+          "decision": false
+        },
+        {
+          "label": "Decision 2",
+          "decision": true
+        },
+        {
+          "label": "A. Release and close: ignores R2, wrong handling",
+          "decision": false
+        },
+        {
+          "label": "B. Recommend a freeze and draft a suspicious transaction report, or keep the enhanced-due-diligence hold: correct handling",
+          "decision": false
+        }
+      ],
+      "teachingNotes": [
+        "The check is whether the trainee sees the types together, and whether a rapid in-and-out is frozen or reported."
+      ],
+      "caseIds": [
+        "wiseword-amlmonth-001"
+      ]
+    },
+    {
+      "number": 10,
+      "title": "Organised-crime cashflow",
+      "method": "An organised-crime network moves large amounts, at high frequency, through local company accounts. The accounts have no invoices, no commercial contracts, and no payroll. Counterparties are often individuals. When the bank asks, the story is a cash business or wholesale trade.",
+      "realWorld": [
+        {
+          "label": "A local company account shows many large movements in a short time",
+          "decision": false
+        },
+        {
+          "label": "Counterparties are mostly individuals. The purpose field is blank. There are no invoices, contracts, or tax records",
+          "decision": false
+        },
+        {
+          "label": "When questioned, the customer says this is only a cash business",
+          "decision": false
+        },
+        {
+          "label": "Internal monitoring or intelligence marks the set of flows as an organised-crime proceeds indicator",
+          "decision": false
+        },
+        {
+          "label": "The funds are then transferred or withdrawn. The movement and the washing of criminal proceeds are done",
+          "decision": false
+        }
+      ],
+      "role": "Senior compliance officer, or an AML investigator.",
+      "goal": "An oral label of cash business is not evidence. When the internal typology marks organised-crime proceeds, drafting a report alone is incomplete. Outbound payments must be held, and a freeze must be recommended.",
+      "teaching": [
+        {
+          "label": "The system shows large movements on a company account, with no invoices and with individual counterparties",
+          "decision": false
+        },
+        {
+          "label": "Decision 1",
+          "decision": true
+        },
+        {
+          "label": "A. Accept the cash-business label and release: a poor start, wrong handling",
+          "decision": false
+        },
+        {
+          "label": "B. Ask for invoices and contracts, or hold outbound payments first. Rule R1: enhanced due diligence and a stop on payments",
+          "decision": false
+        },
+        {
+          "label": "The customer produces no commercial papers. The internal system then marks an organised-crime proceeds indicator. Rule R2 has fired",
+          "decision": false
+        },
+        {
+          "label": "Decision 2",
+          "decision": true
+        },
+        {
+          "label": "A. Close it as an ordinary cash business: ignores R2, wrong handling",
+          "decision": false
+        },
+        {
+          "label": "B. Draft a suspicious transaction report and do not stop payments: an incomplete exit",
+          "decision": false
+        },
+        {
+          "label": "C. Recommend a freeze and draft a suspicious transaction report: the complete exit that matches R2",
+          "decision": false
+        }
+      ],
+      "teachingNotes": [
+        "On this script, drafting a report without a freeze recommendation does not clear R2_OC_INDICATOR. That incomplete exit is listed in data/cases/README.md."
+      ],
+      "caseIds": [
+        "triad-cashflow-001"
+      ]
+    },
+    {
+      "number": 11,
+      "title": "Insurer and bank control gaps",
+      "method": "A firm, such as an insurer or a bank, leaves systematic gaps in its own controls. Ongoing monitoring stays off. Politically exposed person screening is blank. Suspicious-transaction worksheets stay open. An unverified third party pays a large premium or credits an account. A high-risk customer uses those gaps to place funds or to keep a relationship open.",
+      "realWorld": [
+        {
+          "label": "An application or a policy file is missing pieces: no beneficial owner, a stale address, or blank politically exposed person screening",
+          "decision": false
+        },
+        {
+          "label": "A premium or a credit is paid by an unverified third party, with no clear link to the holder",
+          "decision": false
+        },
+        {
+          "label": "Monitoring was switched off, so alerts piled up, or a suspicious-transaction worksheet was left open",
+          "decision": false
+        },
+        {
+          "label": "A member of staff or a relationship manager raises a limit, accepts the premium, or closes the gap as a historical exception",
+          "decision": false
+        },
+        {
+          "label": "A later supervisory review finds the control failures. The firm is fined",
+          "decision": false
+        }
+      ],
+      "role": "Senior compliance reviewer at an insurer or a bank.",
+      "goal": "Hold the control line. An unverified third-party payment, blank screening, and an open monitoring worksheet cannot be closed as a historical exception or as a note written after the fact. The fix is to rerun the checks and to escalate.",
+      "teaching": [
+        {
+          "label": "The system shows an unverified third-party premium, blank politically exposed person screening, and an open worksheet",
+          "decision": false
+        },
+        {
+          "label": "Decision 1",
+          "decision": true
+        },
+        {
+          "label": "A. Close it as a historical exception: a poor start, a serious breach",
+          "decision": false
+        },
+        {
+          "label": "B. Verify the payer's link to the holder, or refuse the premium. This matches rule R1",
+          "decision": false
+        },
+        {
+          "label": "Blank politically exposed person screening and an open monitoring worksheet are still on the file. Rule R2 has fired",
+          "decision": false
+        },
+        {
+          "label": "Decision 2",
+          "decision": true
+        },
+        {
+          "label": "A. Note afterwards that the file was already reviewed, and close: breaches the control rule",
+          "decision": false
+        },
+        {
+          "label": "B. Rerun screening, escalate the worksheet, and draft a suspicious transaction report or complete the control fix: the exit that matches R2",
+          "decision": false
+        }
+      ],
+      "teachingNotes": [
+        "The check is whether the trainee refuses a note written after the fact, and whether screening is rerun and the worksheet is escalated."
+      ],
+      "caseIds": [
+        "insurer-controls-001",
+        "bank-cdd-001"
+      ]
+    }
+  ],
+  "scripts": [
+    {
+      "schema_version": "0.1",
+      "case_id": "deepfake-001",
+      "title": "Deepfake video account opening — virtual bank (demo script)",
+      "locale": "en",
+      "summary": "Synthetic training case. A new customer applies to open an account through video KYC. Two rule signals already show on screen. If the account opens, a large third-party credit arrives within a short time and is split out to an OTC crypto dealer. The trainee must follow the rules first, then decide whether to report or apply enhanced due diligence. This file holds no real customer data and no media files.",
+      "start_node_id": "n_intake",
+      "teaching": {
+        "level": "chan-1-scripted-mirror",
+        "rules_before_ai": true,
+        "acceptable_dispositions": [
+          "onboarding_rejected",
+          "blocked_by_rule",
+          "str_drafted",
+          "edd_hold"
+        ],
+        "poor_dispositions": [
+          "false_positive_cleared"
+        ]
+      },
+      "rules": [
+        {
+          "id": "R1_LIVENESS_TWICE",
+          "when": "kyc.liveness_failures >= 2",
+          "then": "block_onboarding",
+          "note": "Two liveness check failures in a row mean the account must not be opened. An override must be recorded as an event. It cannot pass silently."
+        },
+        {
+          "id": "R2_SIGNALS_PLUS_BURST",
+          "when": "kyc.signals has at least two items, and a sudden third-party credit arrives and is split out",
+          "then": "require_edd_or_str",
+          "note": "Rules come before any model score. This case must not be closed straight away as a false positive."
+        }
+      ],
+      "initial_twin_state": {
+        "phase": "onboarding",
+        "customer": {
+          "id": "SYN-001",
+          "display_name": "Synthetic Customer A",
+          "segment": "new_to_bank"
+        },
+        "kyc": {
+          "channel": "video",
+          "status": "unreviewed",
+          "liveness_failures": 0,
+          "signals": [
+            "blink_interval_irregular",
+            "lighting_inconsistent"
+          ]
+        },
+        "account": {
+          "opened": false
+        },
+        "transactions": [],
+        "risk": {
+          "score": 20,
+          "flags": []
+        },
+        "disposition": null
+      },
+      "nodes": [
+        {
+          "id": "n_intake",
+          "type": "scene",
+          "title": "Video KYC intake",
+          "prompt": "The synthetic customer submits an image of an identity document and a video clip. The rules engine has logged an irregular blink rhythm and inconsistent lighting. No decision on opening the account has been made yet.",
+          "media_ref": "data/media/deepfake-001/kyc-clip.mp4",
+          "next": "n_kyc_review",
+          "twin_patch": {
+            "phase": "kyc_review"
+          }
+        },
+        {
+          "id": "n_kyc_review",
+          "type": "decision",
+          "title": "Accept this video?",
+          "prompt": "Both signals are still there. Do you accept the video, ask for a new liveness check, or refuse to open the account?",
+          "choices": [
+            {
+              "id": "pass_video",
+              "label": "Accept the video and open the account",
+              "next": "n_burst",
+              "rationale": "This ignores the logged signals. If a sudden burst of funds follows, R2 will require a report or EDD.",
+              "effects": {
+                "kyc.status": "passed",
+                "account.opened": true,
+                "risk.flags_add": [
+                  "KYC_SIGNALS_WAIVED"
+                ],
+                "risk.score_delta": 25
+              }
+            },
+            {
+              "id": "redo_liveness",
+              "label": "Ask for a new liveness check",
+              "next": "n_liveness_retry",
+              "rationale": "Get a second observation first, then let R1 decide.",
+              "effects": {
+                "kyc.status": "retry_requested"
+              }
+            },
+            {
+              "id": "reject_onboarding",
+              "label": "Refuse to open the account",
+              "next": "n_outcome_reject",
+              "rationale": "The signals are enough to stop the account opening. There is no need to wait for transactions.",
+              "effects": {
+                "kyc.status": "rejected",
+                "risk.flags_add": [
+                  "ONBOARDING_REJECTED"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_liveness_retry",
+          "type": "scene",
+          "title": "Second liveness check also fails",
+          "prompt": "The retry shows the same two signals. Rule R1: after two failures in a row, the account must not be opened.",
+          "next": "n_liveness_decision",
+          "twin_patch": {
+            "kyc.liveness_failures": 2,
+            "kyc.status": "liveness_failed"
+          }
+        },
+        {
+          "id": "n_liveness_decision",
+          "type": "decision",
+          "title": "Override R1?",
+          "prompt": "The rule says to refuse the account. You can override it and continue, but the override must stay in the event log.",
+          "choices": [
+            {
+              "id": "follow_r1",
+              "label": "Refuse the account under the rule",
+              "next": "n_outcome_blocked",
+              "rationale": "Rules come before individual judgement.",
+              "effects": {
+                "kyc.status": "blocked_by_rule",
+                "risk.flags_add": [
+                  "R1_BLOCK"
+                ]
+              }
+            },
+            {
+              "id": "override_r1",
+              "label": "Override the rule and open the account",
+              "next": "n_burst",
+              "rationale": "An allowed teaching branch. The override is itself an event. It does not delete the rule.",
+              "effects": {
+                "kyc.status": "passed_by_override",
+                "account.opened": true,
+                "risk.flags_add": [
+                  "R1_OVERRIDDEN"
+                ],
+                "risk.score_delta": 40
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_burst",
+          "type": "scene",
+          "title": "Burst of funds after opening",
+          "prompt": "Shortly after the account opens, a large third-party credit arrives. It is split at once into two payments and sent to an OTC crypto dealer. Rule R2: when there are deepfake signals and a burst like this, the case must not be closed straight away as a false positive.",
+          "next": "n_alert_triage",
+          "twin_patch": {
+            "phase": "alert_triage",
+            "transactions": [
+              {
+                "id": "TX-1",
+                "kind": "third_party_in",
+                "amount": 480000
+              },
+              {
+                "id": "TX-2",
+                "kind": "split_out_otc",
+                "amount": 230000
+              },
+              {
+                "id": "TX-3",
+                "kind": "split_out_otc",
+                "amount": 240000
+              }
+            ],
+            "risk.flags_add": [
+              "THIRD_PARTY_BURST"
+            ]
+          }
+        },
+        {
+          "id": "n_alert_triage",
+          "type": "decision",
+          "title": "How to handle this alert",
+          "prompt": "R2 is met. Do you report, apply EDD and freeze, or close it as a false positive?",
+          "choices": [
+            {
+              "id": "file_str",
+              "label": "Draft a suspicious transaction report",
+              "next": "n_outcome_str",
+              "rationale": "The reporting exit that meets R2.",
+              "effects": {
+                "risk.flags_add": [
+                  "STR_DRAFTED"
+                ]
+              }
+            },
+            {
+              "id": "edd_hold",
+              "label": "Apply EDD and hold outbound payments",
+              "next": "n_outcome_edd",
+              "rationale": "Another exit that meets R2. Stop the account first, then gather more evidence.",
+              "effects": {
+                "account.holds": [
+                  "outbound"
+                ],
+                "risk.flags_add": [
+                  "EDD_HOLD"
+                ]
+              }
+            },
+            {
+              "id": "clear_alert",
+              "label": "Close as a false positive",
+              "next": "n_outcome_miss",
+              "rationale": "Poor teaching path. The rule already says the case must not be closed this way.",
+              "effects": {
+                "risk.flags_add": [
+                  "R2_IGNORED"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_outcome_reject",
+          "type": "outcome",
+          "title": "Account opening refused",
+          "prompt": "No account was opened. The signals stay in the twin state. There are no later transactions.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "onboarding_rejected"
+          }
+        },
+        {
+          "id": "n_outcome_blocked",
+          "type": "outcome",
+          "title": "Rule blocks account opening",
+          "prompt": "R1 blocked it. The event log should show both liveness check failures, not an oral account given afterwards.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "blocked_by_rule"
+          }
+        },
+        {
+          "id": "n_outcome_str",
+          "type": "outcome",
+          "title": "Suspicious transaction report drafted",
+          "prompt": "Reporting exit. If R1 was overridden earlier, the override flag stays in the state.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "str_drafted"
+          }
+        },
+        {
+          "id": "n_outcome_edd",
+          "type": "outcome",
+          "title": "EDD with outbound payments on hold",
+          "prompt": "The account is open, but outbound payments are on hold pending EDD.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "edd_hold"
+          }
+        },
+        {
+          "id": "n_outcome_miss",
+          "type": "outcome",
+          "title": "Closed as a false positive",
+          "prompt": "Poor teaching path. R2 was ignored. The dashboard should later mark this session as not following the rules.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "false_positive_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "schema_version": "0.1",
+      "case_id": "daybreak-tbml-001",
+      "title": "Fake jewellery exports — trade-based money laundering (demo script)",
+      "locale": "en",
+      "summary": "Synthetic training case. A company declares a cross-border jewellery and diamond trade. The payer is not the buyer on the invoice, and there is no shipment evidence. As a compliance officer at a financial institution, the trainee decides whether to order enhanced due diligence, hold outbound payments, draft a suspicious transaction report or exit the relationship. It is inspired by a public Customs enforcement briefing on trade-based money laundering. It is not a real customer file.",
+      "start_node_id": "n_file_open",
+      "teaching": {
+        "level": "chan-1-scripted-mirror",
+        "rules_before_ai": true,
+        "case_kind": "public_record_inspired",
+        "disclaimer": "Synthetic training scenario inspired by public enforcement reporting. Not official case files; no real customer data.",
+        "themes": [
+          "trade-based money laundering",
+          "shell company",
+          "third-party payers",
+          "jewellery export"
+        ],
+        "sources": [
+          {
+            "label": "Customs press release (January 2024 trade-based money laundering briefing)"
+          }
+        ],
+        "acceptable_dispositions": [
+          "account_exit",
+          "str_drafted",
+          "freeze_recommended"
+        ],
+        "poor_dispositions": [
+          "false_positive_cleared"
+        ]
+      },
+      "rules": [
+        {
+          "id": "R1_TRADE_DOC_GAP",
+          "when": "trade.shipment_evidence is missing, and the payer is not the buyer on the invoice",
+          "then": "require_edd_before_release",
+          "note": "EDD is required before release. The gap must not be treated as documents in transit. Rules come before any model score."
+        },
+        {
+          "id": "R2_TBML_PASSTHROUGH",
+          "when": "The trade documents are still deficient, and funds are split the same day to accounts with no trade link",
+          "then": "require_str_or_exit_or_freeze",
+          "note": "It must not be closed as an ordinary commercial delay. An override must stay in the event log."
+        }
+      ],
+      "initial_twin_state": {
+        "phase": "periodic_review",
+        "customer": {
+          "id": "SYN-CORP-DB-014",
+          "display_name": "Synthetic Export Company A",
+          "segment": "corporate_trade"
+        },
+        "kyc": {
+          "status": "basic_cdd_on_file",
+          "beneficial_owner": "unverified",
+          "signals": [
+            "thin_operations",
+            "third_party_payer"
+          ]
+        },
+        "trade": {
+          "declared_goods": "jewellery_diamond",
+          "corridor": "cross-border",
+          "shipment_evidence": "missing"
+        },
+        "account": {
+          "id": "SYN-ACC-DB-014",
+          "opened": true,
+          "holds": []
+        },
+        "transactions": [],
+        "risk": {
+          "score": 35,
+          "flags": []
+        },
+        "disposition": null
+      },
+      "nodes": [
+        {
+          "id": "n_file_open",
+          "type": "scene",
+          "title": "Jewellery exporter review",
+          "prompt": "Synthetic Export Company A declares a cross-border jewellery and diamond trade. The file already shows two signals: thin operations, and a payer who is not the buyer on the invoice. The beneficial owner is still unverified.",
+          "next": "n_cdd_gate",
+          "twin_patch": {
+            "phase": "cdd_review"
+          }
+        },
+        {
+          "id": "n_cdd_gate",
+          "type": "decision",
+          "title": "Which review to add first",
+          "prompt": "There is no shipment evidence, and the beneficial owner is unverified. Do you order EDD, exit the relationship, or keep standard customer due diligence (CDD)?",
+          "choices": [
+            {
+              "id": "order_edd",
+              "label": "Order EDD and request the shipment pack",
+              "next": "n_trade_gap",
+              "rationale": "Two signals are enough to stop the standard review.",
+              "effects": {
+                "kyc.status": "edd_ordered",
+                "risk.flags_add": [
+                  "EDD_ORDERED"
+                ]
+              }
+            },
+            {
+              "id": "exit_now",
+              "label": "Exit the customer relationship",
+              "next": "n_outcome_exit",
+              "rationale": "A shell-company profile plus an unverified owner is enough to exit without waiting for transactions.",
+              "effects": {
+                "kyc.status": "exit_started",
+                "risk.flags_add": [
+                  "RELATIONSHIP_EXIT"
+                ]
+              }
+            },
+            {
+              "id": "waive_cdd",
+              "label": "Keep the standard review",
+              "next": "n_trade_gap",
+              "rationale": "Teaching override. The document gap is still there, and R1 must still deal with it later. The override is itself an event.",
+              "effects": {
+                "kyc.status": "cdd_waived",
+                "risk.flags_add": [
+                  "CDD_WAIVED"
+                ],
+                "risk.score_delta": 30
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_trade_gap",
+          "type": "scene",
+          "title": "Invoice and shipment do not match",
+          "prompt": "The invoice says diamond export. There is no bill of lading and no stock record. The payer is an individual, not the buyer. Rule R1: a gap like this must not be skipped before release.",
+          "next": "n_r1_gate",
+          "twin_patch": {
+            "trade.shipment_evidence": "missing",
+            "risk.flags_add": [
+              "TRADE_DOC_GAP"
+            ]
+          }
+        },
+        {
+          "id": "n_r1_gate",
+          "type": "decision",
+          "title": "How to handle the document gap",
+          "prompt": "R1 is met. Do you hold outbound payments and continue EDD, draft a suspicious transaction report now, or accept \"documents in transit\"?",
+          "choices": [
+            {
+              "id": "hold_and_edd",
+              "label": "Hold outbound payments and continue EDD",
+              "next": "n_fanout",
+              "rationale": "Meets R1. Stop outbound payments first, then see where the funds go.",
+              "effects": {
+                "account.holds": [
+                  "outbound"
+                ],
+                "risk.flags_add": [
+                  "EDD_HOLD"
+                ]
+              }
+            },
+            {
+              "id": "draft_str",
+              "label": "Draft a suspicious transaction report",
+              "next": "n_outcome_str",
+              "rationale": "The documents and the payer already do not match. You can report without waiting for the split.",
+              "effects": {
+                "risk.flags_add": [
+                  "STR_DRAFTED"
+                ]
+              }
+            },
+            {
+              "id": "accept_timing",
+              "label": "Accept documents in transit and release",
+              "next": "n_fanout",
+              "rationale": "Poor teaching override. R1 is bypassed, and the event log must keep the override flag.",
+              "effects": {
+                "risk.flags_add": [
+                  "R1_OVERRIDDEN"
+                ],
+                "risk.score_delta": 25
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_fanout",
+          "type": "scene",
+          "title": "Same-day split to unrelated accounts",
+          "prompt": "The \"export proceeds\" are split the same day to several personal accounts with no link to the trade. Another synthetic company shows the same pattern. Rule R2: when the documents are still deficient and funds pass through quickly, the case must not be closed as ordinary trade.",
+          "next": "n_r2_gate",
+          "twin_patch": {
+            "phase": "alert_triage",
+            "transactions": [
+              {
+                "id": "TX-DB-1",
+                "kind": "third_party_export_in",
+                "amount": 860000
+              },
+              {
+                "id": "TX-DB-2",
+                "kind": "fanout_unrelated",
+                "amount": 420000
+              },
+              {
+                "id": "TX-DB-3",
+                "kind": "fanout_unrelated",
+                "amount": 430000
+              }
+            ],
+            "risk.flags_add": [
+              "PASS_THROUGH"
+            ]
+          }
+        },
+        {
+          "id": "n_r2_gate",
+          "type": "decision",
+          "title": "Action after the pass-through",
+          "prompt": "R2 is met. Do you draft a suspicious transaction report and recommend a freeze, exit the relationship, or close it as a trade delay?",
+          "choices": [
+            {
+              "id": "str_and_freeze",
+              "label": "Draft an STR and recommend a freeze",
+              "next": "n_outcome_freeze",
+              "rationale": "The report-and-stop-payment exit that meets R2.",
+              "effects": {
+                "account.holds": [
+                  "outbound"
+                ],
+                "risk.flags_add": [
+                  "STR_DRAFTED",
+                  "FREEZE_RECOMMENDED"
+                ]
+              }
+            },
+            {
+              "id": "exit_rel",
+              "label": "Exit the customer relationship",
+              "next": "n_outcome_exit",
+              "rationale": "The relationship-exit route that meets R2. The relationship ends, but the flags stay in the state.",
+              "effects": {
+                "risk.flags_add": [
+                  "RELATIONSHIP_EXIT"
+                ]
+              }
+            },
+            {
+              "id": "clear_trade",
+              "label": "Close as a trade delay",
+              "next": "n_outcome_miss",
+              "rationale": "Poor teaching path. The rule already says the case must not be closed this way.",
+              "effects": {
+                "risk.flags_add": [
+                  "R2_IGNORED"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_outcome_exit",
+          "type": "outcome",
+          "title": "Customer relationship exited",
+          "prompt": "The relationship is over. The review signals and any override flags stay in the twin state. They were not cleared.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "account_exit"
+          }
+        },
+        {
+          "id": "n_outcome_str",
+          "type": "outcome",
+          "title": "Suspicious transaction report drafted",
+          "prompt": "Reporting exit. The trade document gap stays in the state for reviewers to check against.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "str_drafted"
+          }
+        },
+        {
+          "id": "n_outcome_freeze",
+          "type": "outcome",
+          "title": "Freeze recommended and report drafted",
+          "prompt": "Outbound payments are on hold, and a suspicious transaction report has been drafted. If R1 was overridden earlier, the override flag is still there.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "freeze_recommended"
+          }
+        },
+        {
+          "id": "n_outcome_miss",
+          "type": "outcome",
+          "title": "Closed as a trade delay",
+          "prompt": "Poor teaching path. R2 was ignored. The dashboard should later mark this session as not following the rules.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "false_positive_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "schema_version": "0.1",
+      "case_id": "mule-rent-001",
+      "title": "Renting out a bank account — social media recruitment (demo script)",
+      "locale": "en",
+      "summary": "Synthetic training case. A retail customer says on social media that their account is for rent, and calls it safe and legal. The account first receives a small test credit. The trainee decides whether to interview the customer, draft a suspicious transaction report, hold outbound payments or exit. Exiting without a report is an incomplete path. It is inspired by a public police enforcement briefing on renting and selling accounts. It is not a real customer file.",
+      "start_node_id": "n_alert",
+      "teaching": {
+        "level": "chan-1-scripted-mirror",
+        "rules_before_ai": true,
+        "case_kind": "public_record_inspired",
+        "disclaimer": "Synthetic training scenario inspired by public enforcement reporting. Not official case files; no real customer data.",
+        "themes": [
+          "account rental",
+          "social media recruitment",
+          "mule account",
+          "third-party control"
+        ],
+        "sources": [
+          {
+            "label": "Police press, April 2025 operation on account rental (URL not in the course brief)"
+          }
+        ],
+        "acceptable_dispositions": [
+          "str_drafted",
+          "freeze_recommended"
+        ],
+        "poor_dispositions": [
+          "exit_without_str",
+          "false_positive_cleared"
+        ]
+      },
+      "rules": [
+        {
+          "id": "R1_ACCOUNT_RENTAL",
+          "when": "The customer admits the account is used by a third party, or admits renting out or selling control of the account",
+          "then": "refuse_or_exit_and_report",
+          "note": "Normal use must not continue. Once a test credit has arrived, exiting without a report does not meet the rule."
+        },
+        {
+          "id": "R2_THIRD_PARTY_CONTROL",
+          "when": "An unknown third party controls the account, and third-party credits have already arrived",
+          "then": "require_str_or_freeze",
+          "note": "It must not be treated as helping a friend or as customer service. Rules come before any model score."
+        }
+      ],
+      "initial_twin_state": {
+        "phase": "alert_triage",
+        "customer": {
+          "id": "SYN-MR-170",
+          "display_name": "Synthetic Customer B",
+          "segment": "retail"
+        },
+        "kyc": {
+          "status": "basic_cdd_on_file",
+          "account_control": "unknown",
+          "signals": [
+            "social_post_offering_account"
+          ]
+        },
+        "account": {
+          "id": "SYN-ACC-MR-170",
+          "opened": true,
+          "holds": []
+        },
+        "transactions": [
+          {
+            "id": "TX-MR-0",
+            "kind": "test_credit",
+            "amount": 1000
+          }
+        ],
+        "risk": {
+          "score": 40,
+          "flags": []
+        },
+        "disposition": null
+      },
+      "nodes": [
+        {
+          "id": "n_alert",
+          "type": "scene",
+          "title": "Social media recruitment alert",
+          "prompt": "Synthetic Customer B posts that their bank account is for rent, with the words \"safe and legal\". The account has just received a small test credit. The payer is not the customer.",
+          "next": "n_triage",
+          "twin_patch": {
+            "phase": "alert_triage",
+            "risk.flags_add": [
+              "RENTAL_POST"
+            ]
+          }
+        },
+        {
+          "id": "n_triage",
+          "type": "decision",
+          "title": "How to start on the alert",
+          "prompt": "The post and the test credit are both on file. Do you interview the customer, report and exit now, or close the post as a joke?",
+          "choices": [
+            {
+              "id": "interview",
+              "label": "Interview the customer",
+              "next": "n_admission",
+              "rationale": "Get the facts on account control first, then let R1 decide.",
+              "effects": {
+                "kyc.status": "interview_open"
+              }
+            },
+            {
+              "id": "str_exit",
+              "label": "Draft an STR and exit",
+              "next": "n_outcome_str",
+              "rationale": "The post plus the test credit is enough to report. There is no need to wait for the customer to admit it.",
+              "effects": {
+                "risk.flags_add": [
+                  "STR_DRAFTED",
+                  "RELATIONSHIP_EXIT"
+                ]
+              }
+            },
+            {
+              "id": "dismiss_post",
+              "label": "Close as a social media joke",
+              "next": "n_credits",
+              "rationale": "Poor teaching start. The test credit is still there, and later credits will trigger R2.",
+              "effects": {
+                "risk.flags_add": [
+                  "POST_DISMISSED"
+                ],
+                "risk.score_delta": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_admission",
+          "type": "scene",
+          "title": "Customer admits renting out the account",
+          "prompt": "The customer says a company pays them rent, and their only job is to hand over verification codes. The other side said this is normal. The customer does not control the account. Rule R1: once renting is admitted, normal use must not continue.",
+          "next": "n_r1_gate",
+          "twin_patch": {
+            "kyc.account_control": "third_party",
+            "kyc.status": "rental_admitted",
+            "risk.flags_add": [
+              "RENTAL_ADMITTED"
+            ]
+          }
+        },
+        {
+          "id": "n_r1_gate",
+          "type": "decision",
+          "title": "After the rental admission",
+          "prompt": "R1 is met, and the test credit is still there. Do you report and exit, exit without reporting, or add monitoring and let use continue?",
+          "choices": [
+            {
+              "id": "exit_and_str",
+              "label": "Draft an STR and exit",
+              "next": "n_outcome_str",
+              "rationale": "Meets R1. The account control facts and the test credit are kept on record together.",
+              "effects": {
+                "risk.flags_add": [
+                  "STR_DRAFTED",
+                  "RELATIONSHIP_EXIT"
+                ]
+              }
+            },
+            {
+              "id": "exit_only",
+              "label": "Exit only, no report",
+              "next": "n_outcome_exit_gap",
+              "rationale": "Incomplete teaching path. Exiting does not erase the test credit that already happened.",
+              "effects": {
+                "risk.flags_add": [
+                  "EXIT_WITHOUT_STR"
+                ]
+              }
+            },
+            {
+              "id": "allow_monitor",
+              "label": "Add monitoring and allow continued use",
+              "next": "n_credits",
+              "rationale": "Overrides R1. The override is an event. It does not delete the rental facts.",
+              "effects": {
+                "kyc.status": "passed_by_override",
+                "risk.flags_add": [
+                  "R1_OVERRIDDEN"
+                ],
+                "risk.score_delta": 35
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_credits",
+          "type": "scene",
+          "title": "Credits after the test",
+          "prompt": "After the test credit, several third-party credits arrive, with requests to move the money on quickly. Rule R2: when an unknown third party controls the account and credits have arrived, it must not be treated as helping a friend.",
+          "next": "n_r2_gate",
+          "twin_patch": {
+            "transactions": [
+              {
+                "id": "TX-MR-0",
+                "kind": "test_credit",
+                "amount": 1000
+              },
+              {
+                "id": "TX-MR-1",
+                "kind": "third_party_in",
+                "amount": 180000
+              },
+              {
+                "id": "TX-MR-2",
+                "kind": "third_party_in",
+                "amount": 240000
+              }
+            ],
+            "risk.flags_add": [
+              "THIRD_PARTY_CONTROL"
+            ]
+          }
+        },
+        {
+          "id": "n_r2_gate",
+          "type": "decision",
+          "title": "Action after the credits",
+          "prompt": "R2 is met. Do you hold outbound payments and draft a report, exit and report, or close it as helping a friend?",
+          "choices": [
+            {
+              "id": "freeze_str",
+              "label": "Hold outbound payments and draft an STR",
+              "next": "n_outcome_freeze",
+              "rationale": "The stop-payment-and-report exit that meets R2.",
+              "effects": {
+                "account.holds": [
+                  "outbound"
+                ],
+                "risk.flags_add": [
+                  "STR_DRAFTED",
+                  "FREEZE_RECOMMENDED"
+                ]
+              }
+            },
+            {
+              "id": "exit_and_str_late",
+              "label": "Exit and draft an STR",
+              "next": "n_outcome_str",
+              "rationale": "Another exit that meets R2.",
+              "effects": {
+                "risk.flags_add": [
+                  "STR_DRAFTED",
+                  "RELATIONSHIP_EXIT"
+                ]
+              }
+            },
+            {
+              "id": "clear_favour",
+              "label": "Close as helping a friend",
+              "next": "n_outcome_miss",
+              "rationale": "Poor teaching path. The rule already says the case must not be closed this way.",
+              "effects": {
+                "risk.flags_add": [
+                  "R2_IGNORED"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_outcome_str",
+          "type": "outcome",
+          "title": "Suspicious transaction report drafted",
+          "prompt": "Reporting exit. The rental facts or the post flag stay in the state. The exit did not clear them.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "str_drafted"
+          }
+        },
+        {
+          "id": "n_outcome_exit_gap",
+          "type": "outcome",
+          "title": "Exit without a report",
+          "prompt": "Poor teaching path. The relationship has ended, but the test credit and the rental admission did not go into a suspicious transaction report.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "exit_without_str"
+          }
+        },
+        {
+          "id": "n_outcome_freeze",
+          "type": "outcome",
+          "title": "Outbound payments held and report drafted",
+          "prompt": "Outbound payments are on hold, and the report has been drafted. If R1 was overridden earlier, the override flag is still there.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "freeze_recommended"
+          }
+        },
+        {
+          "id": "n_outcome_miss",
+          "type": "outcome",
+          "title": "Closed as helping a friend",
+          "prompt": "Poor teaching path. R2 was ignored. The dashboard should later mark this session as not following the rules.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "false_positive_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "schema_version": "0.1",
+      "case_id": "wiseword-amlmonth-001",
+      "title": "Multi-typology mule account — one-month alert (demo script)",
+      "locale": "en",
+      "summary": "Synthetic training case. Inside one review window, one retail account receives a part-time-job salary, a romance gift, a gambling refund and a shopping refund. None of the payers is a known counterparty. The trainee must not close the case on a single story, and must not wait for another explanation when money moves in and out fast. Inspired by a public police summary of a multi-typology mule network. Not a real customer file.",
+      "start_node_id": "n_bundle",
+      "teaching": {
+        "level": "chan-1-scripted-mirror",
+        "rules_before_ai": true,
+        "case_kind": "public_record_inspired",
+        "disclaimer": "Synthetic training scenario inspired by public enforcement reporting. Not official case files; no real customer data.",
+        "themes": [
+          "mule account",
+          "job scam",
+          "romance scam",
+          "shopping scam",
+          "gambling"
+        ],
+        "sources": [
+          {
+            "label": "Police press, August 2023 WISEWORD (URL not in the course brief)"
+          }
+        ],
+        "acceptable_dispositions": [
+          "str_drafted",
+          "freeze_recommended",
+          "edd_hold"
+        ],
+        "poor_dispositions": [
+          "false_positive_cleared"
+        ]
+      },
+      "rules": [
+        {
+          "id": "R1_MULTI_TYPOLOGY",
+          "when": "At least two types of fraud credit reach the same account inside one review window",
+          "then": "require_edd_or_str",
+          "note": "Do not close the case on the customer's single story. Rules come before any model score."
+        },
+        {
+          "id": "R2_FAST_OUT",
+          "when": "Shortly after the credits, the customer asks to withdraw in cash or transfer out close to the full amount",
+          "then": "require_freeze_or_str",
+          "note": "Do not wait for the customer to explain the job again. An override must stay in the event log."
+        }
+      ],
+      "initial_twin_state": {
+        "phase": "alert_triage",
+        "customer": {
+          "id": "SYN-WW-314",
+          "display_name": "Synthetic Customer C",
+          "segment": "retail"
+        },
+        "kyc": {
+          "status": "basic_cdd_on_file",
+          "signals": [
+            "multi_typology_credits"
+          ]
+        },
+        "account": {
+          "id": "SYN-ACC-WW-314",
+          "opened": true,
+          "holds": []
+        },
+        "transactions": [],
+        "risk": {
+          "score": 45,
+          "flags": []
+        },
+        "disposition": null
+      },
+      "nodes": [
+        {
+          "id": "n_bundle",
+          "type": "scene",
+          "title": "Several credit types in one month",
+          "prompt": "Synthetic Customer C's account receives four types of credit in one month: an online part-time salary, a romance gift, a gambling top-up refund and a shopping refund. None of the payers is a known counterparty.",
+          "next": "n_frame",
+          "twin_patch": {
+            "transactions": [
+              {
+                "id": "TX-WW-1",
+                "kind": "job_style_credit",
+                "amount": 48000
+              },
+              {
+                "id": "TX-WW-2",
+                "kind": "romance_style_credit",
+                "amount": 70000
+              },
+              {
+                "id": "TX-WW-3",
+                "kind": "gambling_style_credit",
+                "amount": 36000
+              },
+              {
+                "id": "TX-WW-4",
+                "kind": "shopping_style_credit",
+                "amount": 22000
+              }
+            ],
+            "risk.flags_add": [
+              "MULTI_TYPOLOGY"
+            ]
+          }
+        },
+        {
+          "id": "n_frame",
+          "type": "decision",
+          "title": "See the alert as one case or four",
+          "prompt": "Four credit types sit on the same account. Do you investigate them as one network, hear one explanation from the customer first, or split them into unrelated noise?",
+          "choices": [
+            {
+              "id": "one_network",
+              "label": "Treat them as one set of types on the same account",
+              "next": "n_story",
+              "rationale": "Match the types first, then let R1 decide whether one story can close the case.",
+              "effects": {
+                "risk.flags_add": [
+                  "NETWORK_VIEW"
+                ]
+              }
+            },
+            {
+              "id": "one_story_ask",
+              "label": "Ask the customer for one explanation only",
+              "next": "n_story",
+              "rationale": "You can ask, but one explanation does not cover the other payers.",
+              "effects": {
+                "kyc.status": "explanation_requested"
+              }
+            },
+            {
+              "id": "unrelated_noise",
+              "label": "Split into four pieces of noise and release",
+              "next": "n_dispersal",
+              "rationale": "A poor teaching start. The number of types is still there, and a rapid in-and-out will trigger R2.",
+              "effects": {
+                "risk.flags_add": [
+                  "TYPOLOGY_SPLIT"
+                ],
+                "risk.score_delta": 25
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_story",
+          "type": "scene",
+          "title": "The customer has only the part-time story",
+          "prompt": "The customer only says it is an online part-time job and cannot say who the other payers are. Rule R1: two or more credit types must not be closed on a single story.",
+          "next": "n_r1_gate",
+          "twin_patch": {
+            "kyc.status": "single_story",
+            "risk.flags_add": [
+              "STORY_DOES_NOT_COVER"
+            ]
+          }
+        },
+        {
+          "id": "n_r1_gate",
+          "type": "decision",
+          "title": "Is a single story enough?",
+          "prompt": "R1 is met. Do you hold outbound payments and run enhanced due diligence, draft a suspicious transaction report now, or accept the part-time story?",
+          "choices": [
+            {
+              "id": "edd_hold",
+              "label": "Hold outbound payments and run enhanced due diligence",
+              "next": "n_dispersal",
+              "rationale": "Matches R1. Stop outbound payments first, then see whether money moves in and out fast.",
+              "effects": {
+                "account.holds": [
+                  "outbound"
+                ],
+                "risk.flags_add": [
+                  "EDD_HOLD"
+                ]
+              }
+            },
+            {
+              "id": "draft_str",
+              "label": "Draft a suspicious transaction report",
+              "next": "n_outcome_str",
+              "rationale": "Multi-typology credits are enough to report.",
+              "effects": {
+                "risk.flags_add": [
+                  "STR_DRAFTED"
+                ]
+              }
+            },
+            {
+              "id": "accept_job",
+              "label": "Accept the part-time story and release",
+              "next": "n_dispersal",
+              "rationale": "Overrides R1. The other three credit types are still unexplained.",
+              "effects": {
+                "risk.flags_add": [
+                  "R1_OVERRIDDEN"
+                ],
+                "risk.score_delta": 30
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_dispersal",
+          "type": "scene",
+          "title": "Same-day move-out request",
+          "prompt": "The customer asks for a same-day cash withdrawal and transfer, close to the total credited. Rule R2: a rapid in-and-out must not wait for the next job story.",
+          "next": "n_r2_gate",
+          "twin_patch": {
+            "phase": "alert_triage",
+            "risk.flags_add": [
+              "FAST_OUT"
+            ]
+          }
+        },
+        {
+          "id": "n_r2_gate",
+          "type": "decision",
+          "title": "How to stop the rapid in-and-out",
+          "prompt": "R2 is met. Do you recommend a freeze and report, keep the enhanced due diligence hold, or release?",
+          "choices": [
+            {
+              "id": "freeze_str",
+              "label": "Recommend a freeze and draft a suspicious transaction report",
+              "next": "n_outcome_freeze",
+              "rationale": "Matches R2.",
+              "effects": {
+                "account.holds": [
+                  "outbound"
+                ],
+                "risk.flags_add": [
+                  "STR_DRAFTED",
+                  "FREEZE_RECOMMENDED"
+                ]
+              }
+            },
+            {
+              "id": "keep_edd",
+              "label": "Keep the hold and complete enhanced due diligence",
+              "next": "n_outcome_edd",
+              "rationale": "The other exit that matches R2. Hold the account first, then gather more evidence.",
+              "effects": {
+                "account.holds": [
+                  "outbound"
+                ],
+                "risk.flags_add": [
+                  "EDD_HOLD"
+                ]
+              }
+            },
+            {
+              "id": "release",
+              "label": "Release and close",
+              "next": "n_outcome_miss",
+              "rationale": "Poor teaching path. The rules already say the case must not be closed this way.",
+              "effects": {
+                "account.holds": [],
+                "risk.flags_add": [
+                  "R2_IGNORED"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_outcome_str",
+          "type": "outcome",
+          "title": "Suspicious transaction report drafted",
+          "prompt": "Reporting exit. All four credit types stay on the transaction list. The part-time story did not cover them up.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "str_drafted"
+          }
+        },
+        {
+          "id": "n_outcome_freeze",
+          "type": "outcome",
+          "title": "Freeze recommended and report drafted",
+          "prompt": "Outbound payments are stopped and the report is drafted. If you split the types earlier or overrode R1, those flags remain.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "freeze_recommended"
+          }
+        },
+        {
+          "id": "n_outcome_edd",
+          "type": "outcome",
+          "title": "Enhanced due diligence with outbound payments on hold",
+          "prompt": "The account stays open. Outbound payments are on hold while enhanced due diligence fills in the payers.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "edd_hold"
+          }
+        },
+        {
+          "id": "n_outcome_miss",
+          "type": "outcome",
+          "title": "Released and closed",
+          "prompt": "Poor teaching path. R2 was ignored. The dashboard should later mark this session as not following the rules.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "false_positive_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "schema_version": "0.1",
+      "case_id": "justicegate-crypto-001",
+      "title": "Cash and crypto OTC — account cashing-out (demo script)",
+      "locale": "en",
+      "summary": "Synthetic training case. A salaried customer's account collects many credits. The money then leaves through cash withdrawals and transfers to an OTC crypto dealer. The customer cannot give a source of funds that matches the file. The trainee decides on enhanced due diligence, a suspicious transaction report, a freeze recommendation or exiting the relationship. Inspired by a public summary of local account cashing-out. Not a real customer file.",
+      "start_node_id": "n_pattern",
+      "teaching": {
+        "level": "chan-1-scripted-mirror",
+        "rules_before_ai": true,
+        "case_kind": "public_record_inspired",
+        "disclaimer": "Synthetic training scenario inspired by public enforcement reporting. Not official case files; no real customer data.",
+        "themes": [
+          "cash withdrawal",
+          "crypto OTC",
+          "source of funds",
+          "pass-through"
+        ],
+        "sources": [
+          {
+            "label": "Public enforcement briefing, JUSTICEGATE (October 2022–June 2023; URL not in the course brief)"
+          }
+        ],
+        "acceptable_dispositions": [
+          "str_drafted",
+          "freeze_recommended",
+          "account_exit"
+        ],
+        "poor_dispositions": [
+          "false_positive_cleared"
+        ]
+      },
+      "rules": [
+        {
+          "id": "R1_NO_SOURCE",
+          "when": "The customer cannot give a source of funds that matches the file",
+          "then": "do_not_clear",
+          "note": "A friend's currency exchange is not proof of source. Do not close the case while the source is blank."
+        },
+        {
+          "id": "R2_CASH_AND_OTC",
+          "when": "The credits mainly leave through cash withdrawals plus an OTC crypto dealer",
+          "then": "require_str_or_freeze_or_exit",
+          "note": "Do not close it as personal investment. Rules come before any model score."
+        }
+      ],
+      "initial_twin_state": {
+        "phase": "alert_triage",
+        "customer": {
+          "id": "SYN-JG-048",
+          "display_name": "Synthetic Customer D",
+          "segment": "retail_salary",
+          "profile": "salary"
+        },
+        "kyc": {
+          "status": "basic_cdd_on_file",
+          "source_of_funds": "unexplained",
+          "signals": [
+            "volume_vs_salary"
+          ]
+        },
+        "account": {
+          "id": "SYN-ACC-JG-048",
+          "opened": true,
+          "holds": []
+        },
+        "crypto": {
+          "otc_counterparty": "SYN-OTC-JG-07"
+        },
+        "transactions": [],
+        "risk": {
+          "score": 50,
+          "flags": []
+        },
+        "disposition": null
+      },
+      "nodes": [
+        {
+          "id": "n_pattern",
+          "type": "scene",
+          "title": "Salaried profile against large flows in and out",
+          "prompt": "Synthetic Customer D is on file as a salaried person. Over several months the account collects many credits. The outflows start to show cash withdrawals and transfers to the OTC crypto dealer SYN-OTC-JG-07.",
+          "next": "n_ask",
+          "twin_patch": {
+            "phase": "source_review",
+            "risk.flags_add": [
+              "VOLUME_VS_SALARY"
+            ]
+          }
+        },
+        {
+          "id": "n_ask",
+          "type": "decision",
+          "title": "Ask for the source first?",
+          "prompt": "The amounts do not match the salaried profile. Do you ask for the source of funds and run enhanced due diligence, hold outbound payments first, or note it as investment and close it?",
+          "choices": [
+            {
+              "id": "sof_edd",
+              "label": "Ask for the source of funds and run enhanced due diligence",
+              "next": "n_answer",
+              "rationale": "Get the source first, then let R1 decide whether the case can close.",
+              "effects": {
+                "kyc.status": "sof_requested",
+                "risk.flags_add": [
+                  "EDD_ORDERED"
+                ]
+              }
+            },
+            {
+              "id": "hold_first",
+              "label": "Hold outbound payments first, then ask for the source",
+              "next": "n_answer",
+              "rationale": "Stopping payments and gathering evidence can happen at the same time.",
+              "effects": {
+                "account.holds": [
+                  "outbound"
+                ],
+                "kyc.status": "sof_requested",
+                "risk.flags_add": [
+                  "EDD_HOLD"
+                ]
+              }
+            },
+            {
+              "id": "clear_invest",
+              "label": "Note it as investment and close",
+              "next": "n_otc",
+              "rationale": "A poor teaching start. The source is still blank, and the cash and OTC path will trigger R2.",
+              "effects": {
+                "risk.flags_add": [
+                  "SOF_SKIPPED"
+                ],
+                "risk.score_delta": 25
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_answer",
+          "type": "scene",
+          "title": "No matching source",
+          "prompt": "The customer only says a friend exchanged currency, and cannot produce proof that matches the salaried profile. Rule R1: a blank source must not be closed.",
+          "next": "n_r1_gate",
+          "twin_patch": {
+            "kyc.source_of_funds": "friend_fx_unsupported",
+            "kyc.status": "sof_failed",
+            "risk.flags_add": [
+              "NO_SOURCE"
+            ]
+          }
+        },
+        {
+          "id": "n_r1_gate",
+          "type": "decision",
+          "title": "After a blank source",
+          "prompt": "R1 is met. Do you keep the hold and look at where the money goes, draft a suspicious transaction report now, or accept the friend's currency exchange?",
+          "choices": [
+            {
+              "id": "continue_hold",
+              "label": "Keep the hold and check where the money goes",
+              "next": "n_otc",
+              "rationale": "Matches R1. Do not release yet.",
+              "effects": {
+                "account.holds": [
+                  "outbound"
+                ],
+                "risk.flags_add": [
+                  "EDD_HOLD"
+                ]
+              }
+            },
+            {
+              "id": "str_now",
+              "label": "Draft a suspicious transaction report",
+              "next": "n_outcome_str",
+              "rationale": "The source already does not match the file. You can report.",
+              "effects": {
+                "risk.flags_add": [
+                  "STR_DRAFTED"
+                ]
+              }
+            },
+            {
+              "id": "accept_friend",
+              "label": "Accept the friend's currency exchange",
+              "next": "n_otc",
+              "rationale": "Overrides R1. The blank source has not become proof.",
+              "effects": {
+                "risk.flags_add": [
+                  "R1_OVERRIDDEN"
+                ],
+                "risk.score_delta": 30
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_otc",
+          "type": "scene",
+          "title": "Cash and the OTC dealer",
+          "prompt": "Two transfers go to the synthetic OTC dealer SYN-OTC-JG-07, and the rest is withdrawn in cash. Rule R2: when cash plus OTC crypto is the main outflow, the case must not be closed as investment.",
+          "next": "n_r2_gate",
+          "twin_patch": {
+            "phase": "alert_triage",
+            "transactions": [
+              {
+                "id": "TX-JG-1",
+                "kind": "third_party_in",
+                "amount": 520000
+              },
+              {
+                "id": "TX-JG-2",
+                "kind": "cash_withdrawal",
+                "amount": 200000
+              },
+              {
+                "id": "TX-JG-3",
+                "kind": "otc_crypto_out",
+                "amount": 300000,
+                "counterparty": "SYN-OTC-JG-07"
+              }
+            ],
+            "risk.flags_add": [
+              "CASH_AND_OTC"
+            ]
+          }
+        },
+        {
+          "id": "n_r2_gate",
+          "type": "decision",
+          "title": "Handling the cash-out path",
+          "prompt": "R2 is met. Do you recommend a freeze and report, exit the relationship, or close it as investment?",
+          "choices": [
+            {
+              "id": "freeze_str",
+              "label": "Recommend a freeze and draft a suspicious transaction report",
+              "next": "n_outcome_freeze",
+              "rationale": "The stop-and-report exit that matches R2.",
+              "effects": {
+                "account.holds": [
+                  "outbound"
+                ],
+                "risk.flags_add": [
+                  "STR_DRAFTED",
+                  "FREEZE_RECOMMENDED"
+                ]
+              }
+            },
+            {
+              "id": "exit_rel",
+              "label": "Exit the customer relationship",
+              "next": "n_outcome_exit",
+              "rationale": "The exit-the-relationship route that matches R2.",
+              "effects": {
+                "risk.flags_add": [
+                  "RELATIONSHIP_EXIT"
+                ]
+              }
+            },
+            {
+              "id": "clear_invest_late",
+              "label": "Close as personal investment",
+              "next": "n_outcome_miss",
+              "rationale": "Poor teaching path. The rules already say the case must not be closed this way.",
+              "effects": {
+                "risk.flags_add": [
+                  "R2_IGNORED"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_outcome_str",
+          "type": "outcome",
+          "title": "Suspicious transaction report drafted",
+          "prompt": "Reporting exit. The source of funds is still unproven and stays in the state.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "str_drafted"
+          }
+        },
+        {
+          "id": "n_outcome_freeze",
+          "type": "outcome",
+          "title": "Freeze recommended and report drafted",
+          "prompt": "Outbound payments are on hold and the report is drafted. The OTC counterparty SYN-OTC-JG-07 is still in the state.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "freeze_recommended"
+          }
+        },
+        {
+          "id": "n_outcome_exit",
+          "type": "outcome",
+          "title": "Customer relationship exited",
+          "prompt": "The relationship has ended. The flags for the cash and OTC outflows stay in the twin state.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "account_exit"
+          }
+        },
+        {
+          "id": "n_outcome_miss",
+          "type": "outcome",
+          "title": "Closed as investment",
+          "prompt": "Poor teaching path. R2 was ignored. The dashboard should later mark this session as not following the rules.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "false_positive_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "schema_version": "0.1",
+      "case_id": "greythunder-mule-001",
+      "title": "Mule cluster — fake-official and investment proceeds (demo script)",
+      "locale": "en",
+      "summary": "Synthetic training case. A retail account shares a beneficiary account and a login device with a synthetic cluster. The customer says they are helping a friend handle an official refund and investment principal, but does not know the payers. The trainee must first run enhanced due diligence under the cluster rule, then decide whether to report, freeze or exit the relationship. Inspired by a public summary of a mule cluster. Not a real customer file.",
+      "start_node_id": "n_link",
+      "teaching": {
+        "level": "chan-1-scripted-mirror",
+        "rules_before_ai": true,
+        "case_kind": "public_record_inspired",
+        "disclaimer": "Synthetic training scenario inspired by public enforcement reporting. Not official case files; no real customer data.",
+        "themes": [
+          "mule cluster",
+          "fake official",
+          "investment fraud proceeds",
+          "shared device"
+        ],
+        "sources": [
+          {
+            "label": "Public enforcement briefing, GREYTHUNDER (May–November 2022 activity; URL not in the course brief)"
+          }
+        ],
+        "acceptable_dispositions": [
+          "str_drafted",
+          "freeze_recommended",
+          "account_exit"
+        ],
+        "poor_dispositions": [
+          "false_positive_cleared"
+        ]
+      },
+      "rules": [
+        {
+          "id": "R1_MULE_CLUSTER",
+          "when": "The account shares a beneficiary account or a login device with the cluster",
+          "then": "require_edd_before_release",
+          "note": "Enhanced due diligence is required before release. Helping a friend does not disprove the cluster facts."
+        },
+        {
+          "id": "R2_FRAUD_PROCEEDS",
+          "when": "The credit narratives match a fake-official or investment-gain script, and the funds are pooled and moved out at once",
+          "then": "require_str_or_freeze_or_exit",
+          "note": "Do not accept \"a friend's investment\" as a reason to close. Rules come before any model score."
+        }
+      ],
+      "initial_twin_state": {
+        "phase": "alert_triage",
+        "customer": {
+          "id": "SYN-GT-033",
+          "display_name": "Synthetic Customer E",
+          "segment": "retail"
+        },
+        "kyc": {
+          "status": "basic_cdd_on_file",
+          "signals": [
+            "shared_device",
+            "shared_beneficiary"
+          ]
+        },
+        "cluster": {
+          "id": "SYN-CLUSTER-GT-06",
+          "link": "shared_device_and_beneficiary"
+        },
+        "account": {
+          "id": "SYN-ACC-GT-033",
+          "opened": true,
+          "holds": []
+        },
+        "transactions": [],
+        "risk": {
+          "score": 55,
+          "flags": []
+        },
+        "disposition": null
+      },
+      "nodes": [
+        {
+          "id": "n_link",
+          "type": "scene",
+          "title": "The cluster links to this account",
+          "prompt": "Synthetic Customer E's account shares a beneficiary account and a login device with the synthetic cluster SYN-CLUSTER-GT-06. The customer says they are only helping a friend invest.",
+          "next": "n_cluster_gate",
+          "twin_patch": {
+            "phase": "cluster_review",
+            "risk.flags_add": [
+              "MULE_CLUSTER"
+            ]
+          }
+        },
+        {
+          "id": "n_cluster_gate",
+          "type": "decision",
+          "title": "Block the cluster link?",
+          "prompt": "The shared device and the shared beneficiary account are both there. Do you run enhanced due diligence, restrict outbound payments first, or release on the friend story?",
+          "choices": [
+            {
+              "id": "edd_cluster",
+              "label": "Run enhanced due diligence on the cluster",
+              "next": "n_story",
+              "rationale": "Hear the story first, but the cluster facts do not vanish because of one sentence.",
+              "effects": {
+                "kyc.status": "edd_ordered",
+                "risk.flags_add": [
+                  "EDD_ORDERED"
+                ]
+              }
+            },
+            {
+              "id": "restrict",
+              "label": "Restrict outbound payments first",
+              "next": "n_story",
+              "rationale": "The restriction and the interview can happen at the same time.",
+              "effects": {
+                "account.holds": [
+                  "outbound"
+                ],
+                "risk.flags_add": [
+                  "EDD_HOLD"
+                ]
+              }
+            },
+            {
+              "id": "release_friend",
+              "label": "Accept the friend story and release",
+              "next": "n_proceeds",
+              "rationale": "A teaching override. The cluster link is still there, and later proceeds will trigger R2.",
+              "effects": {
+                "risk.flags_add": [
+                  "CLUSTER_WAIVED"
+                ],
+                "risk.score_delta": 30
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_story",
+          "type": "scene",
+          "title": "Official refund and investment principal",
+          "prompt": "The customer says a friend is handling an official refund and investment principal, and the customer does not know the payers. Rule R1: when the account belongs to a mule cluster, enhanced due diligence is required before release.",
+          "next": "n_r1_gate",
+          "twin_patch": {
+            "kyc.status": "story_recorded",
+            "risk.flags_add": [
+              "UNKNOWN_PAYERS"
+            ]
+          }
+        },
+        {
+          "id": "n_r1_gate",
+          "type": "decision",
+          "title": "Override the cluster rule?",
+          "prompt": "R1 is met. Do you keep the restriction, draft a suspicious transaction report now, or accept the help-with-investment story?",
+          "choices": [
+            {
+              "id": "hold",
+              "label": "Keep the restriction and continue the review",
+              "next": "n_proceeds",
+              "rationale": "Matches R1. First see whether the funds are pooled and moved out at once.",
+              "effects": {
+                "account.holds": [
+                  "outbound"
+                ],
+                "risk.flags_add": [
+                  "EDD_HOLD"
+                ]
+              }
+            },
+            {
+              "id": "str_now",
+              "label": "Draft a suspicious transaction report",
+              "next": "n_outcome_str",
+              "rationale": "Unknown payers plus the cluster link. You can report.",
+              "effects": {
+                "risk.flags_add": [
+                  "STR_DRAFTED"
+                ]
+              }
+            },
+            {
+              "id": "accept_help",
+              "label": "Accept the help-with-investment story and release",
+              "next": "n_proceeds",
+              "rationale": "Overrides R1. The override is an event, and the cluster ID stays in the state.",
+              "effects": {
+                "risk.flags_add": [
+                  "R1_OVERRIDDEN"
+                ],
+                "risk.score_delta": 35
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_proceeds",
+          "type": "scene",
+          "title": "Credits pooled and moved out at once",
+          "prompt": "The credit references match fake-official and investment scripts, and the money is pooled and moved out at once. Rule R2: this case must not be closed as a friend's investment.",
+          "next": "n_r2_gate",
+          "twin_patch": {
+            "phase": "alert_triage",
+            "transactions": [
+              {
+                "id": "TX-GT-1",
+                "kind": "fake_official_style_in",
+                "amount": 150000
+              },
+              {
+                "id": "TX-GT-2",
+                "kind": "investment_style_in",
+                "amount": 210000
+              },
+              {
+                "id": "TX-GT-3",
+                "kind": "consolidation_out",
+                "amount": 340000
+              }
+            ],
+            "risk.flags_add": [
+              "FRAUD_PROCEEDS"
+            ]
+          }
+        },
+        {
+          "id": "n_r2_gate",
+          "type": "decision",
+          "title": "After the proceeds move out",
+          "prompt": "R2 is met. Do you recommend a freeze and report, exit the relationship, or close it as a friend's investment?",
+          "choices": [
+            {
+              "id": "str_freeze",
+              "label": "Recommend a freeze and draft a suspicious transaction report",
+              "next": "n_outcome_freeze",
+              "rationale": "Matches R2.",
+              "effects": {
+                "account.holds": [
+                  "outbound"
+                ],
+                "risk.flags_add": [
+                  "STR_DRAFTED",
+                  "FREEZE_RECOMMENDED"
+                ]
+              }
+            },
+            {
+              "id": "exit_rel",
+              "label": "Exit the customer relationship",
+              "next": "n_outcome_exit",
+              "rationale": "The exit-the-relationship route that matches R2.",
+              "effects": {
+                "risk.flags_add": [
+                  "RELATIONSHIP_EXIT"
+                ]
+              }
+            },
+            {
+              "id": "clear_friend",
+              "label": "Close as a friend's investment",
+              "next": "n_outcome_miss",
+              "rationale": "Poor teaching path. The rules already say the case must not be closed this way.",
+              "effects": {
+                "risk.flags_add": [
+                  "R2_IGNORED"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_outcome_str",
+          "type": "outcome",
+          "title": "Suspicious transaction report drafted",
+          "prompt": "Reporting exit. Cluster SYN-CLUSTER-GT-06 is still in the state.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "str_drafted"
+          }
+        },
+        {
+          "id": "n_outcome_freeze",
+          "type": "outcome",
+          "title": "Freeze recommended and report drafted",
+          "prompt": "Outbound payments are on hold and the report is drafted. If you overrode the cluster rule earlier, the override flag remains.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "freeze_recommended"
+          }
+        },
+        {
+          "id": "n_outcome_exit",
+          "type": "outcome",
+          "title": "Customer relationship exited",
+          "prompt": "The relationship has ended. The shared-device and proceeds flags stay in the twin state.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "account_exit"
+          }
+        },
+        {
+          "id": "n_outcome_miss",
+          "type": "outcome",
+          "title": "Closed as a friend's investment",
+          "prompt": "Poor teaching path. R2 was ignored. The dashboard should later mark this session as not following the rules.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "false_positive_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "schema_version": "0.1",
+      "case_id": "crossborder-tel-001",
+      "title": "Cross-border phone-fraud corridor — correspondent monitoring (demo script)",
+      "locale": "en",
+      "summary": "Synthetic training case. Over several weeks, a company pays “commission” to dozens of Mainland personal accounts. The payees do not match the supplier list. A correspondent typology indicator links this corridor to phone-fraud proceeds. As a compliance officer, the trainee runs enhanced due diligence (EDD) on the corridor, drafts a suspicious transaction report, or recommends a freeze or an exit. Inspired by public summaries of cross-border phone fraud. It is not a real customer file, and not an actual correspondent file.",
+      "start_node_id": "n_corridor",
+      "teaching": {
+        "level": "chan-1-scripted-mirror",
+        "rules_before_ai": true,
+        "case_kind": "public_record_inspired",
+        "disclaimer": "Synthetic training scenario inspired by public enforcement reporting. Not official case files; no real customer data.",
+        "themes": [
+          "cross-border phone fraud",
+          "correspondent awareness",
+          "fan-out payments",
+          "mainland personal accounts"
+        ],
+        "sources": [
+          {
+            "label": "Police context, April–June 2023 cross-border phone fraud, IRONSPLITTER-related (URL not in the course brief)"
+          }
+        ],
+        "acceptable_dispositions": [
+          "str_drafted",
+          "freeze_recommended",
+          "account_exit"
+        ],
+        "poor_dispositions": [
+          "false_positive_cleared"
+        ]
+      },
+      "rules": [
+        {
+          "id": "R1_FANOUT",
+          "when": "One customer pays a large number of unrelated Mainland personal accounts, and there is no commission contract",
+          "then": "require_edd_before_release",
+          "note": "Do not release it as ordinary cross-border commission. Rules come before any model score."
+        },
+        {
+          "id": "R2_CORRIDOR_INDICATOR",
+          "when": "A correspondent typology indicator links the same corridor to phone-fraud proceeds",
+          "then": "require_str_or_freeze_or_exit",
+          "note": "Do not close the case after the story changes to fees paid on behalf of customers or family living costs. The indicator is a synthetic teaching indicator, not real intelligence."
+        }
+      ],
+      "initial_twin_state": {
+        "phase": "correspondent_review",
+        "customer": {
+          "id": "SYN-CORP-CB-320",
+          "display_name": "Synthetic Consulting Company A",
+          "segment": "corporate"
+        },
+        "kyc": {
+          "status": "basic_cdd_on_file",
+          "signals": [
+            "payee_list_mismatch"
+          ]
+        },
+        "corridor": {
+          "direction": "outbound-personal",
+          "stated_purpose": "commission",
+          "contract_evidence": "missing",
+          "indicator": "phone_fraud_typology"
+        },
+        "account": {
+          "id": "SYN-ACC-CB-320",
+          "opened": true,
+          "holds": []
+        },
+        "transactions": [],
+        "risk": {
+          "score": 48,
+          "flags": []
+        },
+        "disposition": null
+      },
+      "nodes": [
+        {
+          "id": "n_corridor",
+          "type": "scene",
+          "title": "Commission paid to many personal accounts",
+          "prompt": "Over several weeks, Synthetic Consulting Company A pays dozens of Mainland personal accounts. The stated purpose is commission. The payees do not match the supplier list on file.",
+          "next": "n_corr_gate",
+          "twin_patch": {
+            "phase": "corridor_review",
+            "risk.flags_add": [
+              "PAYEE_FANOUT"
+            ]
+          }
+        },
+        {
+          "id": "n_corr_gate",
+          "type": "decision",
+          "title": "Look into the corridor?",
+          "prompt": "The list already does not match. Do you run enhanced due diligence on the corridor, exit the relationship, or treat this as ordinary cross-border commission?",
+          "choices": [
+            {
+              "id": "edd_corridor",
+              "label": "Run EDD on the corridor",
+              "next": "n_mismatch",
+              "rationale": "Check the contract and the payee relationships first.",
+              "effects": {
+                "kyc.status": "edd_ordered",
+                "risk.flags_add": [
+                  "EDD_ORDERED"
+                ]
+              }
+            },
+            {
+              "id": "exit_now",
+              "label": "Exit the customer relationship",
+              "next": "n_outcome_exit",
+              "rationale": "The supplier list does not match. You can exit without waiting for the next payment.",
+              "effects": {
+                "risk.flags_add": [
+                  "RELATIONSHIP_EXIT"
+                ]
+              }
+            },
+            {
+              "id": "treat_commission",
+              "label": "Treat as ordinary cross-border commission",
+              "next": "n_mismatch",
+              "rationale": "Teaching override. The missing contract is still a fact. R1 must still be dealt with later.",
+              "effects": {
+                "risk.flags_add": [
+                  "CORRIDOR_WAIVED"
+                ],
+                "risk.score_delta": 25
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_mismatch",
+          "type": "scene",
+          "title": "No commission contract",
+          "prompt": "A spot check finds no commission contract. The payees have no business relationship with each other. A synthetic correspondent typology indicator links this corridor to phone-fraud proceeds. Rule R1: this kind of fan-out must not be released as ordinary commission.",
+          "next": "n_r1_gate",
+          "twin_patch": {
+            "corridor.contract_evidence": "missing",
+            "risk.flags_add": [
+              "NO_COMMISSION_CONTRACT"
+            ]
+          }
+        },
+        {
+          "id": "n_r1_gate",
+          "type": "decision",
+          "title": "Does the fan-out rule allow release?",
+          "prompt": "R1 has fired. Do you hold payments and continue the review, draft a suspicious transaction report now, or accept the oral commission story?",
+          "choices": [
+            {
+              "id": "hold",
+              "label": "Hold outbound payments and continue the review",
+              "next": "n_indicator",
+              "rationale": "Matches R1. Stop the fan-out first.",
+              "effects": {
+                "account.holds": [
+                  "outbound"
+                ],
+                "risk.flags_add": [
+                  "EDD_HOLD"
+                ]
+              }
+            },
+            {
+              "id": "str_now",
+              "label": "Draft a suspicious transaction report",
+              "next": "n_outcome_str",
+              "rationale": "Payments to many individuals with no contract are already enough to report.",
+              "effects": {
+                "risk.flags_add": [
+                  "STR_DRAFTED"
+                ]
+              }
+            },
+            {
+              "id": "waive_commission",
+              "label": "Accept the oral commission story and release",
+              "next": "n_indicator",
+              "rationale": "Overrides R1. The typology indicator does not go away because of this.",
+              "effects": {
+                "risk.flags_add": [
+                  "R1_OVERRIDDEN"
+                ],
+                "risk.score_delta": 30
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_indicator",
+          "type": "scene",
+          "title": "The typology indicator remains",
+          "prompt": "The customer changes the story and says these are fees paid on behalf of customers. The phone-fraud typology indicator has not been withdrawn. Rule R2: when the corridor and the proceeds indicator appear together, do not close the case as ordinary commission or as fees paid for others.",
+          "next": "n_r2_gate",
+          "twin_patch": {
+            "phase": "alert_triage",
+            "transactions": [
+              {
+                "id": "TX-CB-1",
+                "kind": "fanout_mainland_personal",
+                "amount": 640000,
+                "payee_count": 40
+              }
+            ],
+            "risk.flags_add": [
+              "PHONE_FRAUD_INDICATOR"
+            ]
+          }
+        },
+        {
+          "id": "n_r2_gate",
+          "type": "decision",
+          "title": "After the indicator appears",
+          "prompt": "R2 has fired. Do you recommend a freeze and report, exit the relationship, or accept that these are fees paid on behalf of customers?",
+          "choices": [
+            {
+              "id": "str_freeze",
+              "label": "Recommend a freeze and draft a suspicious transaction report",
+              "next": "n_outcome_freeze",
+              "rationale": "Matches R2.",
+              "effects": {
+                "account.holds": [
+                  "outbound"
+                ],
+                "risk.flags_add": [
+                  "STR_DRAFTED",
+                  "FREEZE_RECOMMENDED"
+                ]
+              }
+            },
+            {
+              "id": "exit_rel",
+              "label": "Exit the customer relationship",
+              "next": "n_outcome_exit",
+              "rationale": "An exit that matches R2.",
+              "effects": {
+                "risk.flags_add": [
+                  "RELATIONSHIP_EXIT"
+                ]
+              }
+            },
+            {
+              "id": "clear_agent",
+              "label": "Accept fees paid on behalf of customers and close",
+              "next": "n_outcome_miss",
+              "rationale": "Poor teaching path. The rule already says the case must not be closed this way.",
+              "effects": {
+                "risk.flags_add": [
+                  "R2_IGNORED"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_outcome_str",
+          "type": "outcome",
+          "title": "Suspicious transaction report drafted",
+          "prompt": "Reporting exit. The fan-out and the typology indicator stay in the state, so a reviewer can check against them.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "str_drafted"
+          }
+        },
+        {
+          "id": "n_outcome_freeze",
+          "type": "outcome",
+          "title": "Freeze recommended and report drafted",
+          "prompt": "Outbound payments are on hold. The report is drafted. If R1 was overridden earlier, the override flag remains.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "freeze_recommended"
+          }
+        },
+        {
+          "id": "n_outcome_exit",
+          "type": "outcome",
+          "title": "Customer relationship exited",
+          "prompt": "The relationship has ended. The exit does not erase the corridor facts.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "account_exit"
+          }
+        },
+        {
+          "id": "n_outcome_miss",
+          "type": "outcome",
+          "title": "Closed as fees paid on behalf of customers",
+          "prompt": "Poor teaching path. R2 was ignored. The dashboard should later mark this session as not following the rules.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "false_positive_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "schema_version": "0.1",
+      "case_id": "kol-mgmt-001",
+      "title": "KOL (influencer) management company — front account (demo script)",
+      "locale": "en",
+      "summary": "Synthetic training case. A company that claims to run KOL (influencer) management has no brand contracts. Yet its account receives personal credits that look like shopping, investment and romance fraud stories, and the money is sent out quickly. A related synthetic company has similar flows. The trainee decides whether to run enhanced due diligence (EDD), draft a suspicious transaction report, recommend a freeze, or exit. The credits must not be recorded as brand cooperation. Inspired by public summaries of KOL management front companies. It is not a real customer file.",
+      "start_node_id": "n_profile",
+      "teaching": {
+        "level": "chan-1-scripted-mirror",
+        "rules_before_ai": true,
+        "case_kind": "public_record_inspired",
+        "disclaimer": "Synthetic training scenario inspired by public enforcement reporting. Not official case files; no real customer data.",
+        "themes": [
+          "KOL management front",
+          "third-party retail credits",
+          "phone fraud",
+          "investment fraud",
+          "romance fraud"
+        ],
+        "sources": [
+          {
+            "label": "Public enforcement briefing on KOL management company accounts (URL not in the course brief)"
+          }
+        ],
+        "acceptable_dispositions": [
+          "str_drafted",
+          "freeze_recommended",
+          "account_exit"
+        ],
+        "poor_dispositions": [
+          "false_positive_cleared"
+        ]
+      },
+      "rules": [
+        {
+          "id": "R1_FRONT_COMPANY",
+          "when": "The claimed KOL management business has no contracts or staff records, and the credits come from retail third parties",
+          "then": "require_edd_or_exit",
+          "note": "Do not record the credits as brand cooperation when there is no contract. Rules come before any model score."
+        },
+        {
+          "id": "R2_FRAUD_MIX",
+          "when": "The stories behind the credits mix phone, investment or romance fraud patterns, and the money is sent out quickly",
+          "then": "require_str_or_freeze_or_exit",
+          "note": "Do not relabel these credits as brand cooperation and then close the case."
+        }
+      ],
+      "initial_twin_state": {
+        "phase": "periodic_review",
+        "customer": {
+          "id": "SYN-CORP-KOL-02",
+          "display_name": "Synthetic KOL Management Company A",
+          "segment": "corporate"
+        },
+        "related_customer": {
+          "id": "SYN-CORP-KOL-46",
+          "display_name": "Synthetic KOL Management Company B"
+        },
+        "kyc": {
+          "status": "basic_cdd_on_file",
+          "business_evidence": "missing",
+          "signals": [
+            "no_contracts",
+            "retail_inflows"
+          ]
+        },
+        "account": {
+          "id": "SYN-ACC-KOL-02",
+          "opened": true,
+          "holds": []
+        },
+        "transactions": [],
+        "risk": {
+          "score": 42,
+          "flags": []
+        },
+        "disposition": null
+      },
+      "nodes": [
+        {
+          "id": "n_profile",
+          "type": "scene",
+          "title": "KOL management company review",
+          "prompt": "Synthetic KOL Management Company A says it runs KOL management. Its account receives many personal credits. There are no brand contracts and no staff payroll records. The related Synthetic KOL Management Company B has similar flows.",
+          "next": "n_front_gate",
+          "twin_patch": {
+            "phase": "cdd_review",
+            "risk.flags_add": [
+              "FRONT_PROFILE"
+            ]
+          }
+        },
+        {
+          "id": "n_front_gate",
+          "type": "decision",
+          "title": "Check the business claim?",
+          "prompt": "Both contracts and payroll are missing. Do you run enhanced due diligence on the business, exit the relationship, or record the credits as brand cooperation for now?",
+          "choices": [
+            {
+              "id": "edd_business",
+              "label": "Request the management contracts and run EDD",
+              "next": "n_norecords",
+              "rationale": "Get business evidence first, then let R1 decide.",
+              "effects": {
+                "kyc.status": "edd_ordered",
+                "risk.flags_add": [
+                  "EDD_ORDERED"
+                ]
+              }
+            },
+            {
+              "id": "exit_now",
+              "label": "Exit the customer relationship",
+              "next": "n_outcome_exit",
+              "rationale": "Retail credits with no contract are already enough to exit.",
+              "effects": {
+                "risk.flags_add": [
+                  "RELATIONSHIP_EXIT"
+                ]
+              }
+            },
+            {
+              "id": "book_as_deals",
+              "label": "Record as brand cooperation",
+              "next": "n_norecords",
+              "rationale": "Teaching override. The booking label does not change the fact that there is no contract.",
+              "effects": {
+                "risk.flags_add": [
+                  "BOOKED_AS_BRAND"
+                ],
+                "risk.score_delta": 25
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_norecords",
+          "type": "scene",
+          "title": "No management contract produced",
+          "prompt": "The customer cannot produce a management contract. The credit remarks look like shopping, investment and romance fraud stories, not brand cooperation. Rule R1: a front like this requires enhanced due diligence or an exit.",
+          "next": "n_r1_gate",
+          "twin_patch": {
+            "kyc.business_evidence": "missing",
+            "kyc.status": "evidence_failed",
+            "risk.flags_add": [
+              "NO_BUSINESS_RECORD"
+            ]
+          }
+        },
+        {
+          "id": "n_r1_gate",
+          "type": "decision",
+          "title": "Exits under the front-company rule",
+          "prompt": "R1 has fired. Do you hold outbound payments, draft a suspicious transaction report now, or accept the oral business explanation?",
+          "choices": [
+            {
+              "id": "hold",
+              "label": "Hold outbound payments and continue EDD",
+              "next": "n_mix",
+              "rationale": "Matches R1. First see whether the money is sent out quickly.",
+              "effects": {
+                "account.holds": [
+                  "outbound"
+                ],
+                "risk.flags_add": [
+                  "EDD_HOLD"
+                ]
+              }
+            },
+            {
+              "id": "str_now",
+              "label": "Draft a suspicious transaction report",
+              "next": "n_outcome_str",
+              "rationale": "No contract, plus retail third-party credits. You can report.",
+              "effects": {
+                "risk.flags_add": [
+                  "STR_DRAFTED"
+                ]
+              }
+            },
+            {
+              "id": "accept_verbal",
+              "label": "Accept the oral explanation and release",
+              "next": "n_mix",
+              "rationale": "Overrides R1. The fraud-story types will still trigger the next rule.",
+              "effects": {
+                "risk.flags_add": [
+                  "R1_OVERRIDDEN"
+                ],
+                "risk.score_delta": 30
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_mix",
+          "type": "scene",
+          "title": "Three fraud stories and rapid outflow",
+          "prompt": "Further checks match three patterns: phone, investment and romance fraud. The money is sent out quickly. Rule R2: do not relabel these credits as brand cooperation.",
+          "next": "n_r2_gate",
+          "twin_patch": {
+            "phase": "alert_triage",
+            "transactions": [
+              {
+                "id": "TX-KOL-1",
+                "kind": "phone_style_in",
+                "amount": 90000
+              },
+              {
+                "id": "TX-KOL-2",
+                "kind": "investment_style_in",
+                "amount": 140000
+              },
+              {
+                "id": "TX-KOL-3",
+                "kind": "romance_style_in",
+                "amount": 80000
+              },
+              {
+                "id": "TX-KOL-4",
+                "kind": "rapid_out",
+                "amount": 290000
+              }
+            ],
+            "risk.flags_add": [
+              "FRAUD_MIX"
+            ]
+          }
+        },
+        {
+          "id": "n_r2_gate",
+          "type": "decision",
+          "title": "How to record mixed proceeds",
+          "prompt": "R2 has fired. Do you recommend a freeze and report, exit the relationship, or keep the brand-cooperation booking?",
+          "choices": [
+            {
+              "id": "str_freeze",
+              "label": "Recommend a freeze and draft a suspicious transaction report",
+              "next": "n_outcome_freeze",
+              "rationale": "Matches R2.",
+              "effects": {
+                "account.holds": [
+                  "outbound"
+                ],
+                "risk.flags_add": [
+                  "STR_DRAFTED",
+                  "FREEZE_RECOMMENDED"
+                ]
+              }
+            },
+            {
+              "id": "exit_rel",
+              "label": "Exit the customer relationship",
+              "next": "n_outcome_exit",
+              "rationale": "An exit that matches R2.",
+              "effects": {
+                "risk.flags_add": [
+                  "RELATIONSHIP_EXIT"
+                ]
+              }
+            },
+            {
+              "id": "clear_brand",
+              "label": "Keep the brand-cooperation label and close",
+              "next": "n_outcome_miss",
+              "rationale": "Poor teaching path. The rule already says the case must not be closed this way.",
+              "effects": {
+                "risk.flags_add": [
+                  "R2_IGNORED"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_outcome_str",
+          "type": "outcome",
+          "title": "Suspicious transaction report drafted",
+          "prompt": "Reporting exit. The synthetic IDs of Company A and related Company B stay in the state.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "str_drafted"
+          }
+        },
+        {
+          "id": "n_outcome_freeze",
+          "type": "outcome",
+          "title": "Freeze recommended and report drafted",
+          "prompt": "Outbound payments are on hold. The report is drafted. If the brand-cooperation booking override happened, its flag remains.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "freeze_recommended"
+          }
+        },
+        {
+          "id": "n_outcome_exit",
+          "type": "outcome",
+          "title": "Customer relationship exited",
+          "prompt": "The relationship has ended. The no-contract and mixed-fraud-story flags stay in the twin state.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "account_exit"
+          }
+        },
+        {
+          "id": "n_outcome_miss",
+          "type": "outcome",
+          "title": "Closed as brand cooperation",
+          "prompt": "Poor teaching path. R2 was ignored. The dashboard should later mark this session as not following the rules.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "false_positive_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "schema_version": "0.1",
+      "case_id": "triad-cashflow-001",
+      "title": "Flows with no commercial purpose — organised-crime indicator (demo script)",
+      "locale": "en",
+      "summary": "Synthetic training case. A local company account has large inflows and outflows, with no matching invoices, contracts or payroll. The customer says it is a cash business. An internal typology indicator marks this set of flows as organised-crime proceeds. As a compliance officer, the trainee decides whether to hold, draft a suspicious transaction report, recommend a freeze, or exit. This is not a law-enforcement exercise. Inspired by public summaries of organised-crime cash flows. It is not a real customer file.",
+      "start_node_id": "n_flows",
+      "teaching": {
+        "level": "chan-1-scripted-mirror",
+        "rules_before_ai": true,
+        "case_kind": "public_record_inspired",
+        "disclaimer": "Synthetic training scenario inspired by public enforcement reporting. Not official case files; no real customer data.",
+        "themes": [
+          "no commercial purpose",
+          "organised-crime proceeds indicator",
+          "cash-intensive flow"
+        ],
+        "sources": [
+          {
+            "label": "Public reporting on organised-crime cashflow through local accounts, joint OCST investigation context (URL not in the course brief)"
+          }
+        ],
+        "acceptable_dispositions": [
+          "freeze_recommended",
+          "account_exit"
+        ],
+        "incomplete_dispositions": [
+          "str_drafted"
+        ],
+        "poor_dispositions": [
+          "false_positive_cleared"
+        ]
+      },
+      "rules": [
+        {
+          "id": "R1_NO_COMMERCIAL_PURPOSE",
+          "when": "Large flows have no matching invoices, contracts or payroll",
+          "then": "require_edd_hold",
+          "note": "Calling it a cash business orally is not evidence. Before release, you must hold and run enhanced due diligence."
+        },
+        {
+          "id": "R2_OC_INDICATOR",
+          "when": "An internal typology indicator marks organised-crime proceeds",
+          "then": "require_str_and_freeze",
+          "note": "Do not close the case as an ordinary cash business without evidence. The indicator is a synthetic teaching marker. Rules come before any model score."
+        }
+      ],
+      "initial_twin_state": {
+        "phase": "alert_triage",
+        "customer": {
+          "id": "SYN-CORP-OC-025",
+          "display_name": "Synthetic Trading Company A",
+          "segment": "corporate"
+        },
+        "kyc": {
+          "status": "basic_cdd_on_file",
+          "commercial_evidence": "missing",
+          "signals": [
+            "no_invoice",
+            "blank_purpose"
+          ]
+        },
+        "account": {
+          "id": "SYN-ACC-OC-025",
+          "opened": true,
+          "holds": []
+        },
+        "transactions": [],
+        "risk": {
+          "score": 60,
+          "flags": []
+        },
+        "disposition": null
+      },
+      "nodes": [
+        {
+          "id": "n_flows",
+          "type": "scene",
+          "title": "Large flows with no evidence",
+          "prompt": "Synthetic Trading Company A's account has large inflows and outflows in a short time. There are no matching invoices or payroll. The counterparties are individuals, and the purpose field is blank.",
+          "next": "n_purpose_gate",
+          "twin_patch": {
+            "phase": "purpose_review",
+            "transactions": [
+              {
+                "id": "TX-OC-1",
+                "kind": "personal_in",
+                "amount": 500000
+              },
+              {
+                "id": "TX-OC-2",
+                "kind": "personal_out",
+                "amount": 470000
+              }
+            ],
+            "risk.flags_add": [
+              "NO_INVOICE"
+            ]
+          }
+        },
+        {
+          "id": "n_purpose_gate",
+          "type": "decision",
+          "title": "How to ask about the blank purpose",
+          "prompt": "Evidence is missing. Do you ask for the commercial purpose, hold outbound payments first, or accept the cash-business label?",
+          "choices": [
+            {
+              "id": "edd",
+              "label": "Request invoices or contracts",
+              "next": "n_noinvoice",
+              "rationale": "Get evidence first, then let R1 decide.",
+              "effects": {
+                "kyc.status": "edd_ordered",
+                "risk.flags_add": [
+                  "EDD_ORDERED"
+                ]
+              }
+            },
+            {
+              "id": "hold_now",
+              "label": "Hold outbound payments first",
+              "next": "n_noinvoice",
+              "rationale": "A blank purpose is already enough to stop payments first.",
+              "effects": {
+                "account.holds": [
+                  "outbound"
+                ],
+                "risk.flags_add": [
+                  "EDD_HOLD"
+                ]
+              }
+            },
+            {
+              "id": "cash_ok",
+              "label": "Accept the cash-business label",
+              "next": "n_indicator",
+              "rationale": "Teaching override. The lack of evidence is still a fact. The typology indicator will trigger R2 later.",
+              "effects": {
+                "risk.flags_add": [
+                  "CASH_LABEL_ACCEPTED"
+                ],
+                "risk.score_delta": 30
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_noinvoice",
+          "type": "scene",
+          "title": "Still no invoices",
+          "prompt": "The customer says it is a cash business, but cannot produce invoices, contracts or matching tax records. Rule R1: large flows with no commercial evidence must be held and put through enhanced due diligence.",
+          "next": "n_r1_gate",
+          "twin_patch": {
+            "kyc.commercial_evidence": "missing",
+            "kyc.status": "evidence_failed",
+            "risk.flags_add": [
+              "NO_COMMERCIAL_PURPOSE"
+            ]
+          }
+        },
+        {
+          "id": "n_r1_gate",
+          "type": "decision",
+          "title": "Keep the hold?",
+          "prompt": "R1 has fired. Do you keep the hold, exit the relationship, or accept the cash business and release?",
+          "choices": [
+            {
+              "id": "maintain_hold",
+              "label": "Keep the hold and continue the review",
+              "next": "n_indicator",
+              "rationale": "Matches R1.",
+              "effects": {
+                "account.holds": [
+                  "outbound"
+                ],
+                "risk.flags_add": [
+                  "EDD_HOLD"
+                ]
+              }
+            },
+            {
+              "id": "exit_rel",
+              "label": "Exit the customer relationship",
+              "next": "n_outcome_exit",
+              "rationale": "With no evidence, you can exit without waiting for the indicator.",
+              "effects": {
+                "risk.flags_add": [
+                  "RELATIONSHIP_EXIT"
+                ]
+              }
+            },
+            {
+              "id": "accept_cash",
+              "label": "Accept the cash business and release",
+              "next": "n_indicator",
+              "rationale": "Overrides R1. An oral label is not evidence.",
+              "effects": {
+                "account.holds": [],
+                "risk.flags_add": [
+                  "R1_OVERRIDDEN"
+                ],
+                "risk.score_delta": 35
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_indicator",
+          "type": "scene",
+          "title": "Organised-crime proceeds indicator",
+          "prompt": "An internal typology indicator marks this set of flows as organised-crime proceeds. This is a synthetic teaching indicator, not a law-enforcement action. Rule R2: when the indicator appears, you must draft a suspicious transaction report and recommend a freeze.",
+          "next": "n_r2_gate",
+          "twin_patch": {
+            "phase": "alert_triage",
+            "risk.flags_add": [
+              "OC_PROCEEDS_INDICATOR"
+            ]
+          }
+        },
+        {
+          "id": "n_r2_gate",
+          "type": "decision",
+          "title": "After the indicator appears",
+          "prompt": "R2 has fired. Do you recommend a freeze and report, only draft a report, or close it as an ordinary cash business?",
+          "choices": [
+            {
+              "id": "str_freeze",
+              "label": "Recommend a freeze and draft a suspicious transaction report",
+              "next": "n_outcome_freeze",
+              "rationale": "The complete exit that matches R2.",
+              "effects": {
+                "account.holds": [
+                  "outbound"
+                ],
+                "risk.flags_add": [
+                  "STR_DRAFTED",
+                  "FREEZE_RECOMMENDED"
+                ]
+              }
+            },
+            {
+              "id": "str_only",
+              "label": "Draft a suspicious transaction report",
+              "next": "n_outcome_str",
+              "rationale": "The report leaves a record, but R2 also requires a freeze recommendation. This is an incomplete exit, not a case closure.",
+              "effects": {
+                "risk.flags_add": [
+                  "STR_DRAFTED"
+                ]
+              }
+            },
+            {
+              "id": "clear_cash",
+              "label": "Close as an ordinary cash business",
+              "next": "n_outcome_miss",
+              "rationale": "Poor teaching path. The rule already says the case must not be closed this way.",
+              "effects": {
+                "risk.flags_add": [
+                  "R2_IGNORED"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_outcome_exit",
+          "type": "outcome",
+          "title": "Customer relationship exited",
+          "prompt": "The relationship has ended. The no-commercial-evidence flag stays in the twin state.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "account_exit"
+          }
+        },
+        {
+          "id": "n_outcome_freeze",
+          "type": "outcome",
+          "title": "Freeze recommended and report drafted",
+          "prompt": "Outbound payments are on hold. The report is drafted. The organised-crime indicator is still a typology marker, not an order to act.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "freeze_recommended"
+          }
+        },
+        {
+          "id": "n_outcome_str",
+          "type": "outcome",
+          "title": "Suspicious transaction report drafted",
+          "prompt": "Reporting exit. If outbound payments are not yet on hold, the indicator in the state still requires reviewers to see R2.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "str_drafted"
+          }
+        },
+        {
+          "id": "n_outcome_miss",
+          "type": "outcome",
+          "title": "Closed as a cash business",
+          "prompt": "Poor teaching path. R2 was ignored. The dashboard should later mark this session as not following the rules.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "false_positive_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "schema_version": "0.1",
+      "case_id": "insurer-controls-001",
+      "title": "Third-party premium — insurer control gaps (demo script)",
+      "locale": "en",
+      "summary": "Synthetic training case. An insurer's compliance officer reviews a policy. The premium is paid by an unverified third party. Politically exposed person (PEP) screening has no result. A suspicious-transaction worksheet was opened and has no disposition. The trainee decides whether to verify the payer, refuse the premium, fix the controls, or draft a suspicious transaction report. The gaps must not be closed as a historical exception. Inspired by public summaries of control failures from insurance supervision. It is not a real policy, and it is not any insurer's customer file.",
+      "start_node_id": "n_file",
+      "teaching": {
+        "level": "chan-1-scripted-mirror",
+        "rules_before_ai": true,
+        "case_kind": "public_record_inspired",
+        "disclaimer": "Synthetic training scenario inspired by public enforcement reporting. Not official case files; no real customer data.",
+        "themes": [
+          "insurer AML",
+          "third-party premium",
+          "PEP screening",
+          "STR tracking"
+        ],
+        "sources": [
+          {
+            "label": "Insurance Business Asia, AML fine and insurer control scrutiny"
+          }
+        ],
+        "acceptable_dispositions": [
+          "control_remediation",
+          "str_drafted",
+          "policy_exit"
+        ],
+        "poor_dispositions": [
+          "false_positive_cleared"
+        ]
+      },
+      "rules": [
+        {
+          "id": "R1_PREMIUM_PAYER",
+          "when": "The premium payer is not the policyholder, and is not a verified relative or employer",
+          "then": "verify_before_accept",
+          "note": "Do not book the premium before verification. Rules come before any model score."
+        },
+        {
+          "id": "R2_PEP_AND_STR_LOG",
+          "when": "PEP screening is missing, or a suspicious-transaction worksheet has no disposition",
+          "then": "remediate_controls_and_escalate",
+          "note": "Do not close it as a historical exception. The screening rerun and the worksheet handling must both stay on the event log."
+        }
+      ],
+      "initial_twin_state": {
+        "phase": "policy_review",
+        "firm": {
+          "id": "SYN-INS-IA-01",
+          "display_name": "Synthetic Life Insurer A"
+        },
+        "customer": {
+          "id": "SYN-POL-IA-195",
+          "display_name": "Synthetic Policyholder A",
+          "segment": "life_policy"
+        },
+        "premium": {
+          "payer_id": "SYN-PAY-IA-01",
+          "payer_relation": "unverified_third_party",
+          "accepted": false
+        },
+        "controls": {
+          "pep_screening": "missing",
+          "str_worksheet": "open_unowned"
+        },
+        "kyc": {
+          "status": "review_open",
+          "signals": [
+            "third_party_premium",
+            "pep_gap",
+            "str_worksheet_open"
+          ]
+        },
+        "risk": {
+          "score": 38,
+          "flags": []
+        },
+        "disposition": null
+      },
+      "nodes": [
+        {
+          "id": "n_file",
+          "type": "scene",
+          "title": "Periodic policy review",
+          "prompt": "Synthetic Life Insurer A reviews policy SYN-POL-IA-195. The premium is paid by a third party, SYN-PAY-IA-01. The payer's relationship to the holder is unverified. PEP screening has no result. The monitoring record holds an open suspicious-transaction worksheet.",
+          "next": "n_premium_gate",
+          "twin_patch": {
+            "phase": "premium_review"
+          }
+        },
+        {
+          "id": "n_premium_gate",
+          "type": "decision",
+          "title": "Can the third-party premium be booked?",
+          "prompt": "The payer is not yet verified. Do you verify the relationship first, refuse this premium, or book it first?",
+          "choices": [
+            {
+              "id": "verify_payer",
+              "label": "Verify the payer's relationship to the holder",
+              "next": "n_payer_gap",
+              "rationale": "Get the relationship first. Then let R1 decide whether the premium can be booked.",
+              "effects": {
+                "kyc.status": "payer_check_open",
+                "risk.flags_add": [
+                  "PAYER_CHECK"
+                ]
+              }
+            },
+            {
+              "id": "reject_premium",
+              "label": "Refuse the premium and stop collecting on this policy",
+              "next": "n_outcome_exit",
+              "rationale": "An unverified third-party payment can be left unbooked.",
+              "effects": {
+                "premium.accepted": false,
+                "risk.flags_add": [
+                  "PREMIUM_REJECTED"
+                ]
+              }
+            },
+            {
+              "id": "book_premium",
+              "label": "Book it now and verify later",
+              "next": "n_payer_gap",
+              "rationale": "Teaching override. The relationship is still unverified. Booking the premium does not clear R1.",
+              "effects": {
+                "premium.accepted": true,
+                "risk.flags_add": [
+                  "PREMIUM_BOOKED_EARLY"
+                ],
+                "risk.score_delta": 25
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_payer_gap",
+          "type": "scene",
+          "title": "The payer still does not match",
+          "prompt": "The payer is not the policyholder, and is not a verified relative or employer. Rule R1: a third-party premium must not be booked before verification.",
+          "next": "n_r1_gate",
+          "twin_patch": {
+            "premium.payer_relation": "unverified_third_party",
+            "kyc.status": "payer_unverified",
+            "risk.flags_add": [
+              "THIRD_PARTY_PREMIUM"
+            ]
+          }
+        },
+        {
+          "id": "n_r1_gate",
+          "type": "decision",
+          "title": "After verification fails",
+          "prompt": "R1 has fired. Do you hold off booking, stop collection, or accept this payer anyway?",
+          "choices": [
+            {
+              "id": "hold_premium",
+              "label": "Hold off booking and keep verifying",
+              "next": "n_controls",
+              "rationale": "Matches R1. Do not confirm the premium yet.",
+              "effects": {
+                "premium.accepted": false,
+                "risk.flags_add": [
+                  "PREMIUM_HELD"
+                ]
+              }
+            },
+            {
+              "id": "exit_policy",
+              "label": "Stop collecting on this policy",
+              "next": "n_outcome_exit",
+              "rationale": "The refusal exit that matches R1.",
+              "effects": {
+                "premium.accepted": false,
+                "risk.flags_add": [
+                  "POLICY_EXIT"
+                ]
+              }
+            },
+            {
+              "id": "accept_payer",
+              "label": "Accept the unverified payer",
+              "next": "n_controls",
+              "rationale": "Overrides R1. The screening and worksheet gaps are still waiting in the next scene.",
+              "effects": {
+                "premium.accepted": true,
+                "risk.flags_add": [
+                  "R1_OVERRIDDEN"
+                ],
+                "risk.score_delta": 30
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_controls",
+          "type": "scene",
+          "title": "Screening and worksheet both left empty",
+          "prompt": "PEP screening is still blank. The suspicious-transaction worksheet has no owner, and no record of closure or reporting. Rule R2: when screening is missing or the worksheet has no disposition, you must fix the controls and escalate.",
+          "next": "n_r2_gate",
+          "twin_patch": {
+            "phase": "control_review",
+            "controls.pep_screening": "missing",
+            "controls.str_worksheet": "open_unowned",
+            "risk.flags_add": [
+              "PEP_GAP",
+              "STR_WORKSHEET_OPEN"
+            ]
+          }
+        },
+        {
+          "id": "n_r2_gate",
+          "type": "decision",
+          "title": "How to fix the control gaps",
+          "prompt": "R2 has fired. Do you rerun screening and escalate the worksheet, draft a suspicious transaction report from the worksheet, or close it as a historical exception?",
+          "choices": [
+            {
+              "id": "remediate",
+              "label": "Rerun PEP screening and escalate the worksheet",
+              "next": "n_outcome_remediate",
+              "rationale": "Matches R2. Both gaps need a recorded disposition. Writing \"deal with it later\" is not enough.",
+              "effects": {
+                "controls.pep_screening": "rerun_ordered",
+                "controls.str_worksheet": "escalated",
+                "risk.flags_add": [
+                  "CONTROL_REMEDIATION"
+                ]
+              }
+            },
+            {
+              "id": "file_str",
+              "label": "Draft a suspicious transaction report from the worksheet",
+              "next": "n_outcome_str",
+              "rationale": "An opened worksheet needs a disposition. Reporting is one of the R2 exits.",
+              "effects": {
+                "controls.str_worksheet": "str_drafted",
+                "risk.flags_add": [
+                  "STR_DRAFTED"
+                ]
+              }
+            },
+            {
+              "id": "close_legacy",
+              "label": "Close as a historical exception",
+              "next": "n_outcome_miss",
+              "rationale": "Poor teaching path. The rule already forbids closing the case this way.",
+              "effects": {
+                "risk.flags_add": [
+                  "R2_IGNORED"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_outcome_exit",
+          "type": "outcome",
+          "title": "Third-party premium refused",
+          "prompt": "This premium was not confirmed as booked. The payer relationship is still unverified, and it stays in the state.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "policy_exit"
+          }
+        },
+        {
+          "id": "n_outcome_remediate",
+          "type": "outcome",
+          "title": "Control fix ordered",
+          "prompt": "The screening rerun and the worksheet escalation are both on the event log. If R1 was overridden earlier, the override flag is still there.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "control_remediation"
+          }
+        },
+        {
+          "id": "n_outcome_str",
+          "type": "outcome",
+          "title": "Suspicious transaction report drafted",
+          "prompt": "The worksheet now has a disposition. If PEP screening is still blank, the state shows it, so the next handler can complete it.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "str_drafted"
+          }
+        },
+        {
+          "id": "n_outcome_miss",
+          "type": "outcome",
+          "title": "Closed as a historical exception",
+          "prompt": "Poor teaching path. R2 was ignored. The blank screening and the open worksheet are still in the twin state.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "false_positive_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "schema_version": "0.1",
+      "case_id": "bank-cdd-001",
+      "title": "Incomplete due diligence — bank controls (demo script)",
+      "locale": "en",
+      "summary": "Synthetic training case. A corporate customer's account-opening file has no beneficial owner, and the address proof is stale. Yet the relationship manager asks for a higher transfer limit. Ongoing monitoring was switched off, and the alerts raised while it was off have no suspicious transaction report. The trainee decides whether to restrict the account, redo the due diligence, report, and fix the controls. The alerts must not be backdated as reviewed. Inspired by the Hong Kong Monetary Authority's public summaries of bank control failures. It is not a real bank customer file.",
+      "start_node_id": "n_onboard",
+      "teaching": {
+        "level": "chan-1-scripted-mirror",
+        "rules_before_ai": true,
+        "case_kind": "public_record_inspired",
+        "disclaimer": "Synthetic training scenario inspired by public enforcement reporting. Not official case files; no real customer data.",
+        "themes": [
+          "CDD",
+          "beneficial ownership",
+          "ongoing monitoring",
+          "STR failures"
+        ],
+        "sources": [
+          {
+            "label": "Clifford Chance briefing on regulator penalties for four banks (November 2021)"
+          }
+        ],
+        "acceptable_dispositions": [
+          "relationship_exit",
+          "cdd_refreshed_and_str",
+          "str_drafted"
+        ],
+        "poor_dispositions": [
+          "monitoring_backdated"
+        ]
+      },
+      "rules": [
+        {
+          "id": "R1_CDD_INCOMPLETE",
+          "when": "The beneficial owner is missing, or the address proof is stale",
+          "then": "restrict_and_refresh_cdd",
+          "note": "Do not raise the limit or expand the relationship. Rules come before any model score."
+        },
+        {
+          "id": "R2_MONITORING_AND_STR",
+          "when": "Ongoing monitoring was switched off, and alerts raised while it was off reached the internal threshold",
+          "then": "require_str_and_control_fix",
+          "note": "Do not close the case by backdating the alerts as reviewed. The report and the control fix must both stay on the event log."
+        }
+      ],
+      "initial_twin_state": {
+        "phase": "cdd_review",
+        "customer": {
+          "id": "SYN-CORP-CDD-04",
+          "display_name": "Synthetic Corporate Customer A",
+          "segment": "corporate"
+        },
+        "file": {
+          "id": "SYN-FILE-CDD-442"
+        },
+        "kyc": {
+          "status": "incomplete",
+          "beneficial_owner": "missing",
+          "address_proof": "stale",
+          "signals": [
+            "bo_missing",
+            "stale_address"
+          ]
+        },
+        "monitoring": {
+          "status": "switched_off",
+          "alerts_over_threshold": 4
+        },
+        "account": {
+          "id": "SYN-ACC-CDD-04",
+          "opened": true,
+          "holds": [],
+          "transfer_limit": "standard"
+        },
+        "transactions": [],
+        "risk": {
+          "score": 44,
+          "flags": []
+        },
+        "disposition": null
+      },
+      "nodes": [
+        {
+          "id": "n_onboard",
+          "type": "scene",
+          "title": "Incomplete account-opening file",
+          "prompt": "Review file SYN-FILE-CDD-442. Synthetic Corporate Customer A has no beneficial owner on file, and the address proof is stale. The relationship manager asks for a higher transfer limit.",
+          "next": "n_cdd_gate",
+          "twin_patch": {
+            "phase": "cdd_review"
+          }
+        },
+        {
+          "id": "n_cdd_gate",
+          "type": "decision",
+          "title": "Can the limit request be approved?",
+          "prompt": "Customer due diligence (CDD) is incomplete. Do you restrict the account and redo the due diligence, exit the relationship, or raise the limit first?",
+          "choices": [
+            {
+              "id": "refresh_restrict",
+              "label": "Restrict the account and redo customer due diligence",
+              "next": "n_stale",
+              "rationale": "Do not expand the relationship while the owner is missing.",
+              "effects": {
+                "account.holds": [
+                  "limit_increase"
+                ],
+                "kyc.status": "refresh_ordered",
+                "risk.flags_add": [
+                  "CDD_REFRESH"
+                ]
+              }
+            },
+            {
+              "id": "exit_now",
+              "label": "Exit the customer relationship",
+              "next": "n_outcome_exit",
+              "rationale": "An incomplete account-opening file is enough to exit. There is no need to raise the limit first.",
+              "effects": {
+                "risk.flags_add": [
+                  "RELATIONSHIP_EXIT"
+                ]
+              }
+            },
+            {
+              "id": "raise_limit",
+              "label": "Raise the transfer limit first",
+              "next": "n_stale",
+              "rationale": "Teaching override. The owner is still missing. R1 still has to be dealt with later.",
+              "effects": {
+                "account.transfer_limit": "raised",
+                "risk.flags_add": [
+                  "LIMIT_RAISED"
+                ],
+                "risk.score_delta": 30
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_stale",
+          "type": "scene",
+          "title": "The owner still cannot be confirmed",
+          "prompt": "After the missing documents come in, the beneficial owner still cannot be confirmed, and the address proof is still stale. Rule R1: when ownership details are missing or stale, you must restrict the account and redo the due diligence. Do not expand the relationship.",
+          "next": "n_r1_gate",
+          "twin_patch": {
+            "kyc.beneficial_owner": "missing",
+            "kyc.address_proof": "stale",
+            "kyc.status": "still_incomplete",
+            "risk.flags_add": [
+              "CDD_INCOMPLETE"
+            ]
+          }
+        },
+        {
+          "id": "n_r1_gate",
+          "type": "decision",
+          "title": "Override the due diligence rule?",
+          "prompt": "R1 has fired. Do you keep the restriction, exit the relationship, or override and keep the facilities already raised?",
+          "choices": [
+            {
+              "id": "restrict",
+              "label": "Keep the restriction and carry on redoing the due diligence",
+              "next": "n_monitoring",
+              "rationale": "Matches R1.",
+              "effects": {
+                "account.holds": [
+                  "outbound",
+                  "limit_increase"
+                ],
+                "account.transfer_limit": "standard",
+                "risk.flags_add": [
+                  "CDD_RESTRICTED"
+                ]
+              }
+            },
+            {
+              "id": "exit_rel",
+              "label": "Exit the customer relationship",
+              "next": "n_outcome_exit",
+              "rationale": "The exit that matches R1.",
+              "effects": {
+                "risk.flags_add": [
+                  "RELATIONSHIP_EXIT"
+                ]
+              }
+            },
+            {
+              "id": "override_open",
+              "label": "Override the rule and keep the facilities",
+              "next": "n_monitoring",
+              "rationale": "Overrides R1. The override is an event. It does not fill in the missing owner.",
+              "effects": {
+                "risk.flags_add": [
+                  "R1_OVERRIDDEN"
+                ],
+                "risk.score_delta": 35
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_monitoring",
+          "type": "scene",
+          "title": "Monitoring was switched off",
+          "prompt": "Ongoing monitoring was switched off. While it was off, several alerts reached the internal threshold, but there is no suspicious transaction report. Rule R2: you must report and fix the controls. Do not backdate the alerts as reviewed.",
+          "next": "n_r2_gate",
+          "twin_patch": {
+            "phase": "monitoring_review",
+            "monitoring.status": "switched_off",
+            "monitoring.alerts_over_threshold": 4,
+            "risk.flags_add": [
+              "MONITORING_OFF",
+              "ALERTS_UNREPORTED"
+            ]
+          }
+        },
+        {
+          "id": "n_r2_gate",
+          "type": "decision",
+          "title": "Alerts with no report",
+          "prompt": "R2 has fired. Do you redo the due diligence and draft a report, only draft a report while the restriction stays, or backdate the alerts as reviewed at the time?",
+          "choices": [
+            {
+              "id": "do_both",
+              "label": "Redo the due diligence, fix monitoring, and draft a suspicious transaction report",
+              "next": "n_outcome_both",
+              "rationale": "The full exit that matches R2. The due diligence and the report are recorded together.",
+              "effects": {
+                "kyc.status": "refresh_ordered",
+                "monitoring.status": "restored",
+                "risk.flags_add": [
+                  "CDD_REFRESH",
+                  "STR_DRAFTED",
+                  "MONITORING_RESTORED"
+                ]
+              }
+            },
+            {
+              "id": "str_keep_restrict",
+              "label": "Keep the restriction and draft a suspicious transaction report",
+              "next": "n_outcome_str",
+              "rationale": "Reporting is required. The restriction stays. The next handler should see a flag for the due diligence redo.",
+              "effects": {
+                "account.holds": [
+                  "outbound"
+                ],
+                "risk.flags_add": [
+                  "STR_DRAFTED"
+                ]
+              }
+            },
+            {
+              "id": "backdate",
+              "label": "Backdate the alerts as reviewed and close",
+              "next": "n_outcome_miss",
+              "rationale": "Poor teaching path. The rule forbids closing the case by backdating.",
+              "effects": {
+                "risk.flags_add": [
+                  "MONITORING_BACKDATED"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "n_outcome_exit",
+          "type": "outcome",
+          "title": "Customer relationship exited",
+          "prompt": "The relationship has ended. The incomplete customer due diligence stays in the file state. The exit did not mark it complete.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "relationship_exit"
+          }
+        },
+        {
+          "id": "n_outcome_both",
+          "type": "outcome",
+          "title": "Due diligence redone and report drafted",
+          "prompt": "Monitoring is restored. The suspicious transaction report is drafted. The due diligence redo stays on the event log. If the limit was raised or R1 was overridden earlier, those flags are still there.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "cdd_refreshed_and_str"
+          }
+        },
+        {
+          "id": "n_outcome_str",
+          "type": "outcome",
+          "title": "Suspicious transaction report drafted",
+          "prompt": "Reporting exit. The account restriction is still in place. Drafting the report did not fill in the missing owner.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "str_drafted"
+          }
+        },
+        {
+          "id": "n_outcome_miss",
+          "type": "outcome",
+          "title": "Backdated as reviewed",
+          "prompt": "Poor teaching path. R2 was bypassed by backdating. The switched-off monitoring and the unreported alerts are still in the twin state.",
+          "terminal": true,
+          "twin_patch": {
+            "phase": "closed",
+            "disposition": "monitoring_backdated"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -18,11 +18,11 @@ TwinAML is a COMP3424 course demo of a digital twin for AML simulation training.
 | `insurer-controls-001` | Insurer controls (synthetic insurer) |
 | `bank-cdd-001` | Bank CDD / monitoring / STR (synthetic bank) |
 
-A future node/choice player would let a trainee choose one of those scripts by `case_id` and decide inside it. Rules in that script would decide compliance outcomes (rules-before-AI). A language model, if one is added later, may explain a decision only after those rules have fired, and a human override must be stored as an event.
+The **case library** at `/cases` plays these scripts. A trainee picks one of the eleven workflows, reads how the scheme works in the real world, then makes the decisions inside a script while the twin state and event log update beside it. Rules in the script decide the outcome (rules-before-AI). The debrief shows whether the ending was acceptable, incomplete or poor, the rationale for every choice, the rules, and the model teaching flow. A language model, if one is added later, may explain a decision only after those rules have fired, and a human override must be stored as an event.
 
-Case flows for human review are in [`data/case-flow/`](data/case-flow/). Each case has an English Markdown file with Mermaid flow diagrams. The playable scripts stay in `data/cases/`, numbered `01`–`11`. `case_id` is unchanged.
+Case flows are in [`data/case-flow/`](data/case-flow/). Each case has an English Markdown file with Mermaid flow diagrams. The playable scripts stay in `data/cases/`, numbered `01`–`11`. `case_id` is unchanged. `node scripts/export-case-library.mjs` packages the flow pages and scripts into the server-only `workers/api/src/case-library.json`; the case library reads only that file. Workflows 2 and 3 have no script yet, so the library shows their teaching flow read-only.
 
-TwinAML ships English only: docs, UI copy and case content. `node scripts/validate-cases.mjs` fails on a script whose `locale` is not `en` or that contains Chinese, Japanese or Korean text.
+TwinAML ships English only: docs, UI copy and case content. `node scripts/validate-cases.mjs` fails on a script whose `locale` is not `en` or that contains Chinese, Japanese or Korean text, and the library export refuses the same.
 
 | Case | English | Playable script |
 | --- | --- | --- |
@@ -38,7 +38,7 @@ TwinAML ships English only: docs, UI copy and case content. `node scripts/valida
 | Organised-crime cashflow | [English](data/case-flow/10-organised-crime-cashflow.en.md) | `triad-cashflow-001` |
 | Insurer and bank control gaps | [English](data/case-flow/11-control-gaps.en.md) | `insurer-controls-001`, `bank-cdd-001` |
 
-The web investigation pilot, **The Second Ledger**, uses the paired evidence pack below. Players explore six alerts, examine source documents and transfers, request timed checks, place or release provisional holds, and record cited decisions. A guided simulation clock drives evidence delivery and pending payments. The Node API owns persistent sessions and the event history in a SQLite file; the browser renders its learner-visible state. The existing eleven node/choice scripts remain authored content and are not yet connected to a case picker.
+The web investigation pilot, **The Second Ledger**, uses the paired evidence pack below. Players explore six alerts, examine source documents and transfers, request timed checks, place or release provisional holds, and record cited decisions. A guided simulation clock drives evidence delivery and pending payments. The Node API owns persistent sessions and the event history in a SQLite file; the browser renders its learner-visible state. The eleven node/choice scripts are played separately in the case library at `/cases`.
 
 The ARG design, content sources, and first playable scope are in [`docs/arg-investigation.md`](docs/arg-investigation.md). All identities, money, policies, and documents in the pilot are fictional. The debrief reports observed consequences rather than an automated compliance grade.
 
@@ -64,7 +64,7 @@ The primary run path is one Node API with file-backed SQLite, serving the React 
 | Local Python stub | `backend/` | Optional FastAPI health endpoint for offline Python work; it cannot run investigation sessions. |
 | Unity | — | Optional later face on the same API. This repo has no Unity project. |
 
-The web app does not keep a private copy of the case world. The investigation engine applies evidence-release, timing, and payment rules on the API server. The eleven-script node/choice engine remains planned.
+The web app does not keep a private copy of the case world. The investigation engine applies evidence-release, timing, and payment rules on the API server. Case-library sessions store only their events; the server replays the decisions through the same patch rules the validator uses (`scripts/apply-effects.mjs`) to rebuild the twin.
 
 The training-run diagram and the distinction between the investigation pilot and the planned node/choice player are in [`docs/architecture.md`](docs/architecture.md). Course terms — mirroring, shadowing, threading, Chan Level 1, Chan Level 2, rules-before-AI — are mapped in [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md).
 
@@ -74,14 +74,14 @@ Classroom demo. One API and one web client.
 
 | Layer | Current | Planned |
 | --- | --- | --- |
-| Demo API | Node + Hono + built-in SQLite (`workers/api`). Health and persistent investigation sessions; optional Worker adapter shares the engine. | Connect the existing node/choice script library to the same API. |
-| Web | React + Vite + TypeScript (`frontend/`). Playable paired investigation desk served by Node. | Additional ARG episodes and the node/choice case picker. |
+| Demo API | Node + Hono + built-in SQLite (`workers/api`). Health, persistent investigation sessions and case-library sessions; optional Worker adapter shares the engines. | Versioned rule packs (Phase 2). |
+| Web | React + Vite + TypeScript (`frontend/`). Playable paired investigation desk at `/` and the eleven-workflow case library at `/cases`, served by Node. | Additional ARG episodes and a session dashboard (P1-S6). |
 | Local Python stub | FastAPI (`backend/`). Optional. `GET /health` with the same JSON. | Any investigation support would need an implementation; it stays off the deploy path. |
-| Cases | 11 example scripts in [`data/cases/README.md`](data/cases/README.md). | Stay on `packages/schemas/script.schema.json`. A rule’s `when` text is for a person to read until the node/choice state machine exists. |
+| Cases | 11 example scripts in [`data/cases/README.md`](data/cases/README.md). | Stay on `packages/schemas/script.schema.json`. A rule’s `when` text is for a person to read; the script's branches and teaching dispositions decide the outcome. |
 | Media | `data/media/.gitkeep` only. Large video is gitignored. | Scripts may set `media_ref` to a local path. Binaries stay out of git. |
 | Contract | `packages/schemas/script.schema.json` (schema `0.1`). | One script format. Patch keys: [`docs/effects.md`](docs/effects.md). |
 | Docs | `docs/architecture.md`, `docs/arg-investigation.md`, `docs/vps.md`, and the historical [`docs/phases/`](docs/phases/README.md). | The eleven-script roadmap remains in the phase docs. See [Implementation phases](#implementation-phases). |
-| Deploy | VPS deployment on hosted port 8080, reached through `https://amlsim.spectrumvps.tech`: built Node server, `frontend/dist/`, and persistent SQLite. Optional Wrangler configs remain for Worker/Pages hosting. | Account access controls and class-size capacity validation remain future hosting work. |
+| Deploy | VPS deployment on hosted port 8080, reached through `https://amltwin.spectrumvps.tech` (the earlier `https://amlsim.spectrumvps.tech` still works): built Node server, `frontend/dist/`, and persistent SQLite. Optional Wrangler configs remain for Worker/Pages hosting. | Account access controls and class-size capacity validation remain future hosting work. |
 
 Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, Kafka, a microservice split, a Unity project, and a live bank connection.
 
@@ -111,6 +111,8 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 │       ├── src/node-server.mjs  # Node HTTP server, SQLite and frontend files
 │       ├── src/api.ts           # shared health and investigation routes
 │       ├── src/engine.ts        # investigation rules and session state
+│       ├── src/cases.ts         # case-library sessions replayed from events
+│       ├── src/case-library.json # server-only generated flows and scripts
 │       ├── src/index.ts         # optional Worker/Durable Object adapter
 │       ├── src/investigation-pack.json # server-only generated evidence
 │       ├── tests/               # engine and HTTP checks
@@ -121,7 +123,7 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 │   ├── index.html
 │   ├── package.json
 │   ├── public/_redirects        # SPA fallback
-│   ├── src/                     # investigation desk
+│   ├── src/                     # investigation desk and case library (/cases)
 │   ├── tsconfig.json
 │   ├── vite.config.ts
 │   └── wrangler.jsonc
@@ -136,7 +138,7 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 │   │   ├── README.md
 │   │   ├── 01-deepfake-hk-001.example.json
 │   │   └── 02-…11-*.example.json
-│   ├── case-flow/               # human-review flows in English
+│   ├── case-flow/               # the eleven workflows in English (library briefs)
 │   │   ├── 01-deepfake-executive-impersonation.en.md
 │   │   └── 02-…11-*.en.md
 │   ├── evidence/                # authored paired investigation
@@ -152,6 +154,7 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 │   ├── apply-effects.mjs        # schema 0.1 patch apply used by the path test
 │   ├── deepfake-paths.test.mjs  # eight deepfake-001 terminal paths
 │   ├── export-web-investigation.py # deterministic server content export
+│   ├── export-case-library.mjs  # case-flow pages + scripts -> case-library.json
 │   └── .gitkeep
 └── simulation/
     └── flexsim/                 # standalone FlexSim edition: simulation/flexsim/README.md
@@ -182,7 +185,7 @@ npm ci
 npm run dev
 ```
 
-Open `http://127.0.0.1:5173`. Begin a shift to open a persistent investigation session. Reading pauses simulation time; advance by work time or to the next event to complete requested checks and process payment deadlines. The Vite development server proxies `/api` to the Node API on port 8787. An existing shift resumes after refresh; a new shift preserves the previous session and starts another.
+Open `http://127.0.0.1:5173` for The Second Ledger, or `http://127.0.0.1:5173/cases` for the case library. Begin a shift to open a persistent investigation session. Reading pauses simulation time; advance by work time or to the next event to complete requested checks and process payment deadlines. The Vite development server proxies `/api` to the Node API on port 8787. An existing shift resumes after refresh; a new shift preserves the previous session and starts another.
 
 For a single-server build, run `npm run build` in `frontend/` and open the Node server at `http://127.0.0.1:8787`; it serves the built interface and API together. Local development needs no cross-origin configuration. The current optional FastAPI app cannot serve investigation sessions. See [`docs/vps.md`](docs/vps.md) for hosting notes. Optional Pages/Worker hosting uses `VITE_API_URL` and `FRONTEND_ORIGIN`.
 
@@ -207,11 +210,11 @@ Check the case scripts from the repo root:
 node scripts/validate-cases.mjs
 ```
 
-That checks schema `0.1`, the English-only rule and the effect-key grammar, then plays the eight `deepfake-001` endings. Details: [`docs/effects.md`](docs/effects.md).
+That checks schema `0.1`, the English-only rule and the effect-key grammar, then plays the eight `deepfake-001` endings. After changing a script or a case-flow page, regenerate the case library with `node scripts/export-case-library.mjs` (`--check` compares without writing). Details: [`docs/effects.md`](docs/effects.md).
 
 ## Deploy
 
-The investigation pilot is deployed on `hosting-vps` at [https://amlsim.spectrumvps.tech](https://amlsim.spectrumvps.tech). The HTTPS domain routes to the Node service, which serves the built frontend and API together on hosted port 8080; local development keeps port 8787. Tailscale access is required for direct VPS administration. The release layout, persistent SQLite storage, service commands and update/rollback steps are in [`docs/vps.md`](docs/vps.md). Account access controls and class-size load testing remain incomplete. The historical phase plans below retain their original Cloudflare targets.
+TwinAML is deployed on `hosting-vps` at [https://amltwin.spectrumvps.tech](https://amltwin.spectrumvps.tech); the case library is at [https://amltwin.spectrumvps.tech/cases](https://amltwin.spectrumvps.tech/cases). The earlier `https://amlsim.spectrumvps.tech` hostname routes to the same service. The HTTPS domain routes to the Node service, which serves the built frontend and API together on hosted port 8080; local development keeps port 8787. Tailscale access is required for direct VPS administration. The release layout, persistent SQLite storage, service commands and update/rollback steps are in [`docs/vps.md`](docs/vps.md). Account access controls and class-size load testing remain incomplete. The historical phase plans below retain their original Cloudflare targets.
 
 Optional steps for Pages and the Worker remain in [`docs/cloudflare.md`](docs/cloudflare.md). Cloudflare account ids and API tokens are not stored in this repo.
 
@@ -219,7 +222,7 @@ Optional steps for Pages and the Worker remain in [`docs/cloudflare.md`](docs/cl
 
 ### Historical eleven-script roadmap
 
-The original node/choice plans are in [`docs/phases/`](docs/phases/README.md). Their Worker/Pages targets describe the historical plan, not the current VPS run path. Do not implement those slices until the owner names one. The paired-evidence investigation pilot is a separate implemented slice; it does not make the eleven-script player complete.
+The original node/choice plans are in [`docs/phases/`](docs/phases/README.md). Their Worker/Pages targets describe the historical plan, not the current VPS run path. Do not implement the remaining slices until the owner names one. The case library implements P1-S2 to P1-S4 on the Node API; the paired-evidence investigation pilot is a separate slice.
 
 Chan levels follow the course: Level 1 is a scripted mirror, Level 2 is a near-realtime session that writes back to the twin, Level 3 is product vision. Course terms are mapped in [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md).
 
@@ -235,14 +238,14 @@ In scope: load any of the 11 against `packages/schemas/script.schema.json`; sess
 
 Out of scope for Phase 1: Docker, Kubernetes, Neo4j, Kafka, a microservice split, Unity, a live language model that sets disposition, a real bank / regulator / STR filing connection, multi-tenant billing, and session-time video synthesis. New mixer / peel-chain and synthetic-ID families beyond this library wait for Phase 2.
 
-Current status for this **node/choice library roadmap**: the 11 scripts and the effect-key contract are in the repo; P1-S1 is done. The separate paired-evidence web pilot implements investigation sessions and an investigation desk. It does not yet execute these eleven scripts or complete their case-picker slices.
+Current status for this **node/choice library roadmap**: P1-S1 to P1-S4 are done. The case library at `/cases` starts any of the 11 scripts, persists the session in SQLite, and walks it to a rated outcome. P1-S5 is partial: sessions return ordered `session_started`, `decision_made` and `session_closed` events and mark poor endings, but there are no separate `rule_flagged` or `override` events. Overrides appear as the decision event plus the script's override flag.
 
 | Slice | Done when |
 | --- | --- |
 | P1-S1 — Script contract freeze | **Done.** [`docs/effects.md`](docs/effects.md) lists every effect key in the 11 scripts and the apply order. Check with `node scripts/validate-cases.mjs`. |
-| P1-S2 — Twin state machine | Unit tests cover terminal dispositions for the library without HTTP. |
-| P1-S3 — Session store + Worker routes | `curl` or local `wrangler dev` can finish one full path for a chosen `case_id`. `GET /health` stays. |
-| P1-S4 — Scenario player | The trainee can start any of the 11. A browser playthrough matches the API for at least two branches of the selected case. Missing media does not crash the case. |
+| P1-S2 — Twin state machine | **Done.** `workers/api/tests/cases.test.mjs` walks every path in all 11 scripts. Unit tests cover terminal dispositions for the library without HTTP. |
+| P1-S3 — Session store + Worker routes | **Done** on Node and the optional Worker adapter: `/api/case-sessions`. `curl` or local `wrangler dev` can finish one full path for a chosen `case_id`. `GET /health` stays. |
+| P1-S4 — Scenario player | **Done** at `/cases`. The trainee can start any of the 11. A browser playthrough matches the API for at least two branches of the selected case. Missing media does not crash the case. |
 | P1-S5 — Event log + teaching score | `GET` session returns ordered events for replay, and a teaching poor disposition is marked for the dashboard. |
 | P1-S6 — Simple dashboard | After one playthrough, the dashboard shows that session (disposition, flags, timeline) from the Worker twin. |
 | P1-S7 — Deploy checklist | The owner can follow the docs to deploy Pages and the Worker. Tokens stay out of git. |

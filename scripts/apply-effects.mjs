@@ -1,6 +1,7 @@
 /**
  * Apply schema 0.1 patches the way docs/effects.md describes.
- * This is the contract check for case scripts. The Worker state machine is P1-S2.
+ * The validator uses it as the contract check, and the API case library
+ * (workers/api/src/cases.ts) replays a session's choices through play().
  */
 
 function parentOf(state, parts) {
@@ -79,11 +80,13 @@ export function play(script, choiceIds) {
   let node = byId.get(script.start_node_id);
   if (!node) throw new Error(`start_node_id ${script.start_node_id} is missing`);
   const queue = [...choiceIds];
+  const visited = [];
   const limit = script.nodes.length + queue.length + 2;
   for (let step = 0; step < limit; step += 1) {
+    visited.push(node.id);
     applyPatch(twin, node.twin_patch);
     if (node.type === "outcome") {
-      return { twin, nodeId: node.id };
+      return { twin, nodeId: node.id, visited };
     }
     if (node.type === "scene") {
       const next = byId.get(node.next);
@@ -92,6 +95,8 @@ export function play(script, choiceIds) {
       continue;
     }
     if (node.type === "decision") {
+      // Out of choices: the session is waiting at this decision.
+      if (queue.length === 0) return { twin, nodeId: node.id, visited };
       const choiceId = queue.shift();
       const choice = (node.choices || []).find((item) => item.id === choiceId);
       if (!choice) throw new Error(`missing choice ${choiceId} on ${node.id}`);

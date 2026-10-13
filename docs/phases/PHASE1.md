@@ -1,6 +1,6 @@
 # Phase 1 — MVP (Chan Level 1)
 
-**Status:** P1-S1 (script contract freeze) is done. Later slices stay unstarted until the owner names one.  
+**Status:** P1-S1 to P1-S4 are done: the case library at `/cases` plays all 11 scripts on the Node API (the primary VPS runtime; the Worker adapter has the same routes). P1-S5 is partial. Later slices stay unstarted until the owner names one.  
 **Audience:** coding agents.  
 **Chan level:** Level 1 — scripted cases, offline-style mirror of `initial_twin_state`, not a live bank.
 
@@ -116,10 +116,10 @@ Deploy path: **Cloudflare Pages** (`frontend/`) + **Cloudflare Worker** (`worker
 ## Done slices
 
 - [x] P1-S1
-- [ ] P1-S2
-- [ ] P1-S3
-- [ ] P1-S4
-- [ ] P1-S5
+- [x] P1-S2 (`workers/api/tests/cases.test.mjs`)
+- [x] P1-S3 (Node `/api/case-sessions`; optional Worker adapter)
+- [x] P1-S4 (web case library at `/cases`)
+- [ ] P1-S5 (partial: ordered `session_started`, `decision_made`, `session_closed` events and poor-ending ratings; no separate `rule_flagged` or `override` events)
 - [ ] P1-S6
 - [ ] P1-S7
 - [ ] P1-S8

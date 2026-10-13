@@ -6,9 +6,13 @@ This demo stays one API and one web client on purpose. It does not split into mi
 
 The primary runtime is one Node server in `workers/api`, with a file-backed SQLite database. It serves the built React interface from `frontend/dist/` and the investigation API on the same origin. The optional Cloudflare Worker adapter uses the same Hono routes, investigation engine, and content pack. FastAPI in `backend/` remains a health-only stub.
 
-The playable investigation runtime is described under [Investigation pilot](#investigation-pilot). The eleven-script flow below records the original node/choice roadmap and remains planned.
+The playable investigation runtime is described under [Investigation pilot](#investigation-pilot). The eleven-script flow below is implemented by the case library at `/cases`.
 
-## Planned node/choice flow
+## Case library (node/choice flow)
+
+`scripts/export-case-library.mjs` packages the eleven `data/case-flow/*.en.md` pages (the brief and the model teaching flow) and the eleven `data/cases/` scripts into the server-only `workers/api/src/case-library.json`. `workers/api/src/cases.ts` stores a case session as its event list only. Each read replays the `decision_made` events through `play()` in `scripts/apply-effects.mjs`, so the twin and current node are always rebuilt from events, never kept as a second copy. The browser receives the visited nodes, the current choice labels, the twin and the events. Choice rationales, rule notes and the model teaching flow are sent only after an outcome node is reached. The rating comes from the script's `teaching.acceptable_dispositions`, `incomplete_dispositions` and `poor_dispositions`.
+
+The export reads each case-flow page by its structure, so keep it: a first heading `# <number>. <title>` matching the file number; links to the page's own scripts as `](../cases/<file>.json)` before the first `##`; a `## Real-world flow` section with an opening paragraph (optionally `Method and logic: ...`) and a Mermaid diagram; and a `## Platform teaching flow` section with `Trainee role:` and `Training goal:` paragraphs, a Mermaid diagram, and optional notes after it. Mermaid nodes must be written as `id["label"]` (a step) or `id{"label"}` (a decision). Every script must be linked from exactly one page. The export fails with the page name when any of this is missing.
 
 ```mermaid
 flowchart LR
@@ -31,7 +35,7 @@ flowchart LR
 ```mermaid
 sequenceDiagram
   participant Script as Case script
-  participant API as Worker API
+  participant API as Node API
   participant Twin as Twin state
   participant Web as Web client
   Script->>API: load script and initial state

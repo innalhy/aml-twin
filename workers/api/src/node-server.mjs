@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 import api from "./api.ts";
 import pack from "./investigation-pack.json";
 import { applyAction, createSession, InputError, sessionView, STATE_VERSION } from "./engine.ts";
+import { CASE_STATE_VERSION, caseView, createCaseSession, decideCase } from "./cases.ts";
 
 const ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const STATIC_DIR = resolve(ROOT, "frontend/dist");
@@ -21,10 +22,20 @@ const MIME = {
 function sqliteStore(path) {
   mkdirSync(dirname(path), { recursive: true });
   const db = new DatabaseSync(path);
-  db.exec("PRAGMA journal_mode = WAL; PRAGMA busy_timeout = 5000; CREATE TABLE IF NOT EXISTS sessions (id TEXT PRIMARY KEY, snapshot TEXT NOT NULL)");
+  db.exec("PRAGMA journal_mode = WAL; PRAGMA busy_timeout = 5000; CREATE TABLE IF NOT EXISTS sessions (id TEXT PRIMARY KEY, snapshot TEXT NOT NULL); CREATE TABLE IF NOT EXISTS case_sessions (id TEXT PRIMARY KEY, snapshot TEXT NOT NULL)");
   const select = db.prepare("SELECT snapshot FROM sessions WHERE id = ?");
   const insert = db.prepare("INSERT INTO sessions (id, snapshot) VALUES (?, ?)");
   const update = db.prepare("UPDATE sessions SET snapshot = ? WHERE id = ?");
+  const selectCase = db.prepare("SELECT snapshot FROM case_sessions WHERE id = ?");
+  const insertCase = db.prepare("INSERT INTO case_sessions (id, snapshot) VALUES (?, ?)");
+  const updateCase = db.prepare("UPDATE case_sessions SET snapshot = ? WHERE id = ?");
+  function loadCase(id) {
+    const row = selectCase.get(id);
+    if (!row) return null;
+    const state = JSON.parse(row.snapshot);
+    if (state.version !== CASE_STATE_VERSION) throw new InputError("incompatible_session", 409);
+    return state;
+  }
   function load(id) {
     const row = select.get(id);
     if (!row) return null;
@@ -34,6 +45,34 @@ function sqliteStore(path) {
   }
   return {
     close: () => db.close(),
+    cases: {
+      create(id, caseId) {
+        const state = createCaseSession(id, caseId);
+        insertCase.run(id, JSON.stringify(state));
+        return caseView(state);
+      },
+      read(id) {
+        const state = loadCase(id);
+        return state ? { view: caseView(state) } : { error: "session_not_found", status: 404 };
+      },
+      decide(id, input) {
+        db.exec("BEGIN IMMEDIATE");
+        try {
+          const current = loadCase(id);
+          if (!current) {
+            db.exec("COMMIT");
+            return { error: "session_not_found", status: 404 };
+          }
+          const state = decideCase(current, input);
+          updateCase.run(JSON.stringify(state), id);
+          db.exec("COMMIT");
+          return { view: caseView(state) };
+        } catch (error) {
+          db.exec("ROLLBACK");
+          throw error;
+        }
+      },
+    },
     create(id) {
       const state = createSession(id, pack);
       insert.run(id, JSON.stringify(state));
@@ -96,7 +135,7 @@ async function staticResponse(path, method) {
 
 export function createNodeServer(dbPath = process.env.TWINAML_DB ?? resolve(ROOT, "data/local/investigation.sqlite")) {
   const store = sqliteStore(resolve(dbPath));
-  const env = { store, frontendOrigin: process.env.TWINAML_FRONTEND_ORIGIN ?? "" };
+  const env = { store, cases: store.cases, frontendOrigin: process.env.TWINAML_FRONTEND_ORIGIN ?? "" };
   const server = createServer((req, res) => { void serve(req, res); });
   server.on("close", () => store.close());
   async function serve(req, res) {

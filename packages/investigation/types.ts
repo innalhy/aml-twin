@@ -114,3 +114,60 @@ export type InvestigationAction =
   | { type: "finish" };
 
 export type ActionInput = InvestigationAction & { revision: number };
+
+// Case library: the eleven case-flow workflows and their node/choice scripts.
+export interface CaseStep { label: string; decision: boolean }
+export interface CaseBrief {
+  number: number;
+  title: string;
+  method: string;
+  realWorld: CaseStep[];
+  role: string;
+  goal: string;
+}
+export interface CaseLibraryView {
+  workflows: (CaseBrief & {
+    cases: { caseId: string; title: string; summary: string }[];
+    // Read-only teaching flow, only for workflows without a playable script.
+    walkthrough: { teaching: CaseStep[]; teachingNotes: string[] } | null;
+  })[];
+}
+
+export interface CaseEvent {
+  seq: number;
+  type: "session_started" | "decision_made" | "session_closed";
+  nodeId: string;
+  choiceId: string;
+  detail: string;
+}
+export interface CaseNodeView {
+  id: string;
+  type: "scene" | "decision" | "outcome";
+  title: string;
+  prompt: string;
+  mediaRef: string;
+  chosen: string;
+}
+export type CaseRating = "acceptable" | "incomplete" | "poor" | "unrated";
+export interface CaseSessionView {
+  id: string;
+  caseId: string;
+  revision: number;
+  title: string;
+  summary: string;
+  workflow: CaseBrief;
+  rules: { id: string; when: string }[];
+  story: CaseNodeView[];
+  choices: { id: string; label: string }[];
+  twin: Record<string, unknown>;
+  events: CaseEvent[];
+  debrief: {
+    disposition: string;
+    rating: CaseRating;
+    decisions: { title: string; choice: string; rationale: string }[];
+    rules: { id: string; when: string; note: string }[];
+    teaching: CaseStep[];
+    teachingNotes: string[];
+  } | null;
+}
+export interface CaseDecisionInput { revision: number; choiceId: string }

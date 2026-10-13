@@ -119,4 +119,27 @@ assert.equal(cors.headers.get("access-control-allow-origin"), "http://127.0.0.1:
 assert.equal((await request("/api/sessions", { method: "POST", headers: { Origin: "https://untrusted.example" } })).status, 403);
 checks++;
 
+const cases = await request("/api/cases");
+assert.equal(cases.status, 200);
+assert.equal(cases.body.workflows.length, 11);
+assert.doesNotMatch(JSON.stringify(cases.body), /"rationale"/);
+checks++;
+
+const postJson = (path, body) => request(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+assert.equal((await postJson("/api/case-sessions", { caseId: "not-a-case" })).status, 400);
+let run = (await postJson("/api/case-sessions", { caseId: "mule-rent-001" })).body;
+assert.equal(run.caseId, "mule-rent-001");
+assert.equal(run.debrief, null);
+assert.equal((await postJson(`/api/case-sessions/${run.id}/decisions`, { revision: run.revision + 1, choiceId: "interview" })).status, 409);
+for (const choiceId of ["interview", "exit_and_str"]) {
+  const step = await postJson(`/api/case-sessions/${run.id}/decisions`, { revision: run.revision, choiceId });
+  assert.equal(step.status, 200, JSON.stringify(step.body));
+  run = step.body;
+}
+assert.equal(run.debrief.disposition, "str_drafted");
+assert.equal(run.debrief.rating, "acceptable");
+assert.deepEqual((await request(`/api/case-sessions/${run.id}`)).body.events, run.events);
+assert.equal((await request(`/api/case-sessions/${randomUUID()}`)).status, 404);
+checks++;
+
 console.log(`Passed ${checks} HTTP integration checks against ${base}.`);

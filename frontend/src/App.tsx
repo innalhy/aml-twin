@@ -131,7 +131,7 @@ export function App() {
     <header className="topbar">
       <a className="brand" href="#investigation" aria-label="TwinAML investigation desk"><span className="brand-mark" aria-hidden="true">II</span><span>TwinAML<small>THE SECOND LEDGER</small></span></a>
       <div className="training-label"><span className="status-dot" />Training simulation <span className="unit-label">SCU</span></div>
-      <div className="top-actions">{session && <><button className="text-button" onClick={exportHistory}>Export history</button><button className="text-button" disabled={busy} onClick={refreshSession}>Refresh</button></>}<button className="new-shift" disabled={busy || loading} onClick={startSession}>{session ? "New shift" : "Start shift"}</button></div>
+      <div className="top-actions"><a className="text-button" href="/cases">Case library</a>{session && <><button className="text-button export-button" onClick={exportHistory}>Export history</button><button className="text-button" disabled={busy} onClick={refreshSession}>Refresh</button></>}<button className="new-shift" disabled={busy || loading} onClick={startSession}>{session ? "New shift" : "Start shift"}</button></div>
     </header>
     {(error || notice) && <div className={`message ${error ? "error-message" : "notice-message"}`} role={error ? "alert" : "status"}>{error || notice}{error && <button className="text-button" disabled={busy} onClick={session || savedSessionId() ? refreshSession : startSession}>Try again</button>}</div>}
     {loading ? <main id="investigation" className="welcome"><p className="eyebrow">Opening your desk</p><h1>Resuming your shift…</h1><p>Your case history and available records are being restored.</p></main> : !session ?

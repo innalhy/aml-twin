@@ -1,6 +1,8 @@
 # The Second Ledger · TwinAML web
 
-React + Vite + TypeScript investigation desk for the synthetic `analyst-session-001` pack. The player can review six alerts, read available source documents, explore account transfers, request timed checks, place and release provisional outbound holds, and save decisions with evidence citations.
+React + Vite + TypeScript client with two pages. `/` is the investigation desk for the synthetic `analyst-session-001` pack. `/cases` is the case library (`src/CaseLibrary.tsx`): the eleven AML workflows, each with its trainee role, training goal and real-world steps, and a player for its scripts. The player shows the case file as it unfolds, the live twin state, the rules in force and the event log; after the outcome it shows the rating, every choice's rationale and the model teaching flow. The case library saves its current session ID under `twinaml-case-session` for resume.
+
+On the investigation desk, the player can review six alerts, read available source documents, explore account transfers, request timed checks, place and release provisional outbound holds, and save decisions with evidence citations.
 
 The API owns the clock, account balances, record availability and saved history. Reading stays paused; **Work 6 minutes**, **Next event** and **Finish & debrief** explicitly advance simulation time. The debrief shows saved reasoning and payment outcomes without hidden scenario answers or automatic grading.
 

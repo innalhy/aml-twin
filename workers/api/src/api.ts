@@ -1,5 +1,6 @@
 import { Hono } from "hono";
-import type { ActionInput, SessionView } from "../../../packages/investigation/types";
+import type { ActionInput, CaseDecisionInput, CaseSessionView, SessionView } from "../../../packages/investigation/types";
+import { caseLibraryView, parseCaseDecision, parseCaseStart } from "./cases";
 import { InputError, parseAction } from "./engine";
 
 const MAX_BODY_BYTES = 16_384;
@@ -10,7 +11,13 @@ export interface SessionStore {
   read(id: string): SessionResult | Promise<SessionResult>;
   action(id: string, input: ActionInput): SessionResult | Promise<SessionResult>;
 }
-interface ApiBindings { store: SessionStore; frontendOrigin: string }
+export type CaseResult = { view: CaseSessionView } | { error: string; status: 404 | 409 };
+export interface CaseStore {
+  create(id: string, caseId: string): CaseSessionView | Promise<CaseSessionView>;
+  read(id: string): CaseResult | Promise<CaseResult>;
+  decide(id: string, input: CaseDecisionInput): CaseResult | Promise<CaseResult>;
+}
+interface ApiBindings { store: SessionStore; cases: CaseStore; frontendOrigin: string }
 
 async function boundedJson(request: Request): Promise<unknown> {
   if (request.headers.get("content-type")?.split(";")[0].trim().toLowerCase() !== "application/json") {
@@ -49,7 +56,7 @@ app.use("*", async (c, next) => {
   c.header("Cache-Control", "no-store");
   c.header("X-Content-Type-Options", "nosniff");
   const origin = c.req.header("Origin");
-  const allowed = new Set(["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:4173", "http://127.0.0.1:4173", "http://localhost:8787", "http://127.0.0.1:8787", c.env.frontendOrigin].filter(Boolean));
+  const allowed = new Set(["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:4173", "http://127.0.0.1:4173", "http://localhost:8787", "http://127.0.0.1:8787", ...c.env.frontendOrigin.split(",").map((item) => item.trim())].filter(Boolean));
   if (origin) {
     if (!allowed.has(origin)) return c.json({ error: "origin_not_allowed" }, 403);
     c.header("Access-Control-Allow-Origin", origin);
@@ -70,14 +77,12 @@ app.post("/api/sessions", async (c) => {
   return c.json(await c.env.store.create(id), 201);
 });
 
-app.use("/api/sessions/:id/*", async (c, next) => {
-  if (!SESSION_ID.test(c.req.param("id") ?? "")) return c.json({ error: "invalid_session_id" }, 400);
-  await next();
-});
-app.use("/api/sessions/:id", async (c, next) => {
-  if (!SESSION_ID.test(c.req.param("id") ?? "")) return c.json({ error: "invalid_session_id" }, 400);
-  await next();
-});
+for (const path of ["/api/sessions/:id", "/api/sessions/:id/*", "/api/case-sessions/:id", "/api/case-sessions/:id/*"]) {
+  app.use(path, async (c, next) => {
+    if (!SESSION_ID.test(c.req.param("id") ?? "")) return c.json({ error: "invalid_session_id" }, 400);
+    await next();
+  });
+}
 
 app.get("/api/sessions/:id", async (c) => {
   const result = await c.env.store.read(c.req.param("id"));
@@ -87,6 +92,24 @@ app.get("/api/sessions/:id", async (c) => {
 app.post("/api/sessions/:id/actions", async (c) => {
   const input = parseAction(await boundedJson(c.req.raw));
   const result = await c.env.store.action(c.req.param("id"), input);
+  return "view" in result ? c.json(result.view) : c.json({ error: result.error }, result.status);
+});
+
+app.get("/api/cases", (c) => c.json(caseLibraryView()));
+
+app.post("/api/case-sessions", async (c) => {
+  const caseId = parseCaseStart(await boundedJson(c.req.raw));
+  return c.json(await c.env.cases.create(crypto.randomUUID(), caseId), 201);
+});
+
+app.get("/api/case-sessions/:id", async (c) => {
+  const result = await c.env.cases.read(c.req.param("id"));
+  return "view" in result ? c.json(result.view) : c.json({ error: result.error }, result.status);
+});
+
+app.post("/api/case-sessions/:id/decisions", async (c) => {
+  const input = parseCaseDecision(await boundedJson(c.req.raw));
+  const result = await c.env.cases.decide(c.req.param("id"), input);
   return "view" in result ? c.json(result.view) : c.json({ error: result.error }, result.status);
 });
 
