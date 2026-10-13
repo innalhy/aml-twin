@@ -10,7 +10,7 @@ The three terms below are the teaching contract for this demo. Chan Level 1 and 
 
 Level 1 is the digital model of one case. The physical world in this demo is not a factory. It is a synthetic investigation: a customer, KYC signals, an account, transactions, and risk flags.
 
-- The mirror is `initial_twin_state` plus `nodes` in `data/cases/deepfake-hk-001.example.json`.
+- The mirror is `initial_twin_state` plus `nodes` in `data/cases/01-deepfake-hk-001.example.json`.
 - There is no session runtime yet. A person can read the JSON and say what the twin believes before any decision.
 - Branches are a written script, not live sensing.
 
