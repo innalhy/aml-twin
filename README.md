@@ -20,6 +20,22 @@ TwinAML is a COMP3424 course demo of a digital twin for AML simulation training.
 
 A trainee is meant to choose one of those scripts by `case_id` and decide inside it. Rules in the script decide compliance outcomes (rules-before-AI). A language model, if one is added later, may explain a decision only after those rules have fired, and a human override must be stored as an event.
 
+Case flows for human review are in [`data/case-flow/`](data/case-flow/). Each case is two Markdown files, Traditional Chinese and English, and each flow is a Mermaid diagram. The playable scripts stay in `data/cases/`, numbered `01`–`11`. `case_id` is unchanged.
+
+| Case | Traditional Chinese | English | Playable script |
+| --- | --- | --- | --- |
+| Deepfake executive impersonation | [zh-Hant](data/case-flow/01-deepfake-executive-impersonation.zh-Hant.md) | [English](data/case-flow/01-deepfake-executive-impersonation.en.md) | `deepfake-001` |
+| Mule accounts and a crypto mixer | [zh-Hant](data/case-flow/02-crypto-mixers-mule-accounts.zh-Hant.md) | [English](data/case-flow/02-crypto-mixers-mule-accounts.en.md) | Nearby mule and crypto scripts. See the flow page. |
+| Synthetic identity fraud | [zh-Hant](data/case-flow/03-synthetic-identity-fraud.zh-Hant.md) | [English](data/case-flow/03-synthetic-identity-fraud.en.md) | No playable script in the eleven. |
+| Trade-based money laundering | [zh-Hant](data/case-flow/04-trade-based-money-laundering.zh-Hant.md) | [English](data/case-flow/04-trade-based-money-laundering.en.md) | `daybreak-tbml-001` |
+| Cross-border phone-fraud corridor | [zh-Hant](data/case-flow/05-crossborder-phone-fraud.zh-Hant.md) | [English](data/case-flow/05-crossborder-phone-fraud.en.md) | `crossborder-tel-001` |
+| Account rental and mule clusters | [zh-Hant](data/case-flow/06-account-rental-mule-clusters.zh-Hant.md) | [English](data/case-flow/06-account-rental-mule-clusters.en.md) | `mule-rent-001`, `greythunder-mule-001` |
+| Cash and crypto OTC cashing-out | [zh-Hant](data/case-flow/07-cash-crypto-otc.zh-Hant.md) | [English](data/case-flow/07-cash-crypto-otc.en.md) | `justicegate-crypto-001` |
+| KOL management front company | [zh-Hant](data/case-flow/08-kol-management-front.zh-Hant.md) | [English](data/case-flow/08-kol-management-front.en.md) | `kol-mgmt-001` |
+| Multi-typology mule account | [zh-Hant](data/case-flow/09-multi-typology-mule.zh-Hant.md) | [English](data/case-flow/09-multi-typology-mule.en.md) | `wiseword-amlmonth-001` |
+| Organised-crime cashflow | [zh-Hant](data/case-flow/10-organised-crime-cashflow.zh-Hant.md) | [English](data/case-flow/10-organised-crime-cashflow.en.md) | `triad-cashflow-001` |
+| Insurer and bank control gaps | [zh-Hant](data/case-flow/11-control-gaps.zh-Hant.md) | [English](data/case-flow/11-control-gaps.en.md) | `insurer-controls-001`, `bank-cdd-001` |
+
 What runs today is a scaffold. The Worker and the optional FastAPI app answer `GET /health`. The Pages app is a placeholder. The 11 scripts, the effect-key contract, and the JSON Schema are in the repo. Session routes, the scenario player, and the dashboard are not built.
 
 ## Analyst investigation content
@@ -106,8 +122,12 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 ├── data/
 │   ├── cases/                   # index: data/cases/README.md
 │   │   ├── README.md
-│   │   ├── deepfake-001.example.json
-│   │   └── *.example.json
+│   │   ├── 01-deepfake-hk-001.example.json
+│   │   └── 02-…11-*.example.json
+│   ├── case-flow/               # human-review flows, zh-Hant and English
+│   │   ├── 01-deepfake-executive-impersonation.zh-Hant.md
+│   │   ├── 01-deepfake-executive-impersonation.en.md
+│   │   └── 02-…11-*.zh-Hant.md and *.en.md
 │   └── media/
 │       └── .gitkeep
 ├── packages/
@@ -252,7 +272,7 @@ Short rules for classmates and coding agents. The full agreement is [`AGENTS.md`
 7. Do not commit secrets, API keys, `.env` files, Cloudflare account identifiers, or large media.
 8. If the script shape changes, every example case under `data/cases/` must still validate against `packages/schemas/script.schema.json`. Run `node scripts/validate-cases.mjs`. The schema or docs must say what changed.
 
-Read next: [`docs/architecture.md`](docs/architecture.md), [`docs/effects.md`](docs/effects.md), [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md), [`docs/cloudflare.md`](docs/cloudflare.md), [`docs/phases/README.md`](docs/phases/README.md), [`data/cases/README.md`](data/cases/README.md), [`data/cases/deepfake-001.example.json`](data/cases/deepfake-001.example.json), [`packages/schemas/script.schema.json`](packages/schemas/script.schema.json).
+Read next: [`docs/architecture.md`](docs/architecture.md), [`docs/effects.md`](docs/effects.md), [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md), [`docs/cloudflare.md`](docs/cloudflare.md), [`docs/phases/README.md`](docs/phases/README.md), [`data/cases/README.md`](data/cases/README.md), [`data/cases/01-deepfake-hk-001.example.json`](data/cases/01-deepfake-hk-001.example.json), [`data/case-flow/01-deepfake-executive-impersonation.en.md`](data/case-flow/01-deepfake-executive-impersonation.en.md), [`packages/schemas/script.schema.json`](packages/schemas/script.schema.json).
 
 ## License
 

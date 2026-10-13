@@ -34,7 +34,7 @@ This file is the working agreement for AI agents in **TwinAML**, a COMP3424 demo
 - `docs/effects.md` — how `twin_patch` and `choices[].effects` apply (schema 0.1).
 - `docs/comp3424-mapping.md` — Chan Level 1/2, mirroring / shadowing / threading, rules-before-AI.
 - `docs/cloudflare.md` — Pages, the Worker, and a custom domain.
-- `data/cases/deepfake-001.example.json` — the Level 1 example script.
+- `data/cases/01-deepfake-hk-001.example.json` — the Level 1 example script.
 - `packages/schemas/script.schema.json` — the minimal script contract.
 
 ## Definition of done
@@ -43,7 +43,7 @@ A vibe-coding session is done when all of these are true:
 
 - The change matches the request and stays inside the simplified stack above.
 - `workers/api` still answers `GET /health` if that tree was touched. `frontend/` still builds if that tree was touched. `backend/` still imports as one optional local app if that tree was touched.
-- If the script shape changed, `deepfake-001.example.json` still validates against `packages/schemas/script.schema.json`, and the schema or docs say what changed.
+- If the script shape changed, `data/cases/01-deepfake-hk-001.example.json` still validates against `packages/schemas/script.schema.json`, and the schema or docs say what changed.
 - New behaviour is described in the relevant README or `docs/` file. Undocumented folder contracts are not done.
 - No secrets, credentials, or large binaries are staged.
 - The commit message says what a trainee or reviewer can now see or run.

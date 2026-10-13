@@ -206,7 +206,7 @@ def validate(pack):
             check_public_fields(table(path))
         elif path.suffix == ".md":
             require("instructor/" not in path.read_text() and "answer-key" not in path.read_text(), "Learner document links to instructor answers")
-    original = json.loads((ROOT / "data/cases/deepfake-001.example.json").read_text())
+    original = json.loads((ROOT / "data/cases/01-deepfake-hk-001.example.json").read_text())
     burst = next(node for node in original["nodes"] if node["id"] == "n_burst")
     require([(row["id"], row["amount"]) for row in burst["twin_patch"]["transactions"]] == [(transaction_id, int(transactions[transaction_id]["amount"])) for transaction_id in ["TX-1", "TX-2", "TX-3"]], "Deepfake amounts differ from the original case")
     print(f"Validated {len(customers)} customers, {len(accounts)} accounts, {len(transactions)} transfers, {len(alerts)} alerts, and {len(evidence)} evidence records.")

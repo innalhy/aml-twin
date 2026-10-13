@@ -14,7 +14,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { applyPatch, play } from "./apply-effects.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const casePath = join(root, "data/cases/deepfake-001.example.json");
+const casePath = join(root, "data/cases/01-deepfake-hk-001.example.json");
 
 const paths = [
   {

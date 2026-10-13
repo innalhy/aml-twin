@@ -27,7 +27,7 @@ export function App() {
         ))}
       </ul>
       <p className="note">
-        Example script: <code>data/cases/deepfake-001.example.json</code>.
+        Example script: <code>data/cases/01-deepfake-hk-001.example.json</code>.
         API stub: <code>GET /health</code> on the Cloudflare Worker.
       </p>
     </main>
