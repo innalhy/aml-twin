@@ -1,0 +1,3259 @@
+{
+  "research_series": "Hong Kong AML",
+  "baseline_date": "2026-10-13",
+  "latest_update": "2026-10-13-update-24.md",
+  "records": [
+    {
+      "id": "R01",
+      "url": "https://www.cr.gov.hk/en/amlcft/legislation.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "official reference with scope limited to cited passages",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R02",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20230525-4-EN/AML-2.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2023-05",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "bank CDD, reporting and recordkeeping guideline",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R03",
+      "url": "https://www.jfiu.gov.hk/en/str.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "official reference with scope limited to cited passages",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R04",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/circular/list-content/circular/aml/doc?lang=EN&refNo=26EC2",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-01-26",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "STREAMS 2 announced transition",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R05",
+      "url": "https://www.doj.gov.hk/en/notable_judgments/pdf/FACV_7_2023e.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2024-04-10",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "DOJ court judgment summary; no-consent and restraint distinction",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R06",
+      "url": "https://www.info.gov.hk/gia/general/202509/05/P2025090500211.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-09-05",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "commencement announcement; effective 2025-11-03",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R07",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20260902-1-EN/20260902-1-EN.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-09-03",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "date on signed PDF differs from index date",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R08",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20260622-1-EN/20260622-1-EN.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-06-22",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "AI implementation initiative; bank responsibility retained",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R09",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20260827-5-EN/20260827-5-EN.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-08",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "PEP Smart Tips version 2",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R10",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20260316-1-EN/20260316-1-EN.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-03-16",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "sanctions-screening thematic findings",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R11",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20251210-1-EN/20251210-1-EN.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-12-12",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "high-end laundering review findings",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R12",
+      "url": "https://www.hkma.gov.hk/eng/key-functions/international-financial-centre/stablecoin-issuers/",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "official reference with scope limited to cited passages",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R13",
+      "url": "https://www.hkma.gov.hk/media/eng/doc/key-functions/banking-stability/aml-cft/Guideline_on_Anti-Money_Laundering_and_Counter-Financing_of_Terrorism_For_Licensed_Stablecoin_Issuers_eng.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-08",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "final stablecoin AML guideline, not consultation draft",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R14",
+      "url": "https://www.hkma.gov.hk/media/eng/publication-and-research/annual-report/2025/15_Banking_Stability.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-report",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "FMLIT programme metrics and initial enhanced FINEST sharing period",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R15",
+      "url": "https://www.police.gov.hk/info/review/2025/html/en/hkpf_04.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-report",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "police annual outcomes and TAS phased programme",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R17",
+      "url": "https://www.hkma.gov.hk/media/eng/doc/key-functions/banking-stability/aml-cft/seminar_20211005_5.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2021-09-16",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "bank network-analysis presentation; no vendor disclosed",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R18",
+      "url": "https://cloud.google.com/blog/topics/financial-services/how-hsbc-fights-money-launderers-with-artificial-intelligence",
+      "source_type": "customer_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2023-11-29",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "HSBC executive identifies UK/Hong Kong; attributed before-after metrics",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R19",
+      "url": "https://www.quantexa.com/press/hsbc-introduces-financial-crime-detection-systems/",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2019-09-25",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "HSBC trade finance UK/Hong Kong deployment at publication",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R20",
+      "url": "https://www.sas.com/en_us/customers/bangkok-bank.html",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "undated vendor study; Hong Kong SAS AML pilot; 2021 spotlight reference",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R21",
+      "url": "https://risk.lexisnexis.com/insights-resources/case-study/wisdom-asset-management",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_indexed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "undated vendor study; named Hong Kong customer; primary indexed content",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R22",
+      "url": "https://arctic-intelligence.com/case-studies/case-study-first-exchange",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "undated MSO risk-assessment customer study, not TMS deployment",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R23",
+      "url": "https://group.hashkey.com/en/hashkey-exchange-deepens-compliance-partnership-with-elliptic/",
+      "source_type": "customer_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-09-11",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "HashKey Exchange Hong Kong customer announcement, distinct from HashKey Global",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R24",
+      "url": "https://www.elliptic.co/customer-stories/hashkey-exchange-powers-explosive-growth-with-elliptic-compliance-infrastructure/",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "vendor product mapping for HashKey Exchange",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R25",
+      "url": "https://www.info.gov.hk/gia/general/202402/16/P2024021600243.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2024-02-16",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Daybreak announcement; allegations and arrests, ongoing then",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R26",
+      "url": "https://www.customs.gov.hk/en/customs-announcement/press-release/index_id_4707.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-07-22",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "cash/stablecoin allegations and arrests, ongoing then",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R27",
+      "url": "https://www.info.gov.hk/gia/general/202504/24/P2025042400447.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-04-24",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "conviction and concurrent sentences",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R28",
+      "url": "https://www.jfiu.gov.hk/info/doc/JFIU_Annual_Report_2024.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2024-report",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "shared-office case; arrests not final court outcome",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R29",
+      "url": "https://www.hkma.gov.hk/media/eng/doc/key-functions/banking-stability/aml-cft/seminar_20211005_6.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2021-09-16",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "digital footprints with contextual transaction/intelligence review",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R30",
+      "url": "https://www.hkma.gov.hk/media/eng/doc/key-information/press-release/2025/20250722e4a1.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-07-22",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Indian Overseas Bank penalty; historical period May2021-Jan2024",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R31",
+      "url": "https://www.hkma.gov.hk/media/eng/doc/key-information/press-release/2025/20250722e4a2.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-07-22",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "BCOM subsidiary penalty, separate legal entity",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R32",
+      "url": "https://www.hkma.gov.hk/media/eng/doc/key-information/press-release/2025/20250722e4a3.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-07-22",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "BCOM branch penalty, separate legal entity",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R33",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/news/list-content?lang=EN&refNo=26PR158",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-09-29",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Zheng Da control findings and RO suspension; public SFC API",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R34",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/circular/openFile?lang=EN&refNo=25EC62",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-11-17",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "securities/VA layering expectations; example controls not universal delays",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R35",
+      "url": "https://www.ia.org.hk/en/infocenter/files/Conduct_in_Focus_12th_Issue_March_2026_eng.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-03",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "IA publication describing action 2026-03-04; three brokers",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R36",
+      "url": "https://www.tcsp.cr.gov.hk/tcspls/portal/notice/943/eng/%28E%29_commonly_raised_questions_by_respondents_and_the_Companies_Registry_response.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-03",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "TCSP guideline consultation response",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R37",
+      "url": "https://www.tcsp.cr.gov.hk/tcspls/portal/faq/1015/eng/%28E%29FAQs_Institutional_risk_assessment.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-03-03",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "TCSP institutional risk-assessment FAQ",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R38",
+      "url": "https://www.eaa.org.hk/Portals/0/Sections/LGA/Circular/23-01_CRE_QAs_20260522.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-05-22",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "EAA Q&A version with activity scope and guarantee-company clarification",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R39",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/news/list-content?lang=EN&refNo=26PR19",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-02-09",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Kylin multiple control findings; fine not AML-only",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R40",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/news/list-content?lang=EN&refNo=26PR75",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-05-26",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "VA consultation conclusions; target bill not proof of enactment",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R41",
+      "url": "https://apps.sfc.hk/edistributionWeb/gateway/EN/circular/doc?refNo=26EC56",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-09-07",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "SFC sanctions early alert; list change 2026-09-04",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R42",
+      "url": "https://www.fstb.gov.hk/fsb/aml/en/doc/Money%20Laudering%20Report_2022_EN.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2022",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "government risk assessment, not a 2026 assessment",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R43",
+      "url": "https://www.cr.gov.hk/en/publications/docs/G_AntiMoney_TCSPs_%28Mar2025%29e.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-03",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "revised TCSP guideline",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R44",
+      "url": "https://www.jfiu.gov.hk/en/str_screen.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "official reference with scope limited to cited passages",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R45",
+      "url": "https://www.cr.gov.hk/en/legislation/scr/faq.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "official reference with scope limited to cited passages",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R46",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/circular/list-content/circular/aml/doc?lang=EN&refNo=23EC21",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2023-05-24",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "SFC circular on AMLO amendments",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R47",
+      "url": "https://www.fatf-gafi.org/en/countries/detail/Hong-Kong-China.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_indexed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "2023 technical follow-up and 2019 effectiveness evaluation, not 2026 audit",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R48",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20230209-3-EN/20230209-3-EN.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2023-02",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "transaction monitoring, screening and STR guidance",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R49",
+      "url": "https://www.jfiu.gov.hk/en/faq.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "official reference with scope limited to cited passages",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R50",
+      "url": "https://www.thestandard.com.hk/finance/article/343757/HKs-insurance-watchdog-fines-FWD-Life-Insurance-195-mln-for-insufficient-AML-controls",
+      "source_type": "secondary",
+      "evidence_status": "secondary_confirmed",
+      "published_or_version_date": "2026-09-24",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "secondary insurance penalty report pending primary verification",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R51",
+      "url": "https://www.ia.org.hk/en/infocenter/press_releases/20260924.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_retrieval_pending",
+      "published_or_version_date": "2026-09-24",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "IA primary release inaccessible; excluded from primary-confirmed findings",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R52",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20240417-2-EN/20240417-2-EN.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2024-04-17",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "TMS data lineage, segmentation and optimisation review",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R53",
+      "url": "https://www.customs.gov.hk/en/faqs/dealers-in-precious-metals-and-stones/",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "DPMS current FAQ; regime effective 2023-04-01",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R54",
+      "url": "https://www.jfiu.gov.hk/en/statistics_str.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "live STR totals; observation through Jan-Sep2026, not prevalence",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R55",
+      "url": "https://www.quantexa.com/press/standard-chartered-and-quantexa/",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2020-05-20",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Standard Chartered global Quantexa programme, HK deployment not specified",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R56",
+      "url": "https://www.dbs.com/iwov-resources/images/sustainability/reporting/pdf/web/DBS_SR2021.pdf",
+      "source_type": "customer_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2021-report",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "DBS group/regional tools, not HK-specific inventory",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R57",
+      "url": "https://www.sas.com/no_no/customers/bank-of-east-asia.html",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "BEA SAS Fraud Management, not SAS AML",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R58",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20251106-2-EN/20251106-2-EN.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_indexed",
+      "published_or_version_date": "2025-11",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Official guideline; old standalone URL returned404 and replaced with current working repository PDF",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R59",
+      "url": "https://www.police.gov.hk/offbeat/1273/eng/9004.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-01/02",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Police/HKU CryptoTrace; no underlying vendor identified",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R60",
+      "url": "https://www.legco.gov.hk/yr2025/english/panels/se/papers/se20251003cb2-1792-1-e.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-10-03",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "LegCo description of CryptoTrace investigative collaboration",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R61",
+      "url": "https://www.hkma.gov.hk/media/eng/doc/key-functions/banking-stability/aml-cft/seminar_20211005_2.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2021",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "FDAP design, not proof all features deployed",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R62",
+      "url": "https://www.legco.gov.hk/yr2025/english/fc/fc/papers/fi25-14e.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-03-31",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "progress snapshot scheduled full FDAP rollout Mar2027",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R63",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20260622-2-EN/20260622-2-EN.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-06",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "four anonymised HK bank AI use cases, no deanonymisation",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "R64",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20241122-4-EN/20241122-4-EN.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2024-09-09",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "AI monitoring annex, issue date differs from repository id",
+      "used_in": [
+        "2026-10-13-baseline.md"
+      ]
+    },
+    {
+      "id": "U01-S01",
+      "url": "https://av.sc.com/hk/content/docs/hk-20250728-press-release-scb-kyc-new-collaboration-en.pdf",
+      "source_type": "customer_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-07-28",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Standard Chartered Hong Kong corporate KYC/CDI; not TMS",
+      "used_in": [
+        "2026-10-13-update-01.md"
+      ]
+    },
+    {
+      "id": "U01-S02",
+      "url": "https://knowyourcustomer.com/press-releases/dbs-hong-kong-collaborates-with-know-your-customer-limited-to-further-improve-digital-account-opening-for-smes/",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-03-05",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "DBS Hong Kong named collaboration with prospective wording; page updated2026-03-16",
+      "used_in": [
+        "2026-10-13-update-01.md"
+      ]
+    },
+    {
+      "id": "U01-S03",
+      "url": "https://www.lseg.com/en/risk-intelligence/financial-crime-risk-management/adverse-media-screening",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "generic adverse-media capabilities; no HK customer deployment established",
+      "used_in": [
+        "2026-10-13-update-01.md"
+      ]
+    },
+    {
+      "id": "U01-S04",
+      "url": "https://www.lseg.com/content/dam/risk-intelligence/en_us/documents/fact-sheets/world-check-one-media-check-fact-sheet.pdf",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Media Check features; no HK customer deployment established",
+      "used_in": [
+        "2026-10-13-update-01.md"
+      ]
+    },
+    {
+      "id": "U01-S05",
+      "url": "https://www.globenewswire.com/news-release/2023/09/19/2745718/6837/en/Dow-Jones-Risk-Compliance-Launches-RiskCenter-Advanced-Screening-and-Monitoring.html",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2023-09-19",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Dow Jones issuer release via distributor; generic product launch",
+      "used_in": [
+        "2026-10-13-update-01.md"
+      ]
+    },
+    {
+      "id": "U01-S06",
+      "url": "https://www.sec.gov/Archives/edgar/data/1564708/000110465926109973/tm2624691d4_ars.pdf",
+      "source_type": "customer_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "FY2026",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "News Corp issuer filing confirms product offerings; no HK deployment",
+      "used_in": [
+        "2026-10-13-update-01.md"
+      ]
+    },
+    {
+      "id": "U02-S01",
+      "url": "https://eservices.customs.gov.hk/MSOS/downloadFile?id=478776",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-01-20",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Customs MSO TBML supervisory guidance; not new standalone licensing regime",
+      "used_in": [
+        "2026-10-13-update-02.md"
+      ]
+    },
+    {
+      "id": "U02-S02",
+      "url": "https://www.fatf-gafi.org/content/dam/fatf-gafi/reports/Trade-Based-Money-Laundering-Risk-Indicators.pdf.coredownload.inline.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2021-03",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "FATF/Egmont contextual indicators; no automatic criminal determination",
+      "used_in": [
+        "2026-10-13-update-02.md"
+      ]
+    },
+    {
+      "id": "U02-S03",
+      "url": "https://www.fstb.gov.hk/fsb/en/publication/report/docs/2026_Staff%20Report.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-05",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "IMF package authorities status printed pp79-80; third HRA preparation target2026; directly retrieved PDF text verified",
+      "used_in": [
+        "2026-10-13-update-02.md"
+      ]
+    },
+    {
+      "id": "U02-S04",
+      "url": "https://www.jfiu.gov.hk/info/doc/JFIU_Annual_Report_2024.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2024-report",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "older third HRA target2025, superseded by newer government timetable; not delivery evidence",
+      "used_in": [
+        "2026-10-13-update-02.md"
+      ]
+    },
+    {
+      "id": "U02-S05",
+      "url": "https://www.fstb.gov.hk/fsb/aml/en/risk-assessment.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2022-07-08",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "index observed2026-10-13 still labels2022 latest; stale index not proof no third report exists",
+      "used_in": [
+        "2026-10-13-update-02.md"
+      ]
+    },
+    {
+      "id": "U02-S06",
+      "url": "https://www.customs.gov.hk/en/customs-announcement/press-release/index_id_5665.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-09-29",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "counterfeit goods financial follow-up; alleged3.6m, arrested suspect bailed, ongoing at release",
+      "used_in": [
+        "2026-10-13-update-02.md"
+      ]
+    },
+    {
+      "id": "U02-S07",
+      "url": "https://www.customs.gov.hk/en/customs-announcement/press-release/index_id_5659.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-09-24",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "sentence23Sep2026 across multiple offences; confiscation application not order",
+      "used_in": [
+        "2026-10-13-update-02.md"
+      ]
+    },
+    {
+      "id": "U02-S08",
+      "url": "https://www.customs.gov.hk/en/customs-announcement/press-release/index_id_5553.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-08-20",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "narcotics follow-up arrests19Aug2026; alleged35m, ongoing at release",
+      "used_in": [
+        "2026-10-13-update-02.md"
+      ]
+    },
+    {
+      "id": "U03-S01",
+      "url": "https://www.gld.gov.hk/egazette/english/gazette/file.php?extra=0&no=22&number=3145&type=0&vol=29&year=2025",
+      "source_type": "official_primary",
+      "evidence_status": "primary_indexed",
+      "published_or_version_date": "2025-05-30",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Gazette3145 commencement and supersession; no full IA guideline retrieved",
+      "used_in": [
+        "2026-10-13-update-03.md"
+      ]
+    },
+    {
+      "id": "U03-S02",
+      "url": "https://www.ia.org.hk/en/legislative_framework/circulars/antimoney_laundering/files/Cir_dd_30.05.2025_wos.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_indexed",
+      "published_or_version_date": "2025-05-30",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "IA amendment circular; re-domiciliation consequential changes; indexed text reviewed",
+      "used_in": [
+        "2026-10-13-update-03.md"
+      ]
+    },
+    {
+      "id": "U03-S03",
+      "url": "https://www.ia.org.hk/en/legislative_framework/files/GL3_ENG_202505.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_retrieval_pending",
+      "published_or_version_date": "2025-05",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "clean current GL3 version reference; substantive paragraphs read through marked counterpart",
+      "used_in": [
+        "2026-10-13-update-03.md"
+      ]
+    },
+    {
+      "id": "U03-S04",
+      "url": "https://www.ia.org.hk/english/legislative_framework/circulars/antimoney_laundering/files/Cir_dd_30.05.2025_Appendix_A.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_indexed",
+      "published_or_version_date": "2025-05",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "current marked GL3 indexed paragraph excerpts; not full PDF retrieval",
+      "used_in": [
+        "2026-10-13-update-03.md"
+      ]
+    },
+    {
+      "id": "U03-S05",
+      "url": "https://www.ia.org.hk/en/legislative_framework/circulars/antimoney_laundering/files/Cirdd9.4.2024.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_indexed",
+      "published_or_version_date": "2024-04-09",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "cashier-order conditional benchmark, samepolicy/sameyear; full PDF not retrieved",
+      "used_in": [
+        "2026-10-13-update-03.md"
+      ]
+    },
+    {
+      "id": "U03-S06",
+      "url": "https://knowyourcustomer.com/about-us/clients-and-partners/case-studies/case-study-bowtie/",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-09-23",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Bowtie announced partnership/integration description; no independently verified go-live or outcomes",
+      "used_in": [
+        "2026-10-13-update-03.md"
+      ]
+    },
+    {
+      "id": "U04-S01",
+      "url": "https://www.pcpd.org.hk/tc_chi/news_events/media_statements/press_20260825.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_indexed",
+      "published_or_version_date": "2026-08-25",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "PCPD privacy guidance release official indexed Chinese text; not new AML licence or local hosting mandate",
+      "used_in": [
+        "2026-10-13-update-04.md"
+      ]
+    },
+    {
+      "id": "U04-S02",
+      "url": "https://www.pcpd.org.hk/english/news_events/media_statements/press_20250331.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_indexed",
+      "published_or_version_date": "2025-03-31",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "PCPD employee GenAI checklist official indexed content; direct page empty",
+      "used_in": [
+        "2026-10-13-update-04.md"
+      ]
+    },
+    {
+      "id": "U04-S03",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/circular/list-content/circular/intermediaries/supervision/doc?lang=EN&refNo=24EC55",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2024-11-12",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "SFC full public API circular24EC55; defined regulated-activity scope and proportionality",
+      "used_in": [
+        "2026-10-13-update-04.md"
+      ]
+    },
+    {
+      "id": "U04-S04",
+      "url": "https://www.futuhk.com/en/about-us/newsroom/futu-securities-joins-the-regtech-innovation-lab",
+      "source_type": "customer_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-11-03",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Futu HK MOU/testing collaboration FCC/AWS; not established production deployment",
+      "used_in": [
+        "2026-10-13-update-04.md"
+      ]
+    },
+    {
+      "id": "U04-S05",
+      "url": "https://www.hkexnews.hk/listedco/listconews/sehk/2026/0325/2026032500495.pdf",
+      "source_type": "customer_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-03-25",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "BEA issuer report2025p46/PDFp48; governance/AML adoption, no vendor spend or measured benefit",
+      "used_in": [
+        "2026-10-13-update-04.md"
+      ]
+    },
+    {
+      "id": "U04-S06",
+      "url": "https://www.clpsglobal.com/en/news/190/",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-09-22",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "CLPS unnamed-bank sandbox project; attributed accuracy, no independent test or production proof",
+      "used_in": [
+        "2026-10-13-update-04.md"
+      ]
+    },
+    {
+      "id": "U04-S07",
+      "url": "https://www.investhk.gov.hk/en/our-clients/clps-incorporation/",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-02-10",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "InvestHK company profile confirms sandbox participation, not Sept performance or endorsement",
+      "used_in": [
+        "2026-10-13-update-04.md"
+      ]
+    },
+    {
+      "id": "U04-S08",
+      "url": "https://iqeq.com/hk/services/iq-eq-learning-hub/",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "IQEQ HK training capabilities; no buyers prices or measured decision improvement",
+      "used_in": [
+        "2026-10-13-update-04.md"
+      ]
+    },
+    {
+      "id": "U04-S09",
+      "url": "https://kyc.management/en-hk",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "KYCManagement HK vendor features/testimonials; not independent efficacy",
+      "used_in": [
+        "2026-10-13-update-04.md"
+      ]
+    },
+    {
+      "id": "U04-S10",
+      "url": "https://www.protiviti.com/hk-en/anti-money-laundering-consulting",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Protiviti HK service offer; no named local outcomes/prices",
+      "used_in": [
+        "2026-10-13-update-04.md"
+      ]
+    },
+    {
+      "id": "U04-S11",
+      "url": "https://www.sfc.hk/-/media/EN/files/IS/pdf/VA-Accelerator--Invitation-to-Tender-Feb-11-2026-public-posting.pdf?hash=EA1C9B3C53C8649A712F8ACEE5196034&rev=5e1ef4b9cde249cab50913d191fa61b9",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-02-11",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "SFC VAAccelerator procurement specification; deadline11Mar2026; award/delivery unverified",
+      "used_in": [
+        "2026-10-13-update-04.md"
+      ]
+    },
+    {
+      "id": "U04-S12",
+      "url": "https://www.ocorian.com/compliance/bespoke-training",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "current Ocorian redirect destination; do not use cached legacy gaming/CPT claims as current",
+      "used_in": [
+        "2026-10-13-update-04.md"
+      ]
+    },
+    {
+      "id": "U05-S01",
+      "url": "https://www.sfc.hk/en/faqs/intermediaries/licensing/Family-Offices",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2020-09-08",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "SFC activity/business/HK scope; no generic family-office exemption",
+      "used_in": [
+        "2026-10-13-update-05.md"
+      ]
+    },
+    {
+      "id": "U05-S02",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/circular/list-content/circular/doc?lang=EN&refNo=20EC1",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2020-01-07",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "activity-specific licensing circular; no general AUM exemption",
+      "used_in": [
+        "2026-10-13-update-05.md"
+      ]
+    },
+    {
+      "id": "U05-S03",
+      "url": "https://www.info.gov.hk/gia/general/202506/25/P2025062500584.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-06-25",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "official AMLO service/status scope; not all unlicensed offices are FIs",
+      "used_in": [
+        "2026-10-13-update-05.md"
+      ]
+    },
+    {
+      "id": "U05-S04",
+      "url": "https://www.ird.gov.hk/eng/tax/bus_fihv.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "current established FIHV regime; distinct tax and SFC ownership tests",
+      "used_in": [
+        "2026-10-13-update-05.md"
+      ]
+    },
+    {
+      "id": "U05-S05",
+      "url": "https://www.ird.gov.hk/eng/ppr/archives/25073002.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-07-30",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "office estimate and concession applications; not an AML TAM",
+      "used_in": [
+        "2026-10-13-update-05.md"
+      ]
+    },
+    {
+      "id": "U05-S06",
+      "url": "https://www.ird.gov.hk/eng/ppr/archives/26081201.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-08-12",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Bill committee-stage statement; enactment not confirmed",
+      "used_in": [
+        "2026-10-13-update-05.md"
+      ]
+    },
+    {
+      "id": "U05-S07",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20230307-2-EN/20230307-2-EN.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2023-03-07",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "complete wealth/funds tips; bank scope, proportionate corroboration",
+      "used_in": [
+        "2026-10-13-update-05.md"
+      ]
+    },
+    {
+      "id": "U05-S08",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20240208-3-EN/20240208-3-EN.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2024-02-08",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "complete circular; excessive/duplicate historic requests discouraged",
+      "used_in": [
+        "2026-10-13-update-05.md"
+      ]
+    },
+    {
+      "id": "U05-S09",
+      "url": "https://www.legco.gov.hk/en/legco-business/council/bills.html?bill_key=10010&session=2026",
+      "source_type": "official_primary",
+      "evidence_status": "indexed_primary_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "official indexed Bill status only; direct retrieval failed",
+      "used_in": [
+        "2026-10-13-update-05.md"
+      ]
+    },
+    {
+      "id": "U06-S01",
+      "url": "https://www.afrc.org.hk/en-hk/news-centre/press-releases/afrc-takes-first-ever-disciplinary-actions-against-multiple-practice-units-for-non-compliance-with-anti-money-laundering-requirements-and-imposes-fines-totalling-hk290000",
+      "source_type": "official_primary",
+      "evidence_status": "indexed_primary_reviewed",
+      "published_or_version_date": "2026-03-05",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "first AFRC AML sanctions; three cases/four parties, not convictions",
+      "used_in": [
+        "2026-10-13-update-06.md"
+      ]
+    },
+    {
+      "id": "U06-S02",
+      "url": "https://www.afrc.org.hk/f/upload/1198/20c.20260305-sda-prism-en.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-03-05",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Prism full statement; historical period and no dishonest-intent finding",
+      "used_in": [
+        "2026-10-13-update-06.md"
+      ]
+    },
+    {
+      "id": "U06-S03",
+      "url": "https://www.afrc.org.hk/f/upload/1198/20b.20260305-sda-wong-en.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-03-05",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Wong full statement; specified-service controls and CDD",
+      "used_in": [
+        "2026-10-13-update-06.md"
+      ]
+    },
+    {
+      "id": "U06-S04",
+      "url": "https://www.afrc.org.hk/f/upload/1198/20a.20260305-sda-dhc-en.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-03-05",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "DHC/Ho full statement; split63k/7k penalties and control findings",
+      "used_in": [
+        "2026-10-13-update-06.md"
+      ]
+    },
+    {
+      "id": "U06-S05",
+      "url": "https://www.tcsp.cr.gov.hk/tcspls/portal/disciplinary-action-case/225/eng/TC010309%20%28previous%20TC006635%29-Statement%20of%20Disciplinary%20Action%20%28Eng%29%20.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-06-30",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "CY TCSP complete scanned statement visually reviewed",
+      "used_in": [
+        "2026-10-13-update-06.md"
+      ]
+    },
+    {
+      "id": "U06-S06",
+      "url": "https://www.tcsp.cr.gov.hk/tcspls/portal/disciplinary-action-case/224/eng/TC006180-Statement%20of%20Disciplinary%20Action%20%28Eng%29.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-02-13",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Guoke TCSP complete scanned statement visually reviewed",
+      "used_in": [
+        "2026-10-13-update-06.md"
+      ]
+    },
+    {
+      "id": "U06-S07",
+      "url": "https://www.tcsp.cr.gov.hk/tcspls/portal/disciplinary-action-case/223/eng/TC006786-Statement%20of%20Disciplinary%20Action%20%28Eng%29%20.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-01-27",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Pius TCSP complete scanned statement visually reviewed",
+      "used_in": [
+        "2026-10-13-update-06.md"
+      ]
+    },
+    {
+      "id": "U06-S08",
+      "url": "https://www.tcsp.cr.gov.hk/tcspls/portal/disciplinary-action-case/222/eng/TC008593-Statement%20of%20Disciplinary%20Action%20%28Eng%29.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-01-20",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "KeyWill TCSP complete scanned statement visually reviewed",
+      "used_in": [
+        "2026-10-13-update-06.md"
+      ]
+    },
+    {
+      "id": "U06-S09",
+      "url": "https://www.eaa.org.hk/Portals/0/Sections/CC/2026_July/20260730_pr_en.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-07-30",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "EAA AML inspection units distinct from all-category action figures",
+      "used_in": [
+        "2026-10-13-update-06.md"
+      ]
+    },
+    {
+      "id": "U06-S10",
+      "url": "https://www.eaa.org.hk/Portals/0/Sections/CC/2026_Jan/20260122_pr_en.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-01-22",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "EAA2025 AML checks distinct from all-category penalties",
+      "used_in": [
+        "2026-10-13-update-06.md"
+      ]
+    },
+    {
+      "id": "U06-S11",
+      "url": "https://www.eaa.org.hk/Portals/0/Sections/CC/Horizons/2025_Jan/EAA%20Horizon_202501_WholeBook.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "indexed_primary_reviewed",
+      "published_or_version_date": "2025-01",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "indexed article; conduct/decision dates absent; fullPDF retrieval incomplete",
+      "used_in": [
+        "2026-10-13-update-06.md"
+      ]
+    },
+    {
+      "id": "U06-S12",
+      "url": "https://www.cr.gov.hk/en/publications/news-press/press/20260717.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-07-17",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "TCSP licence counts not customer demand or AML software market",
+      "used_in": [
+        "2026-10-13-update-06.md"
+      ]
+    },
+    {
+      "id": "U06-S13",
+      "url": "https://eservices.customs.gov.hk/MSOS/downloadFile?id=494331",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-06-02",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "three namedMSO reprimands; no monetary penalty stated",
+      "used_in": [
+        "2026-10-13-update-06.md"
+      ]
+    },
+    {
+      "id": "U06-S14",
+      "url": "https://eservices.customs.gov.hk/MSOS/downloadFile?id=503960",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-09-11",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "late owner/director-change notification; remedial action",
+      "used_in": [
+        "2026-10-13-update-06.md"
+      ]
+    },
+    {
+      "id": "U06-S15",
+      "url": "https://eservices.customs.gov.hk/MSOS/downloadFile?id=484571",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-02-26",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "account-change instance counts; no deduplicated account total",
+      "used_in": [
+        "2026-10-13-update-06.md"
+      ]
+    },
+    {
+      "id": "U06-S16",
+      "url": "https://www.customs.gov.hk/en/customs-announcement/press-release/index_id_5651.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-09-22",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "ongoing alleged pearl/jewellery registration breach, not laundering conviction",
+      "used_in": [
+        "2026-10-13-update-06.md"
+      ]
+    },
+    {
+      "id": "U06-S17",
+      "url": "https://www.customs.gov.hk/en/customs-announcement/press-release/index_id_5689.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-10-09",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "ongoing alleged CategoryB watchcash registration breach",
+      "used_in": [
+        "2026-10-13-update-06.md"
+      ]
+    },
+    {
+      "id": "U06-S18",
+      "url": "https://www.customs.gov.hk/en/service-enforcement-information/anti-money-laundering/supervision-of-dealers-in-precious-metals-and-ston/",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "current DPMS regime/iPASS; assessment does not grant registration",
+      "used_in": [
+        "2026-10-13-update-06.md"
+      ]
+    },
+    {
+      "id": "U07-S01",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/news/list-content?lang=EN&refNo=26PR75",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-05-26",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "VA consultation conclusions, not enacted commencement",
+      "used_in": [
+        "2026-10-13-update-07.md"
+      ]
+    },
+    {
+      "id": "U07-S02",
+      "url": "https://www.info.gov.hk/gia/general/202606/24/P2026062400325.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-06-24",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "official planned VA legislation status, not Gazette instrument",
+      "used_in": [
+        "2026-10-13-update-07.md"
+      ]
+    },
+    {
+      "id": "U07-S03",
+      "url": "https://www.sfc.hk/-/media/EN/files/LSD/Gazette/GN-3120-of-2023.pdf?rev=b3655bfe799a41a5987981a2f55706a9",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2023-06-01",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Chapter12 VA transfer rules incl1Jan2024immediate provisions",
+      "used_in": [
+        "2026-10-13-update-07.md"
+      ]
+    },
+    {
+      "id": "U07-S04",
+      "url": "https://www.hkma.gov.hk/eng/regulatory-resources/registers/register-of-licensed-stablecoin-issuers/",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-04-23",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "current published issuer entries; licences effective10Apr2026",
+      "used_in": [
+        "2026-10-13-update-07.md"
+      ]
+    },
+    {
+      "id": "U07-S05",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/circular/list-content/circular/doc?lang=EN&refNo=26EC26",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-05-27",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "RelevantStablecoin defined scope; intermediary conditions remain",
+      "used_in": [
+        "2026-10-13-update-07.md"
+      ]
+    },
+    {
+      "id": "U07-S06",
+      "url": "https://anchorpoint.hk/uploads/2026/08/Anchorpoint-commences-institutional-rollout-of-HKDAP-via-Beta-Access-1.pdf",
+      "source_type": "issuer_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-08-12",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "issuer phase1 institutional beta; retailtarget not launch",
+      "used_in": [
+        "2026-10-13-update-07.md"
+      ]
+    },
+    {
+      "id": "U07-S07",
+      "url": "https://anchorpoint.hk/faqs/",
+      "source_type": "issuer_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "issuercurrentFAQ beta/live distributors/walletcontrols; not independently tested",
+      "used_in": [
+        "2026-10-13-update-07.md"
+      ]
+    },
+    {
+      "id": "U07-S08",
+      "url": "https://www.hsbc.com.hk/stablecoins/",
+      "source_type": "issuer_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "issuer current page still future launch wording",
+      "used_in": [
+        "2026-10-13-update-07.md"
+      ]
+    },
+    {
+      "id": "U07-S09",
+      "url": "https://www.hkma.gov.hk/eng/news-and-media/insight/2026/04/20260410/",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-04-10",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "official issuer blockchain/holderverification controls; no namedvendor",
+      "used_in": [
+        "2026-10-13-update-07.md"
+      ]
+    },
+    {
+      "id": "U08-S01",
+      "url": "https://www.hkma.gov.hk/eng/regulatory-resources/registers/register-of-svf-licensees/",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-08-14",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "currentSVF register;11nonbank/fourbank, notmarketdemand",
+      "used_in": [
+        "2026-10-13-update-08.md"
+      ]
+    },
+    {
+      "id": "U08-S02",
+      "url": "https://www.hkma.gov.hk/eng/smart-consumers/e-wallets-and-prepaid-cards/",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "SVFstoredvalue scope; noSVFclassification solelyfrompaymentrole",
+      "used_in": [
+        "2026-10-13-update-08.md"
+      ]
+    },
+    {
+      "id": "U08-S03",
+      "url": "https://www.fstb.gov.hk/fsb/aml/en/preventive-measures/preventive-measures.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "FSTB regimeclasses; MSO distinctfromSVF",
+      "used_in": [
+        "2026-10-13-update-08.md"
+      ]
+    },
+    {
+      "id": "U08-S04",
+      "url": "https://www.hkma.gov.hk/media/eng/publication-and-research/annual-report/2025/16_International_Financial_Centre.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "SVFactivityfigures; accounts notuniquepeople/TAM",
+      "used_in": [
+        "2026-10-13-update-08.md"
+      ]
+    },
+    {
+      "id": "U08-S05",
+      "url": "https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250411e1.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-04-11",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "SVFmodel-sensitive APS measures; fullPDF",
+      "used_in": [
+        "2026-10-13-update-08.md"
+      ]
+    },
+    {
+      "id": "U08-S06",
+      "url": "https://www.hkma.gov.hk/media/eng/doc/key-functions/financial-infrastructure/PN_on_supervision_of_SVF_licensees_eng.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-10",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "SVFoutsourcing note reviewedagent;rootfetchtimeout",
+      "used_in": [
+        "2026-10-13-update-08.md"
+      ]
+    },
+    {
+      "id": "U08-S07",
+      "url": "https://www.hkma.gov.hk/media/eng/doc/key-information/press-release/2025/20250722e5a1.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-07-22",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "33FSfullstatement;49kcards/purpose/businessrepresentation/partnerchecks;conduct2019-23",
+      "used_in": [
+        "2026-10-13-update-08.md"
+      ]
+    },
+    {
+      "id": "U08-S08",
+      "url": "https://eservices.customs.gov.hk/MSOS/downloadFile?id=475668",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-12-19",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "GoldTown decision27Nov2025; noattributionofotherpagespenalties",
+      "used_in": [
+        "2026-10-13-update-08.md"
+      ]
+    },
+    {
+      "id": "U08-S09",
+      "url": "https://www.info.gov.hk/gia/general/202509/10/P2025090900719p.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-09-10",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "MSObusinessplan/fundflows/channels expectations",
+      "used_in": [
+        "2026-10-13-update-08.md"
+      ]
+    },
+    {
+      "id": "U08-S10",
+      "url": "https://blog.za.group/en/article/2025_interim_results_profit",
+      "source_type": "issuer_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-09-30",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "ZAoperatingXDecision;issuerthroughput/latency notaccuracy",
+      "used_in": [
+        "2026-10-13-update-08.md"
+      ]
+    },
+    {
+      "id": "U08-S11",
+      "url": "https://blog.za.group/en/article/keeping-your-money-safe?slug=cny-teaser-hk",
+      "source_type": "issuer_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-12-22",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "ZAbankreview/stoogeaccount explanation; incomparable snapshotlabels",
+      "used_in": [
+        "2026-10-13-update-08.md"
+      ]
+    },
+    {
+      "id": "U08-S12",
+      "url": "https://www.businesswire.com/news/home/20250910977667/en/Asian-E-Wallets-Ant-International-Launch-Payment-Safety-Partnership-to-Protect-Cross-Border-Digital-Transactions",
+      "source_type": "issuer_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-09-11",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "AlipayHKexistingAI fraud;EasySafePayplannedandtrialmetricnotHKAML",
+      "used_in": [
+        "2026-10-13-update-08.md"
+      ]
+    },
+    {
+      "id": "U08-S13",
+      "url": "https://mox.com/media/mox-scores-perfect-four-against-financial-crime/",
+      "source_type": "issuer_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-03-20",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "MoxAI monitoring/recognition;noindependentmetrics/vendor",
+      "used_in": [
+        "2026-10-13-update-08.md"
+      ]
+    },
+    {
+      "id": "U08-S14",
+      "url": "https://www.fcc-analytics.com/post/big-data-101-an-introduction-to-data-query-engines",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2021-11-01",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "FCCWeLabPoC; notcurrentproduction;ROIunvalidated",
+      "used_in": [
+        "2026-10-13-update-08.md"
+      ]
+    },
+    {
+      "id": "U08-S15",
+      "url": "https://www.hkma.gov.hk/media/eng/doc/key-functions/financial-infrastructure/Additional_Guidance_on_Oversight_of_Designated_Retail_Payment_Systems.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2022-09",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "RPSoperator/participant/serviceagent distinctions",
+      "used_in": [
+        "2026-10-13-update-08.md"
+      ]
+    },
+    {
+      "id": "U08-S16",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20241108-2-EN/20241108-2-EN.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2024-11-08",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "digitalbank samebankrequirements subjectmodeladaptation",
+      "used_in": [
+        "2026-10-13-update-08.md"
+      ]
+    },
+    {
+      "id": "U09-S01",
+      "url": "https://www.fatf-gafi.org/en/countries/detail/Hong-Kong-China.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "FATF2023technicalvs2019effectiveness; no2026audit",
+      "used_in": [
+        "2026-10-13-update-09.md"
+      ]
+    },
+    {
+      "id": "U09-S02",
+      "url": "https://www.fatf-gafi.org/en/publications/Mutualevaluations/FUR-Hong-Kong-China-2023.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2023-02-17",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "R28technicalupgrade notneweffectiveness",
+      "used_in": [
+        "2026-10-13-update-09.md"
+      ]
+    },
+    {
+      "id": "U09-S03",
+      "url": "https://www.fatf-gafi.org/en/calendars/assessments.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "possibleNov2029onsite/Jun2030plenary months",
+      "used_in": [
+        "2026-10-13-update-09.md"
+      ]
+    },
+    {
+      "id": "U09-S04",
+      "url": "https://www.fatf-gafi.org/content/dam/fatf-gafi/methodology/5th-round-methodology-june-2026.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-06",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "adoptedAnnexIVpendingeffectivedate; revisedIOgroups",
+      "used_in": [
+        "2026-10-13-update-09.md"
+      ]
+    },
+    {
+      "id": "U09-S05",
+      "url": "https://www.fatf-gafi.org/en/publications/Fatfrecommendations/update-Recommendation-16-payment-transparency-june-2025.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-06-18",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "R16transition notHKcommencement",
+      "used_in": [
+        "2026-10-13-update-09.md"
+      ]
+    },
+    {
+      "id": "U09-S06",
+      "url": "https://www.fatf-gafi.org/en/publications/Fatfrecommendations/R16-Public-Consultation-June-2026.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-06-24",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "closed21Aug draftconsultation;finalnotestablished",
+      "used_in": [
+        "2026-10-13-update-09.md"
+      ]
+    },
+    {
+      "id": "U09-S07",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/20230525-4-EN",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2023-05-25",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "HKMArepositorymarksAML2current",
+      "used_in": [
+        "2026-10-13-update-09.md"
+      ]
+    },
+    {
+      "id": "U09-S08",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20230525-4-EN/AML-2.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2023-05",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "cleanChapter10currentbankfields; notfutureR16replacement",
+      "used_in": [
+        "2026-10-13-update-09.md"
+      ]
+    },
+    {
+      "id": "U09-S09",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/circular/list-content/circular/aml/doc?lang=EN&refNo=25EC37",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-06-27",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "SFCinternationalnotice notlocalcommencement",
+      "used_in": [
+        "2026-10-13-update-09.md"
+      ]
+    },
+    {
+      "id": "U09-S10",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/circular/list-content/circular/aml/doc?lang=EN&refNo=26EC39",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-07-14",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "SFCdraftconsultnotice notlocalreplacement",
+      "used_in": [
+        "2026-10-13-update-09.md"
+      ]
+    },
+    {
+      "id": "U09-S11",
+      "url": "https://www.fatf-gafi.org/en/publications/Fatfrecommendations/Guidance-Beneficial-Ownership-Legal-Persons.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2023-03-10",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "R24multi-prongedmechanism; nopublicregistrymandate",
+      "used_in": [
+        "2026-10-13-update-09.md"
+      ]
+    },
+    {
+      "id": "U09-S12",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/circular/list-content/circular/aml/doc?lang=EN&refNo=23EC21",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2023-05-24",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "localtrustCDDchange effective1Jun2023 notfullR25transposition",
+      "used_in": [
+        "2026-10-13-update-09.md"
+      ]
+    },
+    {
+      "id": "U09-S13",
+      "url": "https://www.cr.gov.hk/en/legislation/scr/faq.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "companyheldSCR withdesignatedaccess;local/re-domiciled distinction",
+      "used_in": [
+        "2026-10-13-update-09.md"
+      ]
+    },
+    {
+      "id": "U09-S14",
+      "url": "https://www.cr.gov.hk/en/publications/news-press/press/20250523.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-05-23",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "re-domiciliationcommencement notcomprehensiveR24reform",
+      "used_in": [
+        "2026-10-13-update-09.md"
+      ]
+    },
+    {
+      "id": "U09-S15",
+      "url": "https://www.fatf-gafi.org/content/dam/fatf-gafi/recommendations/fatf-recommendations-2012.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-06",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "FATFstandard/interpretivenotes vsoptionalimplementationguidance",
+      "used_in": [
+        "2026-10-13-update-09.md"
+      ]
+    },
+    {
+      "id": "U09-S16",
+      "url": "https://www.fatf-gafi.org/en/publications/Fatfrecommendations/Guidance-Beneficial-Ownership-Transparency-Legal-Arrangements.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2024-03-11",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "R25professional/nonprofessionaltrustees; localtranspositionnotestablished",
+      "used_in": [
+        "2026-10-13-update-09.md"
+      ]
+    },
+    {
+      "id": "U10-S01",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/news/list-content?lang=EN&refNo=25PR103",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-07-03",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "FreemanArta historic2017-18 AML/tradingcontrols; notconviction",
+      "used_in": [
+        "2026-10-13-update-10.md"
+      ]
+    },
+    {
+      "id": "U10-S02",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/news/openAppendix?lang=EN&refNo=25PR103&appendix=0",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-07-03",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "fullstatement customer-connected systems/order/fundingrecords",
+      "used_in": [
+        "2026-10-13-update-10.md"
+      ]
+    },
+    {
+      "id": "U10-S03",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/news/list-content?lang=EN&refNo=26PR113",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-07-24",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Victorycase discoveryinvestigation/AMLfindings; isolatedcontext",
+      "used_in": [
+        "2026-10-13-update-10.md"
+      ]
+    },
+    {
+      "id": "U10-S04",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/news/openAppendix?lang=EN&refNo=26PR113&appendix=0",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-07-24",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "fullstatement specificSFCnotificationCode12.5f notJFIUSTRfailure",
+      "used_in": [
+        "2026-10-13-update-10.md"
+      ]
+    },
+    {
+      "id": "U10-S05",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/news/list-content?lang=EN&refNo=26PR117",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-07-27",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "BrightSmartwashtradecounts;notlabelledAMLOpenalty",
+      "used_in": [
+        "2026-10-13-update-10.md"
+      ]
+    },
+    {
+      "id": "U10-S06",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/news/openAppendix?lang=EN&refNo=26PR117&appendix=0",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-07-27",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "fullstatement counting/manualrestriction timing failures",
+      "used_in": [
+        "2026-10-13-update-10.md"
+      ]
+    },
+    {
+      "id": "U10-S07",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/news/list-content?lang=EN&refNo=26PR116",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-07-27",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "CISIAMfundgovernance/IAreferral;notAMLOcase",
+      "used_in": [
+        "2026-10-13-update-10.md"
+      ]
+    },
+    {
+      "id": "U10-S08",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/news/openAppendix?lang=EN&refNo=26PR116&appendix=0",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-07-27",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "fullstatement wrapper/rationale/relatedparty controls",
+      "used_in": [
+        "2026-10-13-update-10.md"
+      ]
+    },
+    {
+      "id": "U10-S09",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/circular/list-content/circular/intermediaries/supervision/doc?lang=EN&refNo=26EC29",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-05-22",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "12broker review unnamedsample;not12fines/prevalence",
+      "used_in": [
+        "2026-10-13-update-10.md"
+      ]
+    },
+    {
+      "id": "U10-S10",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/circular/openAppendix?lang=EN&refNo=26EC29&appendix=0",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-05-22",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "document/correspondentfindings; sample-specific ratios",
+      "used_in": [
+        "2026-10-13-update-10.md"
+      ]
+    },
+    {
+      "id": "U10-S11",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/circular/openAppendix?lang=EN&refNo=26EC29&appendix=1",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-05-22",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "measure1/2SFCrequest/selectedfirm;measure3newindividualaccounts",
+      "used_in": [
+        "2026-10-13-update-10.md"
+      ]
+    },
+    {
+      "id": "U10-S12",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/circular/openAppendix?lang=EN&refNo=26EC29&appendix=2",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-05-22",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "individualscope/relationshipapproach/internalvsexternalreview",
+      "used_in": [
+        "2026-10-13-update-10.md"
+      ]
+    },
+    {
+      "id": "U11-S01",
+      "url": "https://www.info.gov.hk/gia/general/202609/16/P2026091500441p.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-09-16",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Dated proposal status and stablecoin launch account; not a commencement instrument",
+      "used_in": [
+        "2026-10-13-update-11.md"
+      ]
+    },
+    {
+      "id": "U11-S02",
+      "url": "https://www.legco.gov.hk/en/legco-business/council/bills.html?bill_key=10010&session=2026",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Live Bill record retrieved; later passage fields blank; enactment not established",
+      "used_in": [
+        "2026-10-13-update-11.md"
+      ]
+    },
+    {
+      "id": "U11-S03",
+      "url": "https://www.legco.gov.hk/yr2026/english/bc/bc04/minutes/bc0420260730.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-07-30",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Downloaded official committee minutes establish clause examination, not passage",
+      "used_in": [
+        "2026-10-13-update-11.md"
+      ]
+    },
+    {
+      "id": "U11-S04",
+      "url": "https://www.fstb.gov.hk/fsb/aml/en/risk-assessment.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2022-07-08",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Publication index retrieved; old revision limits evidence of absence",
+      "used_in": [
+        "2026-10-13-update-11.md"
+      ]
+    },
+    {
+      "id": "U11-S05",
+      "url": "https://www.cr.gov.hk/en/amlcft/report.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Current report links retrieved; not proof of third report non-publication",
+      "used_in": [
+        "2026-10-13-update-11.md"
+      ]
+    },
+    {
+      "id": "U11-S06",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/circular/list-content/circular/intermediaries/supervision/doc?lang=EN&refNo=26EC51",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-08-20",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Full simplified-eDDA circular and footnotes; authorisation and investigation controls",
+      "used_in": [
+        "2026-10-13-update-11.md"
+      ]
+    },
+    {
+      "id": "U12-S01",
+      "url": "https://www.lseg.com/content/dam/risk-intelligence/en_us/documents/reports/whitepaper/lseg-operating-speed-of-crime-apac.pdf",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Mid-2025 survey; unknown Hong Kong sample size; responses are not alert false-positive rates",
+      "used_in": [
+        "2026-10-13-update-12.md"
+      ]
+    },
+    {
+      "id": "U12-S02",
+      "url": "https://www.lseg.com/en/insights/risk-intelligence/gaining-the-real-time-edge-the-case-for-real-time-risk-intelligence-in-apac",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-02-10",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Dated article and regional survey context",
+      "used_in": [
+        "2026-10-13-update-12.md"
+      ]
+    },
+    {
+      "id": "U12-S03",
+      "url": "https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2023/20230209e2a2.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2023-02-09",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Practical multilingual screening and disposition assurance guidance",
+      "used_in": [
+        "2026-10-13-update-12.md"
+      ]
+    },
+    {
+      "id": "U12-S04",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20260316-1-EN/20260316-1-EN.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-03-16",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Reviewed systems generally met expectations; gap analysis and testing scope",
+      "used_in": [
+        "2026-10-13-update-12.md"
+      ]
+    },
+    {
+      "id": "U12-S05",
+      "url": "https://aereve.ai/Press/Aereve_Press_Release_Final.html",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-10-28",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Vendor sandbox metrics; no verified production launch or independent performance validation",
+      "used_in": [
+        "2026-10-13-update-12.md"
+      ]
+    },
+    {
+      "id": "U12-S06",
+      "url": "https://www.cyberport.hk/en/news/cyberport-ai-pioneers/",
+      "source_type": "institution_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Named sandbox collaboration corroboration; not metric validation",
+      "used_in": [
+        "2026-10-13-update-12.md"
+      ]
+    },
+    {
+      "id": "U12-S07",
+      "url": "https://aereve.ai/assets/Aereve_Citi_HKMA_Sandbox.pdf",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Undated Citi project material; potential benefit not achieved performance",
+      "used_in": [
+        "2026-10-13-update-12.md"
+      ]
+    },
+    {
+      "id": "U12-S08",
+      "url": "https://www.jumio.com/case-study-wonder/",
+      "source_type": "vendor_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Named Wonder implementation; onboarding claims without disclosed period or sample",
+      "used_in": [
+        "2026-10-13-update-12.md"
+      ]
+    },
+    {
+      "id": "U12-S09",
+      "url": "https://hk.linkedin.com/company/wonder-app",
+      "source_type": "customer_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Official customer feed endorses partnership and repeats claims; not independent measurement",
+      "used_in": [
+        "2026-10-13-update-12.md"
+      ]
+    },
+    {
+      "id": "U12-S10",
+      "url": "https://www.bochk.com/dam/document/TnC/DEP/IDV_en_202310.pdf",
+      "source_type": "customer_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2023-10",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Bank-owned IDV supplier and processing disclosure; not 2026 rollout evidence",
+      "used_in": [
+        "2026-10-13-update-12.md"
+      ]
+    },
+    {
+      "id": "U12-S11",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/20230525-4-EN",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2023-05-25",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Repository current-version label, not a claim of all subsequent developments",
+      "used_in": [
+        "2026-10-13-update-12.md"
+      ]
+    },
+    {
+      "id": "U12-S12",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20230525-4-EN/AML-2.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2023-05-25",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Limited Chapter 6 party and jurisdiction coverage; existing bank guideline",
+      "used_in": [
+        "2026-10-13-update-12.md"
+      ]
+    },
+    {
+      "id": "U13-S01",
+      "url": "https://www.digitalpolicy.gov.hk/open_data/business_window/soa-qps-awarded-service-contracts.csv",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-09-30",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Official award snapshot; named scope and values, no delivery acceptance",
+      "used_in": [
+        "2026-10-13-update-13.md"
+      ]
+    },
+    {
+      "id": "U13-S02",
+      "url": "https://www.digitalpolicy.gov.hk/en/our_work/digital_government/suppliers/soa_qps/",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Current SOA-QPS procurement framework and contractor route",
+      "used_in": [
+        "2026-10-13-update-13.md"
+      ]
+    },
+    {
+      "id": "U13-S03",
+      "url": "https://www.digitalpolicy.gov.hk/open_data/business_window/soa-qps-awarded-service-contracts-data-dictionary-en.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Data dictionary fields exclude acceptance and operational status",
+      "used_in": [
+        "2026-10-13-update-13.md"
+      ]
+    },
+    {
+      "id": "U13-S04",
+      "url": "https://www.legco.gov.hk/yr2026/english/panels/fa/papers/fa20260202cb1-56-5-e.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-02-02",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Official TAS launch milestone; FDAP phased development",
+      "used_in": [
+        "2026-10-13-update-13.md"
+      ]
+    },
+    {
+      "id": "U13-S05",
+      "url": "https://www.legco.gov.hk/yr2025/english/fc/fc/papers/fi25-14e.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-03-31",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Historical programme estimate, expenditure and full rollout schedule",
+      "used_in": [
+        "2026-10-13-update-13.md"
+      ]
+    },
+    {
+      "id": "U14-S01",
+      "url": "https://www.afrc.org.hk/f/upload/1049/AML%20FAQs%20on%20STRs%202026_May%202026(AFRC_HKICPA).pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-05-07",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Professional reporting duty and employee route; no case-specific STR evidence",
+      "used_in": [
+        "2026-10-13-update-14.md"
+      ]
+    },
+    {
+      "id": "U14-S02",
+      "url": "https://www.hkicpa.org.hk/-/media/HKICPA-Website/HKICPA/section5_membership/Professional-Representation/aml/AML-Guidelines-revisedfor-Gazettal-May-2023--Final_1.pdf",
+      "source_type": "professional_body_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2023-05",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Specified-service CDD versus universal reporting; existing guideline",
+      "used_in": [
+        "2026-10-13-update-14.md"
+      ]
+    },
+    {
+      "id": "U14-S03",
+      "url": "https://www.afrc.org.hk/en-hk/news-centre/press-releases/afrc-reprimands-hlb-for-multiple-audit-deficiencies-and-imposes-fines",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-09-03",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Audit penalty publication and financial-regulator complaint, not JFIU STR",
+      "used_in": [
+        "2026-10-13-update-14.md"
+      ]
+    },
+    {
+      "id": "U14-S04",
+      "url": "https://www.afrc.org.hk/f/upload/1198/20260903-sda-en-hlb.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-09-03",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Historical audit chronology and confirmation provenance, not laundering conviction",
+      "used_in": [
+        "2026-10-13-update-14.md"
+      ]
+    },
+    {
+      "id": "U14-S05",
+      "url": "https://www.afrc.org.hk/en-hk/news-centre/press-releases/afrc-reprimands-bofa-cpa-limited-for-improperly-backdating-audit-working-papers-and-imposes-a-pecuniary-penalty",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-12-16",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Audit-integrity penalty publication, not AMLO laundering finding",
+      "used_in": [
+        "2026-10-13-update-14.md"
+      ]
+    },
+    {
+      "id": "U14-S06",
+      "url": "https://www.afrc.org.hk/f/upload/1198/16.%2020251216-afrc-sda-bofa-en2.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-12-16",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Document chronology and no demonstrated resulting misstatement finding",
+      "used_in": [
+        "2026-10-13-update-14.md"
+      ]
+    },
+    {
+      "id": "U14-S07",
+      "url": "https://www.afrc.org.hk/en-hk/news-centre/press-releases/afrc-and-sfc-extend-regulatory-cooperation-under-new-mou",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-09-28",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Expanded regulatory cooperation, not a new reporting threshold",
+      "used_in": [
+        "2026-10-13-update-14.md"
+      ]
+    },
+    {
+      "id": "U14-S08",
+      "url": "https://www.afrc.org.hk/media/2qwd014y/checkpoint_reminders_for_auditors-reporting_on_licensed_corporations.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-03-28",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Audit evidence and separate assurance purposes, not automated AML finding",
+      "used_in": [
+        "2026-10-13-update-14.md"
+      ]
+    },
+    {
+      "id": "U14-S09",
+      "url": "https://www.elegislation.gov.hk/hk/cap615!en",
+      "source_type": "official_primary",
+      "evidence_status": "live_consolidated_statute_reviewed",
+      "published_or_version_date": "2026-09-24",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Live point-in-time display and sections 5A(3)/5A(6); display does not establish substantive amendment date",
+      "used_in": [
+        "2026-10-13-update-14.md"
+      ]
+    },
+    {
+      "id": "U15-S01",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20251106-2-EN/20251106-2-EN.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-11",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Relevant sharing, correction, independent assessment and STR controls; no general data-sharing permission",
+      "used_in": [
+        "2026-10-13-update-15.md"
+      ]
+    },
+    {
+      "id": "U15-S02",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/20251106-2-EN",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-11-07",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Current repository record and working PDF; old standalone link returned404",
+      "used_in": [
+        "2026-10-13-update-15.md"
+      ]
+    },
+    {
+      "id": "U15-S03",
+      "url": "https://www.pcpd.org.hk/english/news_events/media_statements/press_20260127.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-01-27",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Planned selected-bank anti-fraud/data-safeguard examinations; no outcomes reported",
+      "used_in": [
+        "2026-10-13-update-15.md"
+      ]
+    },
+    {
+      "id": "U16-S01",
+      "url": "https://www.fstb.gov.hk/fsb/en/link/aml_app.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Ten current applications, filings, withdrawals and future hearing schedule; no automatic merits finding",
+      "used_in": [
+        "2026-10-13-update-16.md"
+      ]
+    },
+    {
+      "id": "U16-S02",
+      "url": "https://www.fstb.gov.hk/fsb/en/link/aml_tribunal.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Tribunal regulatory-review jurisdiction, not criminal guilt process",
+      "used_in": [
+        "2026-10-13-update-16.md"
+      ]
+    },
+    {
+      "id": "U16-S03",
+      "url": "https://www.elegislation.gov.hk/hk/cap615",
+      "source_type": "official_primary",
+      "evidence_status": "live_consolidated_statute_reviewed",
+      "published_or_version_date": "2026-09-24",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Live consolidated sections59-75 and displayed point-in-time; no substantive amendment inferred",
+      "used_in": [
+        "2026-10-13-update-16.md"
+      ]
+    },
+    {
+      "id": "U16-S04",
+      "url": "https://www.fstb.gov.hk/fsb/en/link/doc/AMLRT_2026-1-Decision_on_Stay_%28Eng%29.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-03-05",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Interim stay refusal, not final merits review; separate later withdrawal from register",
+      "used_in": [
+        "2026-10-13-update-16.md"
+      ]
+    },
+    {
+      "id": "U16-S05",
+      "url": "https://www.fstb.gov.hk/fsb/tc/link/doc/AMLRT_2024-18-Decision_(Chi)(f)(TC).pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-09-08",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Chinese merits decision confirms licence refusal; no monetary penalty or criminal conviction; later appeal unverified",
+      "used_in": [
+        "2026-10-13-update-16.md"
+      ]
+    },
+    {
+      "id": "U16-S06",
+      "url": "https://www.doj.gov.hk/en/publications/prosecution_ch5.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Prosecution evidence/public-interest test, not guilt finding",
+      "used_in": [
+        "2026-10-13-update-16.md"
+      ]
+    },
+    {
+      "id": "U16-S07",
+      "url": "https://www.doj.gov.hk/en/community_engagement/press/20170623_pr3.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2017-06-23",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Historical official explanation of criminal conviction standard; not new2026change",
+      "used_in": [
+        "2026-10-13-update-16.md"
+      ]
+    },
+    {
+      "id": "U17-S01",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20250716-3-EN/20250716-3-EN.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-07-16",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Self-reported56submissions/58AIs; broadfintech notAML penetration",
+      "used_in": [
+        "2026-10-13-update-17.md"
+      ]
+    },
+    {
+      "id": "U17-S02",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20251118-3-EN/20251118-3-EN.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-11-19",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "48AIcohort; morethan30% adopted versus80%futureplans, notachievedcurrentcount",
+      "used_in": [
+        "2026-10-13-update-17.md"
+      ]
+    },
+    {
+      "id": "U17-S03",
+      "url": "https://www.hkma.gov.hk/media/eng/doc/key-information/press-release/2026/20260203e3a1.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-02-03",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Fintech integration/evaluation programme proposals, notpaiddeployment",
+      "used_in": [
+        "2026-10-13-update-17.md"
+      ]
+    },
+    {
+      "id": "U17-S04",
+      "url": "https://www.hkma.gov.hk/eng/news-and-media/speeches/2026/09/20260922-1/",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-09-22",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Supplierduediligence expectations; cybersecuritybaseline stillbeingformulated",
+      "used_in": [
+        "2026-10-13-update-17.md"
+      ]
+    },
+    {
+      "id": "U17-S05",
+      "url": "https://v.icbc.com.cn/userfiles/Resources/ICBC/haiwai/Asia/download/EN/2026/annual_report_2025_en.pdf",
+      "source_type": "customer_primary",
+      "evidence_status": "primary_indexed_passages_reviewed",
+      "published_or_version_date": "2025",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Bank-ownedp104distinguishesimplementedfraudfromtrialAML; pageimageunverified",
+      "used_in": [
+        "2026-10-13-update-17.md"
+      ]
+    },
+    {
+      "id": "U17-S06",
+      "url": "https://www.bochk.com/dam/bochk/desktop/top/aboutus/ir/docs/presentations/2025ar/transcript_en.pdf",
+      "source_type": "customer_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "ManagementAML/negativemedia account withoutvendor/golive/performance",
+      "used_in": [
+        "2026-10-13-update-17.md"
+      ]
+    },
+    {
+      "id": "U17-S07",
+      "url": "https://www.hkexnews.hk/listedco/listconews/sehk/2026/0330/2026033000488.pdf",
+      "source_type": "customer_primary",
+      "evidence_status": "primary_indexed_passages_reviewed",
+      "published_or_version_date": "2026-03-30",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Primarytrainingcounts arecumulativeparticipations notuniquelearners oroutcomes",
+      "used_in": [
+        "2026-10-13-update-17.md"
+      ]
+    },
+    {
+      "id": "U18-S01",
+      "url": "https://www.jfiu.gov.hk/info/doc/JFIU_Annual_Report_2024.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2024",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Limitednewdissemination/search/triage detail, noSTRconvictioncohort",
+      "used_in": [
+        "2026-10-13-update-18.md"
+      ]
+    },
+    {
+      "id": "U18-S02",
+      "url": "https://www.sfc.hk/-/media/EN/files/IS/AML/SFC-AMLCFT-Webinar-202511_JFIU_ENG.pdf?rev=f206230e309e4f5ba196bca77dfe46b9&hash=408F99B6D8750D895676F20D9A09A302",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-11",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Historicalreportquality/typologies; tentativeJanlaunch supersededbylaterFebevidence",
+      "used_in": [
+        "2026-10-13-update-18.md"
+      ]
+    },
+    {
+      "id": "U18-S03",
+      "url": "https://www.jfiu.gov.hk/en/faq.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Confidentialintelligence acknowledgment/assessment; reportitselfnotcourtevidence",
+      "used_in": [
+        "2026-10-13-update-18.md"
+      ]
+    },
+    {
+      "id": "U18-S04",
+      "url": "https://www.jfiu.gov.hk/en/statistics.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-01-31",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Qualifiedaggregates;925HKPFCustomspersons anddistinctDoJvalues",
+      "used_in": [
+        "2026-10-13-update-18.md"
+      ]
+    },
+    {
+      "id": "U18-S05",
+      "url": "https://www.police.gov.hk/info/review/2025/html/en/hkpf_04.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Police923andconfiscatedlabel preserved; notreconciledwithJFIUseries",
+      "used_in": [
+        "2026-10-13-update-18.md"
+      ]
+    },
+    {
+      "id": "U19-S01",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20261012-1-EN/20261012-1-EN.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-10-12",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Two-page scanned circular visually reviewed; expectations to consider industry good practice, no AML-specific budget",
+      "used_in": [
+        "2026-10-13-update-19.md"
+      ]
+    },
+    {
+      "id": "U19-S02",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20261012-2-EN/20261012-2-EN.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-10",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Purpose and section 4.2 reviewed with relevant figure/control pages rendered; illustrative architecture, no contract or effectiveness claim",
+      "used_in": [
+        "2026-10-13-update-19.md"
+      ]
+    },
+    {
+      "id": "U20-S01",
+      "url": "https://www.elegislation.gov.hk/hk/cap615",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-09-24",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Current Schedule1 perimeter; display date not necessarily amendment date",
+      "used_in": [
+        "2026-10-13-update-20.md"
+      ]
+    },
+    {
+      "id": "U20-S02",
+      "url": "https://www.cr.gov.hk/en/publications/docs/Conditions_ML_e_Apr2026.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-04",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Conditions14\u201316 effective1August; numbering can vary on licences",
+      "used_in": [
+        "2026-10-13-update-20.md"
+      ]
+    },
+    {
+      "id": "U20-S03",
+      "url": "https://www.cr.gov.hk/en/publications/docs/AntiMoneyGuide_e_(March_2025).pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-03",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Limited digital-identification/MLRO reporting passages; reporting not clean bill of health",
+      "used_in": [
+        "2026-10-13-update-20.md"
+      ]
+    },
+    {
+      "id": "U20-S04",
+      "url": "https://www.info.gov.hk/gia/general/202608/01/P2026073100777.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-08-01",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "First phase commenced; June2027 credit-information phase scheduled",
+      "used_in": [
+        "2026-10-13-update-20.md"
+      ]
+    },
+    {
+      "id": "U20-S05",
+      "url": "https://www.aud.gov.hk/pdf_e/e85ch07.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-11-05",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Dated supervisory/control findings; current remediation unverified",
+      "used_in": [
+        "2026-10-13-update-20.md"
+      ]
+    },
+    {
+      "id": "U20-S06",
+      "url": "https://www.cr.gov.hk/en/services/money-lenders/statistics/Rectification-Orders.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Consolidated licensing orders; months afterAugust blank, not AML-specific or unique firm count",
+      "used_in": [
+        "2026-10-13-update-20.md"
+      ]
+    },
+    {
+      "id": "U20-S07",
+      "url": "https://www.cr.gov.hk/en/services/money-lenders/statistics/Warning-letters.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Consolidated licensing warnings; months afterAugust blank, not AML-specific or unique firm count",
+      "used_in": [
+        "2026-10-13-update-20.md"
+      ]
+    },
+    {
+      "id": "U20-S08",
+      "url": "https://www.fstb.gov.hk/fsb/en/publication/consult/doc/ConsultationConclusionsMoneyLenders-e.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-03-13",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Thematic/advertisement subsets; not additive to consolidated outputs",
+      "used_in": [
+        "2026-10-13-update-20.md"
+      ]
+    },
+    {
+      "id": "U20-S09",
+      "url": "https://www.icac.org.hk/en/p/press-archive/by-year/index_id_1886.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2024-05-31",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Historical conviction; 2015\u20132020 conduct; corruption complaint origin, no disclosed software or STR",
+      "used_in": [
+        "2026-10-13-update-20.md"
+      ]
+    },
+    {
+      "id": "U20-S10",
+      "url": "https://www.cr.gov.hk/en/publications/docs/Speech20251111_PP_e.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-11-11",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Educational repayment/application typologies, not measured detection or conviction cases",
+      "used_in": [
+        "2026-10-13-update-20.md"
+      ]
+    },
+    {
+      "id": "U21-S01",
+      "url": "https://www.doj.gov.hk/en/community_engagement/press/20260519_pr1.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-05-19",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Publication date and reporting-year label",
+      "used_in": [
+        "2026-10-13-update-21.md"
+      ]
+    },
+    {
+      "id": "U21-S02",
+      "url": "https://www.doj.gov.hk/en/publications/pdf/doj2025pd_full.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-05-19",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Printed page31 visually reviewed; limited case summaries, no original-judgment or subsequent-proceedings verification",
+      "used_in": [
+        "2026-10-13-update-21.md"
+      ]
+    },
+    {
+      "id": "U22-S01",
+      "url": "https://apps.sfc.hk/edistributionWeb/api/circular/list-content/circular/aml/doc?lang=EN&refNo=26EC39",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-07-14",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Limited country passages supplement update9; not futureOctober outcome",
+      "used_in": [
+        "2026-10-13-update-22.md"
+      ]
+    },
+    {
+      "id": "U22-S02",
+      "url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/call-for-action-june-2026.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-06-19",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Distinct country treatments and conditional October consideration",
+      "used_in": [
+        "2026-10-13-update-22.md"
+      ]
+    },
+    {
+      "id": "U22-S03",
+      "url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-06-19",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Risk information, not automatic EDD or blanket exit",
+      "used_in": [
+        "2026-10-13-update-22.md"
+      ]
+    },
+    {
+      "id": "U22-S04",
+      "url": "https://www.cedb.gov.hk/en/policies/united-nations-security-council-sanctions.html",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-08-28",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Local measures/reporting and mistaken-freeze clarification; list match not all measures",
+      "used_in": [
+        "2026-10-13-update-22.md"
+      ]
+    },
+    {
+      "id": "U22-S05",
+      "url": "https://www.info.gov.hk/gia/general/202610/09/P2026100900287.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-10-09",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Gazettal and same-day commencement",
+      "used_in": [
+        "2026-10-13-update-22.md"
+      ]
+    },
+    {
+      "id": "U22-S06",
+      "url": "https://www.elegislation.gov.hk/hk/2026/ln114!en",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-10-09",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Actual gazetted instrument visually read; renewed principal provisions expire31May2027",
+      "used_in": [
+        "2026-10-13-update-22.md"
+      ]
+    },
+    {
+      "id": "U22-S07",
+      "url": "https://main.un.org/securitycouncil/en/content/sres28212026",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-05-29",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Sanctions31May2027 versus expert-panel1July2027; local commencement distinct",
+      "used_in": [
+        "2026-10-13-update-22.md"
+      ]
+    },
+    {
+      "id": "U22-S08",
+      "url": "https://www.info.gov.hk/gia/general/202609/11/P2026091100252.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-09-11",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Release-level gazettal/commencement; detailed instrument exceptions/expiry not reviewed",
+      "used_in": [
+        "2026-10-13-update-22.md"
+      ]
+    },
+    {
+      "id": "U22-S09",
+      "url": "https://www.info.gov.hk/gia/general/202609/11/P2026091100247.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-09-11",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Release-level gazettal/commencement; detailed instrument exceptions/expiry not reviewed",
+      "used_in": [
+        "2026-10-13-update-22.md"
+      ]
+    },
+    {
+      "id": "U22-S10",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20200808-1-EN/20200808-1-EN.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2020-08-08",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Current repository status and visually reviewed PDF; local law versus foreign exposure",
+      "used_in": [
+        "2026-10-13-update-22.md"
+      ]
+    },
+    {
+      "id": "U22-S11",
+      "url": "https://www.elegislation.gov.hk/hk/cap575",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Relevant live sections6,8,8A,12; restrictions and reporting triggers distinct",
+      "used_in": [
+        "2026-10-13-update-22.md"
+      ]
+    },
+    {
+      "id": "U22-S12",
+      "url": "https://www.elegislation.gov.hk/hk/cap526",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Live section4 services offence includes financial assistance; no invented standalone STR duty",
+      "used_in": [
+        "2026-10-13-update-22.md"
+      ]
+    },
+    {
+      "id": "U22-S13",
+      "url": "https://ofac.treasury.gov/sanctions-programs-and-country-information/hong-kong-related-sanctions",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-07-14",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Foreign US-program list changes; continuing statutes/prior blocked assets; CFR amendment planned",
+      "used_in": [
+        "2026-10-13-update-22.md"
+      ]
+    },
+    {
+      "id": "U22-S14",
+      "url": "https://ofac.treasury.gov/recent-actions/20260717",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-07-17",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Dated corroborating US-program action; not HongKong law",
+      "used_in": [
+        "2026-10-13-update-22.md"
+      ]
+    },
+    {
+      "id": "U23-S01",
+      "url": "https://www.hkma.gov.hk/eng/key-functions/international-financial-centre/soft-infrastructure/enhanced-competency-framework/",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-09-24",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Current ECF is not mandatory licensing; proposed refinements distinguished",
+      "used_in": [
+        "2026-10-13-update-23.md"
+      ]
+    },
+    {
+      "id": "U23-S02",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20180322-4-EN/20180322-4-EN.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2018-03",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Current linked competency/CPD framework replaces2016; no product accreditation",
+      "used_in": [
+        "2026-10-13-update-23.md"
+      ]
+    },
+    {
+      "id": "U23-S03",
+      "url": "https://www.hkib.org/pdf/1780287770_AML-P-002%20Programme%20Handbook_20260528.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-05-28",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Training fees and lectures versus total learning; Professional case exam not only MCQ",
+      "used_in": [
+        "2026-10-13-update-23.md"
+      ]
+    },
+    {
+      "id": "U23-S04",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20260922-1-EN/260923_Circular.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2026-09-23",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Signed date differs repository ID; transition/course timeline proposed",
+      "used_in": [
+        "2026-10-13-update-23.md"
+      ]
+    },
+    {
+      "id": "U23-S05",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/20230525-4-EN/AML-2.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2023-05",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Limited Chapter9 addition to baselineR02; no simulator mandate",
+      "used_in": [
+        "2026-10-13-update-23.md"
+      ]
+    },
+    {
+      "id": "U23-S06",
+      "url": "https://brdr.hkma.gov.hk/eng/doc-ldg/docId/20180322-4-EN",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2018-03-22",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Current repository identifies linked2018 edition",
+      "used_in": [
+        "2026-10-13-update-23.md"
+      ]
+    },
+    {
+      "id": "U24-S01",
+      "url": "https://www.cr.gov.hk/en/legislation/scr/overview.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Current scope including re-domiciled companies",
+      "used_in": [
+        "2026-10-13-update-24.md"
+      ]
+    },
+    {
+      "id": "U24-S02",
+      "url": "https://www.cr.gov.hk/en/legislation/scr/faq.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Locally kept not public CR filing; bounded FAQ ownership/no-controller examples",
+      "used_in": [
+        "2026-10-13-update-24.md"
+      ]
+    },
+    {
+      "id": "U24-S03",
+      "url": "https://www.cr.gov.hk/en/publications/docs/Guidelines_scr_e.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2025-05-23",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Updated guide access/nominee/trust pages visually checked; no automated tool claim",
+      "used_in": [
+        "2026-10-13-update-24.md"
+      ]
+    },
+    {
+      "id": "U24-S04",
+      "url": "https://www.elegislation.gov.hk/hk/cap622",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Live sections653W653X access; nominee detailed statutory subparagraph not independently retrieved",
+      "used_in": [
+        "2026-10-13-update-24.md"
+      ]
+    },
+    {
+      "id": "U24-S05",
+      "url": "https://www.cr.gov.hk/en/publications/reports/annual-reports.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Latest report listed2024\u201325 whenchecked",
+      "used_in": [
+        "2026-10-13-update-24.md"
+      ]
+    },
+    {
+      "id": "U24-S06",
+      "url": "https://www.cr.gov.hk/docs/ar/2025/full_report_2025_e.pdf",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2024-25",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Printed27\u201328 visual; over96percent keeping, raw SCR accuracy denominator absent",
+      "used_in": [
+        "2026-10-13-update-24.md"
+      ]
+    },
+    {
+      "id": "U24-S07",
+      "url": "https://www.cr.gov.hk/en/publication/fact-stat/statistics/prosecution.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": null,
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Jan\u2013Aug2026 broad summons/fines; latermonthsblank, no SCRspecific breakdown",
+      "used_in": [
+        "2026-10-13-update-24.md"
+      ]
+    },
+    {
+      "id": "U24-S08",
+      "url": "https://www.cr.gov.hk/en/compliance/prosecution/case-20230802.htm",
+      "source_type": "official_primary",
+      "evidence_status": "primary_publication_reviewed",
+      "published_or_version_date": "2023-08-02",
+      "checked_on": "2026-10-13",
+      "evidence_boundary": "Historical four-register-location offences and total fine each; no ownership fraud or MLfinding",
+      "used_in": [
+        "2026-10-13-update-24.md"
+      ]
+    }
+  ]
+}
