@@ -4,7 +4,7 @@ This page freezes how a future twin state machine applies `twin_patch` and `choi
 
 Inventory below covers every example script in [`data/cases/`](../data/cases/README.md):
 
-- `deepfake-hk-001.example.json`
+- `01-deepfake-hk-001.example.json`
 - the ten `hk-*.example.json` files
 
 The machine is not built in this slice. P1-S2 implements the rules on this page. Rules in `rules[].when` stay human-readable sentences. This applier does not parse them.
