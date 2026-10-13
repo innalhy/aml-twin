@@ -2,7 +2,7 @@
 
 ## What it is?
 
-TwinAML is a COMP3424 course demo of a digital twin for AML simulation training. The platform idea is proprietary: this tree is a classroom demo, not a bank production system and not an open-source release. The Phase 1 case library is **11** synthetic scripts under [`data/cases/`](data/cases/README.md). `deepfake-001` is the original course example (video-KYC deepfake). The other ten are `public_record_inspired`. Every customer, account, and amount in them is synthetic. The full index and disclaimer are in [`data/cases/README.md`](data/cases/README.md). The twin is backend state plus the events that change it. The web app is the face that will render that state.
+TwinAML is a COMP3424 course demo of a digital twin for AML simulation training. The platform idea is proprietary: this tree is a classroom demo, not a bank production system and not an open-source release. The Phase 1 case library is **11** synthetic scripts under [`data/cases/`](data/cases/README.md). `deepfake-001` is the original course example (video-KYC deepfake). The other ten are `public_record_inspired`. Every customer, account, and amount in them is synthetic. The full index and disclaimer are in [`data/cases/README.md`](data/cases/README.md). The twin is backend state plus the events that change it. The web app renders that state.
 
 | case_id | Theme |
 | --- | --- |
@@ -18,50 +18,53 @@ TwinAML is a COMP3424 course demo of a digital twin for AML simulation training.
 | `insurer-controls-001` | Insurer controls (synthetic insurer) |
 | `bank-cdd-001` | Bank CDD / monitoring / STR (synthetic bank) |
 
-A trainee is meant to choose one of those scripts by `case_id` and decide inside it. Rules in the script decide compliance outcomes (rules-before-AI). A language model, if one is added later, may explain a decision only after those rules have fired, and a human override must be stored as an event.
+A future node/choice player would let a trainee choose one of those scripts by `case_id` and decide inside it. Rules in that script would decide compliance outcomes (rules-before-AI). A language model, if one is added later, may explain a decision only after those rules have fired, and a human override must be stored as an event.
 
-Case flows for human review are in [`data/case-flow/`](data/case-flow/). Each case is two Markdown files, Traditional Chinese and English, and each flow is a Mermaid diagram. The playable scripts stay in `data/cases/`, numbered `01`–`11`. `case_id` is unchanged.
+Case flows for human review are in [`data/case-flow/`](data/case-flow/). Each case has an English Markdown file with Mermaid flow diagrams. The playable scripts stay in `data/cases/`, numbered `01`–`11`. `case_id` is unchanged.
 
-| Case | Traditional Chinese | English | Playable script |
-| --- | --- | --- | --- |
-| Deepfake executive impersonation | [zh-Hant](data/case-flow/01-deepfake-executive-impersonation.zh-Hant.md) | [English](data/case-flow/01-deepfake-executive-impersonation.en.md) | `deepfake-001` |
-| Mule accounts and a crypto mixer | [zh-Hant](data/case-flow/02-crypto-mixers-mule-accounts.zh-Hant.md) | [English](data/case-flow/02-crypto-mixers-mule-accounts.en.md) | Nearby mule and crypto scripts. See the flow page. |
-| Synthetic identity fraud | [zh-Hant](data/case-flow/03-synthetic-identity-fraud.zh-Hant.md) | [English](data/case-flow/03-synthetic-identity-fraud.en.md) | No playable script in the eleven. |
-| Trade-based money laundering | [zh-Hant](data/case-flow/04-trade-based-money-laundering.zh-Hant.md) | [English](data/case-flow/04-trade-based-money-laundering.en.md) | `daybreak-tbml-001` |
-| Cross-border phone-fraud corridor | [zh-Hant](data/case-flow/05-crossborder-phone-fraud.zh-Hant.md) | [English](data/case-flow/05-crossborder-phone-fraud.en.md) | `crossborder-tel-001` |
-| Account rental and mule clusters | [zh-Hant](data/case-flow/06-account-rental-mule-clusters.zh-Hant.md) | [English](data/case-flow/06-account-rental-mule-clusters.en.md) | `mule-rent-001`, `greythunder-mule-001` |
-| Cash and crypto OTC cashing-out | [zh-Hant](data/case-flow/07-cash-crypto-otc.zh-Hant.md) | [English](data/case-flow/07-cash-crypto-otc.en.md) | `justicegate-crypto-001` |
-| KOL management front company | [zh-Hant](data/case-flow/08-kol-management-front.zh-Hant.md) | [English](data/case-flow/08-kol-management-front.en.md) | `kol-mgmt-001` |
-| Multi-typology mule account | [zh-Hant](data/case-flow/09-multi-typology-mule.zh-Hant.md) | [English](data/case-flow/09-multi-typology-mule.en.md) | `wiseword-amlmonth-001` |
-| Organised-crime cashflow | [zh-Hant](data/case-flow/10-organised-crime-cashflow.zh-Hant.md) | [English](data/case-flow/10-organised-crime-cashflow.en.md) | `triad-cashflow-001` |
-| Insurer and bank control gaps | [zh-Hant](data/case-flow/11-control-gaps.zh-Hant.md) | [English](data/case-flow/11-control-gaps.en.md) | `insurer-controls-001`, `bank-cdd-001` |
+| Case | English | Playable script |
+| --- | --- | --- |
+| Deepfake executive impersonation | [English](data/case-flow/01-deepfake-executive-impersonation.en.md) | `deepfake-001` |
+| Mule accounts and a crypto mixer | [English](data/case-flow/02-crypto-mixers-mule-accounts.en.md) | Nearby mule and crypto scripts. See the flow page. |
+| Synthetic identity fraud | [English](data/case-flow/03-synthetic-identity-fraud.en.md) | No playable script in the eleven. |
+| Trade-based money laundering | [English](data/case-flow/04-trade-based-money-laundering.en.md) | `daybreak-tbml-001` |
+| Cross-border phone-fraud corridor | [English](data/case-flow/05-crossborder-phone-fraud.en.md) | `crossborder-tel-001` |
+| Account rental and mule clusters | [English](data/case-flow/06-account-rental-mule-clusters.en.md) | `mule-rent-001`, `greythunder-mule-001` |
+| Cash and crypto OTC cashing-out | [English](data/case-flow/07-cash-crypto-otc.en.md) | `justicegate-crypto-001` |
+| KOL management front company | [English](data/case-flow/08-kol-management-front.en.md) | `kol-mgmt-001` |
+| Multi-typology mule account | [English](data/case-flow/09-multi-typology-mule.en.md) | `wiseword-amlmonth-001` |
+| Organised-crime cashflow | [English](data/case-flow/10-organised-crime-cashflow.en.md) | `triad-cashflow-001` |
+| Insurer and bank control gaps | [English](data/case-flow/11-control-gaps.en.md) | `insurer-controls-001`, `bank-cdd-001` |
 
-What runs today is a scaffold. The Worker and the optional FastAPI app answer `GET /health`. The Pages app is a placeholder. The 11 scripts, the effect-key contract, and the JSON Schema are in the repo. Session routes, the scenario player, and the dashboard are not built.
+The web investigation pilot, **The Second Ledger**, uses the paired evidence pack below. Players explore six alerts, examine source documents and transfers, request timed checks, place or release provisional holds, and record cited decisions. A guided simulation clock drives evidence delivery and pending payments. The Node API owns persistent sessions and the event history in a SQLite file; the browser renders its learner-visible state. The existing eleven node/choice scripts remain authored content and are not yet connected to a case picker.
+
+The ARG design, content sources, and first playable scope are in [`docs/arg-investigation.md`](docs/arg-investigation.md). All identities, money, policies, and documents in the pilot are fictional. The debrief reports observed consequences rather than an automated compliance grade.
 
 ## Analyst investigation content
 
 The [paired evidence pack](data/evidence/analyst-session-001/README.md) adds detailed records for the deepfake case, a legitimate project-payment lookalike, and four background alerts. It contains 6 customer profiles, 24 accounts, 126 transfers, and 24 evidence documents. The [learner briefing](data/evidence/analyst-session-001/learner/START.md) is the starting point for a manual investigation exercise. Instructor answers and responses requiring further checks stay in a separate folder.
 
-This is authored content alongside the existing eleven scripts. The new lookalike is not yet a script in the case picker. No player or automated evidence-release endpoint is added to the web stack; the standalone FlexSim edition below is a separate runtime. Validate the records with `python3 scripts/validate-evidence.py`; continue checking the existing scripts with `node scripts/validate-cases.mjs`.
+This pack is the source of the web investigation pilot alongside the existing eleven scripts. Its lookalike is not a new node/choice script. Hidden responses remain on the API server and reach the browser only after the corresponding check completes; instructor answer keys are not imported. Validate the records with `python3 scripts/validate-evidence.py`, check the web export with `python3 scripts/export-web-investigation.py --check`, and continue checking the existing scripts with `node scripts/validate-cases.mjs`.
 
 ### FlexSim edition
 
-[`simulation/flexsim/`](simulation/flexsim/README.md) is a standalone FlexSim edition of the same investigation exercise, built on this evidence pack. It is not an adapter to the Worker: FlexSim owns run-time state in that edition only, and nothing there reads or changes the web twin. It was authored on macOS, where the Python reference harness (contract tests, golden traces, trace comparer) is Mac-tested; nothing has run in FlexSim yet, and no model file exists. The Windows build and validation steps are in [`simulation/flexsim/windows/`](simulation/flexsim/windows/ASSEMBLY-STEPS.md).
+[`simulation/flexsim/`](simulation/flexsim/README.md) is a standalone FlexSim edition of the same investigation exercise, built on this evidence pack. It is not an adapter to the web API: FlexSim owns run-time state in that edition only, and nothing there reads or changes the web twin. It was authored on macOS, where the Python reference harness (contract tests, golden traces, trace comparer) is Mac-tested; nothing has run in FlexSim yet, and no model file exists. The Windows build and validation steps are in [`simulation/flexsim/windows/`](simulation/flexsim/windows/ASSEMBLY-STEPS.md).
 
 ## Architecture
 
-One Worker API and one Pages frontend. FastAPI is an optional local process.
+The primary run path is one Node API with file-backed SQLite, serving the React frontend on a VPS. The package retains its existing `workers/api` directory name. Cloudflare is optional; both adapters use the same investigation engine. FastAPI remains a health-only stub.
 
 | Piece | Where | Role |
 | --- | --- | --- |
-| Demo API | `workers/api` | Cloudflare Worker (Hono). Today: `GET /health`. Case load, sessions, decisions, the twin state machine, and events will be added on this Worker. |
-| Web | `frontend/` | React + Vite + TypeScript, deployed to Cloudflare Pages. Today: a placeholder page. The scenario player and the dashboard are not built. Both will read the same twin. |
-| Local API | `backend/` | Optional FastAPI stand-in for offline Python work. Same health JSON. The course demo deploys the Worker. |
+| Demo API | `workers/api` | Node server with shared Hono routes and investigation engine. A file-backed SQLite database persists sessions and event history. |
+| Web | `frontend/` | React + Vite + TypeScript. The Node server serves its built investigation desk alongside `/api` on the same origin. |
+| Optional Worker adapter | `workers/api/src/index.ts` | Uses the same routes and engine, with one SQLite-backed Durable Object per run. Optional Pages hosting serves the frontend separately. |
+| Local Python stub | `backend/` | Optional FastAPI health endpoint for offline Python work; it cannot run investigation sessions. |
 | Unity | — | Optional later face on the same API. This repo has no Unity project. |
 
-The web app does not keep a private copy of the case world. Compliance outcomes come from the rules in the script and from the state machine that will apply them.
+The web app does not keep a private copy of the case world. The investigation engine applies evidence-release, timing, and payment rules on the API server. The eleven-script node/choice engine remains planned.
 
-The training-run diagram (case → script → decision → twin → events → dashboard) is in [`docs/architecture.md`](docs/architecture.md). The session calls in that diagram are not implemented. Course terms — mirroring, shadowing, threading, Chan Level 1, Chan Level 2, rules-before-AI — are mapped in [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md).
+The training-run diagram and the distinction between the investigation pilot and the planned node/choice player are in [`docs/architecture.md`](docs/architecture.md). Course terms — mirroring, shadowing, threading, Chan Level 1, Chan Level 2, rules-before-AI — are mapped in [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md).
 
 ## Tech stack
 
@@ -69,14 +72,14 @@ Classroom demo. One API and one web client.
 
 | Layer | Current | Planned |
 | --- | --- | --- |
-| Demo API | Hono on a Cloudflare Worker (`workers/api`). `GET /health` only. | Load a case, open a session, accept a decision, apply rules, write events. Same Worker. |
-| Web | React + Vite + TypeScript (`frontend/`). Placeholder page that builds. Pages project name `twinaml-web`. | Scenario player and a simple dashboard that read the Worker’s twin state. |
-| Local API | FastAPI (`backend/`). Optional. `GET /health` with the same JSON. | May mirror the Worker routes for offline use. Stays off the deploy path. |
-| Cases | 11 example scripts in [`data/cases/README.md`](data/cases/README.md). | Stay on `packages/schemas/script.schema.json`. A rule’s `when` text is for a person to read until a state machine exists. |
+| Demo API | Node + Hono + built-in SQLite (`workers/api`). Health and persistent investigation sessions; optional Worker adapter shares the engine. | Connect the existing node/choice script library to the same API. |
+| Web | React + Vite + TypeScript (`frontend/`). Playable paired investigation desk served by Node. | Additional ARG episodes and the node/choice case picker. |
+| Local Python stub | FastAPI (`backend/`). Optional. `GET /health` with the same JSON. | Any investigation support would need an implementation; it stays off the deploy path. |
+| Cases | 11 example scripts in [`data/cases/README.md`](data/cases/README.md). | Stay on `packages/schemas/script.schema.json`. A rule’s `when` text is for a person to read until the node/choice state machine exists. |
 | Media | `data/media/.gitkeep` only. Large video is gitignored. | Scripts may set `media_ref` to a local path. Binaries stay out of git. |
 | Contract | `packages/schemas/script.schema.json` (schema `0.1`). | One script format. Patch keys: [`docs/effects.md`](docs/effects.md). |
-| Docs | `docs/architecture.md`, `docs/effects.md`, `docs/comp3424-mapping.md`, `docs/cloudflare.md`, [`docs/phases/`](docs/phases/README.md). | Slice checklists live in the phase docs. See [Implementation phases](#implementation-phases). |
-| Deploy | Wrangler config for Pages (`frontend/wrangler.jsonc`) and the Worker (`workers/api/wrangler.jsonc`). | Pages serves the Vite build. The Worker serves the API. |
+| Docs | `docs/architecture.md`, `docs/arg-investigation.md`, `docs/vps.md`, and the historical [`docs/phases/`](docs/phases/README.md). | The eleven-script roadmap remains in the phase docs. See [Implementation phases](#implementation-phases). |
+| Deploy | VPS deployment on hosted port 8080, reached through `https://amlsim.spectrumvps.tech`: built Node server, `frontend/dist/`, and persistent SQLite. Optional Wrangler configs remain for Worker/Pages hosting. | Account access controls and class-size capacity validation remain future hosting work. |
 
 Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, Kafka, a microservice split, a Unity project, and a live bank connection.
 
@@ -90,7 +93,9 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 ├── docs/
 │   ├── architecture.md          # case → script → decision → twin → events
 │   ├── effects.md               # twin_patch and choice effect keys
-│   ├── cloudflare.md            # Pages, Worker, custom domain
+│   ├── arg-investigation.md     # playable pilot and source mapping
+│   ├── vps.md                   # primary Node + SQLite hosting path
+│   ├── cloudflare.md            # optional Pages/Worker hosting
 │   ├── comp3424-mapping.md      # Chan Level 1/2, mirroring, shadowing, threading
 │   └── phases/
 │       ├── README.md            # how agents use the phase plans
@@ -98,18 +103,23 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 │       ├── PHASE2.md            # Chan Level 2 slices
 │       └── PHASE3.md            # vision only; not the course demo
 ├── workers/
-│   └── api/                     # demo API (Cloudflare Worker, Hono)
+│   └── api/                     # Node API and optional Worker adapter
 │       ├── README.md
 │       ├── package.json
-│       ├── src/index.ts         # GET /health
+│       ├── src/node-server.mjs  # Node HTTP server, SQLite and frontend files
+│       ├── src/api.ts           # shared health and investigation routes
+│       ├── src/engine.ts        # investigation rules and session state
+│       ├── src/index.ts         # optional Worker/Durable Object adapter
+│       ├── src/investigation-pack.json # server-only generated evidence
+│       ├── tests/               # engine and HTTP checks
 │       ├── tsconfig.json
 │       └── wrangler.jsonc
-├── frontend/                    # Cloudflare Pages (Vite, React, TypeScript)
+├── frontend/                    # Vite/React/TypeScript; Node serves dist/
 │   ├── README.md
 │   ├── index.html
 │   ├── package.json
 │   ├── public/_redirects        # SPA fallback
-│   ├── src/                     # placeholder page
+│   ├── src/                     # investigation desk
 │   ├── tsconfig.json
 │   ├── vite.config.ts
 │   └── wrangler.jsonc
@@ -124,37 +134,41 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 │   │   ├── README.md
 │   │   ├── 01-deepfake-hk-001.example.json
 │   │   └── 02-…11-*.example.json
-│   ├── case-flow/               # human-review flows, zh-Hant and English
-│   │   ├── 01-deepfake-executive-impersonation.zh-Hant.md
+│   ├── case-flow/               # human-review flows in English
 │   │   ├── 01-deepfake-executive-impersonation.en.md
-│   │   └── 02-…11-*.zh-Hant.md and *.en.md
+│   │   └── 02-…11-*.en.md
+│   ├── evidence/                # authored paired investigation
+│   ├── local/                   # ignored local SQLite session data
 │   └── media/
 │       └── .gitkeep
 ├── packages/
+│   ├── investigation/types.ts  # shared investigation contract
 │   └── schemas/
 │       └── script.schema.json
 ├── scripts/
 │   ├── validate-cases.mjs       # schema + effect-key check, then the path test
 │   ├── apply-effects.mjs        # schema 0.1 patch apply used by the path test
 │   ├── deepfake-paths.test.mjs  # eight deepfake-001 terminal paths
+│   ├── export-web-investigation.py # deterministic server content export
 │   └── .gitkeep
 └── simulation/
     └── flexsim/                 # standalone FlexSim edition: simulation/flexsim/README.md
 ```
 
-`frontend/package-lock.json` and `workers/api/package-lock.json` are tracked. `frontend/dist/`, `node_modules/`, `.venv/`, `.env`, and files under `data/media/` other than `.gitkeep` are not.
+`frontend/package-lock.json` and `workers/api/package-lock.json` are tracked. Build outputs, `data/local/` session storage, `node_modules/`, `.venv/`, `.env`, and large media are ignored.
 
-`Mindmap.png` is a course planning sketch at the repo root. Use it as a picture of topics. The sections in this README, and `AGENTS.md`, are the contract for what this demo runs.
+`Mindmap.png` is a course planning sketch at the repo root. Use it as a picture of topics. This README and `AGENTS.md` describe the current VPS run path; the shared-engine and single-backend-state rules apply to both hosting adapters.
 
 ## Run locally
 
-Start the Worker and the web app in two terminals. Docker is not a run path.
+Use Node 22.13 or later. Start the Node API and the web app in two terminals. No Cloudflare account is required.
 
-Worker, from `workers/api/`:
+API, from `workers/api/`:
 
 ```bash
-npm install
-npm run dev
+npm ci
+npm run build:node
+npm run start:node
 ```
 
 `http://127.0.0.1:8787/health` returns `{"status":"ok","service":"twinaml-api"}`.
@@ -162,11 +176,15 @@ npm run dev
 Web, from `frontend/`:
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
-Open `http://127.0.0.1:5173`. The page shows the TwinAML scaffold. It does not call the API. It is not a case player, and it has no dashboard.
+Open `http://127.0.0.1:5173`. Begin a shift to open a persistent investigation session. Reading pauses simulation time; advance by work time or to the next event to complete requested checks and process payment deadlines. The Vite development server proxies `/api` to the Node API on port 8787. An existing shift resumes after refresh; a new shift preserves the previous session and starts another.
+
+For a single-server build, run `npm run build` in `frontend/` and open the Node server at `http://127.0.0.1:8787`; it serves the built interface and API together. Local development needs no cross-origin configuration. The current optional FastAPI app cannot serve investigation sessions. See [`docs/vps.md`](docs/vps.md) for hosting notes. Optional Pages/Worker hosting uses `VITE_API_URL` and `FRONTEND_ORIGIN`.
+
+The Node server defaults to `HOST=127.0.0.1`, `PORT=8787`, and the SQLite file `data/local/investigation.sqlite`. Keep that file to resume sessions after a server restart. Set `TWINAML_DB` for a persistent storage location and `TWINAML_FRONTEND_ORIGIN` to the public origin when hosting behind an HTTPS reverse proxy. Runtime settings are documented in [`workers/api/README.md`](workers/api/README.md).
 
 `npm run build` in `frontend/` typechecks, then writes `dist/`. Do not commit `dist/`.
 
@@ -179,7 +197,7 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
 
-`http://127.0.0.1:8000/health` returns the same JSON. Use it when you want a local Python process. The course demo deploys the Worker. Details: [`backend/README.md`](backend/README.md).
+`http://127.0.0.1:8000/health` returns the same JSON. This stub is separate from the Node investigation runtime. Details: [`backend/README.md`](backend/README.md).
 
 Check the case scripts from the repo root:
 
@@ -191,15 +209,15 @@ That checks schema `0.1` and the effect-key grammar, then plays the eight `deepf
 
 ## Deploy
 
-The demo target is Cloudflare. Pages serves the Vite build. The Worker in `workers/api` is the API. Account ids, API tokens, and a real hostname are not stored in this repo.
+The investigation pilot is deployed on `hosting-vps` at [https://amlsim.spectrumvps.tech](https://amlsim.spectrumvps.tech). The HTTPS domain routes to the Node service, which serves the built frontend and API together on hosted port 8080; local development keeps port 8787. Tailscale access is required for direct VPS administration. The release layout, persistent SQLite storage, service commands and update/rollback steps are in [`docs/vps.md`](docs/vps.md). Account access controls and class-size load testing remain incomplete. The historical phase plans below retain their original Cloudflare targets.
 
-Steps for Pages, the Worker, and a custom domain already on your Cloudflare account are in [`docs/cloudflare.md`](docs/cloudflare.md).
+Optional steps for Pages and the Worker remain in [`docs/cloudflare.md`](docs/cloudflare.md). Cloudflare account ids and API tokens are not stored in this repo.
 
 ## Implementation phases
 
-### Planned phases
+### Historical eleven-script roadmap
 
-Plans for coding agents are in [`docs/phases/`](docs/phases/README.md). Do not implement from that folder until the owner names a phase and a slice. The phase files are the source of truth for slice scope. This section lists each slice so a reader can see the plan here.
+The original node/choice plans are in [`docs/phases/`](docs/phases/README.md). Their Worker/Pages targets describe the historical plan, not the current VPS run path. Do not implement those slices until the owner names one. The paired-evidence investigation pilot is a separate implemented slice; it does not make the eleven-script player complete.
 
 Chan levels follow the course: Level 1 is a scripted mirror, Level 2 is a near-realtime session that writes back to the twin, Level 3 is product vision. Course terms are mapped in [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md).
 
@@ -215,7 +233,7 @@ In scope: load any of the 11 against `packages/schemas/script.schema.json`; sess
 
 Out of scope for Phase 1: Docker, Kubernetes, Neo4j, Kafka, a microservice split, Unity, a live language model that sets disposition, a real bank / regulator / STR filing connection, multi-tenant billing, and session-time video synthesis. New mixer / peel-chain and synthetic-ID families beyond this library wait for Phase 2.
 
-Current status: the 11 scripts and the effect-key contract are in the repo. P1-S1 is done. The Worker and the Pages app are still health and placeholder stubs. Session routes, the scenario player, and the dashboard are not built.
+Current status for this **node/choice library roadmap**: the 11 scripts and the effect-key contract are in the repo; P1-S1 is done. The separate paired-evidence web pilot implements investigation sessions and an investigation desk. It does not yet execute these eleven scripts or complete their case-picker slices.
 
 | Slice | Done when |
 | --- | --- |
@@ -257,14 +275,14 @@ Slice detail: [`docs/phases/PHASE2.md`](docs/phases/PHASE2.md).
 
 Slice detail: [`docs/phases/PHASE3.md`](docs/phases/PHASE3.md).
 
-In this scaffold, mirroring is the 11 scripts. Shadowing and threading are Level 2 and are not built.
+In this historical roadmap, mirroring refers to the 11 scripts. Its planned Level 2 shadowing and threading features are not implemented by the investigation pilot.
 
 ## Agent rules
 
 Short rules for classmates and coding agents. The full agreement is [`AGENTS.md`](AGENTS.md).
 
 1. Change one small slice at a time. After it, say what a trainee or reviewer can now see or run.
-2. Keep one Worker (`workers/api`), one Pages client (`frontend/`), and optional local FastAPI (`backend/`). Case scripts live in `data/cases/`. Notes live in `docs/`.
+2. Keep one API with shared routes and engine (`workers/api`), one React client (`frontend/`), and the optional local FastAPI stub (`backend/`). Node with SQLite is the primary runtime; Worker/Pages remains optional. Case scripts live in `data/cases/`. Notes live in `docs/`.
 3. Leave Docker, Kubernetes, Neo4j, Kafka, a service split, and Unity out unless the owner asks in that session.
 4. English is the primary language for docs and UI copy. Keep course terms in English: mirroring, shadowing, threading, Chan Level 1, Chan Level 2, rules-before-AI.
 5. The twin is backend state plus events. The web app renders that state.
@@ -272,7 +290,7 @@ Short rules for classmates and coding agents. The full agreement is [`AGENTS.md`
 7. Do not commit secrets, API keys, `.env` files, Cloudflare account identifiers, or large media.
 8. If the script shape changes, every example case under `data/cases/` must still validate against `packages/schemas/script.schema.json`. Run `node scripts/validate-cases.mjs`. The schema or docs must say what changed.
 
-Read next: [`docs/architecture.md`](docs/architecture.md), [`docs/effects.md`](docs/effects.md), [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md), [`docs/cloudflare.md`](docs/cloudflare.md), [`docs/phases/README.md`](docs/phases/README.md), [`data/cases/README.md`](data/cases/README.md), [`data/cases/01-deepfake-hk-001.example.json`](data/cases/01-deepfake-hk-001.example.json), [`data/case-flow/01-deepfake-executive-impersonation.en.md`](data/case-flow/01-deepfake-executive-impersonation.en.md), [`packages/schemas/script.schema.json`](packages/schemas/script.schema.json).
+Read next: [`docs/arg-investigation.md`](docs/arg-investigation.md), [`docs/vps.md`](docs/vps.md), [`docs/architecture.md`](docs/architecture.md), [`docs/effects.md`](docs/effects.md), [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md), [`docs/phases/README.md`](docs/phases/README.md), [`data/cases/README.md`](data/cases/README.md), [`data/case-flow/01-deepfake-executive-impersonation.en.md`](data/case-flow/01-deepfake-executive-impersonation.en.md), [`packages/schemas/script.schema.json`](packages/schemas/script.schema.json).
 
 ## License
 

@@ -14,9 +14,10 @@ This file is the working agreement for AI agents in **TwinAML**, a COMP3424 demo
 
 1. Change one small slice at a time. A session should leave the tree clearer than it found it.
 2. Keep the simplified architecture:
-   - one Cloudflare Worker in `workers/api` (the demo API: cases, sessions, decisions, twin state machine)
-   - one React + Vite + TypeScript client in `frontend/`, deployed to Cloudflare Pages (scenario player + simple dashboard)
-   - optional FastAPI in `backend/` as a local/dev alternative only. The production demo uses the Worker. Do not treat FastAPI as the required runtime.
+   - one Node API in `workers/api`, with file-backed SQLite, serving the built web client on a VPS (sessions, decisions, twin state machine)
+   - one React + Vite + TypeScript client in `frontend/` (investigation desk and later scenario player)
+   - the existing Cloudflare Worker/Pages adapters remain optional; they share the investigation engine and use separate session storage
+   - optional FastAPI in `backend/` as a local/dev alternative only. It is a health-only stub, not the investigation runtime.
    - case scripts in `data/cases/`
    - notes in `docs/`
 3. Do not add Docker, Kubernetes, Neo4j, Kafka, a microservice split, a Unity project, or other enterprise pieces unless the owner explicitly asks in that session. Docker is not a supported way to run or deploy this demo. Do not reintroduce `docker-compose.yml` or a container cluster as a requirement.
@@ -25,15 +26,15 @@ This file is the working agreement for AI agents in **TwinAML**, a COMP3424 demo
 6. Never commit secrets, API keys, `.env` files, Cloudflare account identifiers, or large media. `data/media/` stays empty aside from `.gitkeep`. Scripts may reference media paths; the binaries stay local.
 7. Do not invent a second state model. The twin is backend state plus events. The web app renders that state. It does not own a private copy of the case world.
 8. Rules decide compliance outcomes. Do not let a language model become the system of record. Any later model may explain a decision only after rules have fired, and a human override must be stored as an event.
-9. Deploy docs stay on Cloudflare Pages (web) and Cloudflare Workers (API). See `docs/cloudflare.md`. A custom domain is attached in the Cloudflare dashboard or in Wrangler config, not by standing up another host.
+9. The owner's current deployment preference is a VPS. See `docs/vps.md` for the Node run path. Optional Cloudflare Pages/Workers hosting remains in `docs/cloudflare.md`. Do not purchase or deploy infrastructure without an explicit request.
 
 ## Where to read first
 
-- `README.md` — what TwinAML is, the folder map, how to run the stubs.
+- `README.md` — what TwinAML is, the folder map, how to run the investigation pilot.
 - `docs/architecture.md` — case → script → decision → twin → events → dashboard.
 - `docs/effects.md` — how `twin_patch` and `choices[].effects` apply (schema 0.1).
 - `docs/comp3424-mapping.md` — Chan Level 1/2, mirroring / shadowing / threading, rules-before-AI.
-- `docs/cloudflare.md` — Pages, the Worker, and a custom domain.
+- `docs/vps.md` — default Node hosting; `docs/cloudflare.md` — optional Pages/Worker hosting.
 - `data/cases/01-deepfake-hk-001.example.json` — the Level 1 example script.
 - `packages/schemas/script.schema.json` — the minimal script contract.
 

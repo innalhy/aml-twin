@@ -3,7 +3,13 @@
   "name": "twinaml-api",
   "main": "src/index.ts",
   "compatibility_date": "2026-09-30",
-  // Session routes for the twin will be added in this Worker.
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": { "FRONTEND_ORIGIN": "" },
+  "durable_objects": {
+    "bindings": [{ "name": "SESSIONS", "class_name": "InvestigationSession" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["InvestigationSession"] }],
+  "observability": { "enabled": true, "head_sampling_rate": 1 },
   // Uncomment and replace the hostname after the zone is on your Cloudflare
   // account. See docs/cloudflare.md. Do not commit account ids or tokens.
   // "routes": [

@@ -4,9 +4,11 @@ TwinAML is a digital twin for training. It is not a bank production system. The 
 
 This demo stays one API and one web client on purpose. It does not split into microservices, and it does not use Neo4j, Kafka, Docker, or Kubernetes.
 
-The demo API is a Cloudflare Worker (`workers/api`). FastAPI in `backend/` is an optional local stand-in with the same health check. It is not the deployed demo.
+The primary runtime is one Node server in `workers/api`, with a file-backed SQLite database. It serves the built React interface from `frontend/dist/` and the investigation API on the same origin. The optional Cloudflare Worker adapter uses the same Hono routes, investigation engine, and content pack. FastAPI in `backend/` remains a health-only stub.
 
-## How one training run moves
+The playable investigation runtime is described under [Investigation pilot](#investigation-pilot). The eleven-script flow below records the original node/choice roadmap and remains planned.
+
+## Planned node/choice flow
 
 ```mermaid
 flowchart LR
@@ -42,24 +44,25 @@ sequenceDiagram
   Note over Web: Player and dashboard read the same twin
 ```
 
-The session routes in that diagram are not implemented yet. The Worker currently exposes `GET /health` only. Those routes will be added on the Worker, not in a second service.
+The node/choice script flow above is not executed by the current pilot. Its historical Worker/Pages hosting target is optional; the current run path uses Node and SQLite on a VPS. Both follow the backend-state principle.
 
 ## What exists now
 
 | Piece | Status |
 | --- | --- |
 | Script JSON and JSON Schema | Present. Eleven example cases. Effect keys are frozen in [`effects.md`](effects.md). |
-| Cloudflare Worker | `GET /health` in `workers/api`. This is the demo API. |
-| FastAPI | Optional local alternative. `GET /health` only. |
-| State machine, sessions, event log | Not built. |
-| Web player and dashboard | Not built. `frontend/` is a placeholder that builds and deploys to Pages. |
+| Node API | `workers/api/src/node-server.mjs` serves `GET /health`, paired-investigation session/action routes, and built frontend files. File-backed SQLite persists runs. |
+| Optional Worker adapter | `workers/api/src/index.ts` uses the same routes and engine, with a SQLite-backed Durable Object per run. |
+| FastAPI | Optional local Python stub. `GET /health` only. |
+| Investigation state, sessions, event log | Implemented for `analyst-session-001`; the eleven node/choice scripts are not yet executed. |
+| Web | Playable React investigation desk in `frontend/`. Node serves the production build; Vite proxies `/api` to Node during development. |
 | `data/media/` | Only `.gitkeep` is tracked. `media_ref` values in a script point at local files. |
 
-A rule's `when` text is a sentence for a person to read. The schema does not execute it. When the state machine exists, decide then whether to replace those sentences with executable conditions. Until then, do not invent a second script format beside this one.
+A node/choice rule's `when` text is a sentence for a person to read. The schema does not execute it. When that script engine is implemented, decide whether to replace those sentences with executable conditions. The current investigation engine uses its authored evidence and payment contract; it does not execute the eleven scripts.
 
-## Where state lives
+## Planned node/choice state
 
-The session twin starts as a deep clone of `initial_twin_state`. Patches then accumulate on that clone. Full key rules, including every key used in the example cases, are in [`effects.md`](effects.md).
+In the planned script player, the session twin starts as a deep clone of `initial_twin_state`. Patches then accumulate on that clone. Full key rules, including every key used in the example cases, are in [`effects.md`](effects.md).
 
 - **Initial mirror**: `initial_twin_state`.
 - **Node patch**: on entry, apply `twin_patch` (for example, `phase` becomes `alert_triage`).
@@ -68,16 +71,32 @@ The session twin starts as a deep clone of `initial_twin_state`. Patches then ac
 
 Media is not in git. The `media_ref` on `n_intake` is `data/media/deepfake-001/kyc-clip.mp4`, and that file is excluded by `.gitignore`. When the clip is missing, the player should later show a missing-file state. It should not abort the whole case.
 
+## Investigation pilot
+
+`scripts/export-web-investigation.py` builds the server-only content bundle from the existing evidence pack and its validated CSV tables. It imports exact document text, profiles, alerts, transactions, request gates, initial balances, and pending-payment schedules. It never imports the instructor answer keys. The script format above remains unchanged.
+
+The shared investigation engine is `workers/api/src/engine.ts`; shared Hono routes are in `workers/api/src/api.ts`. The Node adapter persists each run's authoritative snapshot and ordered events as JSON in a SQLite `sessions` table. Actions update it inside a transaction. Learner actions carry the revision they observed; stale actions are refused so two views cannot silently overwrite each other. The browser stores only its session identifier and local UI/draft state.
+
+The default SQLite path is `data/local/investigation.sqlite`, configurable through `TWINAML_DB`. The Node server defaults to loopback port 8787 and serves `frontend/dist/`. For a VPS, run it behind an HTTPS reverse proxy and set `TWINAML_FRONTEND_ORIGIN` to the public origin. Build and hosting instructions are in [`vps.md`](vps.md) and [`../workers/api/README.md`](../workers/api/README.md).
+
+The optional Worker adapter persists a run in one SQLite-backed Durable Object instead. The adapters share the engine and data contract, not a database; switching hosts does not transfer existing sessions. Use one adapter as the state owner for a deployment.
+
+The guided clock follows the evidence/payment ordering in `simulation/flexsim/CONTRACT.md`: reading is paused, requested evidence arrives before actions at its completion minute, a hold at a payment's due minute takes effect before execution, and releasing a hold immediately checks strictly overdue orders. Decisions never place or release a hold. The web API has its own typed response/event fields; it does not claim byte-for-byte FlexSim trace compatibility.
+
+Responses contain only evidence already available to the learner. Hidden record bodies, titles, request-to-record mappings and instructor paths stay server-side. The debrief uses observed requests, controls, decisions and payment consequences; it does not disclose case truth or produce an instructor score.
+
+See [`arg-investigation.md`](arg-investigation.md) for the player experience, scope and content export.
+
 ## Clients
 
-- **Now**: `frontend/`, React + Vite + TypeScript, deployed to Cloudflare Pages. The target UI is a scenario player plus a simple dashboard that reads twin state.
-- **Later, optional**: a Unity client calling the same Worker API. Do not add a Unity project until one is requested.
+- **Now**: `frontend/`, React + Vite + TypeScript. The Node server serves the built investigation desk and API together. The browser reads learner-visible session state from that API. Pages hosting remains optional with the Worker adapter.
+- **Later, optional**: a Unity client calling the same API. Do not add a Unity project until one is requested.
 
 ## Standalone FlexSim edition
 
-[`simulation/flexsim/`](../simulation/flexsim/README.md) is a separate runtime, not a third client of the Worker. It runs the analyst investigation exercise from the evidence pack `data/evidence/analyst-session-001/` inside FlexSim, where Global Tables and FlexScript own the run state for that edition only. It follows one deterministic contract (`simulation/flexsim/CONTRACT.md`): snapshot tables plus an event log, with a Python reference harness that reproduces the same traces on the Mac for verification.
+[`simulation/flexsim/`](../simulation/flexsim/README.md) is a separate runtime, not another client of the web API. It runs the analyst investigation exercise from the evidence pack `data/evidence/analyst-session-001/` inside FlexSim, where Global Tables and FlexScript own the run state for that edition only. It follows one deterministic contract (`simulation/flexsim/CONTRACT.md`): snapshot tables plus an event log, with a Python reference harness that reproduces the same traces on the Mac for verification.
 
-It shares no state with the Worker and does not call it. For the web demo the rule above stands unchanged: the web twin is the single state owner, and the web app renders that state. The FlexSim edition is authored on macOS and is unverified in FlexSim at the time of writing.
+It shares no state with the web API and does not call it. For the web demo, the API is the single state owner, and the web app renders its state. The FlexSim edition is authored on macOS and is unverified in FlexSim at the time of writing.
 
 ## Explicitly out of scope
 

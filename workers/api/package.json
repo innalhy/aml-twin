@@ -4,8 +4,14 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev",
+    "build:node": "esbuild src/node-server.mjs --bundle --platform=node --format=esm --target=node22 --outfile=dist/server.mjs",
+    "start:node": "node dist/server.mjs",
+    "dev": "npm run build:node && npm run start:node",
+    "dev:worker": "wrangler dev",
     "typecheck": "tsc --noEmit",
+    "test": "node tests/engine.test.mjs",
+    "test:api": "node tests/api.test.mjs",
+    "test:node": "npm run build:node && node --test tests/node-server.test.mjs",
     "deploy": "wrangler deploy",
     "types": "wrangler types"
   },
@@ -13,6 +19,7 @@
     "hono": "^4.10.2"
   },
   "devDependencies": {
+    "esbuild": "^0.28.1",
     "typescript": "~5.8.3",
     "wrangler": "^4.42.0"
   }
