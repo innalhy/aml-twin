@@ -16,21 +16,21 @@ These files are synthetic training scenarios. The ten `public_record_inspired` s
 
 ## Index
 
-Titles below are short English labels. The JSON `title` and prompts are Traditional Chinese, matching `deepfake-hk-001.example.json`.
+Titles below are short English labels. Files are numbered `01`–`11` in this order. The JSON `title` and prompts are Traditional Chinese, matching `01-deepfake-hk-001.example.json`. `case_id` is unchanged.
 
 | File | case_id | Themes | case_kind |
 | --- | --- | --- | --- |
-| [deepfake-hk-001.example.json](deepfake-hk-001.example.json) | `deepfake-hk-001` | Video-KYC deepfake signals, third-party burst, OTC crypto | Course example (no `case_kind`; Chan Level 1 worked example) |
-| [hk-daybreak-tbml-001.example.json](hk-daybreak-tbml-001.example.json) | `hk-daybreak-tbml-001` | Trade-based money laundering, shell company, fake jewellery or diamond exports, third-party payers | `public_record_inspired` |
-| [hk-mule-rent-001.example.json](hk-mule-rent-001.example.json) | `hk-mule-rent-001` | Social-media account rental sold as safe or legal, third-party control | `public_record_inspired` |
-| [hk-wiseword-amlmonth-001.example.json](hk-wiseword-amlmonth-001.example.json) | `hk-wiseword-amlmonth-001` | One mule account, several typologies (job, romance, shopping, gambling) | `public_record_inspired` |
-| [hk-justicegate-crypto-001.example.json](hk-justicegate-crypto-001.example.json) | `hk-justicegate-crypto-001` | Cash withdrawal and crypto OTC cash-out, source of funds | `public_record_inspired` |
-| [hk-greythunder-mule-001.example.json](hk-greythunder-mule-001.example.json) | `hk-greythunder-mule-001` | Mule cluster, fake-official and investment-fraud proceeds | `public_record_inspired` |
-| [hk-crossborder-tel-001.example.json](hk-crossborder-tel-001.example.json) | `hk-crossborder-tel-001` | Cross-border phone-fraud corridor, correspondent awareness, fan-out payments | `public_record_inspired` |
-| [hk-kol-mgmt-001.example.json](hk-kol-mgmt-001.example.json) | `hk-kol-mgmt-001` | KOL or influencer management company as a front | `public_record_inspired` |
-| [hk-triad-cashflow-001.example.json](hk-triad-cashflow-001.example.json) | `hk-triad-cashflow-001` | Flows with no commercial purpose, organised-crime proceeds indicator | `public_record_inspired` |
-| [hk-ia-fwd-controls-001.example.json](hk-ia-fwd-controls-001.example.json) | `hk-ia-fwd-controls-001` | Insurer controls: third-party premium, PEP screening, STR worksheet | `public_record_inspired` |
-| [hk-hkma-cdd-001.example.json](hk-hkma-cdd-001.example.json) | `hk-hkma-cdd-001` | Bank CDD, ongoing monitoring, STR failures | `public_record_inspired` |
+| [01-deepfake-hk-001.example.json](01-deepfake-hk-001.example.json) | `deepfake-hk-001` | Video-KYC deepfake signals, third-party burst, OTC crypto | Course example (no `case_kind`; Chan Level 1 worked example) |
+| [02-daybreak-tbml-001.example.json](02-daybreak-tbml-001.example.json) | `hk-daybreak-tbml-001` | Trade-based money laundering, shell company, fake jewellery or diamond exports, third-party payers | `public_record_inspired` |
+| [03-mule-rent-001.example.json](03-mule-rent-001.example.json) | `hk-mule-rent-001` | Social-media account rental sold as safe or legal, third-party control | `public_record_inspired` |
+| [04-wiseword-amlmonth-001.example.json](04-wiseword-amlmonth-001.example.json) | `hk-wiseword-amlmonth-001` | One mule account, several typologies (job, romance, shopping, gambling) | `public_record_inspired` |
+| [05-justicegate-crypto-001.example.json](05-justicegate-crypto-001.example.json) | `hk-justicegate-crypto-001` | Cash withdrawal and crypto OTC cash-out, source of funds | `public_record_inspired` |
+| [06-greythunder-mule-001.example.json](06-greythunder-mule-001.example.json) | `hk-greythunder-mule-001` | Mule cluster, fake-official and investment-fraud proceeds | `public_record_inspired` |
+| [07-crossborder-tel-001.example.json](07-crossborder-tel-001.example.json) | `hk-crossborder-tel-001` | Cross-border phone-fraud corridor, correspondent awareness, fan-out payments | `public_record_inspired` |
+| [08-kol-mgmt-001.example.json](08-kol-mgmt-001.example.json) | `hk-kol-mgmt-001` | KOL or influencer management company as a front | `public_record_inspired` |
+| [09-triad-cashflow-001.example.json](09-triad-cashflow-001.example.json) | `hk-triad-cashflow-001` | Flows with no commercial purpose, organised-crime proceeds indicator | `public_record_inspired` |
+| [10-ia-fwd-controls-001.example.json](10-ia-fwd-controls-001.example.json) | `hk-ia-fwd-controls-001` | Insurer controls: third-party premium, PEP screening, STR worksheet | `public_record_inspired` |
+| [11-hkma-cdd-001.example.json](11-hkma-cdd-001.example.json) | `hk-hkma-cdd-001` | Bank CDD, ongoing monitoring, STR failures | `public_record_inspired` |
 
 ## Public reporting context
 
