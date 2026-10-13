@@ -1,9 +1,9 @@
 {
   "schema_version": "0.1",
   "case_id": "wiseword-amlmonth-001",
-  "title": "多類型騾子戶口 — 一個月警報（示範劇本）",
-  "locale": "zh-Hant",
-  "summary": "合成培訓案例。同一零售戶口在一個覆核窗內收到兼職薪金、網戀贈與、賭博退回與購物退款，付款人都不是已知對手。學員不得用單一故事結案，快進快出時亦不得再等解釋。靈感來自警方公開的多類型騾子網絡簡述，不是真實客戶檔。",
+  "title": "Multi-typology mule account — one-month alert (demo script)",
+  "locale": "en",
+  "summary": "Synthetic training case. Inside one review window, one retail account receives a part-time-job salary, a romance gift, a gambling refund and a shopping refund. None of the payers is a known counterparty. The trainee must not close the case on a single story, and must not wait for another explanation when money moves in and out fast. Inspired by a public police summary of a multi-typology mule network. Not a real customer file.",
   "start_node_id": "n_bundle",
   "teaching": {
     "level": "chan-1-scripted-mirror",
@@ -22,22 +22,22 @@
   "rules": [
     {
       "id": "R1_MULTI_TYPOLOGY",
-      "when": "同一覆核窗內至少兩類詐騙入帳打進同一戶口",
+      "when": "At least two types of fraud credit reach the same account inside one review window",
       "then": "require_edd_or_str",
-      "note": "不得用客戶的單一故事結案。規則先於任何模型分數。"
+      "note": "Do not close the case on the customer's single story. Rules come before any model score."
     },
     {
       "id": "R2_FAST_OUT",
-      "when": "入帳後短時間內要求現金提取或轉走接近全額",
+      "when": "Shortly after the credits, the customer asks to withdraw in cash or transfer out close to the full amount",
       "then": "require_freeze_or_str",
-      "note": "不得等候客戶再解釋工作。覆寫必須留在事件軌上。"
+      "note": "Do not wait for the customer to explain the job again. An override must stay in the event log."
     }
   ],
   "initial_twin_state": {
     "phase": "alert_triage",
     "customer": {
       "id": "SYN-WW-314",
-      "display_name": "合成客戶丙",
+      "display_name": "Synthetic Customer C",
       "segment": "retail"
     },
     "kyc": {
@@ -60,8 +60,8 @@
     {
       "id": "n_bundle",
       "type": "scene",
-      "title": "一個月內的多類入帳",
-      "prompt": "合成客戶丙的戶口在一個月內收到四類入帳：網上兼職薪金、網戀贈與、賭博充值退回、購物退款。付款人都不是已知對手。",
+      "title": "Several credit types in one month",
+      "prompt": "Synthetic Customer C's account receives four types of credit in one month: an online part-time salary, a romance gift, a gambling top-up refund and a shopping refund. None of the payers is a known counterparty.",
       "next": "n_frame",
       "twin_patch": {
         "transactions": [
@@ -92,32 +92,32 @@
     {
       "id": "n_frame",
       "type": "decision",
-      "title": "把警報看成一件還是四件",
-      "prompt": "四類入帳在同一戶口。你要當成一個網絡調查、先聽客戶一種說法，還是分成互不相干的雜訊？",
+      "title": "See the alert as one case or four",
+      "prompt": "Four credit types sit on the same account. Do you investigate them as one network, hear one explanation from the customer first, or split them into unrelated noise?",
       "choices": [
         {
           "id": "one_network",
-          "label": "當成同一戶口上的一組類型",
+          "label": "Treat them as one set of types on the same account",
           "next": "n_story",
-          "rationale": "先對類型，再讓 R1 判斷能否用一個故事結案。",
+          "rationale": "Match the types first, then let R1 decide whether one story can close the case.",
           "effects": {
             "risk.flags_add": ["NETWORK_VIEW"]
           }
         },
         {
           "id": "one_story_ask",
-          "label": "只問客戶一種解釋",
+          "label": "Ask the customer for one explanation only",
           "next": "n_story",
-          "rationale": "可以問，但一種說法覆蓋不了其餘付款人。",
+          "rationale": "You can ask, but one explanation does not cover the other payers.",
           "effects": {
             "kyc.status": "explanation_requested"
           }
         },
         {
           "id": "unrelated_noise",
-          "label": "分成四宗雜訊並放行",
+          "label": "Split into four pieces of noise and release",
           "next": "n_dispersal",
-          "rationale": "教學上的較差起點。類型數量仍在，快進快出會觸發 R2。",
+          "rationale": "A poor teaching start. The number of types is still there, and a rapid in-and-out will trigger R2.",
           "effects": {
             "risk.flags_add": ["TYPOLOGY_SPLIT"],
             "risk.score_delta": 25
@@ -128,8 +128,8 @@
     {
       "id": "n_story",
       "type": "scene",
-      "title": "客戶只有兼職一個故事",
-      "prompt": "客戶只說是網上兼職，說不出其餘付款人是誰。規則 R1：兩類或以上入帳不得用單一故事結案。",
+      "title": "The customer has only the part-time story",
+      "prompt": "The customer only says it is an online part-time job and cannot say who the other payers are. Rule R1: two or more credit types must not be closed on a single story.",
       "next": "n_r1_gate",
       "twin_patch": {
         "kyc.status": "single_story",
@@ -139,14 +139,14 @@
     {
       "id": "n_r1_gate",
       "type": "decision",
-      "title": "單一故事是否夠用",
-      "prompt": "R1 已滿足。暫停出帳做加強審查、現在草擬可疑交易報告，還是接受兼職說法？",
+      "title": "Is a single story enough?",
+      "prompt": "R1 is met. Do you hold outbound payments and run enhanced due diligence, draft a suspicious transaction report now, or accept the part-time story?",
       "choices": [
         {
           "id": "edd_hold",
-          "label": "暫停出帳並做加強審查",
+          "label": "Hold outbound payments and run enhanced due diligence",
           "next": "n_dispersal",
-          "rationale": "符合 R1。出帳先停，再看會不會快進快出。",
+          "rationale": "Matches R1. Stop outbound payments first, then see whether money moves in and out fast.",
           "effects": {
             "account.holds": ["outbound"],
             "risk.flags_add": ["EDD_HOLD"]
@@ -154,18 +154,18 @@
         },
         {
           "id": "draft_str",
-          "label": "草擬可疑交易報告",
+          "label": "Draft a suspicious transaction report",
           "next": "n_outcome_str",
-          "rationale": "多類型入帳已足夠上報。",
+          "rationale": "Multi-typology credits are enough to report.",
           "effects": {
             "risk.flags_add": ["STR_DRAFTED"]
           }
         },
         {
           "id": "accept_job",
-          "label": "接受兼職說法並放行",
+          "label": "Accept the part-time story and release",
           "next": "n_dispersal",
-          "rationale": "覆寫 R1。其餘三類入帳沒有被解釋掉。",
+          "rationale": "Overrides R1. The other three credit types are still unexplained.",
           "effects": {
             "risk.flags_add": ["R1_OVERRIDDEN"],
             "risk.score_delta": 30
@@ -176,8 +176,8 @@
     {
       "id": "n_dispersal",
       "type": "scene",
-      "title": "要求即日轉走",
-      "prompt": "客戶要求即日現金提取及轉帳，金額接近入帳合計。規則 R2：快進快出不得再等下一個工作故事。",
+      "title": "Same-day move-out request",
+      "prompt": "The customer asks for a same-day cash withdrawal and transfer, close to the total credited. Rule R2: a rapid in-and-out must not wait for the next job story.",
       "next": "n_r2_gate",
       "twin_patch": {
         "phase": "alert_triage",
@@ -187,14 +187,14 @@
     {
       "id": "n_r2_gate",
       "type": "decision",
-      "title": "快進快出怎麼停",
-      "prompt": "R2 已滿足。建議凍結並上報、維持加強審查暫停，或放行？",
+      "title": "How to stop the rapid in-and-out",
+      "prompt": "R2 is met. Do you recommend a freeze and report, keep the enhanced due diligence hold, or release?",
       "choices": [
         {
           "id": "freeze_str",
-          "label": "建議凍結並草擬可疑交易報告",
+          "label": "Recommend a freeze and draft a suspicious transaction report",
           "next": "n_outcome_freeze",
-          "rationale": "符合 R2。",
+          "rationale": "Matches R2.",
           "effects": {
             "account.holds": ["outbound"],
             "risk.flags_add": ["STR_DRAFTED", "FREEZE_RECOMMENDED"]
@@ -202,9 +202,9 @@
         },
         {
           "id": "keep_edd",
-          "label": "維持暫停並完成加強審查",
+          "label": "Keep the hold and complete enhanced due diligence",
           "next": "n_outcome_edd",
-          "rationale": "符合 R2 的另一出口。戶口先停，再補證據。",
+          "rationale": "The other exit that matches R2. Hold the account first, then gather more evidence.",
           "effects": {
             "account.holds": ["outbound"],
             "risk.flags_add": ["EDD_HOLD"]
@@ -212,9 +212,9 @@
         },
         {
           "id": "release",
-          "label": "放行並結案",
+          "label": "Release and close",
           "next": "n_outcome_miss",
-          "rationale": "教學上的較差路徑。規則已要求不得這樣結案。",
+          "rationale": "Poor teaching path. The rules already say the case must not be closed this way.",
           "effects": {
             "account.holds": [],
             "risk.flags_add": ["R2_IGNORED"]
@@ -225,8 +225,8 @@
     {
       "id": "n_outcome_str",
       "type": "outcome",
-      "title": "已草擬可疑交易報告",
-      "prompt": "上報出口。四類入帳都留在交易清單，沒有被兼職故事蓋掉。",
+      "title": "Suspicious transaction report drafted",
+      "prompt": "Reporting exit. All four credit types stay on the transaction list. The part-time story did not cover them up.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -236,8 +236,8 @@
     {
       "id": "n_outcome_freeze",
       "type": "outcome",
-      "title": "已建議凍結並草擬報告",
-      "prompt": "出帳停住，報告已草擬。若先前把類型拆開或覆寫過 R1，那些旗標仍在。",
+      "title": "Freeze recommended and report drafted",
+      "prompt": "Outbound payments are stopped and the report is drafted. If you split the types earlier or overrode R1, those flags remain.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -247,8 +247,8 @@
     {
       "id": "n_outcome_edd",
       "type": "outcome",
-      "title": "加強審查並暫停出帳",
-      "prompt": "戶口仍開，出帳暫停，等待加強審查補齊付款人。",
+      "title": "Enhanced due diligence with outbound payments on hold",
+      "prompt": "The account stays open. Outbound payments are on hold while enhanced due diligence fills in the payers.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -258,8 +258,8 @@
     {
       "id": "n_outcome_miss",
       "type": "outcome",
-      "title": "放行結案",
-      "prompt": "較差路徑。R2 被忽略。儀表板之後應把這次 session 標成未跟規則。",
+      "title": "Released and closed",
+      "prompt": "Poor teaching path. R2 was ignored. The dashboard should later mark this session as not following the rules.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",

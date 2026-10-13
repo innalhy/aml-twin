@@ -1,9 +1,9 @@
 {
   "schema_version": "0.1",
   "case_id": "mule-rent-001",
-  "title": "出租銀行戶口 — 社交平台招攬（示範劇本）",
-  "locale": "zh-Hant",
-  "summary": "合成培訓案例。零售客戶在社交平台表示可出租戶口，並稱安全、合法；戶口先收到小額試探入帳。學員決定約談、草擬可疑交易報告、暫停出帳或退出。只退出而不上報是不完整路徑。靈感來自警方公開的戶口租售執法簡述，不是真實客戶檔。",
+  "title": "Renting out a bank account — social media recruitment (demo script)",
+  "locale": "en",
+  "summary": "Synthetic training case. A retail customer says on social media that their account is for rent, and calls it safe and legal. The account first receives a small test credit. The trainee decides whether to interview the customer, draft a suspicious transaction report, hold outbound payments or exit. Exiting without a report is an incomplete path. It is inspired by a public police enforcement briefing on renting and selling accounts. It is not a real customer file.",
   "start_node_id": "n_alert",
   "teaching": {
     "level": "chan-1-scripted-mirror",
@@ -22,22 +22,22 @@
   "rules": [
     {
       "id": "R1_ACCOUNT_RENTAL",
-      "when": "客戶承認戶口交由第三者使用，或承認出租或出售戶口控制權",
+      "when": "The customer admits the account is used by a third party, or admits renting out or selling control of the account",
       "then": "refuse_or_exit_and_report",
-      "note": "不得維持一般使用。已有試探入帳時，只退出不上報並未滿足規則。"
+      "note": "Normal use must not continue. Once a test credit has arrived, exiting without a report does not meet the rule."
     },
     {
       "id": "R2_THIRD_PARTY_CONTROL",
-      "when": "戶口控制權在不明第三者，且已有第三者入帳",
+      "when": "An unknown third party controls the account, and third-party credits have already arrived",
       "then": "require_str_or_freeze",
-      "note": "不得當成幫朋友或客戶服務。規則先於任何模型分數。"
+      "note": "It must not be treated as helping a friend or as customer service. Rules come before any model score."
     }
   ],
   "initial_twin_state": {
     "phase": "alert_triage",
     "customer": {
       "id": "SYN-MR-170",
-      "display_name": "合成客戶乙",
+      "display_name": "Synthetic Customer B",
       "segment": "retail"
     },
     "kyc": {
@@ -67,8 +67,8 @@
     {
       "id": "n_alert",
       "type": "scene",
-      "title": "社交平台招攬警報",
-      "prompt": "合成客戶乙發文表示可出租銀行戶口，並寫「安全、合法」。戶口剛收到一筆小額試探入帳，付款人不是客戶本人。",
+      "title": "Social media recruitment alert",
+      "prompt": "Synthetic Customer B posts that their bank account is for rent, with the words \"safe and legal\". The account has just received a small test credit. The payer is not the customer.",
       "next": "n_triage",
       "twin_patch": {
         "phase": "alert_triage",
@@ -78,32 +78,32 @@
     {
       "id": "n_triage",
       "type": "decision",
-      "title": "警報怎麼開工",
-      "prompt": "帖文與試探入帳都在。你要約談客戶、現在上報並退出，還是把帖文當成玩笑關掉？",
+      "title": "How to start on the alert",
+      "prompt": "The post and the test credit are both on file. Do you interview the customer, report and exit now, or close the post as a joke?",
       "choices": [
         {
           "id": "interview",
-          "label": "約談客戶",
+          "label": "Interview the customer",
           "next": "n_admission",
-          "rationale": "先取得控制權事實，再讓 R1 判斷。",
+          "rationale": "Get the facts on account control first, then let R1 decide.",
           "effects": {
             "kyc.status": "interview_open"
           }
         },
         {
           "id": "str_exit",
-          "label": "草擬可疑交易報告並退出",
+          "label": "Draft an STR and exit",
           "next": "n_outcome_str",
-          "rationale": "帖文加上試探入帳已足夠上報，不必等客戶承認。",
+          "rationale": "The post plus the test credit is enough to report. There is no need to wait for the customer to admit it.",
           "effects": {
             "risk.flags_add": ["STR_DRAFTED", "RELATIONSHIP_EXIT"]
           }
         },
         {
           "id": "dismiss_post",
-          "label": "當成社交玩笑結案",
+          "label": "Close as a social media joke",
           "next": "n_credits",
-          "rationale": "教學上的較差起點。試探入帳仍在，後續入帳會觸發 R2。",
+          "rationale": "Poor teaching start. The test credit is still there, and later credits will trigger R2.",
           "effects": {
             "risk.flags_add": ["POST_DISMISSED"],
             "risk.score_delta": 20
@@ -114,8 +114,8 @@
     {
       "id": "n_admission",
       "type": "scene",
-      "title": "客戶承認出租戶口",
-      "prompt": "客戶稱有公司支付租金，自己只負責交出驗證碼，對方說這很平常。戶口控制權不在客戶。規則 R1：承認出租就不得維持一般使用。",
+      "title": "Customer admits renting out the account",
+      "prompt": "The customer says a company pays them rent, and their only job is to hand over verification codes. The other side said this is normal. The customer does not control the account. Rule R1: once renting is admitted, normal use must not continue.",
       "next": "n_r1_gate",
       "twin_patch": {
         "kyc.account_control": "third_party",
@@ -126,32 +126,32 @@
     {
       "id": "n_r1_gate",
       "type": "decision",
-      "title": "承認出租之後",
-      "prompt": "R1 已滿足，而且試探入帳仍在。上報並退出、只退出不上報，還是加監控後繼續使用？",
+      "title": "After the rental admission",
+      "prompt": "R1 is met, and the test credit is still there. Do you report and exit, exit without reporting, or add monitoring and let use continue?",
       "choices": [
         {
           "id": "exit_and_str",
-          "label": "草擬可疑交易報告並退出",
+          "label": "Draft an STR and exit",
           "next": "n_outcome_str",
-          "rationale": "符合 R1。控制權與試探入帳一起留下。",
+          "rationale": "Meets R1. The account control facts and the test credit are kept on record together.",
           "effects": {
             "risk.flags_add": ["STR_DRAFTED", "RELATIONSHIP_EXIT"]
           }
         },
         {
           "id": "exit_only",
-          "label": "只退出，不上報",
+          "label": "Exit only, no report",
           "next": "n_outcome_exit_gap",
-          "rationale": "教學上的不完整路徑。退出沒有抹掉已發生的試探入帳。",
+          "rationale": "Incomplete teaching path. Exiting does not erase the test credit that already happened.",
           "effects": {
             "risk.flags_add": ["EXIT_WITHOUT_STR"]
           }
         },
         {
           "id": "allow_monitor",
-          "label": "加監控後准許繼續使用",
+          "label": "Add monitoring and allow continued use",
           "next": "n_credits",
-          "rationale": "覆寫 R1。覆寫是事件，不是把出租事實刪掉。",
+          "rationale": "Overrides R1. The override is an event. It does not delete the rental facts.",
           "effects": {
             "kyc.status": "passed_by_override",
             "risk.flags_add": ["R1_OVERRIDDEN"],
@@ -163,8 +163,8 @@
     {
       "id": "n_credits",
       "type": "scene",
-      "title": "試探之後的入帳",
-      "prompt": "試探入帳之後出現多筆第三者入帳，並要求盡快轉走。規則 R2：控制權在不明第三者且已有入帳時，不得當成幫朋友。",
+      "title": "Credits after the test",
+      "prompt": "After the test credit, several third-party credits arrive, with requests to move the money on quickly. Rule R2: when an unknown third party controls the account and credits have arrived, it must not be treated as helping a friend.",
       "next": "n_r2_gate",
       "twin_patch": {
         "transactions": [
@@ -190,14 +190,14 @@
     {
       "id": "n_r2_gate",
       "type": "decision",
-      "title": "入帳之後的處置",
-      "prompt": "R2 已滿足。暫停出帳並草擬報告、退出並上報，或結為幫忙朋友？",
+      "title": "Action after the credits",
+      "prompt": "R2 is met. Do you hold outbound payments and draft a report, exit and report, or close it as helping a friend?",
       "choices": [
         {
           "id": "freeze_str",
-          "label": "暫停出帳並草擬可疑交易報告",
+          "label": "Hold outbound payments and draft an STR",
           "next": "n_outcome_freeze",
-          "rationale": "符合 R2 的止付並上報出口。",
+          "rationale": "The stop-payment-and-report exit that meets R2.",
           "effects": {
             "account.holds": ["outbound"],
             "risk.flags_add": ["STR_DRAFTED", "FREEZE_RECOMMENDED"]
@@ -205,18 +205,18 @@
         },
         {
           "id": "exit_and_str_late",
-          "label": "退出並草擬可疑交易報告",
+          "label": "Exit and draft an STR",
           "next": "n_outcome_str",
-          "rationale": "符合 R2 的另一出口。",
+          "rationale": "Another exit that meets R2.",
           "effects": {
             "risk.flags_add": ["STR_DRAFTED", "RELATIONSHIP_EXIT"]
           }
         },
         {
           "id": "clear_favour",
-          "label": "結為幫忙朋友",
+          "label": "Close as helping a friend",
           "next": "n_outcome_miss",
-          "rationale": "教學上的較差路徑。規則已要求不得這樣結案。",
+          "rationale": "Poor teaching path. The rule already says the case must not be closed this way.",
           "effects": {
             "risk.flags_add": ["R2_IGNORED"]
           }
@@ -226,8 +226,8 @@
     {
       "id": "n_outcome_str",
       "type": "outcome",
-      "title": "已草擬可疑交易報告",
-      "prompt": "上報出口。出租事實或帖文旗標留在狀態，沒有被退出動作清掉。",
+      "title": "Suspicious transaction report drafted",
+      "prompt": "Reporting exit. The rental facts or the post flag stay in the state. The exit did not clear them.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -237,8 +237,8 @@
     {
       "id": "n_outcome_exit_gap",
       "type": "outcome",
-      "title": "只退出而未上報",
-      "prompt": "較差路徑。關係結束了，但試探入帳與出租承認沒有進入可疑交易報告。",
+      "title": "Exit without a report",
+      "prompt": "Poor teaching path. The relationship has ended, but the test credit and the rental admission did not go into a suspicious transaction report.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -248,8 +248,8 @@
     {
       "id": "n_outcome_freeze",
       "type": "outcome",
-      "title": "已暫停出帳並草擬報告",
-      "prompt": "出帳暫停，報告已草擬。若先前覆寫過 R1，覆寫旗標仍在。",
+      "title": "Outbound payments held and report drafted",
+      "prompt": "Outbound payments are on hold, and the report has been drafted. If R1 was overridden earlier, the override flag is still there.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -259,8 +259,8 @@
     {
       "id": "n_outcome_miss",
       "type": "outcome",
-      "title": "當成幫忙朋友結案",
-      "prompt": "較差路徑。R2 被忽略。儀表板之後應把這次 session 標成未跟規則。",
+      "title": "Closed as helping a friend",
+      "prompt": "Poor teaching path. R2 was ignored. The dashboard should later mark this session as not following the rules.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",

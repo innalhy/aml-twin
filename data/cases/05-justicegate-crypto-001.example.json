@@ -1,9 +1,9 @@
 {
   "schema_version": "0.1",
   "case_id": "justicegate-crypto-001",
-  "title": "現金與場外加密貨幣 — 戶口套現（示範劇本）",
-  "locale": "zh-Hant",
-  "summary": "合成培訓案例。受薪客戶的戶口收集多筆入帳後，以現金提取及轉往場外加密貨幣交易商離開。客戶說不出與檔案相符的資金來源。學員決定加強審查、草擬可疑交易報告、建議凍結或退出。靈感來自公開的本地戶口套現簡述，不是真實客戶檔。",
+  "title": "Cash and crypto OTC — account cashing-out (demo script)",
+  "locale": "en",
+  "summary": "Synthetic training case. A salaried customer's account collects many credits. The money then leaves through cash withdrawals and transfers to an OTC crypto dealer. The customer cannot give a source of funds that matches the file. The trainee decides on enhanced due diligence, a suspicious transaction report, a freeze recommendation or exiting the relationship. Inspired by a public summary of local account cashing-out. Not a real customer file.",
   "start_node_id": "n_pattern",
   "teaching": {
     "level": "chan-1-scripted-mirror",
@@ -22,22 +22,22 @@
   "rules": [
     {
       "id": "R1_NO_SOURCE",
-      "when": "客戶無法提供與檔案相符的資金來源",
+      "when": "The customer cannot give a source of funds that matches the file",
       "then": "do_not_clear",
-      "note": "朋友換匯不是來源證明。不得在來源空白時結案。"
+      "note": "A friend's currency exchange is not proof of source. Do not close the case while the source is blank."
     },
     {
       "id": "R2_CASH_AND_OTC",
-      "when": "入帳的主要去向是現金提取加上場外加密貨幣交易商",
+      "when": "The credits mainly leave through cash withdrawals plus an OTC crypto dealer",
       "then": "require_str_or_freeze_or_exit",
-      "note": "不得當個人投資結案。規則先於任何模型分數。"
+      "note": "Do not close it as personal investment. Rules come before any model score."
     }
   ],
   "initial_twin_state": {
     "phase": "alert_triage",
     "customer": {
       "id": "SYN-JG-048",
-      "display_name": "合成客戶丁",
+      "display_name": "Synthetic Customer D",
       "segment": "retail_salary",
       "profile": "salary"
     },
@@ -65,8 +65,8 @@
     {
       "id": "n_pattern",
       "type": "scene",
-      "title": "受薪檔案對上大額進出",
-      "prompt": "合成客戶丁的檔案是受薪人士。數月內戶口收集多筆入帳，去向開始出現現金提取，以及轉往場外加密貨幣交易商 SYN-OTC-JG-07。",
+      "title": "Salaried profile against large flows in and out",
+      "prompt": "Synthetic Customer D is on file as a salaried person. Over several months the account collects many credits. The outflows start to show cash withdrawals and transfers to the OTC crypto dealer SYN-OTC-JG-07.",
       "next": "n_ask",
       "twin_patch": {
         "phase": "source_review",
@@ -76,14 +76,14 @@
     {
       "id": "n_ask",
       "type": "decision",
-      "title": "要不要先問來源",
-      "prompt": "金額與受薪檔案不符。你要索取資金來源並做加強審查、先暫停出帳，還是註記為投資後關掉？",
+      "title": "Ask for the source first?",
+      "prompt": "The amounts do not match the salaried profile. Do you ask for the source of funds and run enhanced due diligence, hold outbound payments first, or note it as investment and close it?",
       "choices": [
         {
           "id": "sof_edd",
-          "label": "索取資金來源並做加強審查",
+          "label": "Ask for the source of funds and run enhanced due diligence",
           "next": "n_answer",
-          "rationale": "先取來源，再讓 R1 判斷能否結案。",
+          "rationale": "Get the source first, then let R1 decide whether the case can close.",
           "effects": {
             "kyc.status": "sof_requested",
             "risk.flags_add": ["EDD_ORDERED"]
@@ -91,9 +91,9 @@
         },
         {
           "id": "hold_first",
-          "label": "先暫停出帳再問來源",
+          "label": "Hold outbound payments first, then ask for the source",
           "next": "n_answer",
-          "rationale": "止付與取證可以同時做。",
+          "rationale": "Stopping payments and gathering evidence can happen at the same time.",
           "effects": {
             "account.holds": ["outbound"],
             "kyc.status": "sof_requested",
@@ -102,9 +102,9 @@
         },
         {
           "id": "clear_invest",
-          "label": "註記為投資並結案",
+          "label": "Note it as investment and close",
           "next": "n_otc",
-          "rationale": "教學上的較差起點。來源仍是空白，現金與場外路徑會觸發 R2。",
+          "rationale": "A poor teaching start. The source is still blank, and the cash and OTC path will trigger R2.",
           "effects": {
             "risk.flags_add": ["SOF_SKIPPED"],
             "risk.score_delta": 25
@@ -115,8 +115,8 @@
     {
       "id": "n_answer",
       "type": "scene",
-      "title": "說不出相符的來源",
-      "prompt": "客戶只稱朋友換匯，交不出與受薪檔案相符的證明。規則 R1：來源空白不得結案。",
+      "title": "No matching source",
+      "prompt": "The customer only says a friend exchanged currency, and cannot produce proof that matches the salaried profile. Rule R1: a blank source must not be closed.",
       "next": "n_r1_gate",
       "twin_patch": {
         "kyc.source_of_funds": "friend_fx_unsupported",
@@ -127,14 +127,14 @@
     {
       "id": "n_r1_gate",
       "type": "decision",
-      "title": "來源空白之後",
-      "prompt": "R1 已滿足。維持暫停並看去向、現在草擬可疑交易報告，還是接受朋友換匯？",
+      "title": "After a blank source",
+      "prompt": "R1 is met. Do you keep the hold and look at where the money goes, draft a suspicious transaction report now, or accept the friend's currency exchange?",
       "choices": [
         {
           "id": "continue_hold",
-          "label": "維持暫停並核對去向",
+          "label": "Keep the hold and check where the money goes",
           "next": "n_otc",
-          "rationale": "符合 R1。先不要放行。",
+          "rationale": "Matches R1. Do not release yet.",
           "effects": {
             "account.holds": ["outbound"],
             "risk.flags_add": ["EDD_HOLD"]
@@ -142,18 +142,18 @@
         },
         {
           "id": "str_now",
-          "label": "草擬可疑交易報告",
+          "label": "Draft a suspicious transaction report",
           "next": "n_outcome_str",
-          "rationale": "來源與檔案已經不符，可以上報。",
+          "rationale": "The source already does not match the file. You can report.",
           "effects": {
             "risk.flags_add": ["STR_DRAFTED"]
           }
         },
         {
           "id": "accept_friend",
-          "label": "接受朋友換匯",
+          "label": "Accept the friend's currency exchange",
           "next": "n_otc",
-          "rationale": "覆寫 R1。空白來源沒有變成證明。",
+          "rationale": "Overrides R1. The blank source has not become proof.",
           "effects": {
             "risk.flags_add": ["R1_OVERRIDDEN"],
             "risk.score_delta": 30
@@ -164,8 +164,8 @@
     {
       "id": "n_otc",
       "type": "scene",
-      "title": "現金與場外交易商",
-      "prompt": "兩筆轉往合成場外交易商 SYN-OTC-JG-07，其餘以現金提走。規則 R2：現金加場外加密貨幣是主要去向時，不得當投資結案。",
+      "title": "Cash and the OTC dealer",
+      "prompt": "Two transfers go to the synthetic OTC dealer SYN-OTC-JG-07, and the rest is withdrawn in cash. Rule R2: when cash plus OTC crypto is the main outflow, the case must not be closed as investment.",
       "next": "n_r2_gate",
       "twin_patch": {
         "phase": "alert_triage",
@@ -193,14 +193,14 @@
     {
       "id": "n_r2_gate",
       "type": "decision",
-      "title": "套現路徑的處置",
-      "prompt": "R2 已滿足。建議凍結並上報、退出關係，或結為投資？",
+      "title": "Handling the cash-out path",
+      "prompt": "R2 is met. Do you recommend a freeze and report, exit the relationship, or close it as investment?",
       "choices": [
         {
           "id": "freeze_str",
-          "label": "建議凍結並草擬可疑交易報告",
+          "label": "Recommend a freeze and draft a suspicious transaction report",
           "next": "n_outcome_freeze",
-          "rationale": "符合 R2 的止付並上報出口。",
+          "rationale": "The stop-and-report exit that matches R2.",
           "effects": {
             "account.holds": ["outbound"],
             "risk.flags_add": ["STR_DRAFTED", "FREEZE_RECOMMENDED"]
@@ -208,18 +208,18 @@
         },
         {
           "id": "exit_rel",
-          "label": "退出客戶關係",
+          "label": "Exit the customer relationship",
           "next": "n_outcome_exit",
-          "rationale": "符合 R2 的退出出口。",
+          "rationale": "The exit-the-relationship route that matches R2.",
           "effects": {
             "risk.flags_add": ["RELATIONSHIP_EXIT"]
           }
         },
         {
           "id": "clear_invest_late",
-          "label": "結為個人投資",
+          "label": "Close as personal investment",
           "next": "n_outcome_miss",
-          "rationale": "教學上的較差路徑。規則已要求不得這樣結案。",
+          "rationale": "Poor teaching path. The rules already say the case must not be closed this way.",
           "effects": {
             "risk.flags_add": ["R2_IGNORED"]
           }
@@ -229,8 +229,8 @@
     {
       "id": "n_outcome_str",
       "type": "outcome",
-      "title": "已草擬可疑交易報告",
-      "prompt": "上報出口。資金來源仍是未證實，留在狀態裡。",
+      "title": "Suspicious transaction report drafted",
+      "prompt": "Reporting exit. The source of funds is still unproven and stays in the state.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -240,8 +240,8 @@
     {
       "id": "n_outcome_freeze",
       "type": "outcome",
-      "title": "已建議凍結並草擬報告",
-      "prompt": "出帳暫停，報告已草擬。場外對手 SYN-OTC-JG-07 仍在狀態裡。",
+      "title": "Freeze recommended and report drafted",
+      "prompt": "Outbound payments are on hold and the report is drafted. The OTC counterparty SYN-OTC-JG-07 is still in the state.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -251,8 +251,8 @@
     {
       "id": "n_outcome_exit",
       "type": "outcome",
-      "title": "已退出客戶關係",
-      "prompt": "關係結束。現金與場外去向的旗標留在孿生狀態。",
+      "title": "Customer relationship exited",
+      "prompt": "The relationship has ended. The flags for the cash and OTC outflows stay in the twin state.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -262,8 +262,8 @@
     {
       "id": "n_outcome_miss",
       "type": "outcome",
-      "title": "當成投資結案",
-      "prompt": "較差路徑。R2 被忽略。儀表板之後應把這次 session 標成未跟規則。",
+      "title": "Closed as investment",
+      "prompt": "Poor teaching path. R2 was ignored. The dashboard should later mark this session as not following the rules.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",

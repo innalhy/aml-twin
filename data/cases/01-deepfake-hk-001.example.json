@@ -1,9 +1,9 @@
 {
   "schema_version": "0.1",
   "case_id": "deepfake-001",
-  "title": "深偽視像開戶 — 虛擬銀行（示範劇本）",
-  "locale": "zh-Hant",
-  "summary": "合成培訓案例。新客戶以視像 KYC 申請開戶，畫面上已有兩項規則訊號。若開戶成功，短時間內出現第三者大額入帳並拆往場外加密貨幣交易商。學員要先跟規則，再決定上報或加強審查。本檔沒有真實客戶資料，也沒有媒體檔。",
+  "title": "Deepfake video account opening — virtual bank (demo script)",
+  "locale": "en",
+  "summary": "Synthetic training case. A new customer applies to open an account through video KYC. Two rule signals already show on screen. If the account opens, a large third-party credit arrives within a short time and is split out to an OTC crypto dealer. The trainee must follow the rules first, then decide whether to report or apply enhanced due diligence. This file holds no real customer data and no media files.",
   "start_node_id": "n_intake",
   "teaching": {
     "level": "chan-1-scripted-mirror",
@@ -21,20 +21,20 @@
       "id": "R1_LIVENESS_TWICE",
       "when": "kyc.liveness_failures >= 2",
       "then": "block_onboarding",
-      "note": "連續兩次活體失敗就不得開戶。覆寫必須成為事件，不能默默通過。"
+      "note": "Two liveness check failures in a row mean the account must not be opened. An override must be recorded as an event. It cannot pass silently."
     },
     {
       "id": "R2_SIGNALS_PLUS_BURST",
-      "when": "kyc.signals 至少兩項，且出現第三者突發入帳並拆出",
+      "when": "kyc.signals has at least two items, and a sudden third-party credit arrives and is split out",
       "then": "require_edd_or_str",
-      "note": "規則先於任何模型分數。不得把此案直接結為誤報。"
+      "note": "Rules come before any model score. This case must not be closed straight away as a false positive."
     }
   ],
   "initial_twin_state": {
     "phase": "onboarding",
     "customer": {
       "id": "SYN-001",
-      "display_name": "合成客戶甲",
+      "display_name": "Synthetic Customer A",
       "segment": "new_to_bank"
     },
     "kyc": {
@@ -57,8 +57,8 @@
     {
       "id": "n_intake",
       "type": "scene",
-      "title": "視像 KYC 進件",
-      "prompt": "合成客戶提交身份證明影像與一段視像。規則引擎已記下眨眼節奏不規則與光源不一致，尚未決定是否開戶。",
+      "title": "Video KYC intake",
+      "prompt": "The synthetic customer submits an image of an identity document and a video clip. The rules engine has logged an irregular blink rhythm and inconsistent lighting. No decision on opening the account has been made yet.",
       "media_ref": "data/media/deepfake-001/kyc-clip.mp4",
       "next": "n_kyc_review",
       "twin_patch": {
@@ -68,14 +68,14 @@
     {
       "id": "n_kyc_review",
       "type": "decision",
-      "title": "是否接受這次視像",
-      "prompt": "兩項訊號仍在。你要接受視像、要求重做活體，還是拒絕開戶？",
+      "title": "Accept this video?",
+      "prompt": "Both signals are still there. Do you accept the video, ask for a new liveness check, or refuse to open the account?",
       "choices": [
         {
           "id": "pass_video",
-          "label": "接受視像並開戶",
+          "label": "Accept the video and open the account",
           "next": "n_burst",
-          "rationale": "忽略已記錄的訊號。之後若出現資金突發，R2 會要求上報或加強審查。",
+          "rationale": "This ignores the logged signals. If a sudden burst of funds follows, R2 will require a report or EDD.",
           "effects": {
             "kyc.status": "passed",
             "account.opened": true,
@@ -85,18 +85,18 @@
         },
         {
           "id": "redo_liveness",
-          "label": "要求重做活體檢測",
+          "label": "Ask for a new liveness check",
           "next": "n_liveness_retry",
-          "rationale": "先取第二次觀察，再讓 R1 判斷。",
+          "rationale": "Get a second observation first, then let R1 decide.",
           "effects": {
             "kyc.status": "retry_requested"
           }
         },
         {
           "id": "reject_onboarding",
-          "label": "拒絕開戶",
+          "label": "Refuse to open the account",
           "next": "n_outcome_reject",
-          "rationale": "訊號已足夠停止開戶，不必等交易。",
+          "rationale": "The signals are enough to stop the account opening. There is no need to wait for transactions.",
           "effects": {
             "kyc.status": "rejected",
             "risk.flags_add": ["ONBOARDING_REJECTED"]
@@ -107,8 +107,8 @@
     {
       "id": "n_liveness_retry",
       "type": "scene",
-      "title": "第二次活體仍失敗",
-      "prompt": "重做後仍是相同兩項訊號。規則 R1：連續兩次失敗不得開戶。",
+      "title": "Second liveness check also fails",
+      "prompt": "The retry shows the same two signals. Rule R1: after two failures in a row, the account must not be opened.",
       "next": "n_liveness_decision",
       "twin_patch": {
         "kyc.liveness_failures": 2,
@@ -118,14 +118,14 @@
     {
       "id": "n_liveness_decision",
       "type": "decision",
-      "title": "要不要覆寫 R1",
-      "prompt": "規則要求拒絕開戶。覆寫可以繼續，但必須留在事件軌上。",
+      "title": "Override R1?",
+      "prompt": "The rule says to refuse the account. You can override it and continue, but the override must stay in the event log.",
       "choices": [
         {
           "id": "follow_r1",
-          "label": "依規則拒絕開戶",
+          "label": "Refuse the account under the rule",
           "next": "n_outcome_blocked",
-          "rationale": "規則先於個別判斷。",
+          "rationale": "Rules come before individual judgement.",
           "effects": {
             "kyc.status": "blocked_by_rule",
             "risk.flags_add": ["R1_BLOCK"]
@@ -133,9 +133,9 @@
         },
         {
           "id": "override_r1",
-          "label": "覆寫規則並開戶",
+          "label": "Override the rule and open the account",
           "next": "n_burst",
-          "rationale": "允許的教學分支。覆寫本身是事件，不是把規則刪掉。",
+          "rationale": "An allowed teaching branch. The override is itself an event. It does not delete the rule.",
           "effects": {
             "kyc.status": "passed_by_override",
             "account.opened": true,
@@ -148,8 +148,8 @@
     {
       "id": "n_burst",
       "type": "scene",
-      "title": "開戶後的資金突發",
-      "prompt": "開戶後短時間內，一筆第三者大額入帳隨即拆成兩筆，轉往場外加密貨幣交易商。規則 R2：有深偽訊號又有這類突發時，不得直接當誤報結案。",
+      "title": "Burst of funds after opening",
+      "prompt": "Shortly after the account opens, a large third-party credit arrives. It is split at once into two payments and sent to an OTC crypto dealer. Rule R2: when there are deepfake signals and a burst like this, the case must not be closed straight away as a false positive.",
       "next": "n_alert_triage",
       "twin_patch": {
         "phase": "alert_triage",
@@ -176,23 +176,23 @@
     {
       "id": "n_alert_triage",
       "type": "decision",
-      "title": "如何處理這宗警報",
-      "prompt": "R2 已滿足。選擇上報、加強審查並凍結，或結為誤報。",
+      "title": "How to handle this alert",
+      "prompt": "R2 is met. Do you report, apply EDD and freeze, or close it as a false positive?",
       "choices": [
         {
           "id": "file_str",
-          "label": "草擬可疑交易報告",
+          "label": "Draft a suspicious transaction report",
           "next": "n_outcome_str",
-          "rationale": "符合 R2 的上報出口。",
+          "rationale": "The reporting exit that meets R2.",
           "effects": {
             "risk.flags_add": ["STR_DRAFTED"]
           }
         },
         {
           "id": "edd_hold",
-          "label": "加強盡職審查並暫停出帳",
+          "label": "Apply EDD and hold outbound payments",
           "next": "n_outcome_edd",
-          "rationale": "符合 R2 的另一個出口。戶口先停，再補證據。",
+          "rationale": "Another exit that meets R2. Stop the account first, then gather more evidence.",
           "effects": {
             "account.holds": ["outbound"],
             "risk.flags_add": ["EDD_HOLD"]
@@ -200,9 +200,9 @@
         },
         {
           "id": "clear_alert",
-          "label": "結為誤報",
+          "label": "Close as a false positive",
           "next": "n_outcome_miss",
-          "rationale": "教學上的較差路徑。規則已要求不得這樣結案。",
+          "rationale": "Poor teaching path. The rule already says the case must not be closed this way.",
           "effects": {
             "risk.flags_add": ["R2_IGNORED"]
           }
@@ -212,8 +212,8 @@
     {
       "id": "n_outcome_reject",
       "type": "outcome",
-      "title": "開戶被拒",
-      "prompt": "未開戶。訊號留在孿生狀態，沒有後續交易。",
+      "title": "Account opening refused",
+      "prompt": "No account was opened. The signals stay in the twin state. There are no later transactions.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -223,8 +223,8 @@
     {
       "id": "n_outcome_blocked",
       "type": "outcome",
-      "title": "規則截停開戶",
-      "prompt": "R1 截停。事件軌應看得到兩次活體失敗，而不是事後口述。",
+      "title": "Rule blocks account opening",
+      "prompt": "R1 blocked it. The event log should show both liveness check failures, not an oral account given afterwards.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -234,8 +234,8 @@
     {
       "id": "n_outcome_str",
       "type": "outcome",
-      "title": "已草擬可疑交易報告",
-      "prompt": "上報出口。若先前覆寫過 R1，覆寫旗標仍留在狀態裡。",
+      "title": "Suspicious transaction report drafted",
+      "prompt": "Reporting exit. If R1 was overridden earlier, the override flag stays in the state.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -245,8 +245,8 @@
     {
       "id": "n_outcome_edd",
       "type": "outcome",
-      "title": "加強審查並暫停出帳",
-      "prompt": "戶口開了，但出帳暫停，等待加強審查。",
+      "title": "EDD with outbound payments on hold",
+      "prompt": "The account is open, but outbound payments are on hold pending EDD.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -256,8 +256,8 @@
     {
       "id": "n_outcome_miss",
       "type": "outcome",
-      "title": "誤報結案",
-      "prompt": "較差路徑。R2 被忽略，儀表板之後應把這次 session 標成未跟規則。",
+      "title": "Closed as a false positive",
+      "prompt": "Poor teaching path. R2 was ignored. The dashboard should later mark this session as not following the rules.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",

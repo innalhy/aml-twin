@@ -36,7 +36,7 @@ Deploy path: **Cloudflare Pages** (`frontend/`) + **Cloudflare Worker** (`worker
 - Soft rule checks for each script’s teaching rules (human-readable `when` may stay non-executable; outcomes must still match that script’s teaching dispositions). The original example uses `R1_LIVENESS_TWICE` and `R2_SIGNALS_PLUS_BURST`. The other scripts use their own R1/R2 ids.
 - React scenario player + minimal compliance dashboard reading the same twin/events. The case list offers all 11 ids.
 - Persist session + events (Worker-friendly store: e.g. Durable Object or D1 — pick one and document; no Postgres cluster required for MVP).
-- English UI chrome; case content may stay Traditional Chinese.
+- English only, for UI and case content.
 - Missing `media_ref` file → show missing-media state, do not crash the case.
 
 ## Out of scope (Phase 1)

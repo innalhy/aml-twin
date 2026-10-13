@@ -132,6 +132,10 @@ for (const file of files) {
     continue;
   }
 
+  // TwinAML ships English only.
+  if (data.locale !== "en") fail(file, `locale must be "en", found ${JSON.stringify(data.locale)}`);
+  if (/[\u3000-\u30ff\u3400-\u9fff\uff00-\uffef]/.test(JSON.stringify(data))) fail(file, "contains CJK text; translate it to English");
+
   const ids = data.nodes.map((node) => node.id);
   const seen = new Set();
   for (const id of ids) {

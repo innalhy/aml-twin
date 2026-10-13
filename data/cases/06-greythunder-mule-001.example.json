@@ -1,9 +1,9 @@
 {
   "schema_version": "0.1",
   "case_id": "greythunder-mule-001",
-  "title": "騾子群組 — 假冒機構與投資得益（示範劇本）",
-  "locale": "zh-Hant",
-  "summary": "合成培訓案例。零售戶口與一個合成群組共用收款戶口及登入裝置。客戶稱在幫朋友處理官方退款與投資本金，但不認識付款人。學員要先按群組規則加強審查，再決定上報、凍結或退出。靈感來自公開的騾子群組簡述，不是真實客戶檔。",
+  "title": "Mule cluster — fake-official and investment proceeds (demo script)",
+  "locale": "en",
+  "summary": "Synthetic training case. A retail account shares a beneficiary account and a login device with a synthetic cluster. The customer says they are helping a friend handle an official refund and investment principal, but does not know the payers. The trainee must first run enhanced due diligence under the cluster rule, then decide whether to report, freeze or exit the relationship. Inspired by a public summary of a mule cluster. Not a real customer file.",
   "start_node_id": "n_link",
   "teaching": {
     "level": "chan-1-scripted-mirror",
@@ -22,22 +22,22 @@
   "rules": [
     {
       "id": "R1_MULE_CLUSTER",
-      "when": "戶口與群組共用收款戶口或登入裝置",
+      "when": "The account shares a beneficiary account or a login device with the cluster",
       "then": "require_edd_before_release",
-      "note": "放行前必須加強審查。幫朋友不是群組事實的反證。"
+      "note": "Enhanced due diligence is required before release. Helping a friend does not disprove the cluster facts."
     },
     {
       "id": "R2_FRAUD_PROCEEDS",
-      "when": "入帳話術符合假冒機構或投資得益，並隨即彙集轉出",
+      "when": "The credit narratives match a fake-official or investment-gain script, and the funds are pooled and moved out at once",
       "then": "require_str_or_freeze_or_exit",
-      "note": "不得接受「朋友的投資」作為結案理由。規則先於任何模型分數。"
+      "note": "Do not accept \"a friend's investment\" as a reason to close. Rules come before any model score."
     }
   ],
   "initial_twin_state": {
     "phase": "alert_triage",
     "customer": {
       "id": "SYN-GT-033",
-      "display_name": "合成客戶戊",
+      "display_name": "Synthetic Customer E",
       "segment": "retail"
     },
     "kyc": {
@@ -64,8 +64,8 @@
     {
       "id": "n_link",
       "type": "scene",
-      "title": "群組連上這個戶口",
-      "prompt": "合成客戶戊的戶口與合成群組 SYN-CLUSTER-GT-06 共用收款戶口及登入裝置。客戶稱只是幫朋友做投資。",
+      "title": "The cluster links to this account",
+      "prompt": "Synthetic Customer E's account shares a beneficiary account and a login device with the synthetic cluster SYN-CLUSTER-GT-06. The customer says they are only helping a friend invest.",
       "next": "n_cluster_gate",
       "twin_patch": {
         "phase": "cluster_review",
@@ -75,14 +75,14 @@
     {
       "id": "n_cluster_gate",
       "type": "decision",
-      "title": "群組連線要不要擋",
-      "prompt": "共用裝置與共用收款戶口都在。你要做加強審查、先限制出帳，還是因朋友說法而放行？",
+      "title": "Block the cluster link?",
+      "prompt": "The shared device and the shared beneficiary account are both there. Do you run enhanced due diligence, restrict outbound payments first, or release on the friend story?",
       "choices": [
         {
           "id": "edd_cluster",
-          "label": "對群組做加強審查",
+          "label": "Run enhanced due diligence on the cluster",
           "next": "n_story",
-          "rationale": "先聽說法，但群組事實不會因一句話消失。",
+          "rationale": "Hear the story first, but the cluster facts do not vanish because of one sentence.",
           "effects": {
             "kyc.status": "edd_ordered",
             "risk.flags_add": ["EDD_ORDERED"]
@@ -90,9 +90,9 @@
         },
         {
           "id": "restrict",
-          "label": "先限制出帳",
+          "label": "Restrict outbound payments first",
           "next": "n_story",
-          "rationale": "限制與約談可以同時做。",
+          "rationale": "The restriction and the interview can happen at the same time.",
           "effects": {
             "account.holds": ["outbound"],
             "risk.flags_add": ["EDD_HOLD"]
@@ -100,9 +100,9 @@
         },
         {
           "id": "release_friend",
-          "label": "接受朋友說法並放行",
+          "label": "Accept the friend story and release",
           "next": "n_proceeds",
-          "rationale": "教學覆寫。群組連線仍在，後續得益會觸發 R2。",
+          "rationale": "A teaching override. The cluster link is still there, and later proceeds will trigger R2.",
           "effects": {
             "risk.flags_add": ["CLUSTER_WAIVED"],
             "risk.score_delta": 30
@@ -113,8 +113,8 @@
     {
       "id": "n_story",
       "type": "scene",
-      "title": "官方退款與投資本金",
-      "prompt": "客戶說朋友在處理官方退款和投資本金，自己不認識付款人。規則 R1：戶口屬於騾子群組時，放行前必須加強審查。",
+      "title": "Official refund and investment principal",
+      "prompt": "The customer says a friend is handling an official refund and investment principal, and the customer does not know the payers. Rule R1: when the account belongs to a mule cluster, enhanced due diligence is required before release.",
       "next": "n_r1_gate",
       "twin_patch": {
         "kyc.status": "story_recorded",
@@ -124,14 +124,14 @@
     {
       "id": "n_r1_gate",
       "type": "decision",
-      "title": "要不要覆寫群組規則",
-      "prompt": "R1 已滿足。維持限制、現在草擬可疑交易報告，還是接受幫忙投資？",
+      "title": "Override the cluster rule?",
+      "prompt": "R1 is met. Do you keep the restriction, draft a suspicious transaction report now, or accept the help-with-investment story?",
       "choices": [
         {
           "id": "hold",
-          "label": "維持限制並繼續審查",
+          "label": "Keep the restriction and continue the review",
           "next": "n_proceeds",
-          "rationale": "符合 R1。先看資金是不是隨即彙集轉出。",
+          "rationale": "Matches R1. First see whether the funds are pooled and moved out at once.",
           "effects": {
             "account.holds": ["outbound"],
             "risk.flags_add": ["EDD_HOLD"]
@@ -139,18 +139,18 @@
         },
         {
           "id": "str_now",
-          "label": "草擬可疑交易報告",
+          "label": "Draft a suspicious transaction report",
           "next": "n_outcome_str",
-          "rationale": "不認識付款人，加上群組連線，可以上報。",
+          "rationale": "Unknown payers plus the cluster link. You can report.",
           "effects": {
             "risk.flags_add": ["STR_DRAFTED"]
           }
         },
         {
           "id": "accept_help",
-          "label": "接受幫忙投資並放行",
+          "label": "Accept the help-with-investment story and release",
           "next": "n_proceeds",
-          "rationale": "覆寫 R1。覆寫是事件，群組編號仍留在狀態。",
+          "rationale": "Overrides R1. The override is an event, and the cluster ID stays in the state.",
           "effects": {
             "risk.flags_add": ["R1_OVERRIDDEN"],
             "risk.score_delta": 35
@@ -161,8 +161,8 @@
     {
       "id": "n_proceeds",
       "type": "scene",
-      "title": "入帳隨即彙集轉出",
-      "prompt": "入帳備註與假冒機構、投資話術一致，款項隨即彙集轉出。規則 R2：不得用朋友的投資把這宗結案。",
+      "title": "Credits pooled and moved out at once",
+      "prompt": "The credit references match fake-official and investment scripts, and the money is pooled and moved out at once. Rule R2: this case must not be closed as a friend's investment.",
       "next": "n_r2_gate",
       "twin_patch": {
         "phase": "alert_triage",
@@ -189,14 +189,14 @@
     {
       "id": "n_r2_gate",
       "type": "decision",
-      "title": "得益轉出之後",
-      "prompt": "R2 已滿足。建議凍結並上報、退出關係，或結為朋友投資？",
+      "title": "After the proceeds move out",
+      "prompt": "R2 is met. Do you recommend a freeze and report, exit the relationship, or close it as a friend's investment?",
       "choices": [
         {
           "id": "str_freeze",
-          "label": "建議凍結並草擬可疑交易報告",
+          "label": "Recommend a freeze and draft a suspicious transaction report",
           "next": "n_outcome_freeze",
-          "rationale": "符合 R2。",
+          "rationale": "Matches R2.",
           "effects": {
             "account.holds": ["outbound"],
             "risk.flags_add": ["STR_DRAFTED", "FREEZE_RECOMMENDED"]
@@ -204,18 +204,18 @@
         },
         {
           "id": "exit_rel",
-          "label": "退出客戶關係",
+          "label": "Exit the customer relationship",
           "next": "n_outcome_exit",
-          "rationale": "符合 R2 的退出出口。",
+          "rationale": "The exit-the-relationship route that matches R2.",
           "effects": {
             "risk.flags_add": ["RELATIONSHIP_EXIT"]
           }
         },
         {
           "id": "clear_friend",
-          "label": "結為朋友投資",
+          "label": "Close as a friend's investment",
           "next": "n_outcome_miss",
-          "rationale": "教學上的較差路徑。規則已要求不得這樣結案。",
+          "rationale": "Poor teaching path. The rules already say the case must not be closed this way.",
           "effects": {
             "risk.flags_add": ["R2_IGNORED"]
           }
@@ -225,8 +225,8 @@
     {
       "id": "n_outcome_str",
       "type": "outcome",
-      "title": "已草擬可疑交易報告",
-      "prompt": "上報出口。群組 SYN-CLUSTER-GT-06 仍在狀態裡。",
+      "title": "Suspicious transaction report drafted",
+      "prompt": "Reporting exit. Cluster SYN-CLUSTER-GT-06 is still in the state.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -236,8 +236,8 @@
     {
       "id": "n_outcome_freeze",
       "type": "outcome",
-      "title": "已建議凍結並草擬報告",
-      "prompt": "出帳暫停，報告已草擬。若先前覆寫過群組規則，覆寫旗標仍在。",
+      "title": "Freeze recommended and report drafted",
+      "prompt": "Outbound payments are on hold and the report is drafted. If you overrode the cluster rule earlier, the override flag remains.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -247,8 +247,8 @@
     {
       "id": "n_outcome_exit",
       "type": "outcome",
-      "title": "已退出客戶關係",
-      "prompt": "關係結束。共用裝置與得益旗標留在孿生狀態。",
+      "title": "Customer relationship exited",
+      "prompt": "The relationship has ended. The shared-device and proceeds flags stay in the twin state.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -258,8 +258,8 @@
     {
       "id": "n_outcome_miss",
       "type": "outcome",
-      "title": "當成朋友投資結案",
-      "prompt": "較差路徑。R2 被忽略。儀表板之後應把這次 session 標成未跟規則。",
+      "title": "Closed as a friend's investment",
+      "prompt": "Poor teaching path. R2 was ignored. The dashboard should later mark this session as not following the rules.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",

@@ -22,6 +22,8 @@ A future node/choice player would let a trainee choose one of those scripts by `
 
 Case flows for human review are in [`data/case-flow/`](data/case-flow/). Each case has an English Markdown file with Mermaid flow diagrams. The playable scripts stay in `data/cases/`, numbered `01`–`11`. `case_id` is unchanged.
 
+TwinAML ships English only: docs, UI copy and case content. `node scripts/validate-cases.mjs` fails on a script whose `locale` is not `en` or that contains Chinese, Japanese or Korean text.
+
 | Case | English | Playable script |
 | --- | --- | --- |
 | Deepfake executive impersonation | [English](data/case-flow/01-deepfake-executive-impersonation.en.md) | `deepfake-001` |
@@ -205,7 +207,7 @@ Check the case scripts from the repo root:
 node scripts/validate-cases.mjs
 ```
 
-That checks schema `0.1` and the effect-key grammar, then plays the eight `deepfake-001` endings. Details: [`docs/effects.md`](docs/effects.md).
+That checks schema `0.1`, the English-only rule and the effect-key grammar, then plays the eight `deepfake-001` endings. Details: [`docs/effects.md`](docs/effects.md).
 
 ## Deploy
 
@@ -229,7 +231,7 @@ Chan levels follow the course: Level 1 is a scripted mirror, Level 2 is a near-r
 
 **Phase 1 — MVP (Chan Level 1).** A readable mirror of the 11 scripts. The trainee starts a session with a `case_id`. The Worker loads that script, applies the rules and the state machine, and stores events. Pages shows the scenario player and a simple dashboard of the same twin. FastAPI stays optional and local.
 
-In scope: load any of the 11 against `packages/schemas/script.schema.json`; session routes that take `case_id`; deterministic `twin_patch` and choice effects as in [`docs/effects.md`](docs/effects.md); English UI chrome (case prompts may stay Traditional Chinese); a missing `media_ref` file shows a missing-media state.
+In scope: load any of the 11 against `packages/schemas/script.schema.json`; session routes that take `case_id`; deterministic `twin_patch` and choice effects as in [`docs/effects.md`](docs/effects.md); English only, for UI and case content; a missing `media_ref` file shows a missing-media state.
 
 Out of scope for Phase 1: Docker, Kubernetes, Neo4j, Kafka, a microservice split, Unity, a live language model that sets disposition, a real bank / regulator / STR filing connection, multi-tenant billing, and session-time video synthesis. New mixer / peel-chain and synthetic-ID families beyond this library wait for Phase 2.
 

@@ -1,9 +1,9 @@
 {
   "schema_version": "0.1",
   "case_id": "kol-mgmt-001",
-  "title": "網紅管理公司 — 前台戶口（示範劇本）",
-  "locale": "zh-Hant",
-  "summary": "合成培訓案例。一間聲稱經營網紅管理的公司沒有品牌合約，戶口卻收到像購物、投資、網戀話術的個人入帳，並快速轉出。關聯的另一間合成公司流水相似。學員決定加強審查、草擬可疑交易報告、建議凍結或退出，不得把入帳記成品牌合作。靈感來自公開的網紅管理公司前台簡述，不是真實客戶檔。",
+  "title": "KOL (influencer) management company — front account (demo script)",
+  "locale": "en",
+  "summary": "Synthetic training case. A company that claims to run KOL (influencer) management has no brand contracts. Yet its account receives personal credits that look like shopping, investment and romance fraud stories, and the money is sent out quickly. A related synthetic company has similar flows. The trainee decides whether to run enhanced due diligence (EDD), draft a suspicious transaction report, recommend a freeze, or exit. The credits must not be recorded as brand cooperation. Inspired by public summaries of KOL management front companies. It is not a real customer file.",
   "start_node_id": "n_profile",
   "teaching": {
     "level": "chan-1-scripted-mirror",
@@ -22,27 +22,27 @@
   "rules": [
     {
       "id": "R1_FRONT_COMPANY",
-      "when": "聲稱的網紅管理業務沒有合約或員工紀錄，且入帳來自零售第三者",
+      "when": "The claimed KOL management business has no contracts or staff records, and the credits come from retail third parties",
       "then": "require_edd_or_exit",
-      "note": "不得在沒有合約時記成品牌合作。規則先於任何模型分數。"
+      "note": "Do not record the credits as brand cooperation when there is no contract. Rules come before any model score."
     },
     {
       "id": "R2_FRAUD_MIX",
-      "when": "入帳話術混合電話、投資或網戀模式，並快速轉出",
+      "when": "The stories behind the credits mix phone, investment or romance fraud patterns, and the money is sent out quickly",
       "then": "require_str_or_freeze_or_exit",
-      "note": "不得把這些入帳改記為品牌合作後結案。"
+      "note": "Do not relabel these credits as brand cooperation and then close the case."
     }
   ],
   "initial_twin_state": {
     "phase": "periodic_review",
     "customer": {
       "id": "SYN-CORP-KOL-02",
-      "display_name": "合成網紅管理公司甲",
+      "display_name": "Synthetic KOL Management Company A",
       "segment": "corporate"
     },
     "related_customer": {
       "id": "SYN-CORP-KOL-46",
-      "display_name": "合成網紅管理公司乙"
+      "display_name": "Synthetic KOL Management Company B"
     },
     "kyc": {
       "status": "basic_cdd_on_file",
@@ -65,8 +65,8 @@
     {
       "id": "n_profile",
       "type": "scene",
-      "title": "網紅管理公司覆核",
-      "prompt": "合成網紅管理公司甲稱經營網紅管理。戶口收到大量個人入帳，沒有品牌合約，也沒有員工薪金紀錄。關聯的合成網紅管理公司乙流水相似。",
+      "title": "KOL management company review",
+      "prompt": "Synthetic KOL Management Company A says it runs KOL management. Its account receives many personal credits. There are no brand contracts and no staff payroll records. The related Synthetic KOL Management Company B has similar flows.",
       "next": "n_front_gate",
       "twin_patch": {
         "phase": "cdd_review",
@@ -76,14 +76,14 @@
     {
       "id": "n_front_gate",
       "type": "decision",
-      "title": "業務說法要不要核",
-      "prompt": "合約與薪金都缺。你要做業務加強審查、退出關係，還是先記成品牌合作？",
+      "title": "Check the business claim?",
+      "prompt": "Both contracts and payroll are missing. Do you run enhanced due diligence on the business, exit the relationship, or record the credits as brand cooperation for now?",
       "choices": [
         {
           "id": "edd_business",
-          "label": "索取管理合約並做加強審查",
+          "label": "Request the management contracts and run EDD",
           "next": "n_norecords",
-          "rationale": "先取業務證據，再讓 R1 判斷。",
+          "rationale": "Get business evidence first, then let R1 decide.",
           "effects": {
             "kyc.status": "edd_ordered",
             "risk.flags_add": ["EDD_ORDERED"]
@@ -91,18 +91,18 @@
         },
         {
           "id": "exit_now",
-          "label": "退出客戶關係",
+          "label": "Exit the customer relationship",
           "next": "n_outcome_exit",
-          "rationale": "沒有合約的零售入帳已足夠退出。",
+          "rationale": "Retail credits with no contract are already enough to exit.",
           "effects": {
             "risk.flags_add": ["RELATIONSHIP_EXIT"]
           }
         },
         {
           "id": "book_as_deals",
-          "label": "記成品牌合作",
+          "label": "Record as brand cooperation",
           "next": "n_norecords",
-          "rationale": "教學覆寫。沒有合約的事實不會因記帳名稱改變。",
+          "rationale": "Teaching override. The booking label does not change the fact that there is no contract.",
           "effects": {
             "risk.flags_add": ["BOOKED_AS_BRAND"],
             "risk.score_delta": 25
@@ -113,8 +113,8 @@
     {
       "id": "n_norecords",
       "type": "scene",
-      "title": "交不出管理合約",
-      "prompt": "客戶交不出管理合約。入帳備註像購物、投資、網戀話術，不是品牌合作。規則 R1：這種前台必須加強審查或退出。",
+      "title": "No management contract produced",
+      "prompt": "The customer cannot produce a management contract. The credit remarks look like shopping, investment and romance fraud stories, not brand cooperation. Rule R1: a front like this requires enhanced due diligence or an exit.",
       "next": "n_r1_gate",
       "twin_patch": {
         "kyc.business_evidence": "missing",
@@ -125,14 +125,14 @@
     {
       "id": "n_r1_gate",
       "type": "decision",
-      "title": "前台規則的出口",
-      "prompt": "R1 已滿足。暫停出帳、現在草擬可疑交易報告，還是接受口頭業務說明？",
+      "title": "Exits under the front-company rule",
+      "prompt": "R1 has fired. Do you hold outbound payments, draft a suspicious transaction report now, or accept the oral business explanation?",
       "choices": [
         {
           "id": "hold",
-          "label": "暫停出帳並繼續加強審查",
+          "label": "Hold outbound payments and continue EDD",
           "next": "n_mix",
-          "rationale": "符合 R1。先看會不會快速轉出。",
+          "rationale": "Matches R1. First see whether the money is sent out quickly.",
           "effects": {
             "account.holds": ["outbound"],
             "risk.flags_add": ["EDD_HOLD"]
@@ -140,18 +140,18 @@
         },
         {
           "id": "str_now",
-          "label": "草擬可疑交易報告",
+          "label": "Draft a suspicious transaction report",
           "next": "n_outcome_str",
-          "rationale": "沒有合約又有零售第三者入帳，可以上報。",
+          "rationale": "No contract, plus retail third-party credits. You can report.",
           "effects": {
             "risk.flags_add": ["STR_DRAFTED"]
           }
         },
         {
           "id": "accept_verbal",
-          "label": "接受口頭說明並放行",
+          "label": "Accept the oral explanation and release",
           "next": "n_mix",
-          "rationale": "覆寫 R1。話術類型仍會觸發下一條規則。",
+          "rationale": "Overrides R1. The fraud-story types will still trigger the next rule.",
           "effects": {
             "risk.flags_add": ["R1_OVERRIDDEN"],
             "risk.score_delta": 30
@@ -162,8 +162,8 @@
     {
       "id": "n_mix",
       "type": "scene",
-      "title": "三類話術並快速轉出",
-      "prompt": "進一步對上電話、投資、網戀三類模式，款項快速轉出。規則 R2：不得把這些入帳改記成品牌合作。",
+      "title": "Three fraud stories and rapid outflow",
+      "prompt": "Further checks match three patterns: phone, investment and romance fraud. The money is sent out quickly. Rule R2: do not relabel these credits as brand cooperation.",
       "next": "n_r2_gate",
       "twin_patch": {
         "phase": "alert_triage",
@@ -195,14 +195,14 @@
     {
       "id": "n_r2_gate",
       "type": "decision",
-      "title": "混合得益怎麼記",
-      "prompt": "R2 已滿足。建議凍結並上報、退出關係，或維持品牌合作記帳？",
+      "title": "How to record mixed proceeds",
+      "prompt": "R2 has fired. Do you recommend a freeze and report, exit the relationship, or keep the brand-cooperation booking?",
       "choices": [
         {
           "id": "str_freeze",
-          "label": "建議凍結並草擬可疑交易報告",
+          "label": "Recommend a freeze and draft a suspicious transaction report",
           "next": "n_outcome_freeze",
-          "rationale": "符合 R2。",
+          "rationale": "Matches R2.",
           "effects": {
             "account.holds": ["outbound"],
             "risk.flags_add": ["STR_DRAFTED", "FREEZE_RECOMMENDED"]
@@ -210,18 +210,18 @@
         },
         {
           "id": "exit_rel",
-          "label": "退出客戶關係",
+          "label": "Exit the customer relationship",
           "next": "n_outcome_exit",
-          "rationale": "符合 R2 的退出出口。",
+          "rationale": "An exit that matches R2.",
           "effects": {
             "risk.flags_add": ["RELATIONSHIP_EXIT"]
           }
         },
         {
           "id": "clear_brand",
-          "label": "維持品牌合作並結案",
+          "label": "Keep the brand-cooperation label and close",
           "next": "n_outcome_miss",
-          "rationale": "教學上的較差路徑。規則已要求不得這樣結案。",
+          "rationale": "Poor teaching path. The rule already says the case must not be closed this way.",
           "effects": {
             "risk.flags_add": ["R2_IGNORED"]
           }
@@ -231,8 +231,8 @@
     {
       "id": "n_outcome_str",
       "type": "outcome",
-      "title": "已草擬可疑交易報告",
-      "prompt": "上報出口。公司甲與關聯公司乙的合成編號留在狀態裡。",
+      "title": "Suspicious transaction report drafted",
+      "prompt": "Reporting exit. The synthetic IDs of Company A and related Company B stay in the state.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -242,8 +242,8 @@
     {
       "id": "n_outcome_freeze",
       "type": "outcome",
-      "title": "已建議凍結並草擬報告",
-      "prompt": "出帳暫停，報告已草擬。品牌合作的記帳覆寫若發生過，旗標仍在。",
+      "title": "Freeze recommended and report drafted",
+      "prompt": "Outbound payments are on hold. The report is drafted. If the brand-cooperation booking override happened, its flag remains.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -253,8 +253,8 @@
     {
       "id": "n_outcome_exit",
       "type": "outcome",
-      "title": "已退出客戶關係",
-      "prompt": "關係結束。沒有合約與混合話術的旗標留在孿生狀態。",
+      "title": "Customer relationship exited",
+      "prompt": "The relationship has ended. The no-contract and mixed-fraud-story flags stay in the twin state.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -264,8 +264,8 @@
     {
       "id": "n_outcome_miss",
       "type": "outcome",
-      "title": "當成品牌合作結案",
-      "prompt": "較差路徑。R2 被忽略。儀表板之後應把這次 session 標成未跟規則。",
+      "title": "Closed as brand cooperation",
+      "prompt": "Poor teaching path. R2 was ignored. The dashboard should later mark this session as not following the rules.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",

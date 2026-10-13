@@ -22,7 +22,7 @@ This file is the working agreement for AI agents in **TwinAML**, a COMP3424 demo
    - notes in `docs/`
 3. Do not add Docker, Kubernetes, Neo4j, Kafka, a microservice split, a Unity project, or other enterprise pieces unless the owner explicitly asks in that session. Docker is not a supported way to run or deploy this demo. Do not reintroduce `docker-compose.yml` or a container cluster as a requirement.
 4. Prefer the web client over Unity. Unity is an optional later face for the same twin, not a second platform.
-5. English is the primary language for docs and UI copy. Keep course terms in English when they are the lecture vocabulary: mirroring, shadowing, threading, Chan Level 1, Chan Level 2, rules-before-AI. Do not switch docs or the placeholder UI back to Traditional Chinese.
+5. TwinAML ships English only: docs, UI copy and case content, including every string in `data/cases/`. `node scripts/validate-cases.mjs` enforces it for scripts. Keep course terms in English when they are the lecture vocabulary: mirroring, shadowing, threading, Chan Level 1, Chan Level 2, rules-before-AI. Do not switch docs or the placeholder UI back to Traditional Chinese.
 6. Never commit secrets, API keys, `.env` files, Cloudflare account identifiers, or large media. `data/media/` stays empty aside from `.gitkeep`. Scripts may reference media paths; the binaries stay local.
 7. Do not invent a second state model. The twin is backend state plus events. The web app renders that state. It does not own a private copy of the case world.
 8. Rules decide compliance outcomes. Do not let a language model become the system of record. Any later model may explain a decision only after rules have fired, and a human override must be stored as an event.

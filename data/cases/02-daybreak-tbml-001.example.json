@@ -1,9 +1,9 @@
 {
   "schema_version": "0.1",
   "case_id": "daybreak-tbml-001",
-  "title": "假珠寶出口 — 貿易洗錢（示範劇本）",
-  "locale": "zh-Hant",
-  "summary": "合成培訓案例。一間申報經營跨境珠寶鑽石貿易的公司，付款人不是發票買家，亦沒有貨運證據。學員以金融機構合規主任身份，決定加強審查、暫停出帳、草擬可疑交易報告或退出關係。靈感來自海關公開的貿易洗錢執法簡述，不是真實客戶檔。",
+  "title": "Fake jewellery exports — trade-based money laundering (demo script)",
+  "locale": "en",
+  "summary": "Synthetic training case. A company declares a cross-border jewellery and diamond trade. The payer is not the buyer on the invoice, and there is no shipment evidence. As a compliance officer at a financial institution, the trainee decides whether to order enhanced due diligence, hold outbound payments, draft a suspicious transaction report or exit the relationship. It is inspired by a public Customs enforcement briefing on trade-based money laundering. It is not a real customer file.",
   "start_node_id": "n_file_open",
   "teaching": {
     "level": "chan-1-scripted-mirror",
@@ -22,22 +22,22 @@
   "rules": [
     {
       "id": "R1_TRADE_DOC_GAP",
-      "when": "trade.shipment_evidence 缺失，且付款人不是發票上的買家",
+      "when": "trade.shipment_evidence is missing, and the payer is not the buyer on the invoice",
       "then": "require_edd_before_release",
-      "note": "放行前必須加強審查。不得把缺口當成單據在途。規則先於任何模型分數。"
+      "note": "EDD is required before release. The gap must not be treated as documents in transit. Rules come before any model score."
     },
     {
       "id": "R2_TBML_PASSTHROUGH",
-      "when": "貿易文件仍不合格，且同日拆往無貿易關係的戶口",
+      "when": "The trade documents are still deficient, and funds are split the same day to accounts with no trade link",
       "then": "require_str_or_exit_or_freeze",
-      "note": "不得結為一般商業時差。覆寫必須留在事件軌上。"
+      "note": "It must not be closed as an ordinary commercial delay. An override must stay in the event log."
     }
   ],
   "initial_twin_state": {
     "phase": "periodic_review",
     "customer": {
       "id": "SYN-CORP-DB-014",
-      "display_name": "合成出口公司甲",
+      "display_name": "Synthetic Export Company A",
       "segment": "corporate_trade"
     },
     "kyc": {
@@ -66,8 +66,8 @@
     {
       "id": "n_file_open",
       "type": "scene",
-      "title": "珠寶出口公司覆核",
-      "prompt": "合成出口公司甲申報跨境珠寶鑽石貿易。檔上已有兩項訊號：營運單薄，付款人不是發票買家。實益擁有人仍未核實。",
+      "title": "Jewellery exporter review",
+      "prompt": "Synthetic Export Company A declares a cross-border jewellery and diamond trade. The file already shows two signals: thin operations, and a payer who is not the buyer on the invoice. The beneficial owner is still unverified.",
       "next": "n_cdd_gate",
       "twin_patch": {
         "phase": "cdd_review"
@@ -76,14 +76,14 @@
     {
       "id": "n_cdd_gate",
       "type": "decision",
-      "title": "先補哪個審查",
-      "prompt": "貨運證據未見，實益擁有人未核實。你要下令加強審查、退出關係，還是維持一般客戶盡職審查？",
+      "title": "Which review to add first",
+      "prompt": "There is no shipment evidence, and the beneficial owner is unverified. Do you order EDD, exit the relationship, or keep standard customer due diligence (CDD)?",
       "choices": [
         {
           "id": "order_edd",
-          "label": "下令加強審查並索取貨運包",
+          "label": "Order EDD and request the shipment pack",
           "next": "n_trade_gap",
-          "rationale": "兩項訊號已足夠停止一般覆核。",
+          "rationale": "Two signals are enough to stop the standard review.",
           "effects": {
             "kyc.status": "edd_ordered",
             "risk.flags_add": ["EDD_ORDERED"]
@@ -91,9 +91,9 @@
         },
         {
           "id": "exit_now",
-          "label": "退出客戶關係",
+          "label": "Exit the customer relationship",
           "next": "n_outcome_exit",
-          "rationale": "空殼輪廓加上未核實擁有人，可以不待交易就退出。",
+          "rationale": "A shell-company profile plus an unverified owner is enough to exit without waiting for transactions.",
           "effects": {
             "kyc.status": "exit_started",
             "risk.flags_add": ["RELATIONSHIP_EXIT"]
@@ -101,9 +101,9 @@
         },
         {
           "id": "waive_cdd",
-          "label": "維持一般審查",
+          "label": "Keep the standard review",
           "next": "n_trade_gap",
-          "rationale": "教學覆寫。文件缺口仍在，R1 之後還要處理，覆寫本身是事件。",
+          "rationale": "Teaching override. The document gap is still there, and R1 must still deal with it later. The override is itself an event.",
           "effects": {
             "kyc.status": "cdd_waived",
             "risk.flags_add": ["CDD_WAIVED"],
@@ -115,8 +115,8 @@
     {
       "id": "n_trade_gap",
       "type": "scene",
-      "title": "發票與貨運對不上",
-      "prompt": "發票寫鑽石出口。沒有提單，沒有庫存紀錄，付款人是個人而不是買家。規則 R1：這種缺口不得在放行前略過。",
+      "title": "Invoice and shipment do not match",
+      "prompt": "The invoice says diamond export. There is no bill of lading and no stock record. The payer is an individual, not the buyer. Rule R1: a gap like this must not be skipped before release.",
       "next": "n_r1_gate",
       "twin_patch": {
         "trade.shipment_evidence": "missing",
@@ -126,14 +126,14 @@
     {
       "id": "n_r1_gate",
       "type": "decision",
-      "title": "文件缺口怎麼處理",
-      "prompt": "R1 已滿足。暫停出帳並繼續加強審查、現在草擬可疑交易報告，還是接受「單據在途」？",
+      "title": "How to handle the document gap",
+      "prompt": "R1 is met. Do you hold outbound payments and continue EDD, draft a suspicious transaction report now, or accept \"documents in transit\"?",
       "choices": [
         {
           "id": "hold_and_edd",
-          "label": "暫停出帳並繼續加強審查",
+          "label": "Hold outbound payments and continue EDD",
           "next": "n_fanout",
-          "rationale": "符合 R1。先停出帳，再看資金去向。",
+          "rationale": "Meets R1. Stop outbound payments first, then see where the funds go.",
           "effects": {
             "account.holds": ["outbound"],
             "risk.flags_add": ["EDD_HOLD"]
@@ -141,18 +141,18 @@
         },
         {
           "id": "draft_str",
-          "label": "草擬可疑交易報告",
+          "label": "Draft a suspicious transaction report",
           "next": "n_outcome_str",
-          "rationale": "文件與付款人已經對不上，可以上報，不必等拆帳。",
+          "rationale": "The documents and the payer already do not match. You can report without waiting for the split.",
           "effects": {
             "risk.flags_add": ["STR_DRAFTED"]
           }
         },
         {
           "id": "accept_timing",
-          "label": "接受單據在途並放行",
+          "label": "Accept documents in transit and release",
           "next": "n_fanout",
-          "rationale": "教學上的較差覆寫。R1 被跨過，事件軌要留下覆寫旗標。",
+          "rationale": "Poor teaching override. R1 is bypassed, and the event log must keep the override flag.",
           "effects": {
             "risk.flags_add": ["R1_OVERRIDDEN"],
             "risk.score_delta": 25
@@ -163,8 +163,8 @@
     {
       "id": "n_fanout",
       "type": "scene",
-      "title": "同日拆往無關戶口",
-      "prompt": "「出口貨款」同日拆往多個與貿易無關的個人戶口。另一間合成公司有相同模式。規則 R2：文件仍不合格又快速過帳時，不得當一般貿易結案。",
+      "title": "Same-day split to unrelated accounts",
+      "prompt": "The \"export proceeds\" are split the same day to several personal accounts with no link to the trade. Another synthetic company shows the same pattern. Rule R2: when the documents are still deficient and funds pass through quickly, the case must not be closed as ordinary trade.",
       "next": "n_r2_gate",
       "twin_patch": {
         "phase": "alert_triage",
@@ -191,14 +191,14 @@
     {
       "id": "n_r2_gate",
       "type": "decision",
-      "title": "過帳之後的處置",
-      "prompt": "R2 已滿足。草擬可疑交易報告並建議凍結、退出關係，或結為貿易時差？",
+      "title": "Action after the pass-through",
+      "prompt": "R2 is met. Do you draft a suspicious transaction report and recommend a freeze, exit the relationship, or close it as a trade delay?",
       "choices": [
         {
           "id": "str_and_freeze",
-          "label": "草擬可疑交易報告並建議凍結",
+          "label": "Draft an STR and recommend a freeze",
           "next": "n_outcome_freeze",
-          "rationale": "符合 R2 的上報並止付出口。",
+          "rationale": "The report-and-stop-payment exit that meets R2.",
           "effects": {
             "account.holds": ["outbound"],
             "risk.flags_add": ["STR_DRAFTED", "FREEZE_RECOMMENDED"]
@@ -206,18 +206,18 @@
         },
         {
           "id": "exit_rel",
-          "label": "退出客戶關係",
+          "label": "Exit the customer relationship",
           "next": "n_outcome_exit",
-          "rationale": "符合 R2 的退出出口。關係結束，旗標仍留在狀態。",
+          "rationale": "The relationship-exit route that meets R2. The relationship ends, but the flags stay in the state.",
           "effects": {
             "risk.flags_add": ["RELATIONSHIP_EXIT"]
           }
         },
         {
           "id": "clear_trade",
-          "label": "結為貿易時差",
+          "label": "Close as a trade delay",
           "next": "n_outcome_miss",
-          "rationale": "教學上的較差路徑。規則已要求不得這樣結案。",
+          "rationale": "Poor teaching path. The rule already says the case must not be closed this way.",
           "effects": {
             "risk.flags_add": ["R2_IGNORED"]
           }
@@ -227,8 +227,8 @@
     {
       "id": "n_outcome_exit",
       "type": "outcome",
-      "title": "已退出客戶關係",
-      "prompt": "關係結束。審查訊號與任何覆寫旗標留在孿生狀態，沒有被清掉。",
+      "title": "Customer relationship exited",
+      "prompt": "The relationship is over. The review signals and any override flags stay in the twin state. They were not cleared.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -238,8 +238,8 @@
     {
       "id": "n_outcome_str",
       "type": "outcome",
-      "title": "已草擬可疑交易報告",
-      "prompt": "上報出口。貿易文件缺口仍在狀態裡，供覆核對照。",
+      "title": "Suspicious transaction report drafted",
+      "prompt": "Reporting exit. The trade document gap stays in the state for reviewers to check against.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -249,8 +249,8 @@
     {
       "id": "n_outcome_freeze",
       "type": "outcome",
-      "title": "已建議凍結並草擬報告",
-      "prompt": "出帳暫停，可疑交易報告已草擬。若先前覆寫過 R1，覆寫旗標仍在。",
+      "title": "Freeze recommended and report drafted",
+      "prompt": "Outbound payments are on hold, and a suspicious transaction report has been drafted. If R1 was overridden earlier, the override flag is still there.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -260,8 +260,8 @@
     {
       "id": "n_outcome_miss",
       "type": "outcome",
-      "title": "當成貿易時差結案",
-      "prompt": "較差路徑。R2 被忽略。儀表板之後應把這次 session 標成未跟規則。",
+      "title": "Closed as a trade delay",
+      "prompt": "Poor teaching path. R2 was ignored. The dashboard should later mark this session as not following the rules.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",

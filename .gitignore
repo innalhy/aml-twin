@@ -1,9 +1,6 @@
 # TwinAML COMP3424 demo.
 # Large media stays out of git. data/media/.gitkeep remains tracked.
 
-# Local English translations. Traditional Chinese originals stay tracked.
-*.en.*
-
 # --- OS ---
 .DS_Store
 Thumbs.db

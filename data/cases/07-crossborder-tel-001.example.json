@@ -1,9 +1,9 @@
 {
   "schema_version": "0.1",
   "case_id": "crossborder-tel-001",
-  "title": "跨境電話騙案走廊 — 通訊員監察（示範劇本）",
-  "locale": "zh-Hant",
-  "summary": "合成培訓案例。一間公司在數週內向數十個內地個人戶口支付「佣金」，收款人與供應商名單不符。通訊員類型提示把這條走廊與電話騙案得益連結。學員以合規主任身份做走廊加強審查、草擬可疑交易報告、建議凍結或退出。靈感來自跨境電話騙案的公開簡述，不是真實客戶檔，也不是通訊員實檔。",
+  "title": "Cross-border phone-fraud corridor — correspondent monitoring (demo script)",
+  "locale": "en",
+  "summary": "Synthetic training case. Over several weeks, a company pays “commission” to dozens of Mainland personal accounts. The payees do not match the supplier list. A correspondent typology indicator links this corridor to phone-fraud proceeds. As a compliance officer, the trainee runs enhanced due diligence (EDD) on the corridor, drafts a suspicious transaction report, or recommends a freeze or an exit. Inspired by public summaries of cross-border phone fraud. It is not a real customer file, and not an actual correspondent file.",
   "start_node_id": "n_corridor",
   "teaching": {
     "level": "chan-1-scripted-mirror",
@@ -22,22 +22,22 @@
   "rules": [
     {
       "id": "R1_FANOUT",
-      "when": "單一客戶向大量彼此無關的內地個人戶口付款，且沒有佣金合約",
+      "when": "One customer pays a large number of unrelated Mainland personal accounts, and there is no commission contract",
       "then": "require_edd_before_release",
-      "note": "不得當成一般跨境佣金放行。規則先於任何模型分數。"
+      "note": "Do not release it as ordinary cross-border commission. Rules come before any model score."
     },
     {
       "id": "R2_CORRIDOR_INDICATOR",
-      "when": "通訊員類型提示把同一走廊與電話騙案得益連結",
+      "when": "A correspondent typology indicator links the same corridor to phone-fraud proceeds",
       "then": "require_str_or_freeze_or_exit",
-      "note": "不得改口成代客繳費或家屬生活費後結案。提示是合成教學指標，不是真實情報。"
+      "note": "Do not close the case after the story changes to fees paid on behalf of customers or family living costs. The indicator is a synthetic teaching indicator, not real intelligence."
     }
   ],
   "initial_twin_state": {
     "phase": "correspondent_review",
     "customer": {
       "id": "SYN-CORP-CB-320",
-      "display_name": "合成顧問公司甲",
+      "display_name": "Synthetic Consulting Company A",
       "segment": "corporate"
     },
     "kyc": {
@@ -66,8 +66,8 @@
     {
       "id": "n_corridor",
       "type": "scene",
-      "title": "佣金付往大量個人戶口",
-      "prompt": "合成顧問公司甲在數週內向數十個內地個人戶口付款，用途寫佣金。收款人與檔案上的供應商名單不符。",
+      "title": "Commission paid to many personal accounts",
+      "prompt": "Over several weeks, Synthetic Consulting Company A pays dozens of Mainland personal accounts. The stated purpose is commission. The payees do not match the supplier list on file.",
       "next": "n_corr_gate",
       "twin_patch": {
         "phase": "corridor_review",
@@ -77,14 +77,14 @@
     {
       "id": "n_corr_gate",
       "type": "decision",
-      "title": "走廊要不要展開",
-      "prompt": "名單已經對不上。你要做走廊加強審查、退出關係，還是當成一般跨境佣金？",
+      "title": "Look into the corridor?",
+      "prompt": "The list already does not match. Do you run enhanced due diligence on the corridor, exit the relationship, or treat this as ordinary cross-border commission?",
       "choices": [
         {
           "id": "edd_corridor",
-          "label": "做走廊加強審查",
+          "label": "Run EDD on the corridor",
           "next": "n_mismatch",
-          "rationale": "先核對合約與收款人關係。",
+          "rationale": "Check the contract and the payee relationships first.",
           "effects": {
             "kyc.status": "edd_ordered",
             "risk.flags_add": ["EDD_ORDERED"]
@@ -92,18 +92,18 @@
         },
         {
           "id": "exit_now",
-          "label": "退出客戶關係",
+          "label": "Exit the customer relationship",
           "next": "n_outcome_exit",
-          "rationale": "供應商名單對不上，可以不待下一筆就退出。",
+          "rationale": "The supplier list does not match. You can exit without waiting for the next payment.",
           "effects": {
             "risk.flags_add": ["RELATIONSHIP_EXIT"]
           }
         },
         {
           "id": "treat_commission",
-          "label": "當成一般跨境佣金",
+          "label": "Treat as ordinary cross-border commission",
           "next": "n_mismatch",
-          "rationale": "教學覆寫。沒有合約的事實仍在，R1 之後還要處理。",
+          "rationale": "Teaching override. The missing contract is still a fact. R1 must still be dealt with later.",
           "effects": {
             "risk.flags_add": ["CORRIDOR_WAIVED"],
             "risk.score_delta": 25
@@ -114,8 +114,8 @@
     {
       "id": "n_mismatch",
       "type": "scene",
-      "title": "沒有佣金合約",
-      "prompt": "抽查沒有佣金合約，收款人彼此無商業關係。合成的通訊員類型提示把這條走廊與電話騙案得益連結。規則 R1：這種扇出不得當一般佣金放行。",
+      "title": "No commission contract",
+      "prompt": "A spot check finds no commission contract. The payees have no business relationship with each other. A synthetic correspondent typology indicator links this corridor to phone-fraud proceeds. Rule R1: this kind of fan-out must not be released as ordinary commission.",
       "next": "n_r1_gate",
       "twin_patch": {
         "corridor.contract_evidence": "missing",
@@ -125,14 +125,14 @@
     {
       "id": "n_r1_gate",
       "type": "decision",
-      "title": "扇出規則是否放行",
-      "prompt": "R1 已滿足。暫停付款並繼續審查、現在草擬可疑交易報告，還是接受人口述的佣金？",
+      "title": "Does the fan-out rule allow release?",
+      "prompt": "R1 has fired. Do you hold payments and continue the review, draft a suspicious transaction report now, or accept the oral commission story?",
       "choices": [
         {
           "id": "hold",
-          "label": "暫停對外付款並繼續審查",
+          "label": "Hold outbound payments and continue the review",
           "next": "n_indicator",
-          "rationale": "符合 R1。先停扇出。",
+          "rationale": "Matches R1. Stop the fan-out first.",
           "effects": {
             "account.holds": ["outbound"],
             "risk.flags_add": ["EDD_HOLD"]
@@ -140,18 +140,18 @@
         },
         {
           "id": "str_now",
-          "label": "草擬可疑交易報告",
+          "label": "Draft a suspicious transaction report",
           "next": "n_outcome_str",
-          "rationale": "無合約的大量個人收款已足夠上報。",
+          "rationale": "Payments to many individuals with no contract are already enough to report.",
           "effects": {
             "risk.flags_add": ["STR_DRAFTED"]
           }
         },
         {
           "id": "waive_commission",
-          "label": "接受口述佣金並放行",
+          "label": "Accept the oral commission story and release",
           "next": "n_indicator",
-          "rationale": "覆寫 R1。類型提示不會因此消失。",
+          "rationale": "Overrides R1. The typology indicator does not go away because of this.",
           "effects": {
             "risk.flags_add": ["R1_OVERRIDDEN"],
             "risk.score_delta": 30
@@ -162,8 +162,8 @@
     {
       "id": "n_indicator",
       "type": "scene",
-      "title": "類型提示仍在",
-      "prompt": "客戶改口稱是代客繳費。電話騙案類型提示沒有撤下。規則 R2：走廊與得益指標並存時，不得當普通佣金或代繳結案。",
+      "title": "The typology indicator remains",
+      "prompt": "The customer changes the story and says these are fees paid on behalf of customers. The phone-fraud typology indicator has not been withdrawn. Rule R2: when the corridor and the proceeds indicator appear together, do not close the case as ordinary commission or as fees paid for others.",
       "next": "n_r2_gate",
       "twin_patch": {
         "phase": "alert_triage",
@@ -181,14 +181,14 @@
     {
       "id": "n_r2_gate",
       "type": "decision",
-      "title": "指標出現之後",
-      "prompt": "R2 已滿足。建議凍結並上報、退出關係，或接受代客繳費？",
+      "title": "After the indicator appears",
+      "prompt": "R2 has fired. Do you recommend a freeze and report, exit the relationship, or accept that these are fees paid on behalf of customers?",
       "choices": [
         {
           "id": "str_freeze",
-          "label": "建議凍結並草擬可疑交易報告",
+          "label": "Recommend a freeze and draft a suspicious transaction report",
           "next": "n_outcome_freeze",
-          "rationale": "符合 R2。",
+          "rationale": "Matches R2.",
           "effects": {
             "account.holds": ["outbound"],
             "risk.flags_add": ["STR_DRAFTED", "FREEZE_RECOMMENDED"]
@@ -196,18 +196,18 @@
         },
         {
           "id": "exit_rel",
-          "label": "退出客戶關係",
+          "label": "Exit the customer relationship",
           "next": "n_outcome_exit",
-          "rationale": "符合 R2 的退出出口。",
+          "rationale": "An exit that matches R2.",
           "effects": {
             "risk.flags_add": ["RELATIONSHIP_EXIT"]
           }
         },
         {
           "id": "clear_agent",
-          "label": "接受代客繳費並結案",
+          "label": "Accept fees paid on behalf of customers and close",
           "next": "n_outcome_miss",
-          "rationale": "教學上的較差路徑。規則已要求不得這樣結案。",
+          "rationale": "Poor teaching path. The rule already says the case must not be closed this way.",
           "effects": {
             "risk.flags_add": ["R2_IGNORED"]
           }
@@ -217,8 +217,8 @@
     {
       "id": "n_outcome_str",
       "type": "outcome",
-      "title": "已草擬可疑交易報告",
-      "prompt": "上報出口。扇出與類型提示留在狀態，供覆核對照。",
+      "title": "Suspicious transaction report drafted",
+      "prompt": "Reporting exit. The fan-out and the typology indicator stay in the state, so a reviewer can check against them.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -228,8 +228,8 @@
     {
       "id": "n_outcome_freeze",
       "type": "outcome",
-      "title": "已建議凍結並草擬報告",
-      "prompt": "對外付款暫停，報告已草擬。若先前覆寫過 R1，覆寫旗標仍在。",
+      "title": "Freeze recommended and report drafted",
+      "prompt": "Outbound payments are on hold. The report is drafted. If R1 was overridden earlier, the override flag remains.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -239,8 +239,8 @@
     {
       "id": "n_outcome_exit",
       "type": "outcome",
-      "title": "已退出客戶關係",
-      "prompt": "關係結束。走廊事實沒有被退出動作抹掉。",
+      "title": "Customer relationship exited",
+      "prompt": "The relationship has ended. The exit does not erase the corridor facts.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -250,8 +250,8 @@
     {
       "id": "n_outcome_miss",
       "type": "outcome",
-      "title": "當成代客繳費結案",
-      "prompt": "較差路徑。R2 被忽略。儀表板之後應把這次 session 標成未跟規則。",
+      "title": "Closed as fees paid on behalf of customers",
+      "prompt": "Poor teaching path. R2 was ignored. The dashboard should later mark this session as not following the rules.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",

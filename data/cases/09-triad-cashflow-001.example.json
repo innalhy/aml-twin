@@ -1,9 +1,9 @@
 {
   "schema_version": "0.1",
   "case_id": "triad-cashflow-001",
-  "title": "無商業目的流水 — 有組織犯罪指標（示範劇本）",
-  "locale": "zh-Hant",
-  "summary": "合成培訓案例。本地公司戶口大額進出，沒有發票、合約或薪金對應。客戶稱是現金生意。內部類型指標把這組流水標為有組織犯罪得益。學員以合規主任身份決定暫停、草擬可疑交易報告、建議凍結或退出。這不是執法行動演練。靈感來自公開的有組織犯罪資金流簡述，不是真實客戶檔。",
+  "title": "Flows with no commercial purpose — organised-crime indicator (demo script)",
+  "locale": "en",
+  "summary": "Synthetic training case. A local company account has large inflows and outflows, with no matching invoices, contracts or payroll. The customer says it is a cash business. An internal typology indicator marks this set of flows as organised-crime proceeds. As a compliance officer, the trainee decides whether to hold, draft a suspicious transaction report, recommend a freeze, or exit. This is not a law-enforcement exercise. Inspired by public summaries of organised-crime cash flows. It is not a real customer file.",
   "start_node_id": "n_flows",
   "teaching": {
     "level": "chan-1-scripted-mirror",
@@ -23,22 +23,22 @@
   "rules": [
     {
       "id": "R1_NO_COMMERCIAL_PURPOSE",
-      "when": "大額流水沒有發票、合約或薪金對應",
+      "when": "Large flows have no matching invoices, contracts or payroll",
       "then": "require_edd_hold",
-      "note": "口頭稱為現金生意不是憑證。放行前必須暫停並加強審查。"
+      "note": "Calling it a cash business orally is not evidence. Before release, you must hold and run enhanced due diligence."
     },
     {
       "id": "R2_OC_INDICATOR",
-      "when": "內部類型指標標示有組織犯罪得益",
+      "when": "An internal typology indicator marks organised-crime proceeds",
       "then": "require_str_and_freeze",
-      "note": "不得在沒有證據時當一般現金生意結案。指標是合成教學標記。規則先於任何模型分數。"
+      "note": "Do not close the case as an ordinary cash business without evidence. The indicator is a synthetic teaching marker. Rules come before any model score."
     }
   ],
   "initial_twin_state": {
     "phase": "alert_triage",
     "customer": {
       "id": "SYN-CORP-OC-025",
-      "display_name": "合成貿易公司甲",
+      "display_name": "Synthetic Trading Company A",
       "segment": "corporate"
     },
     "kyc": {
@@ -62,8 +62,8 @@
     {
       "id": "n_flows",
       "type": "scene",
-      "title": "沒有憑證的大額進出",
-      "prompt": "合成貿易公司甲的戶口在短期內大額進出。沒有發票或薪金對應，交易對手是個人，用途欄空白。",
+      "title": "Large flows with no evidence",
+      "prompt": "Synthetic Trading Company A's account has large inflows and outflows in a short time. There are no matching invoices or payroll. The counterparties are individuals, and the purpose field is blank.",
       "next": "n_purpose_gate",
       "twin_patch": {
         "phase": "purpose_review",
@@ -85,14 +85,14 @@
     {
       "id": "n_purpose_gate",
       "type": "decision",
-      "title": "空白用途怎麼問",
-      "prompt": "憑證缺失。你要索取商業目的、先暫停出帳，還是接受現金生意的標籤？",
+      "title": "How to ask about the blank purpose",
+      "prompt": "Evidence is missing. Do you ask for the commercial purpose, hold outbound payments first, or accept the cash-business label?",
       "choices": [
         {
           "id": "edd",
-          "label": "索取發票或合約",
+          "label": "Request invoices or contracts",
           "next": "n_noinvoice",
-          "rationale": "先取憑證，再讓 R1 判斷。",
+          "rationale": "Get evidence first, then let R1 decide.",
           "effects": {
             "kyc.status": "edd_ordered",
             "risk.flags_add": ["EDD_ORDERED"]
@@ -100,9 +100,9 @@
         },
         {
           "id": "hold_now",
-          "label": "先暫停出帳",
+          "label": "Hold outbound payments first",
           "next": "n_noinvoice",
-          "rationale": "空白用途已足夠先止付。",
+          "rationale": "A blank purpose is already enough to stop payments first.",
           "effects": {
             "account.holds": ["outbound"],
             "risk.flags_add": ["EDD_HOLD"]
@@ -110,9 +110,9 @@
         },
         {
           "id": "cash_ok",
-          "label": "接受現金生意標籤",
+          "label": "Accept the cash-business label",
           "next": "n_indicator",
-          "rationale": "教學覆寫。沒有憑證的事實仍在，類型指標之後會觸發 R2。",
+          "rationale": "Teaching override. The lack of evidence is still a fact. The typology indicator will trigger R2 later.",
           "effects": {
             "risk.flags_add": ["CASH_LABEL_ACCEPTED"],
             "risk.score_delta": 30
@@ -123,8 +123,8 @@
     {
       "id": "n_noinvoice",
       "type": "scene",
-      "title": "仍然沒有發票",
-      "prompt": "客戶稱是現金生意，交不出發票、合約或稅務對照。規則 R1：沒有商業憑證的大額流水必須暫停並做加強審查。",
+      "title": "Still no invoices",
+      "prompt": "The customer says it is a cash business, but cannot produce invoices, contracts or matching tax records. Rule R1: large flows with no commercial evidence must be held and put through enhanced due diligence.",
       "next": "n_r1_gate",
       "twin_patch": {
         "kyc.commercial_evidence": "missing",
@@ -135,14 +135,14 @@
     {
       "id": "n_r1_gate",
       "type": "decision",
-      "title": "要不要維持暫停",
-      "prompt": "R1 已滿足。維持暫停、退出關係，還是接受現金生意並放行？",
+      "title": "Keep the hold?",
+      "prompt": "R1 has fired. Do you keep the hold, exit the relationship, or accept the cash business and release?",
       "choices": [
         {
           "id": "maintain_hold",
-          "label": "維持暫停並繼續審查",
+          "label": "Keep the hold and continue the review",
           "next": "n_indicator",
-          "rationale": "符合 R1。",
+          "rationale": "Matches R1.",
           "effects": {
             "account.holds": ["outbound"],
             "risk.flags_add": ["EDD_HOLD"]
@@ -150,18 +150,18 @@
         },
         {
           "id": "exit_rel",
-          "label": "退出客戶關係",
+          "label": "Exit the customer relationship",
           "next": "n_outcome_exit",
-          "rationale": "沒有憑證可以退出，不必等指標。",
+          "rationale": "With no evidence, you can exit without waiting for the indicator.",
           "effects": {
             "risk.flags_add": ["RELATIONSHIP_EXIT"]
           }
         },
         {
           "id": "accept_cash",
-          "label": "接受現金生意並放行",
+          "label": "Accept the cash business and release",
           "next": "n_indicator",
-          "rationale": "覆寫 R1。口頭標籤不是憑證。",
+          "rationale": "Overrides R1. An oral label is not evidence.",
           "effects": {
             "account.holds": [],
             "risk.flags_add": ["R1_OVERRIDDEN"],
@@ -173,8 +173,8 @@
     {
       "id": "n_indicator",
       "type": "scene",
-      "title": "有組織犯罪得益指標",
-      "prompt": "內部類型指標把這組流水標為有組織犯罪得益。這是合成教學指標，不是執法行動。規則 R2：指標出現時必須草擬可疑交易報告並建議凍結。",
+      "title": "Organised-crime proceeds indicator",
+      "prompt": "An internal typology indicator marks this set of flows as organised-crime proceeds. This is a synthetic teaching indicator, not a law-enforcement action. Rule R2: when the indicator appears, you must draft a suspicious transaction report and recommend a freeze.",
       "next": "n_r2_gate",
       "twin_patch": {
         "phase": "alert_triage",
@@ -184,14 +184,14 @@
     {
       "id": "n_r2_gate",
       "type": "decision",
-      "title": "指標出現之後",
-      "prompt": "R2 已滿足。建議凍結並上報、只草擬報告，或當一般現金生意結案？",
+      "title": "After the indicator appears",
+      "prompt": "R2 has fired. Do you recommend a freeze and report, only draft a report, or close it as an ordinary cash business?",
       "choices": [
         {
           "id": "str_freeze",
-          "label": "建議凍結並草擬可疑交易報告",
+          "label": "Recommend a freeze and draft a suspicious transaction report",
           "next": "n_outcome_freeze",
-          "rationale": "符合 R2 的完整出口。",
+          "rationale": "The complete exit that matches R2.",
           "effects": {
             "account.holds": ["outbound"],
             "risk.flags_add": ["STR_DRAFTED", "FREEZE_RECOMMENDED"]
@@ -199,18 +199,18 @@
         },
         {
           "id": "str_only",
-          "label": "草擬可疑交易報告",
+          "label": "Draft a suspicious transaction report",
           "next": "n_outcome_str",
-          "rationale": "上報留下紀錄，但 R2 還要求建議凍結。這是不完整出口，不是結案。",
+          "rationale": "The report leaves a record, but R2 also requires a freeze recommendation. This is an incomplete exit, not a case closure.",
           "effects": {
             "risk.flags_add": ["STR_DRAFTED"]
           }
         },
         {
           "id": "clear_cash",
-          "label": "當一般現金生意結案",
+          "label": "Close as an ordinary cash business",
           "next": "n_outcome_miss",
-          "rationale": "教學上的較差路徑。規則已要求不得這樣結案。",
+          "rationale": "Poor teaching path. The rule already says the case must not be closed this way.",
           "effects": {
             "risk.flags_add": ["R2_IGNORED"]
           }
@@ -220,8 +220,8 @@
     {
       "id": "n_outcome_exit",
       "type": "outcome",
-      "title": "已退出客戶關係",
-      "prompt": "關係結束。沒有商業憑證的旗標留在孿生狀態。",
+      "title": "Customer relationship exited",
+      "prompt": "The relationship has ended. The no-commercial-evidence flag stays in the twin state.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -231,8 +231,8 @@
     {
       "id": "n_outcome_freeze",
       "type": "outcome",
-      "title": "已建議凍結並草擬報告",
-      "prompt": "出帳暫停，報告已草擬。有組織犯罪指標仍是類型標記，不是行動指令。",
+      "title": "Freeze recommended and report drafted",
+      "prompt": "Outbound payments are on hold. The report is drafted. The organised-crime indicator is still a typology marker, not an order to act.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -242,8 +242,8 @@
     {
       "id": "n_outcome_str",
       "type": "outcome",
-      "title": "已草擬可疑交易報告",
-      "prompt": "上報出口。若出帳尚未暫停，狀態裡的指標仍要求覆核人員看見 R2。",
+      "title": "Suspicious transaction report drafted",
+      "prompt": "Reporting exit. If outbound payments are not yet on hold, the indicator in the state still requires reviewers to see R2.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",
@@ -253,8 +253,8 @@
     {
       "id": "n_outcome_miss",
       "type": "outcome",
-      "title": "當成現金生意結案",
-      "prompt": "較差路徑。R2 被忽略。儀表板之後應把這次 session 標成未跟規則。",
+      "title": "Closed as a cash business",
+      "prompt": "Poor teaching path. R2 was ignored. The dashboard should later mark this session as not following the rules.",
       "terminal": true,
       "twin_patch": {
         "phase": "closed",

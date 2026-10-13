@@ -22,7 +22,7 @@ The legitimate lookalike is separate authored evidence content, not the existing
 
 ## Index
 
-Titles below are short English labels. Files are numbered `01`–`11` in this order. The JSON `title` and prompts are Traditional Chinese, matching `01-deepfake-hk-001.example.json`. `case_id` is unchanged.
+Titles below are short English labels. Files are numbered `01`–`11` in this order. Every script is English (`locale` `en`); the validator rejects any other locale or Chinese, Japanese or Korean text. The original Traditional Chinese text was translated in October 2026 without changing ids, rules, effects or dispositions. `case_id` is unchanged.
 
 | File | case_id | Themes | case_kind |
 | --- | --- | --- | --- |
