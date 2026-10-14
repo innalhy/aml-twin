@@ -8,8 +8,9 @@ using UnityEngine.UI;
 namespace TwinAml
 {
     /// <summary>
-    /// Light corporate portal for Scn_Dashboard. Exercise scenes keep the dark UiKit shell.
-    /// Progress is completed catalogue modules divided by six. Empty stays 0%.
+    /// Light corporate portal for Scn_Dashboard.
+    /// Dashboard, My Training, Reports, and Help are pages of this canvas.
+    /// Only the gear opens Scn_Settings. Progress is completed modules divided by six.
     /// </summary>
     public static class PortalDashboard
     {
@@ -64,7 +65,7 @@ namespace TwinAml
             bgImage.raycastTarget = false;
 
             BuildHeader(canvasGo.transform, flow);
-            BuildTabs(canvasGo.transform, flow);
+            var tabs = BuildTabs(canvasGo.transform, flow);
             var strip = TopBand(canvasGo.transform, "Disclaimer", 120f, 32f);
             var stripImage = strip.gameObject.AddComponent<Image>();
             stripImage.color = new Color32(0xe4, 0xeb, 0xf2, 0xff);
@@ -105,11 +106,13 @@ namespace TwinAml
 
             var height = BuildBody(content, flow);
             content.sizeDelta = new Vector2(0f, height);
+            if (tabs != null) tabs.SetSiblingIndex(canvasGo.transform.childCount - 1);
         }
 
         static void BuildHeader(Transform canvas, FlowController flow)
         {
             var header = TopBand(canvas, "Header", 0f, 72f);
+            header.gameObject.AddComponent<RectMask2D>();
             var image = header.gameObject.AddComponent<Image>();
             image.color = Navy;
             image.raycastTarget = false;
@@ -145,7 +148,7 @@ namespace TwinAml
             });
         }
 
-        static void BuildTabs(Transform canvas, FlowController flow)
+        static RectTransform BuildTabs(Transform canvas, FlowController flow)
         {
             var bar = TopBand(canvas, "Tabs", 72f, 48f);
             var image = bar.gameObject.AddComponent<Image>();
@@ -161,23 +164,20 @@ namespace TwinAml
             {
                 var index = i;
                 var on = flow.PortalPage == index;
-                var tab = Box(bar, "Tab", 12f + index * 188f, 0f, 180f, 48f);
+                var tab = Box(bar, "Tab", 12f + index * 188f, 4f, 180f, 40f);
                 var hit = tab.gameObject.AddComponent<Image>();
-                hit.color = new Color(1f, 1f, 1f, 0f);
+                hit.color = on ? (Color)SoftBlue : Color.white;
                 var button = tab.gameObject.AddComponent<Button>();
                 button.targetGraphic = hit;
-                button.onClick.AddListener(() =>
-                {
-                    flow.PortalPage = index;
-                    flow.Go(SceneId.Scn_Dashboard);
-                });
-                Put(tab, Locale.T(keys[index]), 16, on ? FontStyle.Bold : FontStyle.Normal, on ? Blue : Muted, TextAnchor.MiddleCenter, 8f, 6f, 164f, 34f);
+                button.onClick.AddListener(() => flow.OpenPortal(index));
+                Put(tab, Locale.T(keys[index]), 16, on ? FontStyle.Bold : FontStyle.Normal, on ? Blue : Muted, TextAnchor.MiddleCenter, 8f, 4f, 164f, 32f);
                 if (!on) continue;
-                var underline = Box(tab, "Underline", 28f, 43f, 124f, 3f);
+                var underline = Box(tab, "Underline", 28f, 36f, 124f, 3f);
                 var barImage = underline.gameObject.AddComponent<Image>();
                 barImage.color = Blue;
                 barImage.raycastTarget = false;
             }
+            return bar;
         }
 
         static float BuildBody(RectTransform content, FlowController flow)
@@ -349,40 +349,47 @@ namespace TwinAml
             var lead = Locale.T("portal.reports.lead");
             var leadH = Estimate(lead, 16, PageW - Margin * 2f);
             Put(content, lead, 16, FontStyle.Normal, Muted, TextAnchor.UpperLeft, Margin, y, PageW - Margin * 2f, leadH);
-            y += leadH + 12f;
+            y += leadH + 8f;
+            var countLine = Locale.T("portal.reports.count") + "  ·  " + flow.Completed.Count;
+            Put(content, countLine, 16, FontStyle.Bold, Ink, TextAnchor.MiddleLeft, Margin, y, PageW - Margin * 2f, 28f);
+            y += 40f;
             y = Metrics(content, flow, y);
             if (flow.Session != null && !flow.Session.Completed)
             {
                 var openText = Locale.T("dash.open") + "\n" + flow.Session.Topic + "  ·  " + flow.Session.CaseId;
-                var openH = Estimate(openText, 15, PageW - Margin * 2f - 36f) + 28f;
-                var open = Card(content, "Open", Margin, y, PageW - Margin * 2f, openH, Color.white);
-                Put(open, openText, 15, FontStyle.Normal, Ink, TextAnchor.UpperLeft, 18f, 14f, PageW - Margin * 2f - 36f, openH - 24f);
-                y += openH + Gap;
+                y = TextCard(content, "Open", openText, y);
             }
-            if (flow.Completed.Count == 0) return y + 12f;
+            if (flow.Completed.Count == 0)
+            {
+                y = TextCard(content, "Empty", Locale.T("dash.empty"), y);
+                return y + 12f;
+            }
+            var n = 0;
             for (var i = flow.Completed.Count - 1; i >= 0; i--)
             {
-                var text = SessionText(flow.Completed[i]);
-                var h = Estimate(text, 15, PageW - Margin * 2f - 36f) + 28f;
-                var card = Card(content, "Session", Margin, y, PageW - Margin * 2f, h, Color.white);
-                Put(card, text, 15, FontStyle.Normal, Ink, TextAnchor.UpperLeft, 18f, 14f, PageW - Margin * 2f - 36f, h - 24f);
-                y += h + Gap;
+                n++;
+                var text = Locale.T("portal.reports.session") + "  " + n + "\n" + SessionText(flow.Completed[i]);
+                y = TextCard(content, "Session", text, y);
             }
             return y + 12f;
         }
 
         static float Help(RectTransform content, FlowController flow, float y)
         {
-            var body = Locale.T("portal.help.body");
-            var h = Estimate(body, 16, PageW - Margin * 2f - 40f) + 36f;
-            var card = Card(content, "Help", Margin, y, PageW - Margin * 2f, h, Color.white);
-            Put(card, body, 16, FontStyle.Normal, Ink, TextAnchor.UpperLeft, 20f, 16f, PageW - Margin * 2f - 40f, h - 28f);
-            y += h + Gap;
-            var note = Locale.T("portal.disclaimer");
-            var noteH = 64f;
-            var noteCard = Card(content, "HelpNote", Margin, y, PageW - Margin * 2f, noteH, Color.white);
-            Put(noteCard, note, 15, FontStyle.Normal, Muted, TextAnchor.MiddleLeft, 20f, 12f, PageW - Margin * 2f - 40f, 40f);
-            return y + noteH + 28f;
+            y = TextCard(content, "HelpNav", Locale.T("portal.help.nav"), y);
+            y = TextCard(content, "HelpSteps", Locale.T("portal.help.steps"), y);
+            y = TextCard(content, "HelpBody", Locale.T("portal.help.body"), y);
+            y = TextCard(content, "HelpNote", Locale.T("portal.disclaimer"), y);
+            return y + 12f;
+        }
+
+        static float TextCard(RectTransform content, string name, string body, float y)
+        {
+            var width = PageW - Margin * 2f - 40f;
+            var h = Estimate(body, 16, width) + 32f;
+            var card = Card(content, name, Margin, y, PageW - Margin * 2f, h, Color.white);
+            Put(card, body, 16, FontStyle.Normal, Ink, TextAnchor.UpperLeft, 20f, 14f, width, h - 24f);
+            return y + h + Gap;
         }
 
         static float Metrics(RectTransform content, FlowController flow, float y)

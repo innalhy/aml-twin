@@ -75,6 +75,14 @@ namespace TwinAml
             _queueGo = true;
         }
 
+        public void OpenPortal(int page)
+        {
+            if (page < 0) page = 0;
+            if (page > 3) page = 3;
+            PortalPage = page;
+            Go(SceneId.Scn_Dashboard);
+        }
+
         void LateUpdate()
         {
             if (!_queueGo) return;

@@ -312,6 +312,14 @@ namespace TwinAml
             Z("portal.reports.lead", "以下各列是由劇本寫入的練習紀錄。同一清單存放於本機快照。");
             E("portal.help.body", "The donut is completed modules divided by the six-module catalogue. Topic 01 and Topic 02 are the playable modules. A module counts as completed only when the latest session for it is not a trap. Trap rate, reaction time, and the four twin fields come from those sessions. Empty figures stay blank until the first choice is submitted.");
             Z("portal.help.body", "圓環為已完成模組除以六個目錄模組。專題一與專題二為可進行模組。某一模組只有在其最近一次練習並非陷阱時，才計為已完成。出錯率、反應時間及四項孿生欄位均來自該等練習。首次提交選擇之前，上述數字維持空白。");
+            E("portal.help.nav", "Dashboard, My Training, Reports, and Help stay on this portal. The name on the right is the signed-in trainee. Only the gear opens Settings, and Settings only changes the interface language.");
+            Z("portal.help.nav", "儀表板、我的培訓、報告與說明均停留於本平台。右側姓名是已登入學員。只有齒輪會開啟設定，而設定只變更介面語言。");
+            E("portal.help.steps", "Topic 1 runs Brief, Inbox, Meeting, Decision, then Feedback. Topic 2 runs Brief, Statement, Chain, Decision, then Feedback. The blue label is the current step.");
+            Z("portal.help.steps", "專題一依次為簡報、收件匣、視像會議、決定、回饋。專題二依次為簡報、客戶說法、資金路徑、決定、回饋。藍色文字為目前步驟。");
+            E("portal.reports.session", "Session report");
+            Z("portal.reports.session", "練習報告");
+            E("portal.reports.count", "Sessions on this machine");
+            Z("portal.reports.count", "本機練習次數");
             E("portal.lang", "繁");
             Z("portal.lang", "EN");
             E("portal.dismiss", "Close");
