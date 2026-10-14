@@ -39,6 +39,26 @@ namespace TwinAml
             Z("nav.dashboard", "儀表板");
             E("nav.settings", "Settings");
             Z("nav.settings", "設定");
+            E("step.t01.1", "Brief");
+            Z("step.t01.1", "簡報");
+            E("step.t01.2", "Inbox");
+            Z("step.t01.2", "收件匣");
+            E("step.t01.3", "Meeting");
+            Z("step.t01.3", "視像會議");
+            E("step.t01.4", "Decision");
+            Z("step.t01.4", "決定");
+            E("step.t01.5", "Feedback");
+            Z("step.t01.5", "回饋");
+            E("step.t02.1", "Brief");
+            Z("step.t02.1", "簡報");
+            E("step.t02.2", "Statement");
+            Z("step.t02.2", "客戶說法");
+            E("step.t02.3", "Chain");
+            Z("step.t02.3", "資金路徑");
+            E("step.t02.4", "Decision");
+            Z("step.t02.4", "決定");
+            E("step.t02.5", "Feedback");
+            Z("step.t02.5", "回饋");
 
             E("boot.kicker", "COMP3424  ·  TwinAML");
             Z("boot.kicker", "COMP3424  ·  TwinAML");

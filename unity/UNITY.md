@@ -33,6 +33,15 @@ Sign in with any display name. It is stored only in the local dashboard snapshot
 
 Both **Start** buttons on the hub are orange `#f5a524`.
 
+Boot, sign-in, the room note, the hub, settings, and both topics use the same chrome as the training portal: a navy header with the TwinAML mark and the title TwinAML — AML Training Portal, a synthetic-training strip, a light gray page, and white rounded cards in a centered column. Forward actions are blue `#2f6fed`. Back actions are a lighter blue. Trap choices stay red and pass choices stay green, so the grade is still visible on the light page.
+
+Topic panels add a step line under that strip. The current step is blue and bold. Earlier steps are green. Later steps are gray. A thin bar fills up to the current step.
+
+| Topic | Steps | Scenes on the highlighted step |
+| --- | --- | --- |
+| Topic 1 | Brief → Inbox → Meeting → Decision → Feedback | Decision is the payment desk or hold-and-report. Feedback is the trap, the pass, and the teach panel. |
+| Topic 2 | Brief → Statement → Chain → Decision → Feedback | Feedback is either miss or pass. |
+
 ## Scene map
 
 ```mermaid
@@ -100,7 +109,7 @@ T02 B and C both end as `account_exit`, which this script lists as acceptable. T
 
 ## Twin state and the dashboard
 
-`Scn_Dashboard` is the **TwinAML — AML Training Portal** (TwinAML — 反洗錢培訓平台). It is a light three-column board on its own canvas. The exercise scenes stay on the dark office shell. The brand on that board is TwinAML. The page heading is Overview and Progress (總覽與進度).
+`Scn_Dashboard` is the **TwinAML — AML Training Portal** (TwinAML — 反洗錢培訓平台). It is a light three-column board. Boot, sign-in, the hub, and both topics use the same navy header, light page, and white cards. The brand is TwinAML. The page heading is Overview and Progress (總覽與進度).
 
 The top bar is navy: a T mark, the portal title, a short language toggle, a settings gear (`Scn_Settings`), a notices bell, and the signed-in name with the role AML Specialist (反洗錢專員). Tabs under it are Dashboard, My Training, Reports, and Help. A strip under the tabs keeps the synthetic-training line visible.
 
@@ -121,7 +130,7 @@ The meeting panel has a video slot for `media_ref` (`data/media/deepfake-hk-001/
 
 ## Language
 
-The header switches **English** and **繁體中文**. The portal uses a short 繁 / EN toggle; exercise screens keep the longer language button. Chinese copy is formal written Traditional Chinese for a bank compliance room, not spoken Cantonese. Script prompts stay in the Traditional Chinese of the case file either way. The embedded font is a subset of WenQuanYi Micro Hei (Apache 2.0) so those characters can draw without a local CJK install. See `Assets/Fonts/NOTICE.txt`.
+The header switches **English** and **繁體中文** with a short 繁 / EN toggle on the portal and on the exercise screens. Chinese copy is formal written Traditional Chinese for a bank compliance room, not spoken Cantonese. Script prompts stay in the Traditional Chinese of the case file either way. The embedded font is a subset of WenQuanYi Micro Hei (Apache 2.0) so those characters can draw without a local CJK install. See `Assets/Fonts/NOTICE.txt`.
 
 ## What this folder does not do
 

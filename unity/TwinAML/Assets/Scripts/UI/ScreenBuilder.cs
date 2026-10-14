@@ -111,8 +111,8 @@ namespace TwinAml
             });
             UiKit.EndCard();
             UiKit.ButtonRow(
-                Locale.T("nav.dashboard"), Btn.Slate, () => flow.Go(SceneId.Scn_Dashboard),
-                Locale.T("nav.settings"), Btn.Slate, () => flow.Go(SceneId.Scn_Settings));
+                Locale.T("nav.dashboard"), Btn.Soft, () => flow.Go(SceneId.Scn_Dashboard),
+                Locale.T("nav.settings"), Btn.Soft, () => flow.Go(SceneId.Scn_Settings));
             UiKit.Note(Locale.T("hub.done") + ": " + flow.Completed.Count);
         }
 
@@ -138,7 +138,7 @@ namespace TwinAml
             }
             UiKit.Button(Locale.T("next"), Btn.Slate, () =>
                 flow.Go(t01 ? SceneId.Scn_T01_Inbox : SceneId.Scn_T02_Statement));
-            UiKit.Button(Locale.T("back.hub"), Btn.Slate, () => flow.Go(SceneId.Scn_TopicsHub));
+            UiKit.Button(Locale.T("back.hub"), Btn.Soft, () => flow.Go(SceneId.Scn_TopicsHub));
         }
 
         static void Inbox()
@@ -152,7 +152,7 @@ namespace TwinAml
             UiKit.EndCard();
             Quote("n_intake");
             UiKit.Button(Locale.T("next"), Btn.Slate, () => flow.Go(SceneId.Scn_T01_Meeting));
-            UiKit.Button(Locale.T("back.hub"), Btn.Slate, () => flow.Go(SceneId.Scn_TopicsHub));
+            UiKit.Button(Locale.T("back.hub"), Btn.Soft, () => flow.Go(SceneId.Scn_TopicsHub));
         }
 
         static void Meeting()
@@ -174,7 +174,7 @@ namespace TwinAml
             UiKit.ButtonRow(
                 Locale.T("t01.meeting.pay"), Btn.Danger, () => flow.Go(SceneId.Scn_T01_PayDesk),
                 Locale.T("t01.meeting.report"), Btn.Pass, () => flow.Go(SceneId.Scn_T01_Report));
-            UiKit.Button(Locale.T("back.inbox"), Btn.Slate, () => flow.Go(SceneId.Scn_T01_Inbox));
+            UiKit.Button(Locale.T("back.inbox"), Btn.Soft, () => flow.Go(SceneId.Scn_T01_Inbox));
         }
 
         static void PayDesk()
@@ -185,7 +185,7 @@ namespace TwinAml
             UiKit.Body(Locale.T("t01.pay.form"));
             UiKit.EndCard();
             ChoiceButton(RoomPaths.T01ConfirmPay, Btn.Danger);
-            UiKit.Button(Locale.T("back.meeting"), Btn.Slate, () => flow.Go(SceneId.Scn_T01_Meeting));
+            UiKit.Button(Locale.T("back.meeting"), Btn.Soft, () => flow.Go(SceneId.Scn_T01_Meeting));
         }
 
         static void Report()
@@ -193,7 +193,7 @@ namespace TwinAml
             UiKit.Title(Locale.T("t01.report.title"));
             UiKit.Body(Locale.T("t01.report.body"));
             ChoiceButton(RoomPaths.T01HoldReport, Btn.Pass);
-            UiKit.Button(Locale.T("back.meeting"), Btn.Slate, () => FlowController.Instance.Go(SceneId.Scn_T01_Meeting));
+            UiKit.Button(Locale.T("back.meeting"), Btn.Soft, () => FlowController.Instance.Go(SceneId.Scn_T01_Meeting));
         }
 
         static void Pass()
@@ -213,7 +213,7 @@ namespace TwinAml
             TwinCard();
             UiKit.Note(Locale.T("written"));
             UiKit.ButtonRow(
-                Locale.T("back.hub"), Btn.Slate, () => flow.Go(SceneId.Scn_TopicsHub),
+                Locale.T("back.hub"), Btn.Soft, () => flow.Go(SceneId.Scn_TopicsHub),
                 Locale.T("open.dashboard"), Btn.Slate, () => flow.Go(SceneId.Scn_Dashboard));
         }
 
@@ -227,7 +227,7 @@ namespace TwinAml
             Quote("n_link");
             Quote("n_story");
             UiKit.Button(Locale.T("next"), Btn.Slate, () => flow.Go(SceneId.Scn_T02_Chain));
-            UiKit.Button(Locale.T("back.hub"), Btn.Slate, () => flow.Go(SceneId.Scn_TopicsHub));
+            UiKit.Button(Locale.T("back.hub"), Btn.Soft, () => flow.Go(SceneId.Scn_TopicsHub));
         }
 
         static void Chain()
@@ -250,7 +250,7 @@ namespace TwinAml
                 UiKit.EndCard();
             }
             UiKit.Button(Locale.T("next"), Btn.Slate, () => flow.Go(SceneId.Scn_T02_Decision));
-            UiKit.Button(Locale.T("back.statement"), Btn.Slate, () => flow.Go(SceneId.Scn_T02_Statement));
+            UiKit.Button(Locale.T("back.statement"), Btn.Soft, () => flow.Go(SceneId.Scn_T02_Statement));
         }
 
         static void Decision()
@@ -264,7 +264,7 @@ namespace TwinAml
             ChoiceButton(RoomPaths.T02B, Btn.Pass);
             ChoiceButton(RoomPaths.T02C, Btn.Pass);
             ChoiceButton(RoomPaths.T02D, Btn.Pass);
-            UiKit.Button(Locale.T("back.hub"), Btn.Slate, () => FlowController.Instance.Go(SceneId.Scn_TopicsHub));
+            UiKit.Button(Locale.T("back.hub"), Btn.Soft, () => FlowController.Instance.Go(SceneId.Scn_TopicsHub));
         }
 
         static void Outcome(string titleKey, string bodyKey, bool teachNext)
@@ -278,7 +278,7 @@ namespace TwinAml
             if (teachNext)
                 UiKit.Button(Locale.T("next"), Btn.Slate, () => flow.Go(SceneId.Scn_T01_Teach));
             UiKit.ButtonRow(
-                Locale.T("back.hub"), Btn.Slate, () => flow.Go(SceneId.Scn_TopicsHub),
+                Locale.T("back.hub"), Btn.Soft, () => flow.Go(SceneId.Scn_TopicsHub),
                 Locale.T("open.dashboard"), Btn.Slate, () => flow.Go(SceneId.Scn_Dashboard));
         }
 
@@ -287,9 +287,9 @@ namespace TwinAml
             var flow = FlowController.Instance;
             UiKit.Title(Locale.T("settings.title"));
             UiKit.Body(Locale.T("settings.body"));
-            UiKit.Button(Locale.T("settings.en"), Btn.Slate, () => flow.SetLocale(LocaleCode.En));
-            UiKit.Button(Locale.T("settings.zh"), Btn.Slate, () => flow.SetLocale(LocaleCode.Zh));
-            UiKit.Button(Locale.T("back.hub"), Btn.Slate, () => flow.Go(SceneId.Scn_TopicsHub));
+            UiKit.Button(Locale.T("settings.en"), Btn.Soft, () => flow.SetLocale(LocaleCode.En));
+            UiKit.Button(Locale.T("settings.zh"), Btn.Soft, () => flow.SetLocale(LocaleCode.Zh));
+            UiKit.Button(Locale.T("back.hub"), Btn.Soft, () => flow.Go(SceneId.Scn_TopicsHub));
         }
 
         static void ChoiceButton(RoomChoice choice, Btn kind)
