@@ -14,6 +14,9 @@ namespace TwinAml
         public TwinSession Session;
         public readonly List<TwinSession> Completed = new List<TwinSession>();
         public string LastError = "";
+        public int PortalPage;
+        public bool BellOpen;
+        public string PortalNotice = "";
 
         long _choiceShownUnixMs;
         bool _entered;

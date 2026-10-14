@@ -189,7 +189,7 @@ node scripts/unity-room-paths.test.mjs
 
 ## Unity training room
 
-Open [`unity/UNITY.md`](unity/UNITY.md). In Unity 2022.3 LTS, open the project folder `unity/TwinAML`, then open `Scn_Boot` and press Play (or use the menu **TwinAML → Play From Boot**). Topic 1 is `deepfake-hk-001`. Topic 2 is `hk-greythunder-mule-001`. The dashboard in that room reads the twin written by those choices. Docker is not involved.
+Open [`unity/UNITY.md`](unity/UNITY.md). In Unity 2022.3 LTS, open the project folder `unity/TwinAML`, then open `Scn_Boot` and press Play (or use the menu **TwinAML → Play From Boot**). Topic 1 is `deepfake-hk-001`. Topic 2 is `hk-greythunder-mule-001`. The dashboard in that room is the TwinAML AML Training Portal. It reads the twin written by those choices and still writes `twinaml-dashboard.json`. Docker is not involved.
 
 ## Deploy
 

@@ -8,6 +8,11 @@ namespace TwinAml
     {
         public static void Build(SceneId id)
         {
+            if (id == SceneId.Scn_Dashboard)
+            {
+                PortalDashboard.Build();
+                return;
+            }
             var flow = FlowController.Instance;
             UiKit.BuildShell(id);
             switch (id)
@@ -16,7 +21,6 @@ namespace TwinAml
                 case SceneId.Scn_Login: Login(); break;
                 case SceneId.Scn_Intro: Intro(); break;
                 case SceneId.Scn_TopicsHub: Hub(); break;
-                case SceneId.Scn_Dashboard: Dashboard(); break;
                 case SceneId.Scn_Settings: Settings(); break;
                 case SceneId.Scn_T01_Brief: TopicBrief("T01"); break;
                 case SceneId.Scn_T01_Inbox: Inbox(); break;
@@ -276,45 +280,6 @@ namespace TwinAml
             UiKit.ButtonRow(
                 Locale.T("back.hub"), Btn.Slate, () => flow.Go(SceneId.Scn_TopicsHub),
                 Locale.T("open.dashboard"), Btn.Slate, () => flow.Go(SceneId.Scn_Dashboard));
-        }
-
-        static void Dashboard()
-        {
-            var flow = FlowController.Instance;
-            UiKit.Title(Locale.T("dash.title"));
-            if (flow.Completed.Count == 0)
-            {
-                UiKit.Body(Locale.T("dash.empty"));
-                UiKit.BeginCard();
-                UiKit.Body(Locale.T("dash.rate") + ": " + Locale.T("none"));
-                UiKit.Body(Locale.T("dash.reaction") + ": " + Locale.T("none"));
-                UiKit.Body(Locale.T("field.funds") + ": " + Locale.T("none"));
-                UiKit.Body(Locale.T("field.callback") + ": " + Locale.T("none"));
-                UiKit.Body(Locale.T("field.dual") + ": " + Locale.T("none"));
-                UiKit.Body(Locale.T("field.str") + ": " + Locale.T("none"));
-                UiKit.EndCard();
-            }
-            else
-            {
-                var traps = flow.TrapCount();
-                var total = flow.Completed.Count;
-                var pct = (100.0 * traps / total).ToString("0.0");
-                UiKit.BeginCard();
-                UiKit.Heading(Locale.T("dash.rate"));
-                UiKit.Body(traps + " / " + total + "  (" + pct + "%)");
-                UiKit.Heading(Locale.T("dash.reaction"));
-                UiKit.Body(flow.MeanReactionMs() + " ms");
-                UiKit.EndCard();
-                UiKit.Heading(Locale.T("dash.history"));
-                for (var i = flow.Completed.Count - 1; i >= 0; i--) SessionCard(flow.Completed[i]);
-            }
-            if (flow.Session != null && !flow.Session.Completed)
-            {
-                UiKit.Body(Locale.T("dash.open"));
-                SessionCard(flow.Session);
-            }
-            UiKit.Note(Locale.T("dash.file") + "\n" + DashboardStore.FilePath);
-            UiKit.Button(Locale.T("back.hub"), Btn.Slate, () => flow.Go(SceneId.Scn_TopicsHub));
         }
 
         static void Settings()

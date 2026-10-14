@@ -28,7 +28,7 @@ Sign in with any display name. It is stored only in the local dashboard snapshot
 | Sign-in | `Scn_Login` |
 | Room note | `Scn_Intro` |
 | Topics | `Scn_TopicsHub` |
-| Empty or filled dashboard | `Scn_Dashboard` |
+| AML Training Portal | `Scn_Dashboard` |
 | Language | `Scn_Settings` |
 
 Both **Start** buttons on the hub are orange `#f5a524`.
@@ -100,6 +100,12 @@ T02 B and C both end as `account_exit`, which this script lists as acceptable. T
 
 ## Twin state and the dashboard
 
+`Scn_Dashboard` is the **TwinAML — AML Training Portal** (TwinAML — 反洗錢培訓平台). It is a light three-column board on its own canvas. The exercise scenes stay on the dark office shell. The brand on that board is TwinAML. The page heading is Overview and Progress (總覽與進度).
+
+The top bar is navy: a T mark, the portal title, a short language toggle, a settings gear (`Scn_Settings`), a notices bell, and the signed-in name with the role AML Specialist (反洗錢專員). Tabs under it are Dashboard, My Training, Reports, and Help. A strip under the tabs keeps the synthetic-training line visible.
+
+The catalogue has six modules. The donut is completed modules divided by six, so an empty board reads 0%. A playable module counts as completed when its latest session is a pass. In progress means that latest session was a trap, or the module is open and no choice has been written yet. Remaining is six minus those two counts. Topic 01 and Topic 02 are the modules you can start. Trade-based money laundering and the insurer-control card stay Not Started. Account rental and the featured cross-border card stay locked until Topic 02 has a pass; both remain catalogue cards. Topic 01 uses a blue Continue (or Review once passed). Topic 02 uses an orange Start Module (`#f5a524`) until it is passed. Quick Access (Policy, News, Contact Compliance) posts a training-prop notice.
+
 The mirror is the cloned script state plus patches. These four dashboard fields are written from that mirror and from the room choice. They are not extra keys in the case file.
 
 | Field | When it is true |
@@ -109,13 +115,13 @@ The mirror is the cloned script state plus patches. These four dashboard fields 
 | `dual_approval` | The room choice marks dual control, or `account.holds` contains `outbound`. |
 | `str_filed` | `STR_DRAFTED` is on the mirror, or the disposition is `str_drafted`, `freeze_recommended`, or `cdd_refreshed_and_str`. |
 
-Before any choice, the dashboard is empty: trap rate (出錯率) and reaction time stay blank. After a choice, the room appends the session and writes `twinaml-dashboard.json` under `Application.persistentDataPath`. The dashboard reads that list: disposition, flags, risk score, the four fields, choice id, script choice ids, and reaction time in milliseconds. Trap rate is completed traps divided by completed exercises.
+Before any choice, the metrics strip is empty: trap rate (出錯率), mean reaction time, and the four fields stay blank. After a choice, the room appends the session and writes `twinaml-dashboard.json` under `Application.persistentDataPath`. That write is unchanged. The strip reads the same list: trap rate is completed traps divided by completed exercises, reaction time is the mean, and the four fields are the latest session. The path of the snapshot is on the strip. Reports repeats each session (disposition, flags, risk score, the four fields, choice id, script choice ids, and reaction time). The left column also lists recent completions and the pass or trap badge.
 
 The meeting panel has a video slot for `media_ref` (`data/media/deepfake-hk-001/kyc-clip.mp4`). If the file is absent, the slot says so and the exercise continues. Phase 1 does not generate a clip.
 
 ## Language
 
-The header switches **English** and **繁體中文**. Chinese copy is formal written Traditional Chinese for a bank compliance room, not spoken Cantonese. Script prompts stay in the Traditional Chinese of the case file either way. The embedded font is a subset of WenQuanYi Micro Hei (Apache 2.0) so those characters can draw without a local CJK install. See `Assets/Fonts/NOTICE.txt`.
+The header switches **English** and **繁體中文**. The portal uses a short 繁 / EN toggle; exercise screens keep the longer language button. Chinese copy is formal written Traditional Chinese for a bank compliance room, not spoken Cantonese. Script prompts stay in the Traditional Chinese of the case file either way. The embedded font is a subset of WenQuanYi Micro Hei (Apache 2.0) so those characters can draw without a local CJK install. See `Assets/Fonts/NOTICE.txt`.
 
 ## What this folder does not do
 
