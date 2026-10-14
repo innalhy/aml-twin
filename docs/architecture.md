@@ -71,7 +71,7 @@ Media is not in git. The `media_ref` on `n_intake` is `data/media/deepfake-hk-00
 ## Clients
 
 - **Now**: `frontend/`, React + Vite + TypeScript, deployed to Cloudflare Pages. The target UI is a scenario player plus a simple dashboard that reads twin state.
-- **Later, optional**: a Unity client calling the same Worker API. Do not add a Unity project until one is requested.
+- **Editor room**: [`unity/UNITY.md`](../unity/UNITY.md). Unity 2022.3 LTS, first scene `Scn_Boot`. It applies the schema 0.1 patches locally while you play Topic 1 and Topic 2. That mirror is the training-room twin for the Editor dashboard. It is not a second case format, and it is not the Worker state machine (P1-S2 is still unstarted). A later Unity build can call the Worker when those routes exist.
 
 ## Explicitly out of scope
 
