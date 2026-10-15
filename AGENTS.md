@@ -19,11 +19,12 @@ This file is the working agreement for AI agents in **TwinAML**, a COMP3424 demo
    - optional FastAPI in `backend/` as a local/dev alternative only. The production demo uses the Worker. Do not treat FastAPI as the required runtime.
    - case scripts in `data/cases/`
    - notes in `docs/`
-3. Do not add Docker, Kubernetes, Neo4j, Kafka, a microservice split, a Unity project, or other enterprise pieces unless the owner explicitly asks in that session. Docker is not a supported way to run or deploy this demo. Do not reintroduce `docker-compose.yml` or a container cluster as a requirement.
-4. Prefer the web client over Unity. Unity is an optional later face for the same twin, not a second platform.
+   - one Unity Editor room in `unity/TwinAML` (see `unity/UNITY.md`). It plays pre-authored scripts locally. It is not a second API.
+3. Do not add Docker, Kubernetes, Neo4j, Kafka, a microservice split, a second Unity project, or other enterprise pieces unless the owner explicitly asks in that session. Docker is not a supported way to run or deploy this demo. Do not reintroduce `docker-compose.yml` or a container cluster as a requirement.
+4. Prefer the web client for the Pages demo. The Editor room is the immersive face. It is not a second platform and it does not replace the Worker.
 5. English is the primary language for docs and UI copy. Keep course terms in English when they are the lecture vocabulary: mirroring, shadowing, threading, Chan Level 1, Chan Level 2, rules-before-AI. Do not switch docs or the placeholder UI back to Traditional Chinese.
 6. Never commit secrets, API keys, `.env` files, Cloudflare account identifiers, or large media. `data/media/` stays empty aside from `.gitkeep`. Scripts may reference media paths; the binaries stay local.
-7. Do not invent a second state model. The twin is backend state plus events. The web app renders that state. It does not own a private copy of the case world.
+7. Do not invent a second state model. The twin is backend state plus events. The web app renders that state. It does not own a private copy of the case world. The Editor room applies the same schema 0.1 mirror locally until the Worker state machine exists. It does not invent another script format.
 8. Rules decide compliance outcomes. Do not let a language model become the system of record. Any later model may explain a decision only after rules have fired, and a human override must be stored as an event.
 9. Deploy docs stay on Cloudflare Pages (web) and Cloudflare Workers (API). See `docs/cloudflare.md`. A custom domain is attached in the Cloudflare dashboard or in Wrangler config, not by standing up another host.
 
@@ -36,6 +37,7 @@ This file is the working agreement for AI agents in **TwinAML**, a COMP3424 demo
 - `docs/cloudflare.md` — Pages, the Worker, and a custom domain.
 - `data/cases/01-deepfake-hk-001.example.json` — the Level 1 example script.
 - `packages/schemas/script.schema.json` — the minimal script contract.
+- `unity/UNITY.md` — Editor training room: `Scn_Boot`, Topic 1, Topic 2.
 
 ## Cursor Cloud specific instructions
 

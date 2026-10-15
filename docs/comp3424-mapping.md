@@ -28,7 +28,7 @@ Level 2 lets one session shadow the trainee. The trainee's choices become events
 
 Level 2 is done when the same case can end as "onboarding refused" and as "opened, then cleared as a false positive", the dashboard shows different `disposition` values and flags, and the ordered events can be replayed.
 
-Anything beyond that (bidirectional control of a real system, autonomous agents, Unity) is outside this demo.
+Anything beyond that (bidirectional control of a real system, autonomous agents, a Unity client on the Worker API) is outside this Worker demo. An Editor training room now lives under [`unity/`](../unity/UNITY.md). It plays two scripts locally. It does not shadow a live session on the Worker.
 
 ## Mirroring, shadowing, threading
 
