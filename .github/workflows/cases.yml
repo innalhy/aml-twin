@@ -13,3 +13,4 @@ jobs:
         with:
           node-version: "22"
       - run: node scripts/validate-cases.mjs
+      - run: node scripts/unity-room-paths.test.mjs

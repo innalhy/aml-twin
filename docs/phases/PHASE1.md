@@ -42,7 +42,7 @@ Deploy path: **Cloudflare Pages** (`frontend/`) + **Cloudflare Worker** (`worker
 ## Out of scope (Phase 1)
 
 - Docker, Kubernetes, Neo4j, Kafka, microservices.
-- Unity client.
+- Unity client on the Worker. An Editor room under [`unity/`](../../unity/UNITY.md) already plays two scripts locally. That room is not one of the slices below, and it does not implement P1-S2.
 - New case families beyond the 11 scripts. Phase 2 adds mixer / peel-chain and synthetic-ID cases.
 - Live LLM judging disposition.
 - Real bank / HKMA / STR filing integration.

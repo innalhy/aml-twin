@@ -79,7 +79,31 @@ data/media/**
 .dev.vars
 .dev.vars.*
 
-# --- Unity (if a client is added later) ---
+# --- Unity ---
+unity/TwinAML/[Ll]ibrary/
+unity/TwinAML/[Tt]emp/
+unity/TwinAML/[Oo]bj/
+unity/TwinAML/[Bb]uild/
+unity/TwinAML/[Bb]uilds/
+unity/TwinAML/[Ll]ogs/
+unity/TwinAML/[Uu]ser[Ss]ettings/
+unity/TwinAML/[Mm]emoryCaptures/
+unity/TwinAML/[Rr]ecordings/
+unity/TwinAML/*.csproj
+unity/TwinAML/*.sln
+unity/TwinAML/*.suo
+unity/TwinAML/*.user
+unity/TwinAML/*.userprefs
+unity/TwinAML/*.pidb
+unity/TwinAML/*.booproj
+unity/TwinAML/*.svd
+unity/TwinAML/*.pdb
+unity/TwinAML/*.mdb
+unity/TwinAML/*.opendb
+unity/TwinAML/*.VC.db
+unity/TwinAML/.vs/
+
+# Older path kept so a stray unity-client folder is still ignored.
 unity-client/[Ll]ibrary/
 unity-client/[Tt]emp/
 unity-client/[Oo]bj/
