@@ -39,6 +39,18 @@ This file is the working agreement for AI agents in **TwinAML**, a COMP3424 demo
 - `packages/schemas/script.schema.json` — the minimal script contract.
 - `unity/UNITY.md` — Editor training room: `Scn_Boot`, Topic 1, Topic 2.
 
+## Cursor Cloud specific instructions
+
+Node 22 matches CI. Do not add Docker. The default image needs `python3-venv` before `python3 -m venv backend/.venv` (no `ensurepip`).
+
+After boot, these are already up when healthy:
+
+- `http://127.0.0.1:8787/health` — Worker, `{"status":"ok","service":"twinaml-api"}`
+- `http://127.0.0.1:5173` — Vite placeholder
+- `http://127.0.0.1:8000/health` — optional FastAPI stand-in, same JSON
+
+How to run them by hand is in `README.md`. Case check: `node scripts/validate-cases.mjs` (first run installs `ajv@8` in the OS temp directory).
+
 ## Definition of done
 
 A vibe-coding session is done when all of these are true:
