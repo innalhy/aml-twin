@@ -2,9 +2,8 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 
 /**
- * Demo API for TwinAML.
- * Session, decision, and twin routes will be added here.
- * FastAPI in backend/ is only a local stand-in.
+ * Legacy Cloudflare Worker scaffold. Not the COMP3424 demo deploy.
+ * The demo API is FastAPI in backend/. See docs/deploy-vps.md.
  */
 const app = new Hono();
 

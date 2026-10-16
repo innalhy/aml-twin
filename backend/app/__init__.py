@@ -1,6 +1,6 @@
 """
-TwinAML FastAPI package (optional local alternative).
+TwinAML FastAPI package.
 
-The demo API is the Cloudflare Worker in workers/api. Cases, sessions,
-decisions, and the twin state machine are not implemented yet.
+This is the COMP3424 demo API. See docs/deploy-vps.md.
+Cases, sessions, decisions, and the twin state machine are not implemented yet.
 """
