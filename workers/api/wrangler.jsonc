@@ -3,9 +3,9 @@
   "name": "twinaml-api",
   "main": "src/index.ts",
   "compatibility_date": "2026-09-30",
-  // Session routes for the twin will be added in this Worker.
-  // Uncomment and replace the hostname after the zone is on your Cloudflare
-  // account. See docs/cloudflare.md. Do not commit account ids or tokens.
+  // Legacy Cloudflare scaffold. Not the COMP3424 demo deploy.
+  // See docs/deploy-vps.md. Leave this route commented.
+  // Do not commit account ids, tokens, or hostnames.
   // "routes": [
   //   { "pattern": "api.example.com", "custom_domain": true }
   // ]

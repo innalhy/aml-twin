@@ -1,6 +1,6 @@
 # TwinAML Unity training room
 
-Immersive Editor face for COMP3424. The office is the training room. Wall panels are the exercise. The Worker and the web app stay the later home for rules. This room does not call the Worker, and it does not start P1-S2.
+Immersive Editor face for COMP3424. The office is the training room. Wall panels are the exercise. This room is in scope for the demo. The VPS web app is the other face. This room does not call the API, and it does not start P1-S2.
 
 Phase 1 content is pre-authored. There is no live video generation and no bank connection. Every screen says the interface is synthetic.
 
@@ -135,6 +135,6 @@ The header switches **English** and **繁體中文** with a short 繁 / EN toggl
 ## What this folder does not do
 
 - It does not change `packages/schemas/script.schema.json` or the eleven case files.
-- It does not implement Worker routes or P1-S2.
+- It does not implement the VPS session API or P1-S2.
 - It does not connect to a bank, HKMA, or the JFIU.
 - It does not require Docker.

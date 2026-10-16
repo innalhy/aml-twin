@@ -1,6 +1,6 @@
-# TwinAML Worker API
+# TwinAML Worker scaffold (legacy)
 
-Minimal Cloudflare Worker for the COMP3424 demo. The twin session API will live here: load a case, open a session, accept a decision, update twin state, and append events.
+Cloudflare Worker (Hono) left in the tree from an earlier deploy sketch. It is **not** the COMP3424 demo target. The demo API is FastAPI in `backend/`, on a Linux VPS. See [`docs/deploy-vps.md`](../../docs/deploy-vps.md) and the pointer in [`docs/cloudflare.md`](../../docs/cloudflare.md).
 
 Implemented now: `GET /health`.
 
@@ -8,9 +8,9 @@ Implemented now: `GET /health`.
 {"status":"ok","service":"twinaml-api"}
 ```
 
-FastAPI in `backend/` can return the same JSON on your machine. It is not this demo's production runtime. FastAPI does not run on Workers.
+FastAPI returns the same JSON. Prefer `backend/` when you are checking the path the demo deploys.
 
-## Run
+## Run the scaffold locally
 
 From `workers/api/`:
 
@@ -21,10 +21,4 @@ npm run dev
 
 Wrangler serves `http://127.0.0.1:8787/health`.
 
-Deploy, once the Cloudflare account is logged in:
-
-```bash
-npx wrangler deploy
-```
-
-A custom domain is documented in `docs/cloudflare.md`. The `routes` block in `wrangler.jsonc` stays commented until you set a real hostname.
+`npx wrangler deploy` is not the course demo. The `routes` block in `wrangler.jsonc` stays commented. Do not commit account ids, tokens, or hostnames.

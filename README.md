@@ -36,18 +36,18 @@ Case flows for human review are in [`data/case-flow/`](data/case-flow/). Each ca
 | Organised-crime cashflow | [zh-Hant](data/case-flow/10-organised-crime-cashflow.zh-Hant.md) | [English](data/case-flow/10-organised-crime-cashflow.en.md) | `hk-triad-cashflow-001` |
 | Insurer and bank control gaps | [zh-Hant](data/case-flow/11-control-gaps.zh-Hant.md) | [English](data/case-flow/11-control-gaps.en.md) | `hk-ia-fwd-controls-001`, `hk-hkma-cdd-001` |
 
-What runs today is a scaffold. The Worker and the optional FastAPI app answer `GET /health`. The Pages app is a placeholder. The 11 scripts, the effect-key contract, and the JSON Schema are in the repo. Session routes, the scenario player, and the dashboard are not built.
+What runs today is a scaffold. FastAPI in `backend/` answers `GET /health`. The Vite app is a placeholder page. The 11 scripts, the effect-key contract, and the JSON Schema are in the repo. Session routes, the scenario player, and the dashboard are not built. `workers/api` can answer the same health check. That Worker is a legacy scaffold, not the demo deploy.
 
 ## Architecture
 
-One Worker API and one Pages frontend. FastAPI is an optional local process.
+One API and one web client on a self-hosted Linux VPS. The Unity Editor room is the immersive face and stays in the demo.
 
 | Piece | Where | Role |
 | --- | --- | --- |
-| Demo API | `workers/api` | Cloudflare Worker (Hono). Today: `GET /health`. Case load, sessions, decisions, the twin state machine, and events will be added on this Worker. |
-| Web | `frontend/` | React + Vite + TypeScript, deployed to Cloudflare Pages. Today: a placeholder page. The scenario player and the dashboard are not built. Both will read the same twin. |
-| Local API | `backend/` | Optional FastAPI stand-in for offline Python work. Same health JSON. The course demo deploys the Worker. |
-| Unity | [`unity/TwinAML`](unity/UNITY.md) | Editor training room. Plays Topic 1 and Topic 2 against the frozen scripts. Not the Worker. |
+| Demo API | `backend/` | FastAPI. Today: `GET /health`. Case load, sessions, decisions, the twin state machine, and events will be added on this process. A Node/Hono process may serve the same routes later. |
+| Web | `frontend/` | React + Vite + TypeScript. Static files on the VPS. Today: a placeholder page. The scenario player and the dashboard are not built. Both will read the same twin. |
+| Unity | [`unity/TwinAML`](unity/UNITY.md) | Editor training room, in scope. Plays Topic 1 and Topic 2 against the frozen scripts. Does not call the API yet. |
+| Legacy scaffold | `workers/api` | Cloudflare Worker (Hono) plus Wrangler config. Left in the tree. Not the COMP3424 demo target. |
 
 The web app does not keep a private copy of the case world. Compliance outcomes come from the rules in the script and from the state machine that will apply them.
 
@@ -59,16 +59,16 @@ Classroom demo. One API and one web client.
 
 | Layer | Current | Planned |
 | --- | --- | --- |
-| Demo API | Hono on a Cloudflare Worker (`workers/api`). `GET /health` only. | Load a case, open a session, accept a decision, apply rules, write events. Same Worker. |
-| Web | React + Vite + TypeScript (`frontend/`). Placeholder page that builds. Pages project name `twinaml-web`. | Scenario player and a simple dashboard that read the Worker’s twin state. |
-| Local API | FastAPI (`backend/`). Optional. `GET /health` with the same JSON. | May mirror the Worker routes for offline use. Stays off the deploy path. |
+| Demo API | FastAPI (`backend/`). `GET /health` only. | Load a case, open a session, accept a decision, apply rules, write events. A Node/Hono process may serve those same routes. |
+| Web | React + Vite + TypeScript (`frontend/`). Placeholder page that builds to `dist/`. | Scenario player and a simple dashboard that read the API’s twin state. Static files on the VPS. |
+| Legacy scaffold | Hono on a Cloudflare Worker (`workers/api`). `GET /health` only. Wrangler files may remain. | Not the demo path. See [`docs/deploy-vps.md`](docs/deploy-vps.md). |
 | Cases | 11 example scripts in [`data/cases/README.md`](data/cases/README.md). | Stay on `packages/schemas/script.schema.json`. A rule’s `when` text is for a person to read until a state machine exists. |
 | Media | `data/media/.gitkeep` only. Large video is gitignored. | Scripts may set `media_ref` to a local path. Binaries stay out of git. |
 | Contract | `packages/schemas/script.schema.json` (schema `0.1`). | One script format. Patch keys: [`docs/effects.md`](docs/effects.md). |
-| Docs | `docs/architecture.md`, `docs/effects.md`, `docs/comp3424-mapping.md`, `docs/cloudflare.md`, [`docs/phases/`](docs/phases/README.md). | Slice checklists live in the phase docs. See [Implementation phases](#implementation-phases). |
-| Deploy | Wrangler config for Pages (`frontend/wrangler.jsonc`) and the Worker (`workers/api/wrangler.jsonc`). | Pages serves the Vite build. The Worker serves the API. |
+| Docs | `docs/architecture.md`, `docs/effects.md`, `docs/comp3424-mapping.md`, `docs/deploy-vps.md`, [`docs/phases/`](docs/phases/README.md). | Slice checklists live in the phase docs. See [Implementation phases](#implementation-phases). |
+| Deploy | Linux VPS. nginx or Caddy, HTTPS, static `frontend/dist`, API on localhost. | [`docs/deploy-vps.md`](docs/deploy-vps.md). |
 
-Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, Kafka, a microservice split, and a live bank connection. The Unity training room is the Editor face in [`unity/UNITY.md`](unity/UNITY.md). It does not replace the Worker.
+Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, Kafka, FlexSim, a microservice split, and a live bank connection. The Unity training room is the Editor face in [`unity/UNITY.md`](unity/UNITY.md). It stays in the demo. It does not replace the API.
 
 ## Repo layout
 
@@ -80,7 +80,8 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 ├── docs/
 │   ├── architecture.md          # case → script → decision → twin → events
 │   ├── effects.md               # twin_patch and choice effect keys
-│   ├── cloudflare.md            # Pages, Worker, custom domain
+│   ├── deploy-vps.md            # Linux VPS: static site, API, HTTPS
+│   ├── cloudflare.md            # pointer only; legacy scaffold is not the demo
 │   ├── comp3424-mapping.md      # Chan Level 1/2, mirroring, shadowing, threading
 │   └── phases/
 │       ├── README.md            # how agents use the phase plans
@@ -91,13 +92,13 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 │   ├── UNITY.md                 # scene map, T01/T02 paths, how to press Play
 │   └── TwinAML/                 # Unity 2022.3 project. First scene: Scn_Boot
 ├── workers/
-│   └── api/                     # demo API (Cloudflare Worker, Hono)
+│   └── api/                     # legacy Cloudflare Worker scaffold (not the demo API)
 │       ├── README.md
 │       ├── package.json
 │       ├── src/index.ts         # GET /health
 │       ├── tsconfig.json
 │       └── wrangler.jsonc
-├── frontend/                    # Cloudflare Pages (Vite, React, TypeScript)
+├── frontend/                    # Vite, React, TypeScript (static files on the VPS)
 │   ├── README.md
 │   ├── index.html
 │   ├── package.json
@@ -106,7 +107,7 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 │   ├── tsconfig.json
 │   ├── vite.config.ts
 │   └── wrangler.jsonc
-├── backend/                     # optional local FastAPI
+├── backend/                     # demo API (FastAPI)
 │   ├── README.md
 │   ├── requirements.txt
 │   └── app/
@@ -140,16 +141,18 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 
 ## Run locally
 
-Start the Worker and the web app in two terminals. Docker is not a run path.
+Start the API and the web app in two terminals. Docker is not a run path.
 
-Worker, from `workers/api/`:
+API, from `backend/`:
 
 ```bash
-npm install
-npm run dev
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
 ```
 
-`http://127.0.0.1:8787/health` returns `{"status":"ok","service":"twinaml-api"}`.
+`http://127.0.0.1:8000/health` returns `{"status":"ok","service":"twinaml-api"}`. Details: [`backend/README.md`](backend/README.md).
 
 Web, from `frontend/`:
 
@@ -162,16 +165,14 @@ Open `http://127.0.0.1:5173`. The page shows the TwinAML scaffold. It does not c
 
 `npm run build` in `frontend/` typechecks, then writes `dist/`. Do not commit `dist/`.
 
-Optional FastAPI stand-in, from `backend/`:
+The legacy Worker, from `workers/api/`, is optional and is not the course demo:
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
+npm install
+npm run dev
 ```
 
-`http://127.0.0.1:8000/health` returns the same JSON. Use it when you want a local Python process. The course demo deploys the Worker. Details: [`backend/README.md`](backend/README.md).
+`http://127.0.0.1:8787/health` returns the same JSON. Deploy steps for the VPS are in [`docs/deploy-vps.md`](docs/deploy-vps.md).
 
 Check the case scripts from the repo root:
 
@@ -193,9 +194,9 @@ Open [`unity/UNITY.md`](unity/UNITY.md). In Unity 2022.3 LTS, open the project f
 
 ## Deploy
 
-The demo target is Cloudflare. Pages serves the Vite build. The Worker in `workers/api` is the API. Account ids, API tokens, and a real hostname are not stored in this repo.
+The demo target is a self-hosted Linux VPS. nginx or Caddy serves the Vite build and reverse-proxies to the API. HTTPS terminates at the proxy. Hostnames, certificates, and private keys are not stored in this repo.
 
-Steps for Pages, the Worker, and a custom domain already on your Cloudflare account are in [`docs/cloudflare.md`](docs/cloudflare.md).
+Steps are in [`docs/deploy-vps.md`](docs/deploy-vps.md). [`docs/cloudflare.md`](docs/cloudflare.md) only records that the Worker scaffold is not this path.
 
 ## Implementation phases
 
@@ -207,32 +208,32 @@ Chan levels follow the course: Level 1 is a scripted mirror, Level 2 is a near-r
 
 | Doc | Chan level | Goal |
 | --- | --- | --- |
-| [Phase 1](docs/phases/PHASE1.md) | Level 1 (scripted mirror) | All 11 synthetic cases end-to-end on Cloudflare (Worker + Pages) |
+| [Phase 1](docs/phases/PHASE1.md) | Level 1 (scripted mirror) | All 11 synthetic cases end-to-end on a Linux VPS (static web + API) |
 | [Phase 2](docs/phases/PHASE2.md) | Level 2 (near-realtime bidirectional) | Versioned rules, realtime twin updates, case families beyond the 11, audit export |
 | [Phase 3](docs/phases/PHASE3.md) | Level 3 (vision) | ML assist and live connectors. Not the COMP3424 demo |
 
-**Phase 1 — MVP (Chan Level 1).** A readable mirror of the 11 scripts. The trainee starts a session with a `case_id`. The Worker loads that script, applies the rules and the state machine, and stores events. Pages shows the scenario player and a simple dashboard of the same twin. FastAPI stays optional and local.
+**Phase 1 — MVP (Chan Level 1).** A readable mirror of the 11 scripts. The trainee starts a session with a `case_id`. The VPS API loads that script, applies the rules and the state machine, and stores events. The web app shows the scenario player and a simple dashboard of the same twin.
 
 In scope: load any of the 11 against `packages/schemas/script.schema.json`; session routes that take `case_id`; deterministic `twin_patch` and choice effects as in [`docs/effects.md`](docs/effects.md); English UI chrome (case prompts may stay Traditional Chinese); a missing `media_ref` file shows a missing-media state.
 
-Out of scope for Phase 1: Docker, Kubernetes, Neo4j, Kafka, a microservice split, a Unity client on the Worker, a live language model that sets disposition, a real bank / HKMA / STR filing connection, multi-tenant billing, and session-time video synthesis. The Editor room in [`unity/UNITY.md`](unity/UNITY.md) is not one of these slices. New mixer / peel-chain and synthetic-ID families beyond this library wait for Phase 2.
+Out of scope for Phase 1: Docker, Kubernetes, Neo4j, Kafka, FlexSim, a microservice split, wiring the Editor room to the live session API, a live language model that sets disposition, a real bank / HKMA / STR filing connection, multi-tenant billing, and session-time video synthesis. The Editor room in [`unity/UNITY.md`](unity/UNITY.md) stays in the demo and is not one of these slices. New mixer / peel-chain and synthetic-ID families beyond this library wait for Phase 2.
 
-Current status: the 11 scripts and the effect-key contract are in the repo. P1-S1 is done. The Worker and the Pages app are still health and placeholder stubs. Session routes, the scenario player, and the dashboard are not built.
+Current status: the 11 scripts and the effect-key contract are in the repo. P1-S1 is done. FastAPI and the web app are still a health check and a placeholder page. Session routes, the scenario player, and the dashboard are not built.
 
 | Slice | Done when |
 | --- | --- |
 | P1-S1 — Script contract freeze | **Done.** [`docs/effects.md`](docs/effects.md) lists every effect key in the 11 scripts and the apply order. Check with `node scripts/validate-cases.mjs`. |
 | P1-S2 — Twin state machine | Unit tests cover terminal dispositions for the library without HTTP. |
-| P1-S3 — Session store + Worker routes | `curl` or local `wrangler dev` can finish one full path for a chosen `case_id`. `GET /health` stays. |
+| P1-S3 — Session store + API routes | `curl` against the local API can finish one full path for a chosen `case_id`. `GET /health` stays. |
 | P1-S4 — Scenario player | The trainee can start any of the 11. A browser playthrough matches the API for at least two branches of the selected case. Missing media does not crash the case. |
 | P1-S5 — Event log + teaching score | `GET` session returns ordered events for replay, and a teaching poor disposition is marked for the dashboard. |
-| P1-S6 — Simple dashboard | After one playthrough, the dashboard shows that session (disposition, flags, timeline) from the Worker twin. |
-| P1-S7 — Deploy checklist | The owner can follow the docs to deploy Pages and the Worker. Tokens stay out of git. |
+| P1-S6 — Simple dashboard | After one playthrough, the dashboard shows that session (disposition, flags, timeline) from the API twin. |
+| P1-S7 — Deploy checklist | The owner can follow [`docs/deploy-vps.md`](docs/deploy-vps.md) to deploy the static site and the API. Tokens and TLS keys stay out of git. |
 | P1-S8 — Demo polish | A classmate can run the demo from this README alone, including a short audit-evidence note for COMP3424. |
 
 Slice detail: [`docs/phases/PHASE1.md`](docs/phases/PHASE1.md).
 
-**Phase 2 — Chan Level 2.** Same Worker, after Phase 1 is done. A training session shadows the trainee: a choice becomes an event, the event updates twin state promptly, and the dashboard reads that state. Rules move into versioned packs. The case library can grow with new families beyond the 11 (mixer / peel-chain, synthetic identity). Two paths through a case must show different dispositions, and the ordered events must be replayable. There is still no live core bank. Not built.
+**Phase 2 — Chan Level 2.** Same VPS API, after Phase 1 is done. A training session shadows the trainee: a choice becomes an event, the event updates twin state promptly, and the dashboard reads that state. Rules move into versioned packs. The case library can grow with new families beyond the 11 (mixer / peel-chain, synthetic identity). Two paths through a case must show different dispositions, and the ordered events must be replayable. There is still no live core bank. Not built.
 
 | Slice | Done when |
 | --- | --- |
@@ -247,14 +248,14 @@ Slice detail: [`docs/phases/PHASE1.md`](docs/phases/PHASE1.md).
 
 Slice detail: [`docs/phases/PHASE2.md`](docs/phases/PHASE2.md).
 
-**Phase 3 — vision (Chan Level 3).** Planning only. This is not a COMP3424 commitment. After Phases 1–2, a model may assist once rules have fired, optional connectors may seed a twin from fixtures, and a Unity face may call the same API. The Editor room under [`unity/`](unity/UNITY.md) already plays two scripts on this machine. P3-S4, that room against the Worker session API, is not built. Models do not become the system of record. There is no second twin, and training data stays labeled synthetic.
+**Phase 3 — vision (Chan Level 3).** Planning only. This is not a COMP3424 commitment. After Phases 1–2, a model may assist once rules have fired, optional connectors may seed a twin from fixtures, and a Unity face may call the same API. The Editor room under [`unity/`](unity/UNITY.md) already plays two scripts on this machine. P3-S4, that room against the VPS session API, is not built. Models do not become the system of record. There is no second twin, and training data stays labeled synthetic.
 
 | Slice | Done when |
 | --- | --- |
 | P3-S1 — ML assist shadow mode | The UI shows a suggestion separately from the rule decision. The model does not write disposition alone. |
 | P3-S2 — Connector adapter | Training can optionally seed the twin from adapter fixtures. The default data stays synthetic. |
 | P3-S3 — Retention and legal hold | Org policy for event retention and export hold is documented, and delete/export gates enforce it. |
-| P3-S4 — Immersive client (Unity) | One Phase 1 path is playable in Unity against the Worker, on the same session API. |
+| P3-S4 — Immersive client (Unity) | One Phase 1 path is playable in Unity against the VPS API, on the same session routes. |
 | P3-S5 — Multi-jurisdiction packs | Switching a rule pack is an audited event. Closed sessions keep the pack id they ran under. |
 
 Slice detail: [`docs/phases/PHASE3.md`](docs/phases/PHASE3.md).
@@ -266,15 +267,15 @@ In this scaffold, mirroring is the 11 scripts. Shadowing and threading are Level
 Short rules for classmates and coding agents. The full agreement is [`AGENTS.md`](AGENTS.md).
 
 1. Change one small slice at a time. After it, say what a trainee or reviewer can now see or run.
-2. Keep one Worker (`workers/api`), one Pages client (`frontend/`), and optional local FastAPI (`backend/`). Case scripts live in `data/cases/`. Notes live in `docs/`.
-3. Leave Docker, Kubernetes, Neo4j, Kafka, a service split, and Unity out unless the owner asks in that session.
+2. Keep one web client (`frontend/`), one VPS API (FastAPI in `backend/`, or later a Node/Hono process with the same routes), and the Unity Editor room. `workers/` may stay as a legacy scaffold. Case scripts live in `data/cases/`. Notes live in `docs/`.
+3. Leave Docker, Kubernetes, Neo4j, Kafka, FlexSim, a service split, and a second Unity project out unless the owner asks in that session. The Editor room in `unity/TwinAML` stays.
 4. English is the primary language for docs and UI copy. Keep course terms in English: mirroring, shadowing, threading, Chan Level 1, Chan Level 2, rules-before-AI.
 5. The twin is backend state plus events. The web app renders that state.
 6. Rules decide compliance outcomes. A model may explain only after rules have fired. A human override is an event.
-7. Do not commit secrets, API keys, `.env` files, Cloudflare account identifiers, or large media.
+7. Do not commit secrets, API keys, `.env` files, TLS private keys, or large media.
 8. If the script shape changes, every example case under `data/cases/` must still validate against `packages/schemas/script.schema.json`. Run `node scripts/validate-cases.mjs`. The schema or docs must say what changed.
 
-Read next: [`docs/architecture.md`](docs/architecture.md), [`docs/effects.md`](docs/effects.md), [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md), [`docs/cloudflare.md`](docs/cloudflare.md), [`docs/phases/README.md`](docs/phases/README.md), [`data/cases/README.md`](data/cases/README.md), [`data/cases/01-deepfake-hk-001.example.json`](data/cases/01-deepfake-hk-001.example.json), [`data/case-flow/01-deepfake-executive-impersonation.en.md`](data/case-flow/01-deepfake-executive-impersonation.en.md), [`packages/schemas/script.schema.json`](packages/schemas/script.schema.json).
+Read next: [`docs/architecture.md`](docs/architecture.md), [`docs/effects.md`](docs/effects.md), [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md), [`docs/deploy-vps.md`](docs/deploy-vps.md), [`docs/phases/README.md`](docs/phases/README.md), [`data/cases/README.md`](data/cases/README.md), [`data/cases/01-deepfake-hk-001.example.json`](data/cases/01-deepfake-hk-001.example.json), [`data/case-flow/01-deepfake-executive-impersonation.en.md`](data/case-flow/01-deepfake-executive-impersonation.en.md), [`packages/schemas/script.schema.json`](packages/schemas/script.schema.json).
 
 ## License
 

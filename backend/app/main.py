@@ -1,7 +1,7 @@
-"""Local FastAPI stand-in.
+"""COMP3424 demo API (FastAPI).
 
-The COMP3424 demo deploys the Worker in workers/api. This app only mirrors
-GET /health for offline Python development. FastAPI does not run on Workers.
+The VPS serves this app behind nginx or Caddy. See docs/deploy-vps.md.
+Today the only route is GET /health.
 """
 
 from fastapi import FastAPI

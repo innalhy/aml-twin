@@ -1,10 +1,10 @@
 # TwinAML architecture (simplified)
 
-TwinAML is a digital twin for training. It is not a bank production system. The twin lives in the backend: one case state, plus the events that change it. The web app is only the face. Unity can later be another face. It does not get a second copy of the state.
+TwinAML is a digital twin for training. It is not a bank production system. The twin lives in the backend: one case state, plus the events that change it. The web app is the face. The Unity Editor room is the immersive face and is in scope for the demo. Neither face gets a second copy of the state.
 
-This demo stays one API and one web client on purpose. It does not split into microservices, and it does not use Neo4j, Kafka, Docker, or Kubernetes.
+This demo stays one API and one web client on purpose. It does not split into microservices, and it does not use Neo4j, Kafka, Docker, Kubernetes, or FlexSim.
 
-The demo API is a Cloudflare Worker (`workers/api`). FastAPI in `backend/` is an optional local stand-in with the same health check. It is not the deployed demo.
+The COMP3424 demo runs on a self-hosted Linux VPS. FastAPI in `backend/` is the API process. The Vite build in `frontend/` is the static site. nginx or Caddy terminates HTTPS. See [`deploy-vps.md`](deploy-vps.md). A Node/Hono process may serve the same routes later. `workers/api` is a legacy Cloudflare Worker scaffold and is not the deployed demo.
 
 ## How one training run moves
 
@@ -29,7 +29,7 @@ flowchart LR
 ```mermaid
 sequenceDiagram
   participant Script as Case script
-  participant API as Worker API
+  participant API as VPS API
   participant Twin as Twin state
   participant Web as Web client
   Script->>API: load script and initial state
@@ -42,17 +42,17 @@ sequenceDiagram
   Note over Web: Player and dashboard read the same twin
 ```
 
-The session routes in that diagram are not implemented yet. The Worker currently exposes `GET /health` only. Those routes will be added on the Worker, not in a second service.
+The session routes in that diagram are not implemented yet. FastAPI currently exposes `GET /health` only. Those routes will be added on that VPS API process, not in a second service. The legacy Worker exposes the same health check and is not where those routes go for this demo.
 
 ## What exists now
 
 | Piece | Status |
 | --- | --- |
 | Script JSON and JSON Schema | Present. Eleven example cases. Effect keys are frozen in [`effects.md`](effects.md). |
-| Cloudflare Worker | `GET /health` in `workers/api`. This is the demo API. |
-| FastAPI | Optional local alternative. `GET /health` only. |
-| State machine, sessions, event log | Not built. |
-| Web player and dashboard | Not built. `frontend/` is a placeholder that builds and deploys to Pages. |
+| FastAPI | `GET /health` in `backend/`. This is the demo API. |
+| Legacy Cloudflare Worker | `GET /health` in `workers/api`. Scaffold only. Not the demo deploy. |
+| State machine, sessions, event log | Not built. P1-S2 is still unstarted. |
+| Web player and dashboard | Not built. `frontend/` is a placeholder that builds to static files for the VPS. |
 | `data/media/` | Only `.gitkeep` is tracked. `media_ref` values in a script point at local files. |
 
 A rule's `when` text is a sentence for a person to read. The schema does not execute it. When the state machine exists, decide then whether to replace those sentences with executable conditions. Until then, do not invent a second script format beside this one.
@@ -70,9 +70,9 @@ Media is not in git. The `media_ref` on `n_intake` is `data/media/deepfake-hk-00
 
 ## Clients
 
-- **Now**: `frontend/`, React + Vite + TypeScript, deployed to Cloudflare Pages. The target UI is a scenario player plus a simple dashboard that reads twin state.
-- **Editor room**: [`unity/UNITY.md`](../unity/UNITY.md). Unity 2022.3 LTS, first scene `Scn_Boot`. It applies the schema 0.1 patches locally while you play Topic 1 and Topic 2. That mirror is the training-room twin for the Editor dashboard. It is not a second case format, and it is not the Worker state machine (P1-S2 is still unstarted). A later Unity build can call the Worker when those routes exist.
+- **Now**: `frontend/`, React + Vite + TypeScript, static files on the Linux VPS. The target UI is a scenario player plus a simple dashboard that reads twin state.
+- **Editor room**: [`unity/UNITY.md`](../unity/UNITY.md). In scope. Unity 2022.3 LTS, first scene `Scn_Boot`. It applies the schema 0.1 patches locally while you play Topic 1 and Topic 2. That mirror is the training-room twin for the Editor dashboard. It is not a second case format, and it is not the API state machine (P1-S2 is still unstarted). A later Unity build can call the VPS API when those routes exist.
 
 ## Explicitly out of scope
 
-Neo4j, Kafka, Docker, Kubernetes, a multi-service split, a live core-banking connection, a language model that issues the compliance result directly, and committing large mp4 files to git.
+Neo4j, Kafka, Docker, Kubernetes, FlexSim, a multi-service split, a live core-banking connection, a language model that issues the compliance result directly, and committing large mp4 files to git. The Unity Editor room stays in the demo. A second Unity project does not.

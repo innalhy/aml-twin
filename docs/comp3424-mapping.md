@@ -2,7 +2,7 @@
 
 Subject: [COMP3424 Digital Twins: Simulation and Case Studies](https://www.polyu.edu.hk/comp/docdrive/ug/subject/COMP3424.pdf) (The Hong Kong Polytechnic University, 3 credits). The subject asks students to understand digital twins, simulation, and how to connect a twin to artificial intelligence. Application settings include government and other non-factory examples. TwinAML uses **AML simulation training** as the case, not a FlexSim production line.
 
-The three terms below are the teaching contract for this demo. Chan Level 1 and Level 2 here mean two delivery stages: first build the mirror, then let one training session follow it. That is the assignment scope. It is not a wholesale import of a factory digital-twin maturity model. Mirroring, shadowing, and threading follow the three capabilities commonly described for industrial digital twins (Jiang, Yin, Li, Luo, Kaynak, *Industrial applications of digital twins*, 2021; Saracco's mirror / shadow / thread). All three live in the same simplified Worker. They do not justify a separate enterprise architecture.
+The three terms below are the teaching contract for this demo. Chan Level 1 and Level 2 here mean two delivery stages: first build the mirror, then let one training session follow it. That is the assignment scope. It is not a wholesale import of a factory digital-twin maturity model. Mirroring, shadowing, and threading follow the three capabilities commonly described for industrial digital twins (Jiang, Yin, Li, Luo, Kaynak, *Industrial applications of digital twins*, 2021; Saracco's mirror / shadow / thread). All three live in the same simplified API on the Linux VPS. They do not justify a separate enterprise architecture. FlexSim is out of scope for this demo.
 
 ## Chan Level 1 — script mirror
 
@@ -18,9 +18,9 @@ Level 1 is done when a case file validates against `packages/schemas/script.sche
 
 ## Chan Level 2 — training shadow
 
-**Next stage, still inside the same Worker (`workers/api`). Not built yet.**
+**Next stage, still inside the same VPS API (`backend/`). Not built yet.**
 
-Level 2 lets one session shadow the trainee. The trainee's choices become events, events update the twin, and the dashboard only reads that state. The optional FastAPI app is a local stand-in for the same routes. It is not a second twin.
+Level 2 lets one session shadow the trainee. The trainee's choices become events, events update the twin, and the dashboard only reads that state. FastAPI in `backend/` is that API. A Node/Hono process may serve the same routes later. It is not a second twin.
 
 - Data direction: trainee action → decision event → twin state → web.
 - The twin does not reach back and control a real bank system. Without that reverse control it remains a shadow, not a bidirectional twin wired into production.
@@ -28,7 +28,7 @@ Level 2 lets one session shadow the trainee. The trainee's choices become events
 
 Level 2 is done when the same case can end as "onboarding refused" and as "opened, then cleared as a false positive", the dashboard shows different `disposition` values and flags, and the ordered events can be replayed.
 
-Anything beyond that (bidirectional control of a real system, autonomous agents, a Unity client on the Worker API) is outside this Worker demo. An Editor training room now lives under [`unity/`](../unity/UNITY.md). It plays two scripts locally. It does not shadow a live session on the Worker.
+Anything beyond that (bidirectional control of a real system, autonomous agents) is outside this demo. The Editor training room under [`unity/`](../unity/UNITY.md) is in scope. It plays two scripts locally. It does not shadow a live session on the API. Wiring that room to the session API is P3-S4 and is not built.
 
 ## Mirroring, shadowing, threading
 
@@ -58,7 +58,7 @@ If a language model is added later, it may explain or draft narrative only after
 | Discrete-event simulation, FlexSim | No production-line simulation. The simulation is a branching script plus a state machine. |
 | IoT sensing | The trainee's decision is the input event. There is no sensor. |
 | NVIDIA Omniverse, VR, metaverse | Not in scope. The web app is the face. |
-| Unity | Optional later client, calling the same API. |
+| Unity | Editor training room, in scope. Plays two scripts locally. A later build may call the same VPS API. |
 | Artificial intelligence / machine learning | Considered only after rules, and it cannot replace the rules. |
 
 ## How a trainee can describe the assignment
