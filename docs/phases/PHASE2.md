@@ -5,12 +5,12 @@
 
 ## Goal
 
-Extend TwinAML so training decisions write back promptly to twin state (WebSocket or equivalent), rules are versioned and configurable, and the case library grows beyond deepfake onboarding (mixer / peel-chain + mule accounts, synthetic identity). Keep Cloudflare as deploy home unless the owner changes it.
+Extend TwinAML so training decisions write back promptly to twin state (WebSocket or equivalent), rules are versioned and configurable, and the case library grows beyond deepfake onboarding (mixer / peel-chain + mule accounts, synthetic identity). The deploy home is the self-hosted Linux VPS in [`docs/deploy-vps.md`](../deploy-vps.md).
 
 ## In scope
 
 - Versioned **rules engine** (rules-before-AI remains mandatory).
-- **Realtime** twin push to the web client (prefer Worker + Durable Object WebSocket / Hibernation API, or documented alternative).
+- **Realtime** twin push to the web client (WebSocket or SSE on the same VPS API process).
 - Additional cases: crypto mixer / peel-chain + mule; synthetic ID onboarding.
 - Optional **graph** view of accounts/hops (Neo4j or a lighter graph store — only if a slice says so; default stay minimal).
 - Lightweight multi-org isolation (org_id on sessions).
