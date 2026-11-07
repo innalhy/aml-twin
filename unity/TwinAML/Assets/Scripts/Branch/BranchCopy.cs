@@ -152,7 +152,7 @@ namespace TwinAml
 
             Both("pause.lead", "The branch is paused. Nothing has been submitted.", "分行已暫停。尚未提交任何決定。");
             Both("pause.resume", "Resume", "繼續");
-            Both("pause.hub", "Leave for the topic wall", "返回專題牆");
+            Both("pause.hub", "Open the investigation centre", "前往調查中心");
 
             Both("notes.empty", "No marks yet. Open a document and mark an issue, or mark the chart.", "尚未有標記。請打開文件並標記問題，或在架構圖上標記。");
             Both("notes.reviewed", "Reviewed", "已審閱");
