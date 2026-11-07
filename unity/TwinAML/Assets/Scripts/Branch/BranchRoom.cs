@@ -8,7 +8,7 @@ using UnityEngine.UI;
 namespace TwinAml
 {
     /// <summary>
-    /// Topic 3 greybox. One room per scene file, built when that scene runs.
+    /// Topic 3 branch. One furnished room per scene file, built when that scene runs.
     /// Built-in pipeline and uGUI, same as the rest of the room. The case script
     /// still decides the twin; this component only records what the trainee noticed.
     /// </summary>
@@ -17,21 +17,16 @@ namespace TwinAml
         const float DoorReach = 3.6f;
         const float PromptReach = 2.8f;
 
-        static Shader _shader;
-        static readonly Dictionary<int, Material> Paints = new Dictionary<int, Material>();
-
         GameObject _player;
         GameObject _client;
         CharacterController _body;
         Camera _cam;
         float _vy;
-        bool _camReady;
         string _page = "";
         string _focus = "";
         string _choice = "";
         bool _tasks;
         bool _notesOpen;
-        bool _blockWalk;
         BranchHotspot _lit;
         Text _prompt;
         InputField _reason;
@@ -101,20 +96,21 @@ namespace TwinAml
             if (zone == "meeting") floor = new Color(0.86f, 0.82f, 0.76f);
             else if (zone == "files") floor = new Color(0.84f, 0.80f, 0.72f);
             else if (zone == "compliance") floor = new Color(0.74f, 0.82f, 0.88f);
-            Cube(world, "Floor", new Vector3(6f, 0.05f, 5f), new Vector3(12.4f, 0.2f, 10.4f), floor, true);
+            Cube(world, "Floor", new Vector3(6f, 0.05f, 5f), new Vector3(12.4f, 0.2f, 10.4f), floor, true, 2);
             Wall(world, 2.3f, 0.12f, 4.4f, 0.24f, wall);
             Wall(world, 9.7f, 0.12f, 4.4f, 0.24f, wall);
             Wall(world, 2.3f, 9.88f, 4.4f, 0.24f, wall);
             Wall(world, 9.7f, 9.88f, 4.4f, 0.24f, wall);
             Wall(world, 0.12f, 5f, 0.24f, 10.2f, wall);
             Wall(world, 11.88f, 5f, 0.24f, 10.2f, wall);
-            Cube(world, "Window", new Vector3(11.7f, 2.1f, 5f), new Vector3(0.08f, 1.2f, 3.2f), new Color(0.55f, 0.72f, 0.82f), false);
+            Cube(world, "Window", new Vector3(11.7f, 2.1f, 5f), new Vector3(0.08f, 1.2f, 3.2f), new Color(0.62f, 0.78f, 0.88f), false, 3);
             Sign(world, BranchCopy.T(ZoneKey(zone)), new Vector3(6f, 2.55f, 9.35f), new Vector3(6f, 2.55f, 5f));
 
             if (zone != "lobby")
                 Door(world, "Door.Back", new Vector3(6f, 1.25f, 0.12f), PreviousScene(zone), PreviousKey(zone));
             if (zone != "compliance")
                 Door(world, "Door.Forward", new Vector3(6f, 1.25f, 9.88f), NextScene(zone), NextKey(zone));
+            RoomFinish.DressBranch(world, zone);
         }
 
         static string PreviousScene(string zone)
@@ -152,6 +148,8 @@ namespace TwinAml
         void Door(Transform world, string name, Vector3 pos, string scene, string promptKey)
         {
             HotCube(world, name, pos, new Vector3(1.7f, 2.35f, 0.16f), new Color(0.13f, 0.22f, 0.36f), "door:" + scene, promptKey);
+            var handle = pos + new Vector3(0.55f, 0f, pos.z < 5f ? 0.1f : -0.1f);
+            Cube(world, name + ".Handle", handle, new Vector3(0.08f, 0.28f, 0.08f), new Color(0.78f, 0.7f, 0.46f), false, 4);
             Sign(world, BranchCopy.T(promptKey), pos + new Vector3(0f, 1.55f, 0f), pos + new Vector3(0f, 1.55f, pos.z < 5f ? 1f : -1f));
         }
 
@@ -166,20 +164,21 @@ namespace TwinAml
 
             if (zone == "lobby")
             {
-                Cube(folder, "Kiosk", new Vector3(2.2f, 0.7f, 3.2f), new Vector3(0.55f, 1.1f, 0.45f), navy, true);
-                Cube(folder, "Screen", new Vector3(9.2f, 1.85f, 1.1f), new Vector3(1.5f, 0.85f, 0.08f), screen, true);
-                Cube(folder, "Chair.A", new Vector3(4.2f, 0.38f, 4.6f), new Vector3(0.55f, 0.45f, 0.55f), wood, true);
-                Cube(folder, "Chair.B", new Vector3(5.2f, 0.38f, 4.6f), new Vector3(0.55f, 0.45f, 0.55f), wood, true);
-                Cube(folder, "Chair.C", new Vector3(6.2f, 0.38f, 4.6f), new Vector3(0.55f, 0.45f, 0.55f), wood, true);
+                Cube(folder, "Kiosk", new Vector3(2.2f, 0.7f, 3.2f), new Vector3(0.55f, 1.1f, 0.45f), navy, true, 4);
+                Cube(folder, "Screen", new Vector3(9.2f, 1.85f, 1.1f), new Vector3(1.5f, 0.85f, 0.08f), screen, true, 3);
+                RoomFinish.Seat(folder, "Chair.A", new Vector3(4.2f, 0.16f, 4.6f), wood);
+                RoomFinish.Seat(folder, "Chair.B", new Vector3(5.2f, 0.16f, 4.6f), wood);
+                RoomFinish.Seat(folder, "Chair.C", new Vector3(6.2f, 0.16f, 4.6f), wood);
                 return;
             }
             if (zone == "desk")
             {
-                Cube(folder, "Counter", new Vector3(6f, 0.65f, 5.4f), new Vector3(6.4f, 1f, 1.2f), wood, true);
+                Cube(folder, "Counter", new Vector3(6f, 0.65f, 5.4f), new Vector3(6.4f, 1f, 1.2f), wood, true, 1);
+                Cube(folder, "CounterFront", new Vector3(6f, 0.55f, 4.72f), new Vector3(6.4f, 0.85f, 0.06f), new Color(0.4f, 0.28f, 0.18f), false, 1);
                 Cube(folder, "Stamp", new Vector3(3.4f, 1.22f, 5.05f), new Vector3(0.18f, 0.12f, 0.18f), new Color(0.65f, 0.18f, 0.16f), true);
-                Cube(folder, "Scanner", new Vector3(4.1f, 1.28f, 5.05f), new Vector3(0.55f, 0.16f, 0.38f), new Color(0.25f, 0.28f, 0.32f), true);
+                Cube(folder, "Scanner", new Vector3(4.1f, 1.28f, 5.05f), new Vector3(0.55f, 0.16f, 0.38f), new Color(0.25f, 0.28f, 0.32f), true, 4);
                 Cube(folder, "NameCard", new Vector3(8.8f, 1.2f, 5.1f), new Vector3(0.28f, 0.02f, 0.18f), paper, true);
-                HotCube(folder, "Computer", new Vector3(8.1f, 1.45f, 5.05f), new Vector3(0.72f, 0.48f, 0.4f), screen, "computer", "spot.computer");
+                HotCube(folder, "Computer", new Vector3(8.1f, 1.45f, 5.05f), new Vector3(0.72f, 0.48f, 0.4f), screen, "computer", "spot.computer", 3);
                 for (var i = 0; i < BranchProgress.DocIds.Length; i++)
                 {
                     var id = BranchProgress.DocIds[i];
@@ -190,24 +189,24 @@ namespace TwinAml
             }
             if (zone == "meeting")
             {
-                Cube(folder, "Table", new Vector3(5.4f, 0.55f, 5.2f), new Vector3(2.6f, 0.75f, 1.2f), wood, true);
-                Cube(folder, "Laptop", new Vector3(5.1f, 1.0f, 5.1f), new Vector3(0.42f, 0.06f, 0.3f), new Color(0.2f, 0.22f, 0.26f), true);
+                Cube(folder, "Table", new Vector3(5.4f, 0.55f, 5.2f), new Vector3(2.6f, 0.75f, 1.2f), wood, true, 1);
+                Cube(folder, "Laptop", new Vector3(5.1f, 1.0f, 5.1f), new Vector3(0.42f, 0.06f, 0.3f), new Color(0.2f, 0.22f, 0.26f), true, 4);
                 Cube(folder, "Cup", new Vector3(6.1f, 0.98f, 5.45f), new Vector3(0.12f, 0.14f, 0.12f), new Color(0.85f, 0.88f, 0.9f), true);
-                Cube(folder, "Seat.A", new Vector3(5.4f, 0.38f, 4.1f), new Vector3(0.55f, 0.45f, 0.55f), navy, true);
-                Cube(folder, "Seat.B", new Vector3(5.4f, 0.38f, 6.3f), new Vector3(0.55f, 0.45f, 0.55f), wood, true);
+                RoomFinish.Seat(folder, "Seat.A", new Vector3(5.4f, 0.16f, 4.1f), navy);
+                RoomFinish.Seat(folder, "Seat.B", new Vector3(5.4f, 0.16f, 6.3f), wood);
                 HotCube(folder, "Chart", new Vector3(0.4f, 1.7f, 5.2f), new Vector3(0.08f, 1.35f, 1.7f), new Color(0.96f, 0.97f, 0.98f), "structure", "spot.structure");
                 return;
             }
             if (zone == "files")
             {
-                Cube(folder, "Cabinet.A", new Vector3(3.4f, 1.05f, 8.5f), new Vector3(1.1f, 1.8f, 0.55f), new Color(0.45f, 0.48f, 0.52f), true);
-                Cube(folder, "Cabinet.B", new Vector3(5.0f, 1.05f, 8.5f), new Vector3(1.1f, 1.8f, 0.55f), new Color(0.45f, 0.48f, 0.52f), true);
-                Cube(folder, "Cabinet.C", new Vector3(6.6f, 1.05f, 8.5f), new Vector3(1.1f, 1.8f, 0.55f), new Color(0.45f, 0.48f, 0.52f), true);
+                Cube(folder, "Cabinet.A", new Vector3(3.4f, 1.05f, 8.5f), new Vector3(1.1f, 1.8f, 0.55f), new Color(0.62f, 0.64f, 0.68f), true, 4);
+                Cube(folder, "Cabinet.B", new Vector3(5.0f, 1.05f, 8.5f), new Vector3(1.1f, 1.8f, 0.55f), new Color(0.62f, 0.64f, 0.68f), true, 4);
+                Cube(folder, "Cabinet.C", new Vector3(6.6f, 1.05f, 8.5f), new Vector3(1.1f, 1.8f, 0.55f), new Color(0.62f, 0.64f, 0.68f), true, 4);
                 HotCube(folder, "Policy", new Vector3(8.4f, 1.15f, 6.4f), new Vector3(0.46f, 0.2f, 0.58f), new Color(0.2f, 0.35f, 0.58f), "policy", "spot.policy");
                 return;
             }
-            Cube(folder, "Desk", new Vector3(6.2f, 0.6f, 6.6f), new Vector3(2.2f, 0.9f, 0.9f), wood, true);
-            Cube(folder, "Monitor", new Vector3(6.2f, 1.25f, 6.9f), new Vector3(0.7f, 0.42f, 0.08f), screen, true);
+            Cube(folder, "Desk", new Vector3(6.2f, 0.6f, 6.6f), new Vector3(2.2f, 0.9f, 0.9f), wood, true, 1);
+            Cube(folder, "Monitor", new Vector3(6.2f, 1.25f, 6.9f), new Vector3(0.7f, 0.42f, 0.08f), screen, true, 3);
             Cube(folder, "ReportButton", new Vector3(7.1f, 1.12f, 6.3f), new Vector3(0.22f, 0.12f, 0.22f), new Color(0.7f, 0.22f, 0.2f), true);
         }
 
@@ -222,20 +221,13 @@ namespace TwinAml
                 go.AddComponent<AudioListener>();
             }
             _cam.clearFlags = CameraClearFlags.SolidColor;
-            _cam.backgroundColor = new Color(0.62f, 0.72f, 0.80f);
+            _cam.backgroundColor = new Color(0.62f, 0.74f, 0.84f);
             _cam.nearClipPlane = 0.08f;
             _cam.farClipPlane = 80f;
             _cam.fieldOfView = 58f;
             RenderSettings.ambientMode = AmbientMode.Flat;
-            RenderSettings.ambientLight = new Color(0.78f, 0.82f, 0.86f);
-            var lights = FindObjectsOfType<Light>();
-            for (var i = 0; i < lights.Length; i++)
-            {
-                if (lights[i].type != LightType.Directional) continue;
-                lights[i].intensity = 1.15f;
-                lights[i].color = new Color(1f, 0.97f, 0.92f);
-                lights[i].shadows = LightShadows.Soft;
-            }
+            RenderSettings.ambientLight = new Color(0.46f, 0.5f, 0.54f);
+            RoomFinish.Sun(new Color(1f, 0.96f, 0.88f), 1.05f, new Vector3(46f, -28f, 0f));
         }
 
         void BuildPeople(string zone)
@@ -260,6 +252,8 @@ namespace TwinAml
             Destroy(shirt.GetComponent<Collider>());
             shirt.GetComponent<Renderer>().sharedMaterial = Paint(new Color(0.18f, 0.40f, 0.72f));
             Head(_player.transform, new Color(0.93f, 0.8f, 0.7f));
+            RoomFinish.PersonDetail(_player.transform, new Color(0.18f, 0.40f, 0.72f));
+            PointerView.Reset(yaw);
 
             if (ClientHome(BranchProgress.ClientStop) == zone)
                 _client = Person("Client", ClientFeet(BranchProgress.ClientStop), new Color(0.25f, 0.35f, 0.48f), "client", "spot.client", ClientYaw(BranchProgress.ClientStop));
@@ -284,6 +278,7 @@ namespace TwinAml
             spot.PromptKey = prompt;
             spot.Remember();
             Head(root.transform, new Color(0.93f, 0.8f, 0.7f));
+            RoomFinish.PersonDetail(root.transform, color);
             Sign(root.transform, BranchCopy.T(prompt), new Vector3(0f, 2.05f, 0f), new Vector3(0f, 2.05f, 1.2f));
             return root;
         }
@@ -302,48 +297,17 @@ namespace TwinAml
         void Update()
         {
             var typing = _reason != null && _reason.isFocused;
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                _page = _page == "" ? "pause" : _page == "pause" ? "" : "";
-                RebuildUi();
-                return;
-            }
-            if (!typing && _page == "" && Input.GetKeyDown(KeyCode.Tab))
-            {
-                _tasks = !_tasks;
-                RebuildUi();
-                return;
-            }
-            if (!typing && _page == "" && Input.GetKeyDown(KeyCode.I))
-            {
-                _notesOpen = !_notesOpen;
-                RebuildUi();
-                return;
-            }
 
             if (_player != null && _player.transform.position.y < -1.5f)
                 _player.transform.position = new Vector3(2.2f, 0.4f, 1.8f);
 
+            var click = PointerView.TakeClick();
             if (_page == "" && _body != null && _player != null && _cam != null)
             {
-                if (Input.GetMouseButtonDown(0) && OverUi()) _blockWalk = true;
-                if (!Input.GetMouseButton(0)) _blockWalk = false;
-                if (!_blockWalk && Input.GetMouseButtonDown(0) && !OverUi())
-                {
-                    var hit = GroundUnderCursor();
-                    if (hit.collider != null)
-                    {
-                        var spot = hit.collider.GetComponentInParent<BranchHotspot>();
-                        if (spot != null && hit.distance <= DoorReach)
-                        {
-                            Open(spot.HotspotId);
-                            _blockWalk = true;
-                        }
-                    }
-                }
-                var typingNote = _reason != null && _reason.isFocused;
-                MouseWalk.Step(_body, _player.transform, _blockWalk || typingNote, ref _vy);
+                if (click && !typing) UseOrWalk();
+                PointerView.Walk(_body, _player.transform, ref _vy);
             }
+            else PointerView.HasGoal = false;
 
             if (_client != null)
             {
@@ -362,26 +326,27 @@ namespace TwinAml
             }
             if (_prompt != null)
                 _prompt.text = near == null ? BranchCopy.T("hud.controls") : BranchCopy.T("hud.use") + "  ·  " + BranchCopy.T(near.PromptKey);
+        }
 
-            if (_page != "" || _cam == null) return;
-            if (Input.GetKeyDown(KeyCode.E) && near != null) Open(near.HotspotId);
+        void UseOrWalk()
+        {
+            var hit = GroundUnderCursor();
+            if (hit.collider == null) return;
+            var spot = hit.collider.GetComponentInParent<BranchHotspot>();
+            if (spot != null && hit.distance <= DoorReach)
+            {
+                PointerView.HasGoal = false;
+                Open(spot.HotspotId);
+                return;
+            }
+            PointerView.Goal = hit.point;
+            PointerView.HasGoal = true;
         }
 
         void LateUpdate()
         {
             if (_cam == null || _player == null) return;
-            var desired = _player.transform.position - _player.transform.forward * 5.1f + Vector3.up * 3.35f;
-            if (!_camReady)
-            {
-                _cam.transform.position = desired;
-                _camReady = true;
-            }
-            else
-            {
-                var t = 1f - Mathf.Exp(-5f * Time.deltaTime);
-                _cam.transform.position = Vector3.Lerp(_cam.transform.position, desired, t);
-            }
-            _cam.transform.LookAt(_player.transform.position + Vector3.up * 1.15f);
+            PointerView.Orbit(_cam, _player.transform.position, 4.3f, 2.9f);
         }
 
         BranchHotspot Nearest()
@@ -1013,11 +978,6 @@ namespace TwinAml
             return default(RaycastHit);
         }
 
-        static bool OverUi()
-        {
-            return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
-        }
-
         static Transform Folder(Transform parent, string name)
         {
             var go = new GameObject(name);
@@ -1035,14 +995,14 @@ namespace TwinAml
             Cube(parent, name, pos, scale, color, false);
         }
 
-        static GameObject Cube(Transform parent, string name, Vector3 pos, Vector3 scale, Color color, bool solid)
+        static GameObject Cube(Transform parent, string name, Vector3 pos, Vector3 scale, Color color, bool solid, int style = 0)
         {
             var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
             go.name = name;
             go.transform.SetParent(parent, false);
             go.transform.position = pos;
             go.transform.localScale = scale;
-            go.GetComponent<Renderer>().sharedMaterial = Paint(color);
+            go.GetComponent<Renderer>().sharedMaterial = RoomFinish.ForStyle(color, style);
             if (!solid)
             {
                 var collider = go.GetComponent<Collider>();
@@ -1051,9 +1011,9 @@ namespace TwinAml
             return go;
         }
 
-        static void HotCube(Transform parent, string name, Vector3 pos, Vector3 scale, Color color, string id, string prompt)
+        static void HotCube(Transform parent, string name, Vector3 pos, Vector3 scale, Color color, string id, string prompt, int style = 0)
         {
-            var go = Cube(parent, name, pos, scale, color, true);
+            var go = Cube(parent, name, pos, scale, color, true, style);
             var spot = go.AddComponent<BranchHotspot>();
             spot.HotspotId = id;
             spot.PromptKey = prompt;
@@ -1083,23 +1043,7 @@ namespace TwinAml
 
         static Material Paint(Color color)
         {
-            var bytes = (Color32)color;
-            var key = (bytes.r << 16) | (bytes.g << 8) | bytes.b;
-            Material mat;
-            if (Paints.TryGetValue(key, out mat)) return mat;
-            if (_shader == null)
-            {
-                var probe = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                probe.SetActive(false);
-                _shader = probe.GetComponent<Renderer>().sharedMaterial.shader;
-                DestroyImmediate(probe);
-            }
-            mat = new Material(_shader);
-            if (mat.HasProperty("_Color")) mat.color = color;
-            if (mat.HasProperty("_Glossiness")) mat.SetFloat("_Glossiness", 0.08f);
-            if (mat.HasProperty("_Metallic")) mat.SetFloat("_Metallic", 0f);
-            Paints[key] = mat;
-            return mat;
+            return RoomFinish.ForStyle(color, 0);
         }
 
         static RectTransform HudBox(Transform parent, float x, float y, float w, float h)
