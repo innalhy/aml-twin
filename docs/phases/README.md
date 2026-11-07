@@ -17,15 +17,15 @@ These documents are **plans for coding agents**. They define scope, slices, acce
 5. Commit **directly to `main`** unless the owner says otherwise. Do not open a feature branch or PR by default.
 6. Do not reintroduce Docker, Kubernetes, Neo4j, Kafka, FlexSim, a second Unity project, or a live bank connection unless the active phase slice explicitly allows it. The Editor room under `unity/` is already in the demo.
 
-## Current repo baseline (before Phase 1 slices)
+## Current repo baseline
 
-Matches root `README.md` on main:
+Phase 1 slices P1-S1 through P1-S8 are done. See [`PHASE1.md`](./PHASE1.md).
 
-- Demo API: FastAPI in `backend/`, `GET /health` only.
-- Frontend: placeholder page that builds to static files.
-- Legacy scaffold: Cloudflare Worker in `workers/api`, same health JSON. Not the deploy path.
-- Cases: `data/cases/*.example.json` (`deepfake-hk-001` and ten `hk-*` scripts) + `packages/schemas/script.schema.json`. Effect keys: [`docs/effects.md`](../effects.md) (P1-S1).
-- Docs: `docs/architecture.md`, `docs/comp3424-mapping.md`, `docs/deploy-vps.md`. `docs/cloudflare.md` is a pointer only.
+- Demo API: FastAPI in `backend/`. `GET /health`, `GET /cases`, session routes, and the twin state machine.
+- Frontend: scenario player and dashboard. Static build for the VPS. The Vite dev server proxies `/health`, `/cases`, and `/sessions` to port 8000.
+- Legacy scaffold: Cloudflare Worker in `workers/api`, health JSON only. Not the deploy path.
+- Cases: `data/cases/*.example.json` + `packages/schemas/script.schema.json`. Effect keys: [`docs/effects.md`](../effects.md).
+- Docs: `docs/architecture.md`, `docs/comp3424-mapping.md`, `docs/deploy-vps.md`, `docs/audit-evidence.md`. `docs/cloudflare.md` is a pointer only.
 
 ## Suggested order
 

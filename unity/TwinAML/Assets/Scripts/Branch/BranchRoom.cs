@@ -31,6 +31,7 @@ namespace TwinAml
         string _choice = "";
         bool _tasks;
         bool _notesOpen;
+        bool _blockWalk;
         BranchHotspot _lit;
         Text _prompt;
         InputField _reason;
@@ -325,16 +326,38 @@ namespace TwinAml
 
             if (_page == "" && _body != null && _cam != null)
             {
-                var forward = _cam.transform.forward;
-                forward.y = 0f;
-                if (forward.sqrMagnitude < 0.001f) forward = Vector3.forward;
-                forward.Normalize();
-                var right = _cam.transform.right;
-                right.y = 0f;
-                right.Normalize();
-                var wish = right * Input.GetAxisRaw("Horizontal") + forward * Input.GetAxisRaw("Vertical");
-                if (wish.sqrMagnitude > 1f) wish.Normalize();
-                if (wish.sqrMagnitude > 0.01f)
+                var backward = false;
+                var wish = Vector3.zero;
+                if (Input.GetMouseButtonDown(0) && OverUi()) _blockWalk = true;
+                if (!Input.GetMouseButton(0)) _blockWalk = false;
+                if (!OverUi() && Input.GetMouseButton(0) && !_blockWalk)
+                {
+                    var hit = GroundUnderCursor();
+                    if (hit.collider != null)
+                    {
+                        var spot = hit.collider.GetComponentInParent<BranchHotspot>();
+                        if (Input.GetMouseButtonDown(0) && spot != null && hit.distance <= DoorReach)
+                        {
+                            Open(spot.HotspotId);
+                            _blockWalk = true;
+                        }
+                        else if (spot == null)
+                        {
+                            var to = hit.point - _player.transform.position;
+                            to.y = 0f;
+                            if (to.sqrMagnitude > 0.36f) wish = to.normalized;
+                        }
+                    }
+                }
+                if (wish.sqrMagnitude < 0.01f && !OverUi() && Input.GetMouseButton(1))
+                {
+                    backward = true;
+                    var back = _player.transform.forward;
+                    back.y = 0f;
+                    if (back.sqrMagnitude < 0.001f) back = Vector3.forward;
+                    wish = -back.normalized;
+                }
+                if (!backward && wish.sqrMagnitude > 0.01f)
                 {
                     var face = Quaternion.LookRotation(wish);
                     _player.transform.rotation = Quaternion.Slerp(_player.transform.rotation, face, 12f * Time.deltaTime);
@@ -366,15 +389,6 @@ namespace TwinAml
 
             if (_page != "" || _cam == null) return;
             if (Input.GetKeyDown(KeyCode.E) && near != null) Open(near.HotspotId);
-            if (Input.GetMouseButtonDown(0) && !OverUi())
-            {
-                RaycastHit hit;
-                if (Physics.Raycast(_cam.ScreenPointToRay(Input.mousePosition), out hit, 12f))
-                {
-                    var spot = hit.collider.GetComponentInParent<BranchHotspot>();
-                    if (spot != null && hit.distance <= DoorReach) Open(spot.HotspotId);
-                }
-            }
         }
 
         void LateUpdate()
@@ -1007,6 +1021,20 @@ namespace TwinAml
             if (stop <= 0) return 200f;
             if (stop == 1) return 250f;
             return 20f;
+        }
+
+        RaycastHit GroundUnderCursor()
+        {
+            var hits = Physics.RaycastAll(_cam.ScreenPointToRay(Input.mousePosition), 40f);
+            System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+            for (var i = 0; i < hits.Length; i++)
+            {
+                var col = hits[i].collider;
+                if (col == null) continue;
+                if (_player != null && (col.transform == _player.transform || col.transform.IsChildOf(_player.transform))) continue;
+                return hits[i];
+            }
+            return default(RaycastHit);
         }
 
         static bool OverUi()

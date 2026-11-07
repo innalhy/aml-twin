@@ -161,7 +161,7 @@ The branch is five scene files in `Assets/Scenes/3D/`, one room each, built in c
 
 The lesson on screen is English, including when the portal language is Traditional Chinese. It is written for someone new to AML. A cream panel under the top bar always says **Do this next**. **Words** defines customer, CDD, beneficial owner, red flag, source of funds, enhanced due diligence, mandate, and escalate. Each paper starts with why it matters. Each answer starts with why you asked.
 
-Walk with WASD. Click an object, or stand close and press E. Tab opens the task list. I opens notes. Esc pauses.
+Hold the left mouse button to walk forward toward the cursor. Hold the right mouse button to walk backward. Click an object to use it. Tab opens the task list. I opens notes. Esc pauses.
 
 Rooms, in the order the coach sends you: lobby, relationship desk, meeting room, then the blue-floor compliance office. The file room holds a short CDD note. The ownership chart is the white board on the left wall of the meeting room. Follow it to a person, not only to the next company.
 
