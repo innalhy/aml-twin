@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Write minimal Unity 2022 scene YAML and .meta files for the TwinAML room.
+"""Write minimal scene YAML and .meta files for the TwinAML room.
 
 Scenes contain a camera and a light only. FlowController builds the UI at play time.
+The supported Editor is Unity 6000.6.8f1. It opens this YAML and may upgrade serialized versions on save.
 """
 
 import hashlib

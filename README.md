@@ -46,7 +46,7 @@ One API and one web client on a self-hosted Linux VPS. The Unity Editor room is 
 | --- | --- | --- |
 | Demo API | `backend/` | FastAPI. Today: `GET /health`. Case load, sessions, decisions, the twin state machine, and events will be added on this process. A Node/Hono process may serve the same routes later. |
 | Web | `frontend/` | React + Vite + TypeScript. Static files on the VPS. Today: a placeholder page. The scenario player and the dashboard are not built. Both will read the same twin. |
-| Unity | [`unity/TwinAML`](unity/UNITY.md) | Editor training room, in scope. Plays Topic 1 and Topic 2 against the frozen scripts. Does not call the API yet. |
+| Unity | [`unity/TwinAML`](unity/UNITY.md) | Editor training room, in scope. Unity 6000.6.8f1. Plays Topic 1 and Topic 2 against the frozen scripts. Does not call the API yet. |
 | Legacy scaffold | `workers/api` | Cloudflare Worker (Hono) plus Wrangler config. Left in the tree. Not the COMP3424 demo target. |
 
 The web app does not keep a private copy of the case world. Compliance outcomes come from the rules in the script and from the state machine that will apply them.
@@ -90,7 +90,7 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 │       └── PHASE3.md            # vision only; not the course demo
 ├── unity/                       # Editor training room. See unity/UNITY.md
 │   ├── UNITY.md                 # scene map, T01/T02 paths, how to press Play
-│   └── TwinAML/                 # Unity 2022.3 project. First scene: Scn_Boot
+│   └── TwinAML/                 # Unity 6000.6.8f1 project. First scene: Scn_Boot
 ├── workers/
 │   └── api/                     # legacy Cloudflare Worker scaffold (not the demo API)
 │       ├── README.md
@@ -190,7 +190,7 @@ node scripts/unity-room-paths.test.mjs
 
 ## Unity training room
 
-Open [`unity/UNITY.md`](unity/UNITY.md). In Unity 2022.3 LTS, open the project folder `unity/TwinAML`, then open `Scn_Boot` and press Play (or use the menu **TwinAML → Play From Boot**). Topic 1 is `deepfake-hk-001`. Topic 2 is `hk-greythunder-mule-001`. The dashboard in that room is the TwinAML AML Training Portal. It reads the twin written by those choices and still writes `twinaml-dashboard.json`. Docker is not involved.
+Open [`unity/UNITY.md`](unity/UNITY.md). In Unity 6000.6.8f1, open the project folder `unity/TwinAML` (not the repo root), then open `Scn_Boot` and press Play (or use the menu **TwinAML → Play From Boot**). Case JSON is read from `data/cases/`. Topic 1 is `deepfake-hk-001`. Topic 2 is `hk-greythunder-mule-001`. The dashboard in that room is the TwinAML AML Training Portal. It reads the twin written by those choices and still writes `twinaml-dashboard.json`. Docker is not involved.
 
 ## Deploy
 
