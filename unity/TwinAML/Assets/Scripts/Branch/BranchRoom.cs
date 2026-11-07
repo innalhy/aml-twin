@@ -2,12 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace TwinAml
 {
     /// <summary>
-    /// Topic 3 greybox. One floor, about 22 m by 16 m, built when the scene runs.
+    /// Topic 3 greybox. One room per scene file, built when that scene runs.
     /// Built-in pipeline and uGUI, same as the rest of the room. The case script
     /// still decides the twin; this component only records what the trainee noticed.
     /// </summary>
@@ -60,15 +61,153 @@ namespace TwinAml
         void Build()
         {
             BranchProgress.MarkEntered();
+            BranchProgress.HasPose = false;
             DressCamera();
             var world = new GameObject("World");
             world.transform.SetParent(transform, false);
-            BuildShell(world.transform);
-            BuildRooms(world.transform);
-            BuildPeople();
+            var zone = CurrentZone();
+            BuildRoomShell(world.transform, zone);
+            BuildZoneProps(world.transform, zone);
+            BuildPeople(zone);
             EnsureEvents();
             if (!BranchProgress.GuideDismissed) _page = "guide";
             RebuildUi();
+        }
+
+        static string CurrentZone()
+        {
+            var name = SceneManager.GetActiveScene().name;
+            if (name == "Scn_Branch_Desk") return "desk";
+            if (name == "Scn_Branch_Meeting") return "meeting";
+            if (name == "Scn_Branch_Files") return "files";
+            if (name == "Scn_Branch_Compliance") return "compliance";
+            return "lobby";
+        }
+
+        static string ZoneKey(string zone)
+        {
+            if (zone == "desk") return "zone.desk";
+            if (zone == "meeting") return "zone.meeting";
+            if (zone == "files") return "zone.files";
+            if (zone == "compliance") return "zone.compliance";
+            return "zone.lobby";
+        }
+
+        void BuildRoomShell(Transform world, string zone)
+        {
+            var wall = new Color(0.93f, 0.94f, 0.95f);
+            var floor = new Color(0.78f, 0.80f, 0.82f);
+            if (zone == "meeting") floor = new Color(0.86f, 0.82f, 0.76f);
+            else if (zone == "files") floor = new Color(0.84f, 0.80f, 0.72f);
+            else if (zone == "compliance") floor = new Color(0.74f, 0.82f, 0.88f);
+            Cube(world, "Floor", new Vector3(6f, 0.05f, 5f), new Vector3(12.4f, 0.2f, 10.4f), floor, true);
+            Wall(world, 2.3f, 0.12f, 4.4f, 0.24f, wall);
+            Wall(world, 9.7f, 0.12f, 4.4f, 0.24f, wall);
+            Wall(world, 2.3f, 9.88f, 4.4f, 0.24f, wall);
+            Wall(world, 9.7f, 9.88f, 4.4f, 0.24f, wall);
+            Wall(world, 0.12f, 5f, 0.24f, 10.2f, wall);
+            Wall(world, 11.88f, 5f, 0.24f, 10.2f, wall);
+            Cube(world, "Window", new Vector3(11.7f, 2.1f, 5f), new Vector3(0.08f, 1.2f, 3.2f), new Color(0.55f, 0.72f, 0.82f), false);
+            Sign(world, BranchCopy.T(ZoneKey(zone)), new Vector3(6f, 2.55f, 9.35f), new Vector3(6f, 2.55f, 5f));
+
+            if (zone != "lobby")
+                Door(world, "Door.Back", new Vector3(6f, 1.25f, 0.12f), PreviousScene(zone), PreviousKey(zone));
+            if (zone != "compliance")
+                Door(world, "Door.Forward", new Vector3(6f, 1.25f, 9.88f), NextScene(zone), NextKey(zone));
+        }
+
+        static string PreviousScene(string zone)
+        {
+            if (zone == "desk") return "Scn_Branch_Lobby";
+            if (zone == "meeting") return "Scn_Branch_Desk";
+            if (zone == "files") return "Scn_Branch_Meeting";
+            return "Scn_Branch_Files";
+        }
+
+        static string NextScene(string zone)
+        {
+            if (zone == "lobby") return "Scn_Branch_Desk";
+            if (zone == "desk") return "Scn_Branch_Meeting";
+            if (zone == "meeting") return "Scn_Branch_Files";
+            return "Scn_Branch_Compliance";
+        }
+
+        static string PreviousKey(string zone)
+        {
+            if (zone == "desk") return "zone.lobby";
+            if (zone == "meeting") return "zone.desk";
+            if (zone == "files") return "zone.meeting";
+            return "zone.files";
+        }
+
+        static string NextKey(string zone)
+        {
+            if (zone == "lobby") return "zone.desk";
+            if (zone == "desk") return "zone.meeting";
+            if (zone == "meeting") return "zone.files";
+            return "zone.compliance";
+        }
+
+        void Door(Transform world, string name, Vector3 pos, string scene, string promptKey)
+        {
+            HotCube(world, name, pos, new Vector3(1.7f, 2.35f, 0.16f), new Color(0.13f, 0.22f, 0.36f), "door:" + scene, promptKey);
+            Sign(world, BranchCopy.T(promptKey), pos + new Vector3(0f, 1.55f, 0f), pos + new Vector3(0f, 1.55f, pos.z < 5f ? 1f : -1f));
+        }
+
+        void BuildZoneProps(Transform world, string zone)
+        {
+            var wood = new Color(0.55f, 0.40f, 0.28f);
+            var navy = new Color(0.13f, 0.22f, 0.36f);
+            var paper = new Color(0.96f, 0.95f, 0.90f);
+            var paperAlt = new Color(0.93f, 0.90f, 0.80f);
+            var screen = new Color(0.18f, 0.42f, 0.58f);
+            var folder = Folder(world, zone);
+
+            if (zone == "lobby")
+            {
+                Cube(folder, "Kiosk", new Vector3(2.2f, 0.7f, 3.2f), new Vector3(0.55f, 1.1f, 0.45f), navy, true);
+                Cube(folder, "Screen", new Vector3(9.2f, 1.85f, 1.1f), new Vector3(1.5f, 0.85f, 0.08f), screen, true);
+                Cube(folder, "Chair.A", new Vector3(4.2f, 0.38f, 4.6f), new Vector3(0.55f, 0.45f, 0.55f), wood, true);
+                Cube(folder, "Chair.B", new Vector3(5.2f, 0.38f, 4.6f), new Vector3(0.55f, 0.45f, 0.55f), wood, true);
+                Cube(folder, "Chair.C", new Vector3(6.2f, 0.38f, 4.6f), new Vector3(0.55f, 0.45f, 0.55f), wood, true);
+                return;
+            }
+            if (zone == "desk")
+            {
+                Cube(folder, "Counter", new Vector3(6f, 0.65f, 5.4f), new Vector3(6.4f, 1f, 1.2f), wood, true);
+                Cube(folder, "Stamp", new Vector3(3.4f, 1.22f, 5.05f), new Vector3(0.18f, 0.12f, 0.18f), new Color(0.65f, 0.18f, 0.16f), true);
+                Cube(folder, "Scanner", new Vector3(4.1f, 1.28f, 5.05f), new Vector3(0.55f, 0.16f, 0.38f), new Color(0.25f, 0.28f, 0.32f), true);
+                Cube(folder, "NameCard", new Vector3(8.8f, 1.2f, 5.1f), new Vector3(0.28f, 0.02f, 0.18f), paper, true);
+                HotCube(folder, "Computer", new Vector3(8.1f, 1.45f, 5.05f), new Vector3(0.72f, 0.48f, 0.4f), screen, "computer", "spot.computer");
+                for (var i = 0; i < BranchProgress.DocIds.Length; i++)
+                {
+                    var id = BranchProgress.DocIds[i];
+                    var x = 3.5f + i * 0.62f;
+                    HotCube(folder, "Doc." + id, new Vector3(x, 1.28f, 5.7f), new Vector3(0.48f, 0.16f, 0.34f), i % 2 == 0 ? paper : paperAlt, "doc:" + id, "spot." + id);
+                }
+                return;
+            }
+            if (zone == "meeting")
+            {
+                Cube(folder, "Table", new Vector3(5.4f, 0.55f, 5.2f), new Vector3(2.6f, 0.75f, 1.2f), wood, true);
+                Cube(folder, "Laptop", new Vector3(5.1f, 1.0f, 5.1f), new Vector3(0.42f, 0.06f, 0.3f), new Color(0.2f, 0.22f, 0.26f), true);
+                Cube(folder, "Cup", new Vector3(6.1f, 0.98f, 5.45f), new Vector3(0.12f, 0.14f, 0.12f), new Color(0.85f, 0.88f, 0.9f), true);
+                Cube(folder, "Seat.A", new Vector3(5.4f, 0.38f, 4.1f), new Vector3(0.55f, 0.45f, 0.55f), navy, true);
+                Cube(folder, "Seat.B", new Vector3(5.4f, 0.38f, 6.3f), new Vector3(0.55f, 0.45f, 0.55f), wood, true);
+                HotCube(folder, "Chart", new Vector3(0.4f, 1.7f, 5.2f), new Vector3(0.08f, 1.35f, 1.7f), new Color(0.96f, 0.97f, 0.98f), "structure", "spot.structure");
+                return;
+            }
+            if (zone == "files")
+            {
+                Cube(folder, "Cabinet.A", new Vector3(3.4f, 1.05f, 8.5f), new Vector3(1.1f, 1.8f, 0.55f), new Color(0.45f, 0.48f, 0.52f), true);
+                Cube(folder, "Cabinet.B", new Vector3(5.0f, 1.05f, 8.5f), new Vector3(1.1f, 1.8f, 0.55f), new Color(0.45f, 0.48f, 0.52f), true);
+                Cube(folder, "Cabinet.C", new Vector3(6.6f, 1.05f, 8.5f), new Vector3(1.1f, 1.8f, 0.55f), new Color(0.45f, 0.48f, 0.52f), true);
+                HotCube(folder, "Policy", new Vector3(8.4f, 1.15f, 6.4f), new Vector3(0.46f, 0.2f, 0.58f), new Color(0.2f, 0.35f, 0.58f), "policy", "spot.policy");
+                return;
+            }
+            Cube(folder, "Desk", new Vector3(6.2f, 0.6f, 6.6f), new Vector3(2.2f, 0.9f, 0.9f), wood, true);
+            Cube(folder, "Monitor", new Vector3(6.2f, 1.25f, 6.9f), new Vector3(0.7f, 0.42f, 0.08f), screen, true);
+            Cube(folder, "ReportButton", new Vector3(7.1f, 1.12f, 6.3f), new Vector3(0.22f, 0.12f, 0.22f), new Color(0.7f, 0.22f, 0.2f), true);
         }
 
         void DressCamera()
@@ -98,103 +237,10 @@ namespace TwinAml
             }
         }
 
-        void BuildShell(Transform world)
+        void BuildPeople(string zone)
         {
-            Cube(world, "Floor", new Vector3(11f, 0.05f, 8f), new Vector3(23f, 0.2f, 17f), new Color(0.78f, 0.80f, 0.82f), true);
-            Rug(world, "Rug.Lobby", new Vector3(4.7f, 0.17f, 3.2f), new Vector3(8.4f, 0.02f, 5.4f), new Color(0.86f, 0.88f, 0.90f));
-            Rug(world, "Rug.Desk", new Vector3(15.5f, 0.17f, 3.7f), new Vector3(12.2f, 0.02f, 6.4f), new Color(0.80f, 0.84f, 0.88f));
-            Rug(world, "Rug.Meeting", new Vector3(4.7f, 0.17f, 11f), new Vector3(8.4f, 0.02f, 8.6f), new Color(0.86f, 0.82f, 0.76f));
-            Rug(world, "Rug.Files", new Vector3(12.1f, 0.17f, 11.5f), new Vector3(5.4f, 0.02f, 8f), new Color(0.84f, 0.80f, 0.72f));
-            Rug(world, "Rug.Compliance", new Vector3(18.4f, 0.17f, 11.5f), new Vector3(6.4f, 0.02f, 8f), new Color(0.74f, 0.82f, 0.88f));
-
-            var wall = new Color(0.93f, 0.94f, 0.95f);
-            var trim = new Color(0.13f, 0.22f, 0.36f);
-            Wall(world, 1.6f, 0.15f, 3.2f, 0.3f, wall);
-            Wall(world, 13.6f, 0.15f, 16.8f, 0.3f, wall);
-            Wall(world, 11f, 15.85f, 22f, 0.3f, wall);
-            Wall(world, 0.15f, 8f, 0.3f, 16f, wall);
-            Wall(world, 21.85f, 8f, 0.3f, 16f, wall);
-
-            Wall(world, 1.85f, 6.2f, 3.1f, 0.2f, wall);
-            Wall(world, 7.32f, 6.2f, 3.45f, 0.2f, wall);
-            Wall(world, 10.3f, 7.15f, 2.2f, 0.2f, wall);
-            Wall(world, 17.55f, 7.15f, 8.3f, 0.2f, wall);
-            Wall(world, 9.2f, 1.25f, 0.2f, 1.9f, wall);
-            Wall(world, 9.2f, 6.6f, 0.2f, 4.8f, wall);
-            Wall(world, 9.2f, 13.35f, 0.2f, 4.7f, wall);
-            Wall(world, 9.2f, 6.7f, 0.45f, 1.15f, wall);
-            Wall(world, 15f, 8.68f, 0.2f, 3.05f, wall);
-            Wall(world, 15f, 13.95f, 0.2f, 3.5f, wall);
-
-            Rug(world, "Mat.Entry", new Vector3(4.2f, 0.18f, 0.7f), new Vector3(1.8f, 0.02f, 0.9f), trim);
-            Rug(world, "Mat.Desk", new Vector3(9.2f, 0.18f, 3.3f), new Vector3(0.9f, 0.02f, 1.8f), trim);
-            Rug(world, "Mat.Meet", new Vector3(4.5f, 0.18f, 6.2f), new Vector3(2f, 0.02f, 0.9f), trim);
-            Rug(world, "Mat.Back", new Vector3(12.4f, 0.18f, 7.15f), new Vector3(1.8f, 0.02f, 0.9f), trim);
-            Rug(world, "Mat.Side", new Vector3(9.2f, 0.18f, 10f), new Vector3(0.9f, 0.02f, 1.8f), trim);
-            Rug(world, "Mat.Compliance", new Vector3(15f, 0.18f, 11.2f), new Vector3(0.9f, 0.02f, 1.8f), trim);
-
-            Cube(world, "Window", new Vector3(6f, 2.1f, 15.62f), new Vector3(3.2f, 1.2f, 0.08f), new Color(0.55f, 0.72f, 0.82f), false);
-            Cube(world, "Window.B", new Vector3(16f, 2.1f, 15.62f), new Vector3(3.2f, 1.2f, 0.08f), new Color(0.55f, 0.72f, 0.82f), false);
-
-            Sign(world, BranchCopy.T("zone.lobby"), new Vector3(4.7f, 2.55f, 5.85f), new Vector3(4.7f, 2.55f, 3f));
-            Sign(world, BranchCopy.T("zone.desk"), new Vector3(15.4f, 2.55f, 6.85f), new Vector3(15.4f, 2.55f, 3.5f));
-            Sign(world, BranchCopy.T("zone.meeting"), new Vector3(4.7f, 2.55f, 6.55f), new Vector3(4.7f, 2.55f, 10f));
-            Sign(world, BranchCopy.T("zone.files"), new Vector3(12.1f, 2.55f, 7.5f), new Vector3(12.1f, 2.55f, 11f));
-            Sign(world, BranchCopy.T("zone.compliance"), new Vector3(18.2f, 2.55f, 7.5f), new Vector3(18.2f, 2.55f, 11f));
-        }
-
-        void BuildRooms(Transform world)
-        {
-            var wood = new Color(0.55f, 0.40f, 0.28f);
-            var navy = new Color(0.13f, 0.22f, 0.36f);
-            var paper = new Color(0.96f, 0.95f, 0.90f);
-            var paperAlt = new Color(0.93f, 0.90f, 0.80f);
-            var screen = new Color(0.18f, 0.42f, 0.58f);
-
-            var lobby = Folder(world, "Lobby");
-            Cube(lobby, "Kiosk", new Vector3(2.1f, 0.7f, 1.7f), new Vector3(0.55f, 1.1f, 0.45f), navy, true);
-            Cube(lobby, "Screen", new Vector3(7.5f, 1.85f, 0.55f), new Vector3(1.5f, 0.85f, 0.08f), screen, true);
-            Cube(lobby, "Chair.A", new Vector3(3.3f, 0.38f, 4.3f), new Vector3(0.55f, 0.45f, 0.55f), wood, true);
-            Cube(lobby, "Chair.B", new Vector3(4.2f, 0.38f, 4.3f), new Vector3(0.55f, 0.45f, 0.55f), wood, true);
-            Cube(lobby, "Chair.C", new Vector3(5.1f, 0.38f, 4.3f), new Vector3(0.55f, 0.45f, 0.55f), wood, true);
-
-            var desk = Folder(world, "RelationshipDesk");
-            Cube(desk, "Counter", new Vector3(15.7f, 0.65f, 4.75f), new Vector3(6.8f, 1f, 1.25f), wood, true);
-            Cube(desk, "Stamp", new Vector3(13.1f, 1.22f, 4.35f), new Vector3(0.18f, 0.12f, 0.18f), new Color(0.65f, 0.18f, 0.16f), true);
-            Cube(desk, "Scanner", new Vector3(13.7f, 1.28f, 4.35f), new Vector3(0.55f, 0.16f, 0.38f), new Color(0.25f, 0.28f, 0.32f), true);
-            Cube(desk, "NameCard", new Vector3(19.3f, 1.2f, 4.4f), new Vector3(0.28f, 0.02f, 0.18f), paper, true);
-            HotCube(desk, "Computer", new Vector3(18.7f, 1.45f, 4.4f), new Vector3(0.72f, 0.48f, 0.4f), screen, "computer", "spot.computer");
-            for (var i = 0; i < BranchProgress.DocIds.Length; i++)
-            {
-                var id = BranchProgress.DocIds[i];
-                var x = 13.55f + i * 0.62f;
-                HotCube(desk, "Doc." + id, new Vector3(x, 1.28f, 5.05f), new Vector3(0.48f, 0.16f, 0.34f), i % 2 == 0 ? paper : paperAlt, "doc:" + id, "spot." + id);
-            }
-
-            var meeting = Folder(world, "MeetingRoom");
-            Cube(meeting, "Table", new Vector3(4.8f, 0.55f, 10.6f), new Vector3(2.6f, 0.75f, 1.2f), wood, true);
-            Cube(meeting, "Laptop", new Vector3(4.5f, 1.0f, 10.5f), new Vector3(0.42f, 0.06f, 0.3f), new Color(0.2f, 0.22f, 0.26f), true);
-            Cube(meeting, "Cup", new Vector3(5.5f, 0.98f, 10.85f), new Vector3(0.12f, 0.14f, 0.12f), new Color(0.85f, 0.88f, 0.9f), true);
-            Cube(meeting, "Seat.A", new Vector3(4.8f, 0.38f, 9.5f), new Vector3(0.55f, 0.45f, 0.55f), navy, true);
-            Cube(meeting, "Seat.B", new Vector3(4.8f, 0.38f, 11.7f), new Vector3(0.55f, 0.45f, 0.55f), wood, true);
-            HotCube(meeting, "Chart", new Vector3(0.48f, 1.7f, 11.2f), new Vector3(0.08f, 1.35f, 1.7f), new Color(0.96f, 0.97f, 0.98f), "structure", "spot.structure");
-
-            var files = Folder(world, "FileRoom");
-            Cube(files, "Cabinet.A", new Vector3(11.2f, 1.05f, 14.4f), new Vector3(1.1f, 1.8f, 0.55f), new Color(0.45f, 0.48f, 0.52f), true);
-            Cube(files, "Cabinet.B", new Vector3(12.5f, 1.05f, 14.4f), new Vector3(1.1f, 1.8f, 0.55f), new Color(0.45f, 0.48f, 0.52f), true);
-            Cube(files, "Cabinet.C", new Vector3(13.8f, 1.05f, 14.4f), new Vector3(1.1f, 1.8f, 0.55f), new Color(0.45f, 0.48f, 0.52f), true);
-            HotCube(files, "Policy", new Vector3(12.2f, 1.15f, 12.6f), new Vector3(0.46f, 0.2f, 0.58f), new Color(0.2f, 0.35f, 0.58f), "policy", "spot.policy");
-
-            var compliance = Folder(world, "ComplianceOffice");
-            Cube(compliance, "Desk", new Vector3(18.6f, 0.6f, 13.6f), new Vector3(2.2f, 0.9f, 0.9f), wood, true);
-            Cube(compliance, "Monitor", new Vector3(18.6f, 1.25f, 13.85f), new Vector3(0.7f, 0.42f, 0.08f), screen, true);
-            Cube(compliance, "ReportButton", new Vector3(19.4f, 1.12f, 13.3f), new Vector3(0.22f, 0.12f, 0.22f), new Color(0.7f, 0.22f, 0.2f), true);
-        }
-
-        void BuildPeople()
-        {
-            var spawn = BranchProgress.HasPose ? BranchProgress.Pose : new Vector3(4.1f, 0.25f, 2.05f);
-            var yaw = BranchProgress.HasPose ? BranchProgress.Yaw : 25f;
+            var spawn = new Vector3(2.2f, 0.25f, 1.8f);
+            var yaw = 15f;
             _player = new GameObject("Player");
             _player.transform.SetParent(transform, false);
             _player.transform.position = spawn;
@@ -214,8 +260,10 @@ namespace TwinAml
             shirt.GetComponent<Renderer>().sharedMaterial = Paint(new Color(0.18f, 0.40f, 0.72f));
             Head(_player.transform, new Color(0.93f, 0.8f, 0.7f));
 
-            _client = Person("Client", ClientFeet(BranchProgress.ClientStop), new Color(0.25f, 0.35f, 0.48f), "client", "spot.client", ClientYaw(BranchProgress.ClientStop));
-            Person("Compliance", new Vector3(17.4f, 0.16f, 12.3f), new Color(0.32f, 0.38f, 0.46f), "decision", "spot.decision", 140f);
+            if (ClientHome(BranchProgress.ClientStop) == zone)
+                _client = Person("Client", ClientFeet(BranchProgress.ClientStop), new Color(0.25f, 0.35f, 0.48f), "client", "spot.client", ClientYaw(BranchProgress.ClientStop));
+            if (zone == "compliance")
+                Person("Compliance", new Vector3(8.2f, 0.16f, 5.4f), new Color(0.32f, 0.38f, 0.46f), "decision", "spot.decision", 200f);
         }
 
         GameObject Person(string name, Vector3 feet, Color color, string hotspot, string prompt, float yaw)
@@ -273,7 +321,7 @@ namespace TwinAml
             }
 
             if (_player != null && _player.transform.position.y < -1.5f)
-                _player.transform.position = new Vector3(4.1f, 0.4f, 2.05f);
+                _player.transform.position = new Vector3(2.2f, 0.4f, 1.8f);
 
             if (_page == "" && _body != null && _cam != null)
             {
@@ -365,6 +413,17 @@ namespace TwinAml
         void Open(string id)
         {
             _focus = "";
+            if (id != null && id.StartsWith("door:"))
+            {
+                var sceneName = id.Substring(5);
+                SceneId scene;
+                if (SceneCatalog.TryParse(sceneName, out scene) && FlowController.Instance != null)
+                {
+                    BranchProgress.HasPose = false;
+                    FlowController.Instance.Go(scene);
+                }
+                return;
+            }
             if (id == "client")
             {
                 if (BranchProgress.ClientStop >= 2) _page = "interview";
@@ -851,7 +910,7 @@ namespace TwinAml
             ModalButton(panel, BranchCopy.T("pause.hub"), 48f, 340f, 944f, 48f, UiKit.Soft, UiKit.Ink, () =>
             {
                 var flow = FlowController.Instance;
-                if (flow != null) flow.Go(SceneId.Scn_TopicsHub);
+                if (flow != null) flow.Go(SceneId.Scn_Triage_Desk);
             });
         }
 
@@ -869,8 +928,10 @@ namespace TwinAml
         void MoveClient(int stop)
         {
             BranchProgress.ClientStop = stop;
+            BranchProgress.HasPose = false;
             _page = "";
-            RebuildUi();
+            var scene = stop <= 0 ? SceneId.Scn_Branch_Lobby : stop == 1 ? SceneId.Scn_Branch_Desk : SceneId.Scn_Branch_Meeting;
+            if (FlowController.Instance != null) FlowController.Instance.Go(scene);
         }
 
         void Submit()
@@ -918,13 +979,14 @@ namespace TwinAml
 
         string ZoneName()
         {
-            if (_player == null) return BranchCopy.T("zone.lobby");
-            var p = _player.transform.position;
-            if (p.x < 9.2f && p.z < 6.2f) return BranchCopy.T("zone.lobby");
-            if (p.x >= 9.2f && p.z < 7.15f) return BranchCopy.T("zone.desk");
-            if (p.x < 9.2f) return BranchCopy.T("zone.meeting");
-            if (p.x < 15f) return BranchCopy.T("zone.files");
-            return BranchCopy.T("zone.compliance");
+            return BranchCopy.T(ZoneKey(CurrentZone()));
+        }
+
+        static string ClientHome(int stop)
+        {
+            if (stop <= 0) return "lobby";
+            if (stop == 1) return "desk";
+            return "meeting";
         }
 
         string Clock()
@@ -935,9 +997,9 @@ namespace TwinAml
 
         static Vector3 ClientFeet(int stop)
         {
-            if (stop <= 0) return new Vector3(6.4f, 0.16f, 3.5f);
-            if (stop == 1) return new Vector3(13.6f, 0.16f, 3.55f);
-            return new Vector3(6.3f, 0.16f, 10.5f);
+            if (stop <= 0) return new Vector3(6.2f, 0.16f, 4.2f);
+            if (stop == 1) return new Vector3(6.0f, 0.16f, 3.2f);
+            return new Vector3(5.4f, 0.16f, 6.4f);
         }
 
         static float ClientYaw(int stop)
