@@ -324,49 +324,25 @@ namespace TwinAml
             if (_player != null && _player.transform.position.y < -1.5f)
                 _player.transform.position = new Vector3(2.2f, 0.4f, 1.8f);
 
-            if (_page == "" && _body != null && _cam != null)
+            if (_page == "" && _body != null && _player != null && _cam != null)
             {
-                var backward = false;
-                var wish = Vector3.zero;
                 if (Input.GetMouseButtonDown(0) && OverUi()) _blockWalk = true;
                 if (!Input.GetMouseButton(0)) _blockWalk = false;
-                if (!OverUi() && Input.GetMouseButton(0) && !_blockWalk)
+                if (!_blockWalk && Input.GetMouseButtonDown(0) && !OverUi())
                 {
                     var hit = GroundUnderCursor();
                     if (hit.collider != null)
                     {
                         var spot = hit.collider.GetComponentInParent<BranchHotspot>();
-                        if (Input.GetMouseButtonDown(0) && spot != null && hit.distance <= DoorReach)
+                        if (spot != null && hit.distance <= DoorReach)
                         {
                             Open(spot.HotspotId);
                             _blockWalk = true;
                         }
-                        else if (spot == null)
-                        {
-                            var to = hit.point - _player.transform.position;
-                            to.y = 0f;
-                            if (to.sqrMagnitude > 0.36f) wish = to.normalized;
-                        }
                     }
                 }
-                if (wish.sqrMagnitude < 0.01f && !OverUi() && Input.GetMouseButton(1))
-                {
-                    backward = true;
-                    var back = _player.transform.forward;
-                    back.y = 0f;
-                    if (back.sqrMagnitude < 0.001f) back = Vector3.forward;
-                    wish = -back.normalized;
-                }
-                if (!backward && wish.sqrMagnitude > 0.01f)
-                {
-                    var face = Quaternion.LookRotation(wish);
-                    _player.transform.rotation = Quaternion.Slerp(_player.transform.rotation, face, 12f * Time.deltaTime);
-                }
-                if (_body.isGrounded && _vy < 0f) _vy = -1.5f;
-                else _vy -= 18f * Time.deltaTime;
-                var motion = wish * 3.1f;
-                motion.y = _vy;
-                _body.Move(motion * Time.deltaTime);
+                var typingNote = _reason != null && _reason.isFocused;
+                MouseWalk.Step(_body, _player.transform, _blockWalk || typingNote, ref _vy);
             }
 
             if (_client != null)

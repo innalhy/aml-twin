@@ -19,6 +19,11 @@ namespace TwinAml
         const int ShiftSeconds = 25 * 60;
 
         Camera _cam;
+        GameObject _walker;
+        CharacterController _body;
+        float _vy;
+        bool _blockWalk;
+        bool _camReady;
         Phase _phase = Phase.Arrive;
         string _station = "overview";
         string _alertId = "";
@@ -99,6 +104,7 @@ namespace TwinAml
             }
             BuildWorld();
             BuildCanvas();
+            SpawnWalker();
             var station = "desk";
             SceneId sceneId;
             if (SceneCatalog.TryParse(SceneManager.GetActiveScene().name, out sceneId))
@@ -110,7 +116,8 @@ namespace TwinAml
         void Update()
         {
             if (_cam == null) return;
-            if (_blend < 1f)
+            StepWalker();
+            if (_walker == null && _blend < 1f)
             {
                 _blend = Mathf.MoveTowards(_blend, 1f, Time.deltaTime * 1.35f);
                 var t = Mathf.SmoothStep(0f, 1f, _blend);
@@ -133,11 +140,11 @@ namespace TwinAml
                 if (_hot[i].Renderer == null) continue;
                 _hot[i].Renderer.material.color = Color.Lerp(_hot[i].A, _hot[i].B, pulse);
             }
-            if (Input.GetMouseButtonDown(0)) TryRoomClick();
         }
 
         void LateUpdate()
         {
+            FollowWalker();
             if (_dirty)
             {
                 _dirty = false;
@@ -167,11 +174,25 @@ namespace TwinAml
             }
         }
 
-        void TryRoomClick()
+        bool TryRoomClick()
         {
-            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
-            RaycastHit hit;
-            if (!Physics.Raycast(_cam.ScreenPointToRay(Input.mousePosition), out hit, 40f)) return;
+            if (!Input.GetMouseButtonDown(0)) return false;
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return false;
+            if (_cam == null) return false;
+            var hits = Physics.RaycastAll(_cam.ScreenPointToRay(Input.mousePosition), 40f);
+            System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+            RaycastHit hit = default(RaycastHit);
+            var found = false;
+            for (var i = 0; i < hits.Length; i++)
+            {
+                var col = hits[i].collider;
+                if (col == null) continue;
+                if (_walker != null && (col.transform == _walker.transform || col.transform.IsChildOf(_walker.transform))) continue;
+                hit = hits[i];
+                found = true;
+                break;
+            }
+            if (!found) return false;
             var name = hit.collider.gameObject.name;
             if (name == "HotDesk") Rail("desk");
             else if (name == "HotMap") Rail("map");
@@ -183,6 +204,68 @@ namespace TwinAml
                 MoveTo("profile");
                 OpenAlert(name.Substring("HotFile_".Length), "kyc");
             }
+            else return false;
+            return true;
+        }
+
+        void SpawnWalker()
+        {
+            _walker = new GameObject("Walker");
+            _walker.transform.SetParent(transform, false);
+            _walker.transform.position = new Vector3(0f, 0.2f, -3.6f);
+            _body = _walker.AddComponent<CharacterController>();
+            _body.height = 1.7f;
+            _body.radius = 0.32f;
+            _body.center = new Vector3(0f, 0.9f, 0f);
+            _body.stepOffset = 0.2f;
+            _body.skinWidth = 0.05f;
+            var shirt = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            shirt.name = "Body";
+            shirt.transform.SetParent(_walker.transform, false);
+            shirt.transform.localPosition = new Vector3(0f, 0.9f, 0f);
+            shirt.transform.localScale = new Vector3(0.6f, 0.84f, 0.6f);
+            Destroy(shirt.GetComponent<Collider>());
+            var renderer = shirt.GetComponent<Renderer>();
+            if (renderer != null) renderer.sharedMaterial = Mat(Hex(0x2f6fed));
+        }
+
+        void StepWalker()
+        {
+            if (_walker == null || _body == null) return;
+            var typing = _note != null && _note.isFocused;
+            if (Input.GetMouseButtonDown(0) && EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+                _blockWalk = true;
+            if (!Input.GetMouseButton(0)) _blockWalk = false;
+            if (!_blockWalk && TryRoomClick()) _blockWalk = true;
+            MouseWalk.Step(_body, _walker.transform, _blockWalk || typing, ref _vy);
+            var p = _walker.transform.position;
+            var clamped = new Vector3(Mathf.Clamp(p.x, -7.2f, 7.2f), p.y, Mathf.Clamp(p.z, -6f, 5.6f));
+            if (p.y < -1f) clamped = new Vector3(0f, 0.2f, -3.6f);
+            if (clamped != p)
+            {
+                _body.enabled = false;
+                _walker.transform.position = clamped;
+                _body.enabled = true;
+            }
+        }
+
+        void FollowWalker()
+        {
+            if (_walker == null || _cam == null) return;
+            var desired = _walker.transform.position - _walker.transform.forward * 5.1f + Vector3.up * 3.35f;
+            if (!_camReady)
+            {
+                _cam.transform.position = desired;
+                _camReady = true;
+            }
+            else
+            {
+                var t = 1f - Mathf.Exp(-5f * Time.deltaTime);
+                _cam.transform.position = Vector3.Lerp(_cam.transform.position, desired, t);
+            }
+            var look = _walker.transform.position + Vector3.up * 1.15f;
+            _cam.transform.LookAt(look);
+            _look = look;
         }
 
         void PrepareCamera()
@@ -459,7 +542,7 @@ namespace TwinAml
             _scrollContent.anchoredPosition = Vector2.zero;
             LayoutDrawer();
             PaintRails();
-            if (_coach != null) _coach.text = CoachText();
+            if (_coach != null) _coach.text = "Hold the left mouse button to walk forward. Hold the right mouse button to walk back. Move the mouse to turn. Click an object to use it.\n" + CoachText();
             if (_gate != null && _phase != Phase.File) _gate.text = "";
             UpdateGate();
             RebuildBoards();
@@ -900,6 +983,28 @@ namespace TwinAml
                 _toLook = new Vector3(0f, 0.7f, 0.2f);
             }
             _blend = 0f;
+            PlaceWalker();
+        }
+
+        void PlaceWalker()
+        {
+            if (_walker == null || _body == null) return;
+            var feet = new Vector3(_toPos.x, 0.2f, _toPos.z);
+            var flat = _toLook - _toPos;
+            flat.y = 0f;
+            if (_station == "overview")
+            {
+                feet = new Vector3(0f, 0.2f, -5.2f);
+                flat = Vector3.forward;
+            }
+            else if (flat.sqrMagnitude > 0.01f)
+                feet += flat.normalized * 1.2f;
+            _body.enabled = false;
+            _walker.transform.position = feet;
+            if (flat.sqrMagnitude > 0.01f)
+                _walker.transform.rotation = Quaternion.LookRotation(flat.normalized);
+            _body.enabled = true;
+            _camReady = false;
         }
 
         void Snap(string station)
@@ -1076,6 +1181,7 @@ namespace TwinAml
             go.transform.position = pos;
             var box = go.AddComponent<BoxCollider>();
             box.size = scale;
+            box.isTrigger = true;
         }
 
         static void Beam(Transform parent, Vector3 a, Vector3 b, Color color)

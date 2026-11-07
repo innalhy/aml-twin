@@ -165,7 +165,7 @@ The branch is five scene files in `Assets/Scenes/3D/`, one room each, built in c
 
 The lesson on screen is English, including when the portal language is Traditional Chinese. It is written for someone new to AML. A cream panel under the top bar always says **Do this next**. **Words** defines customer, CDD, beneficial owner, red flag, source of funds, enhanced due diligence, mandate, and escalate. Each paper starts with why it matters. Each answer starts with why you asked.
 
-Hold the left mouse button to walk forward toward the cursor. Hold the right mouse button to walk backward. Click an object to use it. Tab opens the task list. I opens notes. Esc pauses.
+Hold the left mouse button to walk forward. Hold the right mouse button to walk backward. Move the mouse while a button is held to turn. Click an object to use it. Tab opens the task list. I opens notes. Esc pauses. The investigation centre uses the same mouse walk.
 
 Rooms, in the order the coach sends you: lobby, relationship desk, meeting room, then the blue-floor compliance office. The file room holds a short CDD note. The ownership chart is the white board on the left wall of the meeting room. Follow it to a person, not only to the next company.
 
@@ -179,7 +179,7 @@ The room copy is English, including when the portal language is Traditional Chin
 
 Close only when the explanation is clear and nothing suspicious remains. None of these six is that case. Ask for more information when a document can fill a real gap. Escalate when several red flags or a network remain. Draft an STR when there is reasonable suspicion of criminal proceeds or terrorist financing. Do not tell the customer. That disclosure is tipping off. The room writes a training flag. It does not contact a financial intelligence unit.
 
-How to play: read the arrival card, sit at the desk, then open a file. The coach says to open A5, A1, or A6 before A3. Use the left rail or click the floor pads and the file cards. Inside a file, open at least two sources (payments, customer file, map, links, or screening) and write 50 characters before the four paths unlock. Mark a red flag only when you can point to it. The reason for each flag appears in the senior note after you file. Decisions stay filed. File the shift from the queue when all six are done.
+How to play: hold the left mouse button to walk forward, the right mouse button to walk back, and move the mouse while a button is held to turn. Click an object to use it. Read the arrival card, sit at the desk, then open a file. The coach says to open A5, A1, or A6 before A3. Use the left rail or click the floor pads and the file cards. Inside a file, open at least two sources (payments, customer file, map, links, or screening) and write 50 characters before the four paths unlock. Mark a red flag only when you can point to it. The reason for each flag appears in the senior note after you file. Decisions stay filed. File the shift from the queue when all six are done.
 
 The six customers, Port Amber, Harbour, North Archive, and the sanctions sheet are training props. Brightwave Trading Ltd is the trade-payment company. It is not the Topic 3 onboarding company.
 
