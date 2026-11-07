@@ -16,7 +16,7 @@ These files are synthetic training scenarios. The ten `public_record_inspired` s
 
 ## Index
 
-Titles below are short English labels. Files are numbered `01`–`11` in this order. The JSON `title` and prompts are Traditional Chinese, matching `01-deepfake-hk-001.example.json`. `case_id` is unchanged.
+Titles below are short English labels. Files are numbered `01`–`13`. The JSON `title` and prompts in `01`–`11` are Traditional Chinese. `12-starlight-onboard-001.example.json` is the Topic 3 onboarding script. `13-alert-triage-shift-001.example.json` is English. It is the script for the Unity investigation room (Topic 4). `case_id` is unchanged.
 
 | File | case_id | Themes | case_kind |
 | --- | --- | --- | --- |
@@ -31,6 +31,12 @@ Titles below are short English labels. Files are numbered `01`–`11` in this or
 | [09-triad-cashflow-001.example.json](09-triad-cashflow-001.example.json) | `hk-triad-cashflow-001` | Flows with no commercial purpose, organised-crime proceeds indicator | `public_record_inspired` |
 | [10-ia-fwd-controls-001.example.json](10-ia-fwd-controls-001.example.json) | `hk-ia-fwd-controls-001` | Insurer controls: third-party premium, PEP screening, STR worksheet | `public_record_inspired` |
 | [11-hkma-cdd-001.example.json](11-hkma-cdd-001.example.json) | `hk-hkma-cdd-001` | Bank CDD, ongoing monitoring, STR failures | `public_record_inspired` |
+| [12-starlight-onboard-001.example.json](12-starlight-onboard-001.example.json) | `hk-starlight-onboard-001` | Company onboarding, hidden beneficial owner, source of funds | `synthetic_course` |
+| [13-alert-triage-shift-001.example.json](13-alert-triage-shift-001.example.json) | `alert-triage-shift-001` | One monitoring shift, six synthetic alerts, four triage paths | `course_example` |
+
+`hk-starlight-onboard-001` is the Editor room's Topic 3. It is a fictional company account-opening lesson, not a public-record case. The company, the people, and jurisdiction code HR-7 are synthetic. The walkable branch teaches that lesson in English.
+
+`alert-triage-shift-001` is the Editor room's Topic 4. Six fictional alerts, one shift, English on screen. Customers, places, and the sanctions sheet are training props. `shift_reviewed` means the six choices were written down. The room grades them. Closing any alert fails the shift. Drafting an STR on the similar-name hit, only because the names match, also fails it.
 
 ## Public reporting context
 
@@ -68,6 +74,8 @@ Terminal `disposition` values used by the new scripts:
 | `policy_exit` | Third-party premium refused (`hk-ia-fwd-controls-001`) |
 | `control_remediation` | PEP screening rerun and STR worksheet escalated |
 | `cdd_refreshed_and_str` | CDD refresh, monitoring restored, and STR drafted |
+| `cdd_incomplete` | More documents were requested, and enhanced due diligence was not ordered (`hk-starlight-onboard-001`, poor) |
+| `shift_reviewed` | The six Topic 4 dispositions were written down (`alert-triage-shift-001`). The room grades that queue separately. |
 | `exit_without_str` | Relationship exited while a report was still required (poor) |
 | `false_positive_cleared` | Cleared against a rule that forbids clearance (poor) |
 | `monitoring_backdated` | Alerts marked reviewed after the fact (poor) |

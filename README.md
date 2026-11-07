@@ -2,7 +2,7 @@
 
 ## What it is?
 
-TwinAML is a COMP3424 course demo of a digital twin for AML simulation training. The platform idea is proprietary: this tree is a classroom demo, not a bank production system and not an open-source release. The Phase 1 case library is **11** synthetic scripts under [`data/cases/`](data/cases/README.md). `deepfake-hk-001` is the original course example (video-KYC deepfake). The other ten are `public_record_inspired`. Every customer, account, and amount in them is synthetic. The full index and disclaimer are in [`data/cases/README.md`](data/cases/README.md). The twin is backend state plus the events that change it. The web app is the face that will render that state.
+TwinAML is a COMP3424 course demo of a digital twin for AML simulation training. The platform idea is proprietary: this tree is a classroom demo, not a bank production system and not an open-source release. The Phase 1 case library is **11** synthetic scripts under [`data/cases/`](data/cases/README.md). `deepfake-hk-001` is the original course example (video-KYC deepfake). The other ten are `public_record_inspired`. The same folder also holds two Editor-room scripts: Topic 3 company onboarding (`hk-starlight-onboard-001`) and Topic 4 alert triage (`alert-triage-shift-001`). Every customer, account, and amount in them is synthetic. The full index and disclaimer are in [`data/cases/README.md`](data/cases/README.md). The twin is backend state plus the events that change it. The web app is the face that will render that state.
 
 | case_id | Theme |
 | --- | --- |
@@ -17,10 +17,12 @@ TwinAML is a COMP3424 course demo of a digital twin for AML simulation training.
 | `hk-triad-cashflow-001` | Organised-crime cashflow indicators |
 | `hk-ia-fwd-controls-001` | Insurer controls (synthetic insurer) |
 | `hk-hkma-cdd-001` | Bank CDD / monitoring / STR (synthetic bank) |
+| `hk-starlight-onboard-001` | Topic 3: company onboarding, hidden beneficial owner |
+| `alert-triage-shift-001` | Topic 4: one monitoring shift, six synthetic alerts |
 
 A trainee is meant to choose one of those scripts by `case_id` and decide inside it. Rules in the script decide compliance outcomes (rules-before-AI). A language model, if one is added later, may explain a decision only after those rules have fired, and a human override must be stored as an event.
 
-Case flows for human review are in [`data/case-flow/`](data/case-flow/). Each case is two Markdown files, Traditional Chinese and English, and each flow is a Mermaid diagram. The playable scripts stay in `data/cases/`, numbered `01`–`11`. `case_id` is unchanged.
+Case flows for human review are in [`data/case-flow/`](data/case-flow/). Each case is two Markdown files, Traditional Chinese and English, and each flow is a Mermaid diagram. The playable scripts stay in `data/cases/`, numbered `01`–`13`. `12` is the fictional company-onboarding lesson used by the Editor branch. `13` is the English alert-triage shift. `case_id` is unchanged.
 
 | Case | Traditional Chinese | English | Playable script |
 | --- | --- | --- | --- |
@@ -46,7 +48,7 @@ One API and one web client on a self-hosted Linux VPS. The Unity Editor room is 
 | --- | --- | --- |
 | Demo API | `backend/` | FastAPI. Today: `GET /health`. Case load, sessions, decisions, the twin state machine, and events will be added on this process. A Node/Hono process may serve the same routes later. |
 | Web | `frontend/` | React + Vite + TypeScript. Static files on the VPS. Today: a placeholder page. The scenario player and the dashboard are not built. Both will read the same twin. |
-| Unity | [`unity/TwinAML`](unity/UNITY.md) | Editor training room, in scope. Plays Topic 1 and Topic 2 against the frozen scripts. Does not call the API yet. |
+| Unity | [`unity/TwinAML`](unity/UNITY.md) | Editor training room, in scope. Plays Topics 1–4 against schema 0.1 scripts. Topic 3 is an English walkable branch. Topic 4 is an English alert-triage room. Does not call the API yet. |
 | Legacy scaffold | `workers/api` | Cloudflare Worker (Hono) plus Wrangler config. Left in the tree. Not the COMP3424 demo target. |
 
 The web app does not keep a private copy of the case world. Compliance outcomes come from the rules in the script and from the state machine that will apply them.
@@ -190,7 +192,7 @@ node scripts/unity-room-paths.test.mjs
 
 ## Unity training room
 
-Open [`unity/UNITY.md`](unity/UNITY.md). In Unity 2022.3 LTS, open the project folder `unity/TwinAML`, then open `Scn_Boot` and press Play (or use the menu **TwinAML → Play From Boot**). Topic 1 is `deepfake-hk-001`. Topic 2 is `hk-greythunder-mule-001`. The dashboard in that room is the TwinAML AML Training Portal. It reads the twin written by those choices and still writes `twinaml-dashboard.json`. Docker is not involved.
+Open [`unity/UNITY.md`](unity/UNITY.md). In Unity 2022.3 LTS, open the project folder `unity/TwinAML`, then open `Scn_Boot` and press Play (or use the menu **TwinAML → Play From Boot**). Topic 1 is `deepfake-hk-001`. Topic 2 is `hk-greythunder-mule-001`. Topic 3 is `hk-starlight-onboard-001`, a walkable branch taught in English. Topic 4 is `alert-triage-shift-001`, an English investigation room with six synthetic alerts. The dashboard in that room is the TwinAML AML Training Portal. It reads the twin written by those choices and still writes `twinaml-dashboard.json`. Docker is not involved.
 
 ## Deploy
 
@@ -248,7 +250,7 @@ Slice detail: [`docs/phases/PHASE1.md`](docs/phases/PHASE1.md).
 
 Slice detail: [`docs/phases/PHASE2.md`](docs/phases/PHASE2.md).
 
-**Phase 3 — vision (Chan Level 3).** Planning only. This is not a COMP3424 commitment. After Phases 1–2, a model may assist once rules have fired, optional connectors may seed a twin from fixtures, and a Unity face may call the same API. The Editor room under [`unity/`](unity/UNITY.md) already plays two scripts on this machine. P3-S4, that room against the VPS session API, is not built. Models do not become the system of record. There is no second twin, and training data stays labeled synthetic.
+**Phase 3 — vision (Chan Level 3).** Planning only. This is not a COMP3424 commitment. After Phases 1–2, a model may assist once rules have fired, optional connectors may seed a twin from fixtures, and a Unity face may call the same API. The Editor room under [`unity/`](unity/UNITY.md) already plays Topics 1–4 on this machine. P3-S4, that room against the VPS session API, is not built. Models do not become the system of record. There is no second twin, and training data stays labeled synthetic.
 
 | Slice | Done when |
 | --- | --- |
