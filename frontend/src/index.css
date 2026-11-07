@@ -10,9 +10,17 @@ body {
 }
 
 main {
-  max-width: 38rem;
+  max-width: 44rem;
   margin: 0 auto;
-  padding: 4.5rem 1.5rem 3rem;
+  padding: 3.5rem 1.5rem 3rem;
+}
+
+main.split {
+  max-width: 68rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(16rem, 0.8fr);
+  gap: 2rem;
+  align-items: start;
 }
 
 .eyebrow {
@@ -26,35 +34,215 @@ main {
 
 h1 {
   margin: 0;
-  font-size: 3rem;
+  font-size: 2.6rem;
   font-weight: 600;
   letter-spacing: -0.03em;
+}
+
+h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1.35rem;
+}
+
+h3 {
+  margin: 1.25rem 0 0.4rem;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .lead {
   font-size: 1.15rem;
 }
 
-ul {
+.meta,
+.note,
+.kicker {
+  color: #5c564c;
+}
+
+.kicker {
+  margin: 0 0 0.25rem;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  gap: 1rem;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.nav a,
+a.button {
+  color: #0f6e6b;
+}
+
+a.button {
+  align-self: center;
+  text-decoration: none;
+  border: 1px solid #0f6e6b;
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+}
+
+ul.cases,
+ul.flags,
+ul.rules,
+ol.events {
   list-style: none;
   padding: 0;
-  margin: 2rem 0;
+  margin: 1.5rem 0;
+}
+
+ul.cases {
   border-top: 1px solid #d9d1c3;
 }
 
-li {
+ul.cases li {
   display: grid;
-  gap: 0.2rem;
-  padding: 0.9rem 0;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.95rem 0;
   border-bottom: 1px solid #d9d1c3;
 }
 
-li span,
+ul.cases li div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+ul.cases li span,
 .note {
   color: #5c564c;
+}
+
+button {
+  font: inherit;
+  font-family: "Segoe UI", sans-serif;
+  color: #f3efe6;
+  background: #0f6e6b;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.5rem 0.95rem;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: wait;
 }
 
 code {
   font-family: "IBM Plex Mono", ui-monospace, monospace;
   font-size: 0.92em;
+}
+
+.error {
+  color: #8c2f2f;
+}
+
+.card {
+  margin: 1rem 0;
+  padding: 1rem 1.1rem;
+  background: #fffdf8;
+  border: 1px solid #d9d1c3;
+}
+
+.card.scene {
+  background: transparent;
+}
+
+.choices {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.choices button {
+  display: grid;
+  gap: 0.2rem;
+  text-align: left;
+  border-radius: 0.6rem;
+  padding: 0.75rem 0.9rem;
+}
+
+.choices button span {
+  color: #d7ebe9;
+  font-weight: 400;
+}
+
+.outcome {
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid #d9d1c3;
+}
+
+.media.missing {
+  color: #8c2f2f;
+}
+
+aside {
+  position: sticky;
+  top: 1rem;
+  padding: 1rem 1.1rem;
+  background: #fffdf8;
+  border: 1px solid #d9d1c3;
+}
+
+aside h2 {
+  font-size: 1.1rem;
+}
+
+dl {
+  margin: 0;
+}
+
+dl div {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid #eee6da;
+}
+
+dt {
+  color: #5c564c;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 0.85rem;
+}
+
+dd {
+  margin: 0;
+}
+
+dl.facts {
+  margin: 1.25rem 0;
+}
+
+ul.flags li,
+ul.rules li,
+ol.events li {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid #eee6da;
+}
+
+@media (max-width: 800px) {
+  main.split {
+    grid-template-columns: 1fr;
+  }
+
+  aside {
+    position: static;
+  }
+
+  h1 {
+    font-size: 2.1rem;
+  }
 }

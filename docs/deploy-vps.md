@@ -9,7 +9,7 @@ Hostnames, certificates, and private keys stay on that machine. This repository 
 | Piece | In this repo | On the VPS |
 | --- | --- | --- |
 | Web | `frontend/` (Vite). `npm run build` writes `dist/`. | Static files. The proxy serves them. |
-| API | `backend/` FastAPI. Today: `GET /health`. | `uvicorn` bound to `127.0.0.1:8000`. |
+| API | `backend/` FastAPI. Health, cases, sessions, decisions. | `uvicorn` bound to `127.0.0.1:8000`. |
 | Unity | [`unity/TwinAML`](../unity/UNITY.md) | Editor training room on a workstation. In scope for the demo. It is not a site on the VPS, and it does not call this API yet. |
 | Legacy scaffold | `workers/api`, `workers/api/wrangler.jsonc`, `frontend/wrangler.jsonc` | Left in the tree. Not the COMP3424 demo target. |
 
@@ -52,13 +52,13 @@ Expected body: `{"status":"ok","service":"twinaml-api"}`.
 
 Bind to `127.0.0.1` so the public ports are only 80 and 443 on the proxy. Keep `uvicorn` running with the process supervisor that machine already uses. This repo does not ship a systemd unit or a process-manager config.
 
-Session routes are not implemented. When they land they stay on this same process: `/sessions` and paths under it.
+Session routes stay on this same process: `/cases`, `/sessions`, and paths under `/sessions`.
 
 ## Reverse proxy and HTTPS
 
 Use one hostname for the student demo so the page and the API share an origin. `training.example.com` below is a placeholder. Point the DNS A or AAAA record at the VPS. Put the real name in the proxy config on the server.
 
-Paths the API owns today: `/health`. Reserve `/sessions` for the later session API. Every other path is the static site. Unknown site paths fall back to `index.html`.
+Paths the API owns: `/health`, `/cases`, and `/sessions`. Every other path is the static site. Unknown site paths fall back to `index.html`. The player calls those API paths on the same hostname.
 
 ### Caddy
 
@@ -67,6 +67,9 @@ Caddy can obtain and renew a certificate when that DNS name points at this machi
 ```
 training.example.com {
 	handle /health* {
+		reverse_proxy 127.0.0.1:8000
+	}
+	handle /cases* {
 		reverse_proxy 127.0.0.1:8000
 	}
 	handle /sessions* {
@@ -100,6 +103,11 @@ server {
         proxy_set_header Host $host;
     }
 
+    location /cases {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+    }
+
     location /sessions {
         proxy_pass http://127.0.0.1:8000;
         proxy_set_header Host $host;
@@ -115,10 +123,9 @@ A separate `listen 80` server can redirect to HTTPS. The certificate and the pri
 
 ## Check from another machine
 
-- `https://training.example.com/` shows the TwinAML placeholder page.
+- `https://training.example.com/` shows the case list.
 - `https://training.example.com/health` returns the health JSON.
-
-The placeholder does not call the API. A later scenario player on this same origin will.
+- Starting a case and opening the dashboard hits `/sessions` on that same origin.
 
 ## Secrets
 

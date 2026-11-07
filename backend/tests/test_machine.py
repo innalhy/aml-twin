@@ -114,18 +114,21 @@ def _terminal_paths(script: dict) -> list[tuple[list[str], str]]:
     by_id = {node["id"]: node for node in script["nodes"]}
     found: list[tuple[list[str], str]] = []
 
-    def walk(node_id: str, choices: list[str]) -> None:
+    def walk(node_id: str, choices: list[str], seen: frozenset[str]) -> None:
+        if node_id in seen:
+            raise AssertionError(f"{script['case_id']} cycles at {node_id}")
         node = by_id[node_id]
         if node["type"] == "outcome":
             found.append((choices, node_id))
             return
+        nxt_seen = seen | {node_id}
         if node["type"] == "scene":
-            walk(node["next"], choices)
+            walk(node["next"], choices, nxt_seen)
             return
         for choice in node.get("choices") or []:
-            walk(choice["next"], choices + [choice["id"]])
+            walk(choice["next"], choices + [choice["id"]], nxt_seen)
 
-    walk(script["start_node_id"], [])
+    walk(script["start_node_id"], [], frozenset())
     return found
 
 
