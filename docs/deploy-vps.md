@@ -52,6 +52,8 @@ Expected body: `{"status":"ok","service":"twinaml-api"}`.
 
 Bind to `127.0.0.1` so the public ports are only 80 and 443 on the proxy. Keep `uvicorn` running with the process supervisor that machine already uses. This repo does not ship a systemd unit or a process-manager config.
 
+Start one uvicorn process. Sessions are rows in `data/local/sessions.sqlite` under the repo root (the path is not the process working directory). Further workers on this same machine share that file. Do not run a second copy of the API on another host against a copied file. Closed sessions older than 7 days are deleted, and the file keeps at most 2000 sessions. See [`backend/README.md`](../backend/README.md).
+
 Session routes stay on this same process: `/cases`, `/sessions`, and paths under `/sessions`.
 
 ## Reverse proxy and HTTPS

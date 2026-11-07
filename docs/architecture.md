@@ -51,13 +51,15 @@ Those routes live on the FastAPI process: `GET /cases`, `POST /sessions`, `GET /
 | Script JSON and JSON Schema | Present. Eleven example cases. Effect keys are frozen in [`effects.md`](effects.md). |
 | FastAPI | `backend/`. Health, case list, sessions, decisions, events, and the twin. |
 | Legacy Cloudflare Worker | `GET /health` in `workers/api`. Scaffold only. Not the demo deploy. |
-| State machine, sessions, event log | `backend/app/machine.py`. Sessions stay in that process. |
+| State machine, sessions, event log | `backend/app/machine.py` applies patches. Sessions and events are rows in `data/local/sessions.sqlite` on the API machine. |
 | Web player and dashboard | `frontend/`. Both read the API twin. |
 | `data/media/` | Only `.gitkeep` is tracked. `media_ref` values in a script point at local files. |
 
 A rule's `when` text is a sentence for a person to read. The schema does not execute it, and the state machine does not either. Outcomes still come from the script's patches. Do not invent a second script format beside this one.
 
 ## Where state lives
+
+One session is one row in `data/local/sessions.sqlite`. The API machine is the only host for that file. A restart keeps the rows. Closed rows older than 7 days are removed, and the file holds at most 2000 sessions. Details and the environment overrides are in [`backend/README.md`](../backend/README.md).
 
 The session twin starts as a deep clone of `initial_twin_state`. Patches then accumulate on that clone. Full key rules, including every key used in the example cases, are in [`effects.md`](effects.md).
 

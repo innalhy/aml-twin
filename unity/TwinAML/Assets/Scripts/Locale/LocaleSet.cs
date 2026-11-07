@@ -105,25 +105,25 @@ namespace TwinAml
             Z("hub.t01.title", "專題一　深偽視像");
             E("hub.t01.body", "Case deepfake-hk-001. A video image is not authority to pay. Confirming the payment is the trap. Holding and reporting is the pass.");
             Z("hub.t01.body", "個案 deepfake-hk-001。視像不足以作為付款授權。確認付款屬於陷阱；暫停並舉報屬於通過。");
-            E("hub.t02.title", "Topic 2  ·  Mule account and mixer");
+            E("hub.t02.title", "Follow the money: money-laundering network investigation");
             Z("hub.t02.title", "專題二　人頭戶與混幣");
             E("hub.t02.body", "Case hk-greythunder-mule-001. A is a miss. B, C, and D are passes: enhanced due diligence, an outbound hold, and a draft suspicious transaction report.");
             Z("hub.t02.body", "個案 hk-greythunder-mule-001。選項 A 屬於失誤。選項 B、C、D 屬於通過，分別為加強盡職審查、暫停出帳，以及草擬可疑交易報告。");
-            E("hub.t03.title", "Topic 3  ·  Company account opening");
+            E("hub.t03.title", "Virtual bank branch: account-opening risk detection");
             Z("hub.t03.title", "專題三　公司開戶");
             E("hub.t03.body", "A walkable branch, taught in English. A new company wants an account. Learn who really owns it, where the money comes from, and why you do not open yet.");
             Z("hub.t03.body", "可走動的分行，課文為英文。一間新公司要開戶。學習誰真正擁有它、錢從哪裡來，以及為何暫不開戶。");
-            E("hub.t04.title", "Topic 4  ·  Alert triage shift");
+            E("hub.t04.title", "Transaction monitoring room: alert triage simulation");
             Z("hub.t04.title", "專題四　警報分流班次");
             E("hub.t04.body", "Case alert-triage-shift-001. A 3D investigation room, in English. Six synthetic alerts. Practise priority, red flags, a short note, and one of four paths: close, ask for more information, escalate, or draft an STR.");
             Z("hub.t04.body", "個案 alert-triage-shift-001。三維調查室，指引為英文。六個合成警報。練習優先次序、紅旗、簡短備註，以及四條路徑之一：關閉、要求更多資料、升級調查，或草擬可疑交易報告。");
             E("hub.t04.resume", "Resume the open shift");
             Z("hub.t04.resume", "返回進行中的班次");
-            E("t04.brief.title", "Topic 4  ·  Alert triage shift");
+            E("t04.brief.title", "Transaction monitoring room: alert triage simulation");
             Z("t04.brief.title", "專題四　警報分流班次");
             E("t04.brief.goal", "You are a new transaction-monitoring analyst. One shift, six fictional alerts, about 20 to 30 minutes. An alert means the monitoring system saw activity that may not fit the customer. You check the facts and choose a path. You are not asked to memorise a statute.");
             Z("t04.brief.goal", "你是新入職的交易監察分析員。一個班次、六個虛構警報，約二十至三十分鐘。警報表示監察系統見到與客戶已知資料可能不符的活動。你要核對事實並選擇路徑，而不是背誦法條。");
-            E("t04.brief.how", "In the room, sit at the desk, then open each file. Read the payments, the customer file, the map, and the link board. Mark a red flag only when you can point to it. Write a note: what happened, why it does not fit, and the next step. The room itself is in English, with the meaning of each path on screen. Start on the topics page begins a new shift and clears an open one.");
+            E("t04.brief.how", "In the room, drag the mouse to look around and click the floor to walk. Sit at the desk, then open each file. Read the payments, the customer file, the map, and the link board. Mark a red flag only when you can point to it. Write a note: what happened, why it does not fit, and the next step. The room itself is in English, with the meaning of each path on screen. Start on the topics page begins a new shift and clears an open one.");
             Z("t04.brief.how", "進入房間後先坐到調查台，再逐一打開檔案。閱讀交易、客戶檔案、地圖及關聯板。只有能在資料中指出時才標記紅旗。備註要寫明發生了什麼、為何不符，以及下一步。調查室指引為英文，每條路徑的意思都會顯示在畫面上。在專題頁按開始會重開班次，並清除未完成的進度。");
             E("t04.brief.paths", "Close only when the explanation is clear and nothing suspicious remains. None of these six is that case, and closing any of them fails the shift. Ask for more information when a document can fill a real gap. Escalate when several red flags or a network remain. Draft an STR when you have reasonable suspicion of criminal proceeds or terrorist financing. Drafting an STR on the similar-name hit, only because the names match, fails the shift.");
             Z("t04.brief.paths", "只有解釋清晰且再無可疑之處才可關閉。這六個檔案都不是這種情況，關閉任何一個即本班次不通過。文件能補上真正缺口時，要求更多資料。出現多項紅旗或關聯網絡時，升級調查。有合理懷疑資金為犯罪所得或與恐怖融資有關時，草擬可疑交易報告。僅因姓名相似而對篩查命中草擬報告，本班次不通過。");
@@ -195,7 +195,7 @@ namespace TwinAml
             E("t01.teach.body", "Rules decide before any model. Withholding trust is the pass: the video was checked again, and rule R1 stopped onboarding. The session marks a callback and dual control because you refused a single approval from the video. The frozen script does not draft a suspicious transaction report on this ending, because the account was never opened. A suspicious transaction report (STR) is a report an institution prepares for a suspicious transaction. In practice it is filed with the Joint Financial Intelligence Unit. This room never files one. Topic 2 is where a draft STR is written onto the twin.");
             Z("t01.teach.body", "規則先於任何模型作出決定。不予信任即為通過：視像經再次核對後，規則 R1 截停開戶。由於你拒絕以該視像作單一確認，工作階段記為已回撥並已雙重覆核。此結局不會草擬可疑交易報告，因為戶口從未開啟。可疑交易報告（Suspicious Transaction Report，簡稱 STR）是機構就可疑交易擬備的報告，實務上提交予聯合財富情報組。本室不會實際提交。專題二才會把可疑交易報告草稿寫入孿生狀態。");
 
-            E("t02.brief.title", "Topic 2 brief");
+            E("t02.brief.title", "Follow the money: money-laundering network investigation");
             Z("t02.brief.title", "專題二　簡報");
             E("t02.brief.goal", "Training goal: read the mule-cluster link, the customer's story, and the funds path together. Clearing the case as a friend's investment is the miss. Enhanced due diligence, an outbound hold, and a draft suspicious transaction report are passes.");
             Z("t02.brief.goal", "訓練目標：一併閱讀人頭戶群組連繫、客戶說法與資金路徑。把個案結為朋友投資屬於失誤。加強盡職審查、暫停出帳，以及草擬可疑交易報告屬於通過。");
@@ -270,17 +270,17 @@ namespace TwinAml
             Z("portal.t01.body", "視像不足以作為付款授權。確認付款屬於陷阱。");
             E("portal.t02.kicker", "Topic 02");
             Z("portal.t02.kicker", "專題二");
-            E("portal.t02.title", "Transaction monitoring (mule and mixer)");
+            E("portal.t02.title", "Follow the money: money-laundering network investigation");
             Z("portal.t02.title", "交易監察（人頭戶與混幣）");
             E("portal.t02.body", "Read the cluster, the customer statement, and the funds path together.");
             Z("portal.t02.body", "請一併閱讀群組連繫、客戶說法與資金路徑。");
             E("portal.t03.kicker", "Topic 03");
             Z("portal.t03.kicker", "專題三");
-            E("portal.t03.title", "Company account opening");
+            E("portal.t03.title", "Virtual bank branch: account-opening risk detection");
             Z("portal.t03.title", "公司開戶");
             E("portal.t03.body", "Walk a branch in English. Check the real owner and the source of funds before you open.");
             Z("portal.t03.body", "以英文走過一間分行。開戶前先查真正的擁有人與資金來源。");
-            E("portal.t04.title", "Alert triage shift");
+            E("portal.t04.title", "Transaction monitoring room: alert triage simulation");
             Z("portal.t04.title", "警報分流班次");
             E("portal.start", "Start Module");
             Z("portal.start", "開始模組");
@@ -437,9 +437,19 @@ namespace TwinAml
 
         public static string T(string key)
         {
-            var table = Current == LocaleCode.Zh ? Zh : En;
+            var table = CaseEnglish(key) || Current != LocaleCode.Zh ? En : Zh;
             if (table.TryGetValue(key, out var value)) return value;
+            if (table != En && En.TryGetValue(key, out value)) return value;
             return key;
+        }
+
+        static bool CaseEnglish(string key)
+        {
+            if (string.IsNullOrEmpty(key)) return false;
+            return key.StartsWith("t02.") || key.StartsWith("t03.") || key.StartsWith("t04.")
+                || key.StartsWith("hub.t02") || key.StartsWith("hub.t03") || key.StartsWith("hub.t04")
+                || key.StartsWith("portal.t02") || key.StartsWith("portal.t03") || key.StartsWith("portal.t04")
+                || key.StartsWith("step.t02") || key.StartsWith("step.t03") || key.StartsWith("step.t04");
         }
 
         static void E(string key, string value) { En[key] = value; }

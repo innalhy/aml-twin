@@ -57,6 +57,8 @@ tmp/
 temp/
 data/local/
 *.sqlite
+*.sqlite-wal
+*.sqlite-shm
 *.db
 
 # --- Media (keep small fixtures; ignore large binaries) ---
