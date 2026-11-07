@@ -21,12 +21,14 @@
       "id": "R1_LIVENESS_TWICE",
       "when": "kyc.liveness_failures >= 2",
       "then": "block_onboarding",
+      "flags": ["R1_BLOCK", "R1_OVERRIDDEN"],
       "note": "連續兩次活體失敗就不得開戶。覆寫必須成為事件，不能默默通過。"
     },
     {
       "id": "R2_SIGNALS_PLUS_BURST",
       "when": "kyc.signals 至少兩項，且出現第三者突發入帳並拆出",
       "then": "require_edd_or_str",
+      "flags": ["R2_IGNORED"],
       "note": "規則先於任何模型分數。不得把此案直接結為誤報。"
     }
   ],

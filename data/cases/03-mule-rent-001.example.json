@@ -24,12 +24,14 @@
       "id": "R1_ACCOUNT_RENTAL",
       "when": "客戶承認戶口交由第三者使用，或承認出租或出售戶口控制權",
       "then": "refuse_or_exit_and_report",
+      "flags": ["RENTAL_ADMITTED", "R1_OVERRIDDEN"],
       "note": "不得維持一般使用。已有試探入帳時，只退出不上報並未滿足規則。"
     },
     {
       "id": "R2_THIRD_PARTY_CONTROL",
       "when": "戶口控制權在不明第三者，且已有第三者入帳",
       "then": "require_str_or_freeze",
+      "flags": ["THIRD_PARTY_CONTROL", "R2_IGNORED"],
       "note": "不得當成幫朋友或客戶服務。規則先於任何模型分數。"
     }
   ],

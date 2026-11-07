@@ -25,12 +25,14 @@
       "id": "R1_NO_COMMERCIAL_PURPOSE",
       "when": "大額流水沒有發票、合約或薪金對應",
       "then": "require_edd_hold",
+      "flags": ["NO_COMMERCIAL_PURPOSE", "R1_OVERRIDDEN"],
       "note": "口頭稱為現金生意不是憑證。放行前必須暫停並加強審查。"
     },
     {
       "id": "R2_OC_INDICATOR",
       "when": "內部類型指標標示有組織犯罪得益",
       "then": "require_str_and_freeze",
+      "flags": ["OC_PROCEEDS_INDICATOR", "R2_IGNORED"],
       "note": "不得在沒有證據時當一般現金生意結案。指標是合成教學標記。規則先於任何模型分數。"
     }
   ],

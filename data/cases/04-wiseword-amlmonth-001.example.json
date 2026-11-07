@@ -24,12 +24,14 @@
       "id": "R1_MULTI_TYPOLOGY",
       "when": "同一覆核窗內至少兩類詐騙入帳打進同一戶口",
       "then": "require_edd_or_str",
+      "flags": ["MULTI_TYPOLOGY", "R1_OVERRIDDEN"],
       "note": "不得用客戶的單一故事結案。規則先於任何模型分數。"
     },
     {
       "id": "R2_FAST_OUT",
       "when": "入帳後短時間內要求現金提取或轉走接近全額",
       "then": "require_freeze_or_str",
+      "flags": ["FAST_OUT", "R2_IGNORED"],
       "note": "不得等候客戶再解釋工作。覆寫必須留在事件軌上。"
     }
   ],

@@ -10,7 +10,7 @@ namespace TwinAml
 {
     /// <summary>
     /// Topic 4 investigation room. Furnished primitives, lit with the built-in pipeline.
-    /// The case file stays schema 0.1. This view only reads teaching.alerts.
+    /// The case script stays schema 0.1. This view reads the sibling alerts dossier.
     /// </summary>
     public sealed class TriageRoom : MonoBehaviour
     {
@@ -45,6 +45,7 @@ namespace TwinAml
 
         Font _font;
         Text _timer;
+        int _timerShown = int.MaxValue;
         Text _coach;
         Text _drawerTitle;
         Text _gate;
@@ -91,6 +92,7 @@ namespace TwinAml
 
         void Start()
         {
+            PointerView.Reset(0f);
             _font = UiKit.Font;
             PrepareCamera();
             if (TriageShift.Alerts == null || TriageShift.Alerts.Count != 6)
@@ -115,29 +117,27 @@ namespace TwinAml
         {
             if (_cam == null) return;
             StepWalker();
-            if (_walker == null && _blend < 1f)
-            {
-                _blend = Mathf.MoveTowards(_blend, 1f, Time.deltaTime * 1.35f);
-                var t = Mathf.SmoothStep(0f, 1f, _blend);
-                _cam.transform.position = Vector3.Lerp(_fromPos, _toPos, t);
-                _look = Vector3.Lerp(_fromLook, _toLook, t);
-                _cam.transform.LookAt(_look);
-            }
-            if (_timer != null)
-            {
-                if (!TriageShift.ClockOn) _timer.text = "25:00";
-                else
-                {
-                    var left = ShiftSeconds - TriageShift.ElapsedSec();
-                    _timer.text = left >= 0 ? Clock(left) : "Over " + Clock(-left);
-                }
-            }
+            PaintTimer();
+            if (_hot.Count == 0) return;
             var pulse = 0.5f + 0.5f * Mathf.Sin(Time.time * 2.2f);
             for (var i = 0; i < _hot.Count; i++)
+                RoomFinish.Tint(_hot[i].Renderer, Color.Lerp(_hot[i].A, _hot[i].B, pulse));
+        }
+
+        void PaintTimer()
+        {
+            if (_timer == null) return;
+            if (!TriageShift.ClockOn)
             {
-                if (_hot[i].Renderer == null) continue;
-                _hot[i].Renderer.material.color = Color.Lerp(_hot[i].A, _hot[i].B, pulse);
+                if (_timerShown == int.MaxValue) return;
+                _timerShown = int.MaxValue;
+                _timer.text = "25:00";
+                return;
             }
+            var left = ShiftSeconds - TriageShift.ElapsedSec();
+            if (left == _timerShown) return;
+            _timerShown = left;
+            _timer.text = left >= 0 ? Clock(left) : "Over " + Clock(-left);
         }
 
         void LateUpdate()
@@ -168,28 +168,17 @@ namespace TwinAml
                     list.RemoveAt(i);
                     continue;
                 }
-                label.rotation = Quaternion.LookRotation(label.position - _cam.transform.position);
+                var dir = label.position - _cam.transform.position;
+                if (dir.sqrMagnitude < 0.0001f) continue;
+                label.rotation = Quaternion.LookRotation(dir);
             }
         }
 
         bool TryRoomClick()
         {
-            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return false;
-            if (_cam == null) return false;
-            var hits = Physics.RaycastAll(_cam.ScreenPointToRay(Input.mousePosition), 40f);
-            System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
-            RaycastHit hit = default(RaycastHit);
-            var found = false;
-            for (var i = 0; i < hits.Length; i++)
-            {
-                var col = hits[i].collider;
-                if (col == null) continue;
-                if (_walker != null && (col.transform == _walker.transform || col.transform.IsChildOf(_walker.transform))) continue;
-                hit = hits[i];
-                found = true;
-                break;
-            }
-            if (!found) return false;
+            if (PointerView.IsOverUi()) return false;
+            RaycastHit hit;
+            if (!PointerView.FirstHit(_cam, _walker != null ? _walker.transform : null, out hit)) return false;
             var name = hit.collider.gameObject.name;
             if (name == "HotDesk") Rail("desk");
             else if (name == "HotMap") Rail("map");
@@ -262,18 +251,10 @@ namespace TwinAml
 
         void WalkToCursor()
         {
-            if (_cam == null) return;
-            var hits = Physics.RaycastAll(_cam.ScreenPointToRay(Input.mousePosition), 40f);
-            System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
-            for (var i = 0; i < hits.Length; i++)
-            {
-                var col = hits[i].collider;
-                if (col == null) continue;
-                if (_walker != null && (col.transform == _walker.transform || col.transform.IsChildOf(_walker.transform))) continue;
-                PointerView.Goal = hits[i].point;
-                PointerView.HasGoal = true;
-                return;
-            }
+            RaycastHit hit;
+            if (!PointerView.FirstHit(_cam, _walker != null ? _walker.transform : null, out hit)) return;
+            PointerView.Goal = hit.point;
+            PointerView.HasGoal = true;
         }
 
         void PrepareCamera()
@@ -406,7 +387,7 @@ namespace TwinAml
                     else color = Hex(0x9f2d2a);
                 }
                 else if (_cards[i].Id == _alertId) color = Hex(0xf5a524);
-                if (_cards[i].Renderer != null) _cards[i].Renderer.material.color = color;
+                RoomFinish.Tint(_cards[i].Renderer, color);
             }
         }
 
@@ -1089,10 +1070,13 @@ namespace TwinAml
             scaler.referenceResolution = new Vector2(1920f, 1080f);
             scaler.matchWidthOrHeight = 0.5f;
             canvasGo.AddComponent<GraphicRaycaster>();
-            var events = new GameObject("TriageRoom.Events");
-            events.transform.SetParent(transform, false);
-            events.AddComponent<EventSystem>();
-            events.AddComponent<StandaloneInputModule>();
+            if (FindAnyObjectByType<EventSystem>() == null)
+            {
+                var events = new GameObject("TriageRoom.Events");
+                events.transform.SetParent(transform, false);
+                events.AddComponent<EventSystem>();
+                events.AddComponent<StandaloneInputModule>();
+            }
             return canvasGo;
         }
 
@@ -1144,7 +1128,11 @@ namespace TwinAml
             mesh.richText = false;
             if (_font != null) _font.RequestCharactersInTexture(mesh.text, 64, FontStyle.Normal);
             var renderer = go.GetComponent<MeshRenderer>();
-            if (renderer != null) renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            if (renderer != null)
+            {
+                renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                if (mesh.font != null && mesh.font.material != null) renderer.sharedMaterial = mesh.font.material;
+            }
             if (billboard) _billboards.Add(go.transform);
         }
 
@@ -1163,6 +1151,9 @@ namespace TwinAml
             mesh.font = _font;
             mesh.richText = false;
             if (_font != null) _font.RequestCharactersInTexture(mesh.text, 56, FontStyle.Normal);
+            var renderer = go.GetComponent<MeshRenderer>();
+            if (renderer != null && mesh.font != null && mesh.font.material != null)
+                renderer.sharedMaterial = mesh.font.material;
             _dynamicLabels.Add(go.transform);
         }
 
@@ -1178,7 +1169,15 @@ namespace TwinAml
             go.transform.SetParent(parent, false);
             go.transform.position = pos;
             go.transform.localScale = scale;
-            if (!collide) go.layer = 2;
+            if (!collide)
+            {
+                var collider = go.GetComponent<Collider>();
+                if (collider != null)
+                {
+                    collider.enabled = false;
+                    Destroy(collider);
+                }
+            }
             var renderer = go.GetComponent<Renderer>();
             if (renderer != null)
             {
@@ -1211,7 +1210,12 @@ namespace TwinAml
             go.transform.position = (a + b) * 0.5f;
             if (delta.sqrMagnitude > 0.0001f) go.transform.rotation = Quaternion.LookRotation(delta);
             go.transform.localScale = new Vector3(0.035f, 0.035f, delta.magnitude);
-            go.layer = 2;
+            var beamCollider = go.GetComponent<Collider>();
+            if (beamCollider != null)
+            {
+                beamCollider.enabled = false;
+                Destroy(beamCollider);
+            }
             var renderer = go.GetComponent<Renderer>();
             if (renderer != null)
             {

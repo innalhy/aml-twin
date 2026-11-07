@@ -1,0 +1,112 @@
+{
+  "schema_version": "0.1",
+  "cases": [
+    {
+      "case_id": "deepfake-hk-001",
+      "file": "01-deepfake-hk-001.example.json",
+      "sha256": "d05228610f51cc9c4771df23fa92cd817fbd2c20477c37d52e3e13e6938ae5f0",
+      "bytes": 8518,
+      "locale": "zh-Hant",
+      "case_kind": null
+    },
+    {
+      "case_id": "hk-daybreak-tbml-001",
+      "file": "02-daybreak-tbml-001.example.json",
+      "sha256": "4de0aaefb2e01f9ea5990ae9cab0cc9a32ecae8522249dab3c2403963712ff3f",
+      "bytes": 9545,
+      "locale": "zh-Hant",
+      "case_kind": "public_record_inspired"
+    },
+    {
+      "case_id": "hk-mule-rent-001",
+      "file": "03-mule-rent-001.example.json",
+      "sha256": "6fce63d2c14af0b1e617c412e2f0fbbb2407b3f626c9be379a1ba5dd0502ca57",
+      "bytes": 9292,
+      "locale": "zh-Hant",
+      "case_kind": "public_record_inspired"
+    },
+    {
+      "case_id": "hk-wiseword-amlmonth-001",
+      "file": "04-wiseword-amlmonth-001.example.json",
+      "sha256": "ae7bffbe75031bf8ec7ea91f20d35474675bc5f66638a5fa53ea98615c868a77",
+      "bytes": 9012,
+      "locale": "zh-Hant",
+      "case_kind": "public_record_inspired"
+    },
+    {
+      "case_id": "hk-justicegate-crypto-001",
+      "file": "05-justicegate-crypto-001.example.json",
+      "sha256": "4973321ddbdc28d81b171441cdab88bc25eda43baa7686d12ece34f7a627d778",
+      "bytes": 9066,
+      "locale": "zh-Hant",
+      "case_kind": "public_record_inspired"
+    },
+    {
+      "case_id": "hk-greythunder-mule-001",
+      "file": "06-greythunder-mule-001.example.json",
+      "sha256": "456543f63486a175241741bd4a3b0db60d2372e88b81d7afc530275444ca4979",
+      "bytes": 8985,
+      "locale": "zh-Hant",
+      "case_kind": "public_record_inspired"
+    },
+    {
+      "case_id": "hk-crossborder-tel-001",
+      "file": "07-crossborder-tel-001.example.json",
+      "sha256": "9f791d1dccc2d7cdb2bba75cdd3e331a73f4273a272692887583230cfe0524fc",
+      "bytes": 9091,
+      "locale": "zh-Hant",
+      "case_kind": "public_record_inspired"
+    },
+    {
+      "case_id": "hk-kol-mgmt-001",
+      "file": "08-kol-mgmt-001.example.json",
+      "sha256": "22b87e0bb27b86a8ce57834575d0dd1e0e2ef6eb9498de723a88195ae26864d8",
+      "bytes": 9341,
+      "locale": "zh-Hant",
+      "case_kind": "public_record_inspired"
+    },
+    {
+      "case_id": "hk-triad-cashflow-001",
+      "file": "09-triad-cashflow-001.example.json",
+      "sha256": "f6decb3e6e2126e1aad15f5154d361fb884840cdf1dc2e4e395d8f6820b7bf6e",
+      "bytes": 9110,
+      "locale": "zh-Hant",
+      "case_kind": "public_record_inspired"
+    },
+    {
+      "case_id": "hk-ia-fwd-controls-001",
+      "file": "10-ia-fwd-controls-001.example.json",
+      "sha256": "1411ee9a4a825e743f1dbba6f858791921e975665ca78f535c4a6535ef540533",
+      "bytes": 9617,
+      "locale": "zh-Hant",
+      "case_kind": "public_record_inspired"
+    },
+    {
+      "case_id": "hk-hkma-cdd-001",
+      "file": "11-hkma-cdd-001.example.json",
+      "sha256": "b619a5b97b5f368842dc9c66c0826cdc002b191512e56cc53e78ff5b9bc169aa",
+      "bytes": 9679,
+      "locale": "zh-Hant",
+      "case_kind": "public_record_inspired"
+    },
+    {
+      "case_id": "hk-starlight-onboard-001",
+      "file": "12-starlight-onboard-001.example.json",
+      "sha256": "ad332d8f2bd64c255fd1f13d661f6163069133fdf589716629c2a5115d67095a",
+      "bytes": 8409,
+      "locale": "zh-Hant",
+      "case_kind": "synthetic_course"
+    },
+    {
+      "case_id": "alert-triage-shift-001",
+      "file": "13-alert-triage-shift-001.example.json",
+      "sha256": "86f0dd03b2263e01adc288b78c676ab188195653223266dace8dc22cd0e963ec",
+      "bytes": 16948,
+      "locale": "en",
+      "case_kind": "course_example",
+      "alerts_file": "alert-triage-shift-001.alerts.json",
+      "alerts_sha256": "faf19f5c3e6e26299930b97eb2e01da10eb1c8cb8c40375d9c8bb0dc41502552",
+      "alerts_bytes": 41513
+    }
+  ]
+}

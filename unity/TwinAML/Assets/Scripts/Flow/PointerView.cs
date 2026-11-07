@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -20,6 +21,10 @@ namespace TwinAml
         static Vector3 _anchor;
         static Vector3 _last;
         const float Slop = 7f;
+        static readonly List<RaycastResult> UiHits = new List<RaycastResult>(8);
+        static readonly RaycastHit[] WorldHits = new RaycastHit[48];
+        static PointerEventData _pointer;
+        static EventSystem _pointerSystem;
 
         public static void Reset(float yaw)
         {
@@ -46,7 +51,7 @@ namespace TwinAml
         /// </summary>
         public static bool TakeClick()
         {
-            var over = OverUi();
+            var over = IsOverUi();
             var click = false;
             if (Input.GetMouseButtonDown(0))
             {
@@ -75,7 +80,7 @@ namespace TwinAml
             }
             if (_left && Input.GetMouseButtonUp(0))
             {
-                click = !_dragged && !over;
+                click = !_dragged && !IsOverUi();
                 _left = false;
                 _dragged = false;
             }
@@ -117,9 +122,46 @@ namespace TwinAml
             body.Move(wish * Time.deltaTime);
         }
 
-        static bool OverUi()
+        /// <summary>
+        /// True when a uGUI graphic is under the cursor. Raycasts the canvases
+        /// directly so the result does not depend on script order.
+        /// </summary>
+        public static bool IsOverUi()
         {
-            return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+            var system = EventSystem.current;
+            if (system == null) return false;
+            if (_pointer == null || _pointerSystem != system)
+            {
+                _pointerSystem = system;
+                _pointer = new PointerEventData(system);
+            }
+            _pointer.position = Input.mousePosition;
+            UiHits.Clear();
+            system.RaycastAll(_pointer, UiHits);
+            return UiHits.Count > 0;
+        }
+
+        /// <summary>
+        /// Nearest physics hit along the cursor, skipping the walker. The buffer is reused.
+        /// </summary>
+        public static bool FirstHit(Camera cam, Transform ignore, out RaycastHit hit, float maxDistance = 40f)
+        {
+            hit = default(RaycastHit);
+            if (cam == null) return false;
+            var count = Physics.RaycastNonAlloc(cam.ScreenPointToRay(Input.mousePosition), WorldHits, maxDistance);
+            var best = float.PositiveInfinity;
+            var found = false;
+            for (var i = 0; i < count; i++)
+            {
+                var col = WorldHits[i].collider;
+                if (col == null) continue;
+                if (ignore != null && (col.transform == ignore || col.transform.IsChildOf(ignore))) continue;
+                if (WorldHits[i].distance >= best) continue;
+                best = WorldHits[i].distance;
+                hit = WorldHits[i];
+                found = true;
+            }
+            return found;
         }
     }
 }

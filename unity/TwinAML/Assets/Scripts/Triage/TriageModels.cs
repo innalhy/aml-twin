@@ -37,8 +37,8 @@ namespace TwinAml
     }
 
     /// <summary>
-    /// One alert inside teaching.alerts on the Topic 4 script.
-    /// The room reads this. It does not invent a second script format.
+    /// One alert from the Topic 4 dossier file. The room reads that file.
+    /// Choice ids stay on the schema 0.1 script.
     /// </summary>
     public sealed class TriageAlert
     {
@@ -96,14 +96,12 @@ namespace TwinAml
     {
         public static readonly string[] DecisionKeys = { "close", "more", "escalate", "report" };
 
-        public static List<TriageAlert> Read(JsonValue script)
+        public static List<TriageAlert> Read(JsonValue pack)
         {
-            if (script == null) throw new EffectException("Script is missing.");
-            var teaching = script.Get("teaching");
-            if (teaching == null) throw new EffectException("teaching is missing.");
-            var alerts = teaching.Get("alerts");
+            if (pack == null) throw new EffectException("Alert dossier is missing.");
+            var alerts = pack.Get("alerts");
             if (alerts == null || alerts.Kind != JsonKind.Array)
-                throw new EffectException("teaching.alerts is missing.");
+                throw new EffectException("alerts is missing from the dossier file.");
             var list = new List<TriageAlert>();
             for (var i = 0; i < alerts.Array.Count; i++)
                 list.Add(ReadAlert(alerts.Array[i], i));
