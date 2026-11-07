@@ -2,14 +2,12 @@
 
 from __future__ import annotations
 
-import json
-import re
+import copy
 from datetime import datetime, timezone
 from typing import Any
 
+from app.cases import library_case
 from app.effects import ScriptError, apply_patch
-
-_RULE_FLAG = re.compile(r"^R\d+_")
 
 
 class ChoiceError(ValueError):
@@ -25,7 +23,20 @@ def _now() -> str:
 
 
 def _nodes(script: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    case = library_case(script)
+    if case is not None:
+        return case.nodes
     return {node["id"]: node for node in script["nodes"]}
+
+
+def _rule_flags(script: dict[str, Any]) -> frozenset[str]:
+    case = library_case(script)
+    if case is not None:
+        return case.rule_flags
+    found: set[str] = set()
+    for rule in script.get("rules") or []:
+        found.update(rule.get("flags") or [])
+    return frozenset(found)
 
 
 def _event(
@@ -51,12 +62,14 @@ def _event(
 
 
 def _note_flags(
+    script: dict[str, Any],
     events: list[dict[str, Any]],
     node_id: str,
     new_flags: list[str],
     choice_id: str | None = None,
 ) -> None:
-    rule_flags = [flag for flag in new_flags if _RULE_FLAG.match(flag)]
+    known = _rule_flags(script)
+    rule_flags = [flag for flag in new_flags if flag in known]
     if rule_flags:
         _event(
             events,
@@ -65,24 +78,29 @@ def _note_flags(
             choice_id=choice_id,
             payload={"flags": rule_flags},
         )
-    override = bool(choice_id and "override" in choice_id.lower()) or any(
-        "OVERRIDDEN" in flag for flag in new_flags
-    )
+    override_flags = [flag for flag in rule_flags if "OVERRIDDEN" in flag]
+    override = bool(choice_id and "override" in choice_id.lower()) or bool(override_flags)
     if override:
         _event(
             events,
             "override",
             node_id=node_id,
             choice_id=choice_id,
-            payload={"flags": [flag for flag in new_flags if "OVERRIDDEN" in flag]},
+            payload={"flags": override_flags},
         )
 
 
 def teaching_mark(script: dict[str, Any], disposition: str | None) -> dict[str, Any]:
-    teaching = script.get("teaching") or {}
-    acceptable = set(teaching.get("acceptable_dispositions") or [])
-    poor = set(teaching.get("poor_dispositions") or [])
-    incomplete = set(teaching.get("incomplete_dispositions") or [])
+    case = library_case(script)
+    if case is not None:
+        acceptable = case.acceptable
+        poor = case.poor
+        incomplete = case.incomplete
+    else:
+        teaching = script.get("teaching") or {}
+        acceptable = set(teaching.get("acceptable_dispositions") or [])
+        poor = set(teaching.get("poor_dispositions") or [])
+        incomplete = set(teaching.get("incomplete_dispositions") or [])
     if disposition is None:
         return {
             "disposition": None,
@@ -127,7 +145,7 @@ def _walk(
     for _ in range(limit):
         added = apply_patch(twin, node.get("twin_patch"))
         _event(events, "node_entered", node_id=node["id"], payload={"node_type": node["type"]})
-        _note_flags(events, node["id"], added)
+        _note_flags(script, events, node["id"], added)
         if node["type"] == "outcome":
             mark = teaching_mark(script, twin.get("disposition"))
             _event(events, "session_closed", node_id=node["id"], payload=mark)
@@ -146,7 +164,7 @@ def _walk(
 
 
 def start_session(script: dict[str, Any]) -> dict[str, Any]:
-    twin = json.loads(json.dumps(script["initial_twin_state"]))
+    twin = copy.deepcopy(script["initial_twin_state"])
     events: list[dict[str, Any]] = []
     _event(events, "session_started", payload={"case_id": script["case_id"]})
     node, scenes = _walk(script, twin, script["start_node_id"], events)
@@ -170,7 +188,11 @@ def submit_choice(state: dict[str, Any], script: dict[str, Any], choice_id: str)
     node = _nodes(script).get(state["node_id"])
     if node is None or node["type"] != "decision":
         raise SessionClosed("session is not waiting for a choice")
-    choice = next((item for item in node.get("choices") or [] if item["id"] == choice_id), None)
+    case = library_case(script)
+    if case is not None:
+        choice = case.choices.get(node["id"], {}).get(choice_id)
+    else:
+        choice = next((item for item in node.get("choices") or [] if item["id"] == choice_id), None)
     if choice is None:
         raise ChoiceError(f"unknown choice {choice_id}")
     added = apply_patch(state["twin"], choice.get("effects"))
@@ -181,7 +203,7 @@ def submit_choice(state: dict[str, Any], script: dict[str, Any], choice_id: str)
         choice_id=choice_id,
         payload={"label": choice.get("label", "")},
     )
-    _note_flags(state["events"], node["id"], added, choice_id)
+    _note_flags(script, state["events"], node["id"], added, choice_id)
     nxt, scenes = _walk(script, state["twin"], choice["next"], state["events"])
     state["node_id"] = nxt["id"]
     state["passed_scenes"] = scenes

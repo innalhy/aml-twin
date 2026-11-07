@@ -247,6 +247,7 @@ def _rules(script: dict[str, Any]) -> list[dict[str, Any]]:
                 "when": rule["when"],
                 "then": rule["then"],
                 "note": rule.get("note", ""),
+                "flags": list(rule.get("flags") or []),
             }
         )
     return rows
