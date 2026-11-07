@@ -159,7 +159,7 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
 
-`http://127.0.0.1:8000/health` returns `{"status":"ok","service":"twinaml-api"}`. `GET /cases` lists the scripts. `POST /sessions` with `{"case_id":"deepfake-hk-001"}` opens a training run. Details: [`backend/README.md`](backend/README.md).
+`http://127.0.0.1:8000/health` returns `{"status":"ok","service":"twinaml-api"}`. `GET /cases` lists the scripts. `POST /sessions` with `{"case_id":"deepfake-hk-001"}` opens a training run. Runs are stored in `data/local/sessions.sqlite` and survive a restart of the API. Details: [`backend/README.md`](backend/README.md).
 
 Web, from `frontend/`:
 

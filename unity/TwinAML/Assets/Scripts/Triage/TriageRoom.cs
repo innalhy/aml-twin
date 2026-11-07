@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace TwinAml
 {
     /// <summary>
-    /// Topic 4 investigation room. Primitives stand in for the set.
+    /// Topic 4 investigation room. Furnished primitives, lit with the built-in pipeline.
     /// The case file stays schema 0.1. This view only reads teaching.alerts.
     /// </summary>
     public sealed class TriageRoom : MonoBehaviour
@@ -22,8 +22,6 @@ namespace TwinAml
         GameObject _walker;
         CharacterController _body;
         float _vy;
-        bool _blockWalk;
-        bool _camReady;
         Phase _phase = Phase.Arrive;
         string _station = "overview";
         string _alertId = "";
@@ -176,7 +174,6 @@ namespace TwinAml
 
         bool TryRoomClick()
         {
-            if (!Input.GetMouseButtonDown(0)) return false;
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return false;
             if (_cam == null) return false;
             var hits = Physics.RaycastAll(_cam.ScreenPointToRay(Input.mousePosition), 40f);
@@ -227,17 +224,24 @@ namespace TwinAml
             Destroy(shirt.GetComponent<Collider>());
             var renderer = shirt.GetComponent<Renderer>();
             if (renderer != null) renderer.sharedMaterial = Mat(Hex(0x2f6fed));
+            var head = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            head.name = "Head";
+            head.transform.SetParent(_walker.transform, false);
+            head.transform.localPosition = new Vector3(0f, 1.62f, 0f);
+            head.transform.localScale = new Vector3(0.28f, 0.28f, 0.28f);
+            Destroy(head.GetComponent<Collider>());
+            var headRenderer = head.GetComponent<Renderer>();
+            if (headRenderer != null) headRenderer.sharedMaterial = Mat(new Color(0.93f, 0.8f, 0.7f));
+            RoomFinish.PersonDetail(_walker.transform, Hex(0x2f6fed));
         }
 
         void StepWalker()
         {
             if (_walker == null || _body == null) return;
             var typing = _note != null && _note.isFocused;
-            if (Input.GetMouseButtonDown(0) && EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
-                _blockWalk = true;
-            if (!Input.GetMouseButton(0)) _blockWalk = false;
-            if (!_blockWalk && TryRoomClick()) _blockWalk = true;
-            MouseWalk.Step(_body, _walker.transform, _blockWalk || typing, ref _vy);
+            var click = PointerView.TakeClick();
+            if (click && !typing && !TryRoomClick()) WalkToCursor();
+            PointerView.Walk(_body, _walker.transform, ref _vy);
             var p = _walker.transform.position;
             var clamped = new Vector3(Mathf.Clamp(p.x, -7.2f, 7.2f), p.y, Mathf.Clamp(p.z, -6f, 5.6f));
             if (p.y < -1f) clamped = new Vector3(0f, 0.2f, -3.6f);
@@ -252,20 +256,24 @@ namespace TwinAml
         void FollowWalker()
         {
             if (_walker == null || _cam == null) return;
-            var desired = _walker.transform.position - _walker.transform.forward * 5.1f + Vector3.up * 3.35f;
-            if (!_camReady)
+            PointerView.Orbit(_cam, _walker.transform.position, 4.6f, 3.15f);
+            _look = _walker.transform.position + Vector3.up * 1.15f;
+        }
+
+        void WalkToCursor()
+        {
+            if (_cam == null) return;
+            var hits = Physics.RaycastAll(_cam.ScreenPointToRay(Input.mousePosition), 40f);
+            System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+            for (var i = 0; i < hits.Length; i++)
             {
-                _cam.transform.position = desired;
-                _camReady = true;
+                var col = hits[i].collider;
+                if (col == null) continue;
+                if (_walker != null && (col.transform == _walker.transform || col.transform.IsChildOf(_walker.transform))) continue;
+                PointerView.Goal = hits[i].point;
+                PointerView.HasGoal = true;
+                return;
             }
-            else
-            {
-                var t = 1f - Mathf.Exp(-5f * Time.deltaTime);
-                _cam.transform.position = Vector3.Lerp(_cam.transform.position, desired, t);
-            }
-            var look = _walker.transform.position + Vector3.up * 1.15f;
-            _cam.transform.LookAt(look);
-            _look = look;
         }
 
         void PrepareCamera()
@@ -279,12 +287,13 @@ namespace TwinAml
                 go.AddComponent<AudioListener>();
             }
             _cam.clearFlags = CameraClearFlags.SolidColor;
-            _cam.backgroundColor = new Color(0.05f, 0.07f, 0.11f);
+            _cam.backgroundColor = new Color(0.08f, 0.11f, 0.16f);
             _cam.fieldOfView = 58f;
             _cam.nearClipPlane = 0.08f;
             _cam.farClipPlane = 80f;
             RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
-            RenderSettings.ambientLight = new Color(0.55f, 0.62f, 0.72f);
+            RenderSettings.ambientLight = new Color(0.42f, 0.46f, 0.52f);
+            RoomFinish.Sun(new Color(0.82f, 0.88f, 1f), 0.85f, new Vector3(42f, 18f, 0f));
         }
 
         void BuildError(string message)
@@ -307,7 +316,7 @@ namespace TwinAml
             var root = new GameObject("World").transform;
             root.SetParent(transform, false);
 
-            Box(root, "Floor", new Vector3(0f, -0.06f, 0f), new Vector3(18f, 0.12f, 14f), Hex(0x1a2433), false);
+            Box(root, "Floor", new Vector3(0f, -0.06f, 0f), new Vector3(18f, 0.12f, 14f), Hex(0x1a2433), true);
             Box(root, "NorthWall", new Vector3(0f, 1.7f, 6.15f), new Vector3(16.2f, 3.4f, 0.18f), Hex(0x243246), false);
             Box(root, "WestWall", new Vector3(-8.05f, 1.7f, 0f), new Vector3(0.18f, 3.4f, 12.2f), Hex(0x243246), false);
             Box(root, "EastWall", new Vector3(8.05f, 1.7f, 0f), new Vector3(0.18f, 3.4f, 12.2f), Hex(0x2a3b50), false);
@@ -331,7 +340,8 @@ namespace TwinAml
 
             Box(root, "SeniorDesk", new Vector3(5.7f, 0.72f, 3.55f), new Vector3(1.5f, 0.08f, 0.8f), Hex(0x314256), false);
             Shape(root, "Senior", PrimitiveType.Capsule, new Vector3(6.15f, 1.05f, 4.15f), new Vector3(0.42f, 0.55f, 0.42f), Hex(0x8ea0b8), false);
-            WorldLabel(root, "Senior investigator", new Vector3(6.15f, 2.05f, 4.15f), 0.045f, Hex(0xf2f6fb), true);
+            Shape(root, "SeniorHead", PrimitiveType.Sphere, new Vector3(6.15f, 1.72f, 4.15f), new Vector3(0.26f, 0.26f, 0.26f), new Color(0.9f, 0.78f, 0.68f), false);
+            WorldLabel(root, "Senior investigator", new Vector3(6.15f, 2.15f, 4.15f), 0.045f, Hex(0xf2f6fb), true);
 
             Pad(root, "DeskPad", new Vector3(0f, 0.02f, -3.7f), new Vector3(1.4f, 0.03f, 0.7f), Hex(0xc4842a), "DESK");
             Pad(root, "MapPad", new Vector3(0f, 0.02f, 3.3f), new Vector3(1.3f, 0.03f, 0.7f), Hex(0x2f6fed), "MAP");
@@ -362,11 +372,16 @@ namespace TwinAml
                 WorldLabel(root, alert.Id + "\n" + Short(alert.CustomerName), new Vector3(-7.15f, 1.72f, z), 0.032f, Hex(0xf7f9fb), true);
             }
             PaintCards();
+            RoomFinish.DressMonitor(root);
         }
 
         void Screen(Transform root, float x, string title)
         {
-            Box(root, "Monitor", new Vector3(x, 1.18f, -1.58f), new Vector3(0.62f, 0.4f, 0.05f), Hex(0x14344c), false);
+            Box(root, "Bezel", new Vector3(x, 1.18f, -1.64f), new Vector3(0.72f, 0.5f, 0.05f), Hex(0x121820), false);
+            Box(root, "Stand", new Vector3(x, 0.9f, -1.7f), new Vector3(0.06f, 0.22f, 0.06f), Hex(0x2a3340), false);
+            var panel = Box(root, "Monitor", new Vector3(x, 1.18f, -1.58f), new Vector3(0.62f, 0.4f, 0.04f), Hex(0x14344c), false);
+            var renderer = panel.GetComponent<Renderer>();
+            if (renderer != null) renderer.sharedMaterial = RoomFinish.ForStyle(new Color(0.2f, 0.62f, 0.78f), 3);
             WorldLabel(root, title, new Vector3(x, 1.18f, -1.5f), 0.04f, Hex(0xb7e3ff), true);
         }
 
@@ -542,7 +557,7 @@ namespace TwinAml
             _scrollContent.anchoredPosition = Vector2.zero;
             LayoutDrawer();
             PaintRails();
-            if (_coach != null) _coach.text = "Hold the left mouse button to walk forward. Hold the right mouse button to walk back. Move the mouse to turn. Click an object to use it.\n" + CoachText();
+            if (_coach != null) _coach.text = "Drag the mouse to look around. Click the floor to walk. Click a station, a file, or a wall to use it. The buttons on screen are the controls.\n" + CoachText();
             if (_gate != null && _phase != Phase.File) _gate.text = "";
             UpdateGate();
             RebuildBoards();
@@ -1004,7 +1019,7 @@ namespace TwinAml
             if (flat.sqrMagnitude > 0.01f)
                 _walker.transform.rotation = Quaternion.LookRotation(flat.normalized);
             _body.enabled = true;
-            _camReady = false;
+            PointerView.Aim(feet, feet + flat);
         }
 
         void Snap(string station)
@@ -1168,8 +1183,11 @@ namespace TwinAml
             if (renderer != null)
             {
                 renderer.sharedMaterial = Mat(color);
-                renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-                renderer.receiveShadows = false;
+                var bulky = scale.x * scale.y * scale.z > 0.25f;
+                renderer.shadowCastingMode = bulky
+                    ? UnityEngine.Rendering.ShadowCastingMode.On
+                    : UnityEngine.Rendering.ShadowCastingMode.Off;
+                renderer.receiveShadows = true;
             }
             return go;
         }
@@ -1233,11 +1251,7 @@ namespace TwinAml
 
         static Material Mat(Color color)
         {
-            var shader = Shader.Find("Unlit/Color");
-            if (shader == null) shader = Shader.Find("Standard");
-            var mat = new Material(shader);
-            mat.color = color;
-            return mat;
+            return RoomFinish.ForStyle(color, 0);
         }
 
         static void ClearChildren(Transform parent)

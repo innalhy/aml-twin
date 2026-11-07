@@ -4,9 +4,8 @@ using UnityEngine.EventSystems;
 namespace TwinAml
 {
     /// <summary>
-    /// Shared walk for the 3D rooms. Hold left mouse to walk forward, hold right
-    /// mouse to walk back, and move the mouse sideways while a button is held to turn.
-    /// A click on an object is handled by the room; pass blocked=true for that hold.
+    /// Kept so older call sites still compile. The branch and the monitoring room
+    /// use PointerView: drag to look, click the floor to walk, click an object to use it.
     /// </summary>
     public static class MouseWalk
     {

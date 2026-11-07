@@ -1,7 +1,7 @@
 """COMP3424 demo API (FastAPI).
 
 The VPS serves this app behind nginx or Caddy. See docs/deploy-vps.md.
-Sessions, decisions, and the twin live on this process.
+Sessions and events are rows in data/local/sessions.sqlite on this machine.
 """
 
 from fastapi import FastAPI, HTTPException
@@ -15,7 +15,7 @@ from app.sessions import decide, evidence, fetch, fetch_state, list_sessions, op
 app = FastAPI(
     title="TwinAML",
     version="0.1.0",
-    description="COMP3424 demo API. The twin is this process: sessions, decisions, and events.",
+    description="COMP3424 demo API. Sessions and events live in data/local/sessions.sqlite.",
 )
 
 app.add_middleware(
