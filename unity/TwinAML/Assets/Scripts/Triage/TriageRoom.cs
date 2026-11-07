@@ -372,10 +372,10 @@ namespace TwinAml
             _timer = MakeText(timerRect, "25:00", 22, FontStyle.Bold, new Color(0.96f, 0.78f, 0.35f), TextAnchor.MiddleCenter);
             Stretch(_timer.rectTransform);
             var leave = Pin(header, "Leave", 1680f, 8f, 216f, 40f);
-            MakeButton(leave, "Topics", new Color(0.12f, 0.2f, 0.32f), Color.white, delegate
+            MakeButton(leave, "Bank branch", new Color(0.12f, 0.2f, 0.32f), Color.white, delegate
             {
                 ReadNote();
-                FlowController.Instance.Go(SceneId.Scn_TopicsHub);
+                FlowController.Instance.Go(SceneId.Scn_Branch_Lobby);
             });
 
             AddRail(canvas.transform, "Overview", "overview", 76f);
@@ -384,6 +384,7 @@ namespace TwinAml
             AddRail(canvas.transform, "Customer wall", "profile", 232f);
             AddRail(canvas.transform, "Link board", "links", 284f);
             AddRail(canvas.transform, "Senior investigator", "senior", 336f);
+            AddRail(canvas.transform, "Meeting", "meeting", 388f);
 
             var coach = Pin(canvas.transform, "Coach", 24f, 900f, 1040f, 156f);
             coach.gameObject.AddComponent<Image>().color = new Color(0.05f, 0.09f, 0.14f, 0.9f);
@@ -886,6 +887,11 @@ namespace TwinAml
             {
                 _toPos = new Vector3(2.6f, 1.75f, 1.35f);
                 _toLook = new Vector3(6.0f, 1.35f, 3.9f);
+            }
+            else if (station == "meeting")
+            {
+                _toPos = new Vector3(-3.1f, 1.8f, -2.2f);
+                _toLook = new Vector3(-5.4f, 1.1f, -4.3f);
             }
             else
             {
