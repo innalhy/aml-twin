@@ -6,6 +6,39 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/3D/Scn_Branch_Lobby.unity
+    guid: a11b1001c0de4a01b3c4d5e6f7081901
+  - enabled: 1
+    path: Assets/Scenes/3D/Scn_Branch_Desk.unity
+    guid: a11b1002c0de4a01b3c4d5e6f7081902
+  - enabled: 1
+    path: Assets/Scenes/3D/Scn_Branch_Meeting.unity
+    guid: a11b1003c0de4a01b3c4d5e6f7081903
+  - enabled: 1
+    path: Assets/Scenes/3D/Scn_Branch_Files.unity
+    guid: a11b1004c0de4a01b3c4d5e6f7081904
+  - enabled: 1
+    path: Assets/Scenes/3D/Scn_Branch_Compliance.unity
+    guid: a11b1005c0de4a01b3c4d5e6f7081905
+  - enabled: 1
+    path: Assets/Scenes/3D/Scn_Triage_Desk.unity
+    guid: b22c2001c0de4a01b3c4d5e6f7081901
+  - enabled: 1
+    path: Assets/Scenes/3D/Scn_Triage_Map.unity
+    guid: b22c2002c0de4a01b3c4d5e6f7081902
+  - enabled: 1
+    path: Assets/Scenes/3D/Scn_Triage_Profiles.unity
+    guid: b22c2003c0de4a01b3c4d5e6f7081903
+  - enabled: 1
+    path: Assets/Scenes/3D/Scn_Triage_Links.unity
+    guid: b22c2004c0de4a01b3c4d5e6f7081904
+  - enabled: 1
+    path: Assets/Scenes/3D/Scn_Triage_Meeting.unity
+    guid: b22c2005c0de4a01b3c4d5e6f7081905
+  - enabled: 1
+    path: Assets/Scenes/3D/Scn_Triage_Senior.unity
+    guid: b22c2006c0de4a01b3c4d5e6f7081906
+  - enabled: 1
     path: Assets/Scenes/Scn_Boot.unity
     guid: f58060f44347626909b6c28759811e11
   - enabled: 1

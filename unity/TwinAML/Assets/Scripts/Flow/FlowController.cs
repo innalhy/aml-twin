@@ -229,7 +229,7 @@ namespace TwinAml
             }
             if (Session == null || Session.Script == null)
             {
-                Go(SceneId.Scn_TopicsHub);
+                Go(SceneId.Scn_Branch_Lobby);
                 return;
             }
             try
