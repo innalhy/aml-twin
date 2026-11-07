@@ -71,7 +71,7 @@ Media is not in git. The `media_ref` on `n_intake` is `data/media/deepfake-hk-00
 ## Clients
 
 - **Web**: `frontend/`, React + Vite + TypeScript, static files on the Linux VPS. The scenario player and the dashboard read twin state from the API.
-- **Editor room**: [`unity/UNITY.md`](../unity/UNITY.md). In scope. Unity 2022.3 LTS, first scene `Scn_Boot`. It applies the schema 0.1 patches locally while you play Topics 1–4. That mirror is the training-room twin for the Editor dashboard. It is not a second case format, and it does not call the session API. Wiring that room to the API is P3-S4.
+- **Editor room**: [`unity/UNITY.md`](../unity/UNITY.md). In scope. Unity 6000.6.8f1, first scene `Scn_Branch_Lobby`. It applies the schema 0.1 patches locally while you play Topics 1–4. That mirror is the training-room twin for the Editor dashboard. It is not a second case format, and it does not call the session API. Wiring that room to the API is P3-S4.
 
 ## Explicitly out of scope
 
