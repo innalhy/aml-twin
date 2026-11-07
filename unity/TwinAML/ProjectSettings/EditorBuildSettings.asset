@@ -65,4 +65,22 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Scn_T02_FeedbackPass.unity
     guid: 510ca61a46dc4080c57d122b2254d492
+  - enabled: 1
+    path: Assets/Scenes/Scn_T03_Brief.unity
+    guid: 64d25098285b45bf99ca528ca12ce2b8
+  - enabled: 1
+    path: Assets/Scenes/Scn_T03_Branch.unity
+    guid: cd5b62d59eba4d5b8b95bf4dd529827b
+  - enabled: 1
+    path: Assets/Scenes/Scn_T03_Feedback.unity
+    guid: 1138a80363c44f6c94d9ce0a9a293806
+  - enabled: 1
+    path: Assets/Scenes/Scn_T04_Brief.unity
+    guid: a14b2c6d8e0f41a2b3c4d5e6f708192a
+  - enabled: 1
+    path: Assets/Scenes/Scn_T04_Room.unity
+    guid: b25c3d7e9f1042b3c4d5e6f708192a3b
+  - enabled: 1
+    path: Assets/Scenes/Scn_T04_Report.unity
+    guid: c36d4e8f0a2143c4d5e6f708192a3b4c
   m_configObjects: {}
