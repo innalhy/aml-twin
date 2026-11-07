@@ -198,7 +198,9 @@ namespace TwinAml
                 var summary = session.Script.Get("summary");
                 if (summary != null && summary.Kind == JsonKind.String) UiKit.Body(summary.String);
                 UiKit.Body(RulesText(session.Script));
-                UiKit.Note(CaseLibrary.Candidates(CaseLibrary.T04File)[0]);
+                UiKit.Note(CaseLibrary.ScriptPath(session.CaseId));
+                var alertsPath = CaseLibrary.AlertsPath(session.CaseId);
+                if (!string.IsNullOrEmpty(alertsPath)) UiKit.Note(alertsPath);
                 UiKit.EndCard();
             }
             UiKit.Button(Locale.T("t04.enter"), Btn.Orange, () => flow.Go(SceneId.Scn_T04_Room));
@@ -252,7 +254,7 @@ namespace TwinAml
                 if (summary != null && summary.Kind == JsonKind.String) UiKit.Body(summary.String);
                 UiKit.Note(CustomerLine(session.Script));
                 UiKit.Body(RulesText(session.Script));
-                UiKit.Note(CaseLibrary.Candidates(t01 ? CaseLibrary.T01File : CaseLibrary.T02File)[0]);
+                UiKit.Note(CaseLibrary.ScriptPath(session.CaseId));
                 UiKit.EndCard();
             }
             UiKit.Button(Locale.T("next"), Btn.Slate, () =>
@@ -494,6 +496,16 @@ namespace TwinAml
                 {
                     builder.Append("\n");
                     builder.Append(then.String);
+                }
+                var flags = rule.Get("flags");
+                if (flags != null && flags.Kind == JsonKind.Array && flags.Array.Count > 0)
+                {
+                    builder.Append("\n");
+                    for (var f = 0; f < flags.Array.Count; f++)
+                    {
+                        if (f > 0) builder.Append(", ");
+                        if (flags.Array[f].Kind == JsonKind.String) builder.Append(flags.Array[f].String);
+                    }
                 }
             }
             return builder.ToString();

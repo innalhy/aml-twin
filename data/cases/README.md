@@ -36,7 +36,11 @@ Titles below are short English labels. Files are numbered `01`–`13`. The JSON 
 
 `hk-starlight-onboard-001` is the Editor room's Topic 3. It is a fictional company account-opening lesson, not a public-record case. The company, the people, and jurisdiction code HR-7 are synthetic. The walkable branch teaches that lesson in English.
 
-`alert-triage-shift-001` is the Editor room's Topic 4. Six fictional alerts, one shift, English on screen. Customers, places, and the sanctions sheet are training props. `shift_reviewed` means the six choices were written down. The room grades them. Closing any alert fails the shift. Drafting an STR on the similar-name hit, only because the names match, also fails it.
+`alert-triage-shift-001` is the Editor room's Topic 4. Six fictional alerts, one shift, English on screen. Customers, places, and the sanctions sheet are training props. The playable choices stay in [`13-alert-triage-shift-001.example.json`](13-alert-triage-shift-001.example.json). The dossiers, including the room grade (`correct`, `why`, `script_choice`), stay in [`alert-triage-shift-001.alerts.json`](alert-triage-shift-001.alerts.json). The web API does not serve that file. `shift_reviewed` means the six choices were written down. The room grades them. Closing any alert fails the shift. Drafting an STR on the similar-name hit, only because the names match, also fails it.
+
+`data/cases/index.json` is the library both the API and the Editor room load. `node scripts/validate-cases.mjs` rewrites it after the scripts pass schema 0.1, the 24 KiB script limit, and the alert dossier schema. A script the index does not name is not in the library.
+
+Each rule has `flags`. Those strings are the mirror flags a `flags_add` in that same file already writes. `when` stays a sentence. The machine records `rule_flagged` when one of those flags is added. It does not parse `when`.
 
 ## Public reporting context
 

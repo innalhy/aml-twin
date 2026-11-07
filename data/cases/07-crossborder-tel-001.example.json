@@ -24,12 +24,14 @@
       "id": "R1_FANOUT",
       "when": "單一客戶向大量彼此無關的內地個人戶口付款，且沒有佣金合約",
       "then": "require_edd_before_release",
+      "flags": ["PAYEE_FANOUT", "R1_OVERRIDDEN"],
       "note": "不得當成一般跨境佣金放行。規則先於任何模型分數。"
     },
     {
       "id": "R2_CORRIDOR_INDICATOR",
       "when": "通訊員類型提示把同一走廊與電話騙案得益連結",
       "then": "require_str_or_freeze_or_exit",
+      "flags": ["PHONE_FRAUD_INDICATOR", "R2_IGNORED"],
       "note": "不得改口成代客繳費或家屬生活費後結案。提示是合成教學指標，不是真實情報。"
     }
   ],

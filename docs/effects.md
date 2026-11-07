@@ -13,7 +13,7 @@ The use-counts in the tables below were taken across the first eleven files. Cas
 
 Case 13 uses the same grammar and does not add a suffix. Its choices write `risk.flags_add`, `risk.score_delta` (`20`, `10`, or `0`), and replace `kyc.status` and `triage.last`. The parent `triage` is on `initial_twin_state`. The outcome disposition is `shift_reviewed`, which means the six choices were written down. The Unity room grades that shift separately. Decision nodes in file 13 have no `twin_patch`.
 
-The demo API applies these keys in `backend/app/effects.py`. Rules in `rules[].when` stay human-readable sentences. The machine does not parse them. A new `R`-flag or an override choice is recorded as an event. The disposition string still comes from the outcome patch.
+The demo API applies these keys in `backend/app/effects.py`. `rules[].when` stays a sentence. The machine does not parse it. `rules[].flags` names the mirror flags that stand for that rule, and each of those flags is written by a `flags_add` in the same file. Adding one of those flags records `rule_flagged`. A choice id containing `override`, or a listed flag containing `OVERRIDDEN`, records `override`. The disposition string still comes from the outcome patch.
 
 ## Apply order
 
@@ -159,7 +159,7 @@ From the repo root:
 node scripts/validate-cases.mjs
 ```
 
-The script checks each `data/cases/*.example.json` file against `packages/schemas/script.schema.json`, checks that `start_node_id` and every `next` point at a node, and checks that every patch key follows the grammar above against that file's `initial_twin_state`. It then runs [`scripts/deepfake-paths.test.mjs`](../scripts/deepfake-paths.test.mjs), which clones `initial_twin_state` and plays all eight terminal paths of `deepfake-hk-001`. That file can also be run on its own. The API machine is checked separately:
+The script checks each `data/cases/*.example.json` file against `packages/schemas/script.schema.json`, checks that `start_node_id` and every `next` point at a node, checks that every `rules[].flags` entry is written by a `flags_add` in that file, checks that a script is at most 24 KiB, and checks that every patch key follows the grammar above against that file's `initial_twin_state`. It checks `*.alerts.json` against `packages/schemas/alerts.schema.json` and checks that each `script_choice` points at a choice on the matching script. When those checks pass, it writes `data/cases/index.json` (case id, file, sha256, bytes, and the Topic 4 dossier when a case has one). It then runs [`scripts/deepfake-paths.test.mjs`](../scripts/deepfake-paths.test.mjs), which clones `initial_twin_state` and plays all eight terminal paths of `deepfake-hk-001`. That file can also be run on its own. The API loads the index and refuses a script whose bytes do not match the hash. The API machine is checked separately:
 
 ```bash
 cd backend

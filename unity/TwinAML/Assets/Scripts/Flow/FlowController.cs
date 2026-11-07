@@ -118,23 +118,23 @@ namespace TwinAml
             {
                 if (topic == "T01")
                 {
-                    session.Script = CaseLibrary.Load(CaseLibrary.T01File);
+                    session.Script = CaseLibrary.LoadCase(CaseLibrary.T01CaseId);
                     session.CaseId = CaseLibrary.T01CaseId;
                 }
                 else if (topic == "T03")
                 {
                     BranchProgress.Reset();
-                    session.Script = CaseLibrary.Load(CaseLibrary.T03File);
+                    session.Script = CaseLibrary.LoadCase(CaseLibrary.T03CaseId);
                     session.CaseId = CaseLibrary.T03CaseId;
                 }
                 else if (topic == "T04")
                 {
-                    session.Script = CaseLibrary.Load(CaseLibrary.T04File);
+                    session.Script = CaseLibrary.LoadCase(CaseLibrary.T04CaseId);
                     session.CaseId = CaseLibrary.T04CaseId;
                 }
                 else
                 {
-                    session.Script = CaseLibrary.Load(CaseLibrary.T02File);
+                    session.Script = CaseLibrary.LoadCase(CaseLibrary.T02CaseId);
                     session.CaseId = CaseLibrary.T02CaseId;
                 }
                 var title = session.Script.Get("title");
@@ -144,7 +144,7 @@ namespace TwinAml
                     throw new EffectException("Loaded file case_id does not match " + session.CaseId + ".");
                 session.Twin = session.Script.Require("initial_twin_state").Clone();
                 TwinProjector.Apply(session, null);
-                if (topic == "T04") TriageShift.Begin(session.Script);
+                if (topic == "T04") TriageShift.Begin(session.CaseId);
                 session.Trap = false;
                 session.FundsRisk = false;
                 session.Completed = false;
@@ -170,6 +170,7 @@ namespace TwinAml
                 LastError = "Finish the six alerts before the shift report.";
                 return;
             }
+            var filed = false;
             try
             {
                 var ids = TriageShift.ChoiceIds();
@@ -181,7 +182,6 @@ namespace TwinAml
                 Session.Trap = score.HardFail || score.Overall < 60;
                 Session.FundsRisk = Session.Trap;
                 Session.MappingNote = "Topic 4 grades the six dispositions in the room. shift_reviewed means the queue was written down. A pass is a training score of 60 or more, with no closed file and no STR filed on the name-only screening hit.";
-                Session.Completed = true;
                 var record = new ChoiceRecord();
                 record.ChoiceId = Session.Trap ? "shift_below_pass" : "shift_pass";
                 record.SceneId = SceneId.Scn_T04_Room.ToString();
@@ -192,13 +192,23 @@ namespace TwinAml
                 record.Trap = Session.Trap;
                 for (var i = 0; i < ids.Count; i++) record.ScriptChoiceIds.Add(ids[i]);
                 Session.Choices.Add(record);
+                Session.Completed = true;
+                Completed.Add(Session);
+                filed = true;
+                DashboardStore.Write(Trainee, Completed);
                 LastError = "";
                 TriageShift.Finished = true;
-                Completed.Add(Session);
-                DashboardStore.Write(Trainee, Completed);
             }
             catch (Exception err)
             {
+                if (filed)
+                {
+                    if (Completed.Count > 0 && Completed[Completed.Count - 1] == Session)
+                        Completed.RemoveAt(Completed.Count - 1);
+                    if (Session != null && Session.Choices.Count > 0)
+                        Session.Choices.RemoveAt(Session.Choices.Count - 1);
+                    if (Session != null) Session.Completed = false;
+                }
                 LastError = err.Message;
                 Debug.LogError("TwinAML shift failed: " + err.Message);
                 return;
@@ -211,16 +221,16 @@ namespace TwinAml
             _choiceShownUnixMs = NowMs();
         }
 
-        public void Commit(string choiceId)
+        public bool Commit(string choiceId)
         {
-            if (_committedThisScreen) return;
+            if (_committedThisScreen) return false;
             var choice = RoomPaths.Find(choiceId);
             if (choice == null)
             {
                 LastError = "Unknown choice " + choiceId + ".";
-                return;
+                ShowChoiceError();
+                return false;
             }
-            _committedThisScreen = true;
             if (Session == null || Session.Script == null)
             {
                 var topic = SceneCatalog.TopicOf(choice.Next);
@@ -229,9 +239,12 @@ namespace TwinAml
             }
             if (Session == null || Session.Script == null)
             {
-                Go(SceneId.Scn_Branch_Lobby);
-                return;
+                if (string.IsNullOrEmpty(LastError))
+                    LastError = "The case file did not load.";
+                ShowChoiceError();
+                return false;
             }
+            var filed = false;
             try
             {
                 var played = EffectApplier.Play(Session.Script, choice.ScriptChoices);
@@ -258,16 +271,35 @@ namespace TwinAml
                     record.ScriptChoiceIds.Add(choice.ScriptChoices[i]);
                 Session.Choices.Add(record);
                 Session.Completed = true;
-                LastError = "";
                 Completed.Add(Session);
+                filed = true;
                 DashboardStore.Write(Trainee, Completed);
+                LastError = "";
             }
             catch (Exception err)
             {
+                if (filed)
+                {
+                    if (Completed.Count > 0 && Completed[Completed.Count - 1] == Session)
+                        Completed.RemoveAt(Completed.Count - 1);
+                    if (Session != null && Session.Choices.Count > 0)
+                        Session.Choices.RemoveAt(Session.Choices.Count - 1);
+                    if (Session != null) Session.Completed = false;
+                }
                 LastError = err.Message;
                 Debug.LogError("TwinAML choice failed: " + err.Message);
+                ShowChoiceError();
+                return false;
             }
+            _committedThisScreen = true;
             Go(choice.Next);
+            return true;
+        }
+
+        void ShowChoiceError()
+        {
+            if (SceneCatalog.IsBranchRoom(Current)) return;
+            ScreenBuilder.Build(Current);
         }
 
         public int TrapCount()

@@ -27,6 +27,7 @@ namespace TwinAml
         public string String;
         public List<JsonValue> Array;
         public List<JsonMember> Object;
+        public Dictionary<string, JsonValue> Map;
 
         public static JsonValue Null()
         {
@@ -48,6 +49,7 @@ namespace TwinAml
         {
             value = null;
             if (Kind != JsonKind.Object || Object == null) return false;
+            if (Map != null) return Map.TryGetValue(key, out value);
             for (var i = 0; i < Object.Count; i++)
             {
                 if (Object[i].Key == key)
@@ -77,9 +79,12 @@ namespace TwinAml
             if (Kind == JsonKind.Object && Object != null)
             {
                 copy.Object = new List<JsonMember>(Object.Count);
+                copy.Map = new Dictionary<string, JsonValue>(Object.Count);
                 for (var i = 0; i < Object.Count; i++)
                 {
-                    copy.Object.Add(new JsonMember(Object[i].Key, Object[i].Value.Clone()));
+                    var cloned = Object[i].Value.Clone();
+                    copy.Object.Add(new JsonMember(Object[i].Key, cloned));
+                    copy.Map[Object[i].Key] = cloned;
                 }
             }
             return copy;
@@ -217,11 +222,12 @@ namespace TwinAml
             {
                 _index++;
                 var members = new List<JsonMember>();
+                var map = new Dictionary<string, JsonValue>();
                 SkipSpace();
                 if (Peek('}'))
                 {
                     _index++;
-                    return new JsonValue { Kind = JsonKind.Object, Object = members };
+                    return new JsonValue { Kind = JsonKind.Object, Object = members, Map = map };
                 }
                 while (true)
                 {
@@ -231,6 +237,7 @@ namespace TwinAml
                     Expect(':');
                     var value = ReadValue();
                     members.Add(new JsonMember(key, value));
+                    map[key] = value;
                     SkipSpace();
                     if (Peek('}'))
                     {
@@ -239,7 +246,7 @@ namespace TwinAml
                     }
                     Expect(',');
                 }
-                return new JsonValue { Kind = JsonKind.Object, Object = members };
+                return new JsonValue { Kind = JsonKind.Object, Object = members, Map = map };
             }
 
             JsonValue ReadArray()

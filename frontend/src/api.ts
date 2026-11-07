@@ -16,6 +16,7 @@ export type Rule = {
   when: string;
   then: string;
   note: string;
+  flags?: string[];
 };
 
 export type Choice = {
@@ -106,6 +107,10 @@ export type Evidence = {
   customer_id?: string;
 };
 
+export function isAbortError(err: unknown): boolean {
+  return err instanceof Error && err.name === "AbortError";
+}
+
 async function read<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(path, {
     ...init,
@@ -127,8 +132,8 @@ async function read<T>(path: string, init?: RequestInit): Promise<T> {
   return (await response.json()) as T;
 }
 
-export function fetchCases() {
-  return read<{ cases: CaseRow[] }>("/cases");
+export function fetchCases(signal?: AbortSignal) {
+  return read<{ cases: CaseRow[] }>("/cases", { signal });
 }
 
 export function openSession(caseId: string) {
@@ -138,21 +143,30 @@ export function openSession(caseId: string) {
   });
 }
 
-export function fetchSession(sessionId: string) {
-  return read<SessionView>(`/sessions/${sessionId}`);
+export function fetchSession(sessionId: string, signal?: AbortSignal) {
+  return read<SessionView>(`/sessions/${encodeURIComponent(sessionId)}`, {
+    signal,
+    cache: "no-store",
+  });
 }
 
-export function fetchSessions() {
-  return read<{ sessions: SessionSummary[] }>("/sessions");
+export function fetchSessions(signal?: AbortSignal) {
+  return read<{ sessions: SessionSummary[] }>("/sessions", {
+    signal,
+    cache: "no-store",
+  });
 }
 
 export function submitChoice(sessionId: string, choiceId: string) {
-  return read<SessionView>(`/sessions/${sessionId}/decisions`, {
+  return read<SessionView>(`/sessions/${encodeURIComponent(sessionId)}/decisions`, {
     method: "POST",
     body: JSON.stringify({ choice_id: choiceId }),
   });
 }
 
-export function fetchEvidence(sessionId: string) {
-  return read<Evidence>(`/sessions/${sessionId}/evidence`);
+export function fetchEvidence(sessionId: string, signal?: AbortSignal) {
+  return read<Evidence>(`/sessions/${encodeURIComponent(sessionId)}/evidence`, {
+    signal,
+    cache: "no-store",
+  });
 }
