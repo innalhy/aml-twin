@@ -12,6 +12,34 @@ namespace TwinAml.EditorTools
 
         static TwinAmlProjectSetup()
         {
+            // #region agent log
+            try
+            {
+                var textType = typeof(UnityEngine.UI.Text);
+                var eventType = typeof(UnityEngine.EventSystems.EventSystem);
+                var payload = "{\"sessionId\":\"9eacb3\",\"runId\":\"post-fix\",\"hypothesisId\":\"A\",\"location\":\"TwinAmlProjectSetup.cs:ctor\",\"message\":\"ugui types resolved\",\"data\":{\"textAssembly\":\""
+                    + textType.Assembly.GetName().Name
+                    + "\",\"eventAssembly\":\""
+                    + eventType.Assembly.GetName().Name
+                    + "\",\"textType\":\""
+                    + textType.FullName
+                    + "\",\"eventType\":\""
+                    + eventType.FullName
+                    + "\"},\"timestamp\":"
+                    + System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                    + "}\n";
+                System.IO.File.AppendAllText("/Users/lihauyin/Downloads/VS Code/aml-twin/.cursor/debug-9eacb3.log", payload);
+            }
+            catch (System.Exception ex)
+            {
+                var payload = "{\"sessionId\":\"9eacb3\",\"runId\":\"post-fix\",\"hypothesisId\":\"A\",\"location\":\"TwinAmlProjectSetup.cs:ctor\",\"message\":\"ugui types missing\",\"data\":{\"error\":\""
+                    + ex.GetType().Name
+                    + "\"},\"timestamp\":"
+                    + System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                    + "}\n";
+                try { System.IO.File.AppendAllText("/Users/lihauyin/Downloads/VS Code/aml-twin/.cursor/debug-9eacb3.log", payload); } catch { }
+            }
+            // #endregion
             EditorApplication.delayCall += Sync;
         }
 
