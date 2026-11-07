@@ -5,7 +5,13 @@ This page freezes how a future twin state machine applies `twin_patch` and `choi
 Inventory below covers every example script in [`data/cases/`](../data/cases/README.md):
 
 - `01-deepfake-hk-001.example.json`
-- the ten `hk-*.example.json` files
+- the ten `hk-*.example.json` files numbered `02`–`11`
+- `12-starlight-onboard-001.example.json` (`hk-starlight-onboard-001`), the Topic 3 onboarding lesson
+- `13-alert-triage-shift-001.example.json` (`alert-triage-shift-001`), the Topic 4 alert shift
+
+The use-counts in the tables below were taken across the first eleven files. Case 12 uses the same key grammar. It does not add a suffix. On top of those counts it writes: one scene `phase`, `kyc.status`, `kyc.beneficial_owner` (`undisclosed`), `kyc.address_proof` (`mismatch`), `kyc.source_of_funds` (`unexplained`), `kyc.business_evidence` (`thin`), and `risk.flags_add`; five choice `kyc.status` values; one `account.opened`; two `account.holds`; six `risk.flags_add` (one on the scene, five on choices); one `risk.score_delta` of `35`; five outcome `phase` / `disposition` pairs. New flag values are `ADDRESS_MISMATCH`, `DOCS_ONLY`, `HIGH_RISK_GEOGRAPHY`, `OFFSHORE_LAYER`, `R1_IGNORED`, `SOF_UNCLEAR`, `UBO_UNDISCLOSED`, `VOLUME_MISMATCH`, and `YOUNG_COMPANY`. New disposition: `cdd_incomplete` (poor). `onboarding_rejected` is also used here, as on `deepfake-hk-001`.
+
+Case 13 uses the same grammar and does not add a suffix. Its choices write `risk.flags_add`, `risk.score_delta` (`20`, `10`, or `0`), and replace `kyc.status` and `triage.last`. The parent `triage` is on `initial_twin_state`. The outcome disposition is `shift_reviewed`, which means the six choices were written down. The Unity room grades that shift separately. Decision nodes in file 13 have no `twin_patch`.
 
 The machine is not built in this slice. P1-S2 implements the rules on this page. Rules in `rules[].when` stay human-readable sentences. This applier does not parse them.
 
@@ -19,7 +25,7 @@ A session has one twin. Patches accumulate on it.
    - `scene`: the node has `next`. After the patch, enter that node. The player may show the scene first. The twin does not wait for a choice.
    - `decision`: wait for one `choice_id`. Apply that choice's `effects` (skip when the object is absent). Then enter `choice.next`.
    - `outcome`: `terminal` is `true`. Stop after the patch. The session disposition is the string that patch wrote to `disposition`.
-4. **Same node, both objects.** Apply `twin_patch` first, then `effects`. No decision in these eleven files has a `twin_patch`. The order still holds if a later script adds one.
+4. **Same node, both objects.** Apply `twin_patch` first, then `effects`. No decision in these scripts has a `twin_patch`. The order still holds if a later script adds one.
 
 ```text
 twin = deepClone(script.initial_twin_state)

@@ -1,0 +1,210 @@
+{
+  "schema_version": "0.1",
+  "case_id": "hk-starlight-onboard-001",
+  "title": "星輝貿易開戶 — 實益擁有人未披露（示範劇本）",
+  "locale": "zh-Hant",
+  "summary": "合成培訓案例。星輝貿易有限公司成立約三個月，代表李先生申請公司戶口。表面股東止於一間 BVI 公司，其後再由一間塞舌爾公司持有，檔案未能核實最終自然人。地址證明與護照不符，資金來源只是一句說法，預期每月來往約港幣二百萬，並觸及銀行政策代號 HR-7 的較高風險地區。學員不應按表面文件開戶。本劇本沒有真實客戶、真實戶口或真實制裁名單。",
+  "start_node_id": "n_file",
+  "teaching": {
+    "level": "chan-1-scripted-mirror",
+    "rules_before_ai": true,
+    "case_kind": "synthetic_course",
+    "disclaimer": "Synthetic training scenario. Fictional company, fictional people, fictional jurisdiction code HR-7. Not a customer file and not a screening result.",
+    "themes": ["CDD", "beneficial ownership", "source of funds", "onboarding"],
+    "sources": [
+      {
+        "label": "FATF Recommendations (customer due diligence), as published by the Hong Kong Companies Registry",
+        "url": "https://www.cr.gov.hk/en/compliance/aml_cft/FATF/FATF_Recommendations.pdf"
+      }
+    ],
+    "acceptable_dispositions": ["edd_hold", "str_drafted", "onboarding_rejected"],
+    "poor_dispositions": ["false_positive_cleared", "cdd_incomplete"],
+    "preferred_disposition": "edd_hold"
+  },
+  "rules": [
+    {
+      "id": "R1_CDD_INCOMPLETE",
+      "when": "公司客戶的實益擁有人、資金來源或開戶授權仍未能核實",
+      "then": "do_not_open_order_edd_or_refuse",
+      "note": "不得按表面文件開戶。先識別並核實客戶與實益擁有人，並理解股權、控制權，以及業務關係的目的與性質。"
+    },
+    {
+      "id": "R2_UNEXPLAINED_FILE",
+      "when": "離岸控制鏈、交易規模或較高風險地區仍無法合理解釋",
+      "then": "escalate_and_do_not_clear",
+      "note": "懷疑不等於已經證實。加強盡職審查是第一步。解釋仍然失敗時，才上報合規並考慮拒絕建立關係。本房間只在孿生狀態寫下草擬旗標，不會向聯合財富情報組提交報告。"
+    }
+  ],
+  "initial_twin_state": {
+    "phase": "kyc_review",
+    "customer": {
+      "id": "SYN-CORP-STAR-01",
+      "display_name": "星輝貿易有限公司",
+      "segment": "corporate"
+    },
+    "file": {
+      "id": "SYN-FILE-STAR-01"
+    },
+    "kyc": {
+      "status": "incomplete",
+      "beneficial_owner": "undisclosed",
+      "address_proof": "mismatch",
+      "source_of_funds": "unexplained",
+      "business_evidence": "thin"
+    },
+    "account": {
+      "id": "SYN-ACC-STAR-01",
+      "opened": false,
+      "holds": []
+    },
+    "transactions": [],
+    "risk": {
+      "score": 58,
+      "flags": []
+    },
+    "disposition": null
+  },
+  "nodes": [
+    {
+      "id": "n_file",
+      "type": "scene",
+      "title": "公司開戶檔",
+      "prompt": "覆核合成檔 SYN-FILE-STAR-01。星輝貿易有限公司由李先生代表申請開戶。實益擁有人未披露，地址證明與護照不符，資金來源未經證明，業務證據薄弱。",
+      "next": "n_decision",
+      "twin_patch": {
+        "phase": "cdd_review",
+        "kyc.status": "still_incomplete",
+        "kyc.beneficial_owner": "undisclosed",
+        "kyc.address_proof": "mismatch",
+        "kyc.source_of_funds": "unexplained",
+        "kyc.business_evidence": "thin",
+        "risk.flags_add": [
+          "YOUNG_COMPANY",
+          "OFFSHORE_LAYER",
+          "UBO_UNDISCLOSED",
+          "SOF_UNCLEAR",
+          "VOLUME_MISMATCH",
+          "ADDRESS_MISMATCH",
+          "HIGH_RISK_GEOGRAPHY"
+        ]
+      }
+    },
+    {
+      "id": "n_decision",
+      "type": "decision",
+      "title": "是否建立這段業務關係",
+      "prompt": "規則 R1 尚未滿足。你可以開戶、只要求補文件、下令加強盡職審查、上報合規，或拒絕開戶。",
+      "choices": [
+        {
+          "id": "open_now",
+          "label": "按表面文件開戶",
+          "next": "n_out_open",
+          "rationale": "教學上的較差路徑。實益擁有人與資金來源仍未核實，規則要求不得開戶。",
+          "effects": {
+            "kyc.status": "passed",
+            "account.opened": true,
+            "risk.flags_add": ["CDD_WAIVED", "R1_IGNORED"],
+            "risk.score_delta": 35
+          }
+        },
+        {
+          "id": "request_docs",
+          "label": "只要求補充文件",
+          "next": "n_out_docs",
+          "rationale": "補文件可以是第一步，但這份檔案的股權鏈與資金來源仍未處理，不能當作盡職審查已經完成。",
+          "effects": {
+            "kyc.status": "explanation_requested",
+            "risk.flags_add": ["DOCS_ONLY"]
+          }
+        },
+        {
+          "id": "order_edd",
+          "label": "暫不開戶並進行加強盡職審查",
+          "next": "n_out_edd",
+          "rationale": "本演習希望學員採取的處理。先核實最終實益擁有人、資金來源與業務真實性。戶口維持未開立。",
+          "effects": {
+            "kyc.status": "edd_ordered",
+            "account.holds": ["outbound"],
+            "risk.flags_add": ["EDD_ORDERED"]
+          }
+        },
+        {
+          "id": "report_hold",
+          "label": "暫停開戶並上報合規",
+          "next": "n_out_report",
+          "rationale": "解釋未能消除懷疑時的合規出口。此房間只草擬旗標，不會向聯合財富情報組提交。",
+          "effects": {
+            "kyc.status": "blocked_by_rule",
+            "account.holds": ["outbound"],
+            "risk.flags_add": ["EDD_ORDERED", "STR_DRAFTED"]
+          }
+        },
+        {
+          "id": "refuse_relationship",
+          "label": "拒絕建立業務關係",
+          "next": "n_out_refuse",
+          "rationale": "無法完成盡職審查時可以拒絕。仍須記錄理由。此檔案仍有空間先做加強盡職審查。",
+          "effects": {
+            "kyc.status": "rejected",
+            "risk.flags_add": ["ONBOARDING_REJECTED"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_out_open",
+      "type": "outcome",
+      "title": "已按表面文件開戶",
+      "prompt": "戶口已開立。實益擁有人與資金來源仍未核實。規則 R1 被略過，這不是可接受的結案。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "false_positive_cleared"
+      }
+    },
+    {
+      "id": "n_out_docs",
+      "type": "outcome",
+      "title": "只要求了補充文件",
+      "prompt": "戶口未開立，但加強盡職審查沒有下令。股權鏈與資金來源仍未處理，盡職審查尚未完成。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "cdd_incomplete"
+      }
+    },
+    {
+      "id": "n_out_edd",
+      "type": "outcome",
+      "title": "先做加強盡職審查",
+      "prompt": "戶口未開立。已下令加強盡職審查，並限制關係向前推進。實益擁有人、資金來源與業務真實性仍待核實。這是本演習希望學員採取的處理。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "edd_hold"
+      }
+    },
+    {
+      "id": "n_out_report",
+      "type": "outcome",
+      "title": "暫停開戶並上報合規",
+      "prompt": "戶口未開立。合規上報旗標已寫入孿生狀態。此房間不會向聯合財富情報組提交報告。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "str_drafted"
+      }
+    },
+    {
+      "id": "n_out_refuse",
+      "type": "outcome",
+      "title": "拒絕建立業務關係",
+      "prompt": "戶口未開立，關係被拒絕。無法完成盡職審查時這是允許的出口。理由應留在紀錄上。此檔案仍可以先做加強盡職審查，再決定是否拒絕。",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "closed",
+        "disposition": "onboarding_rejected"
+      }
+    }
+  ]
+}
