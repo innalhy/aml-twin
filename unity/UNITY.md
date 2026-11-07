@@ -8,7 +8,7 @@ Phase 1 content is pre-authored. There is no live video generation and no bank c
 
 The topics wall is the flat training portal. The 3D rooms are separate scene files under `Assets/Scenes/3D/`. Open one of those files, or use **TwinAML → 3D Scenes**, then press Play. **TwinAML → Play Branch Lobby** starts in the bank lobby. Playing Boot, sign-in, the topics wall, or the dashboard opens that same lobby.
 
-Each file is one room. A navy door loads the next file. The rooms are greybox cubes, built when you press Play.
+Each file is one room. A navy door loads the next file. The rooms are furnished from primitives when you press Play: wood, carpet, glass, ceiling lights, and a view through the window. Drag the mouse to look around. Click the floor to walk. Click an object to use it. The buttons on screen are the controls. The keyboard is not part of the exercise.
 
 Bank branch, in walk order:
 
@@ -161,11 +161,11 @@ T02 B and C both end as `account_exit`, which this script lists as acceptable. T
 
 ## Topic 3 branch
 
-The branch is five scene files in `Assets/Scenes/3D/`, one room each, built in code when you press Play. Lobby, relationship desk, meeting room, file room, then the compliance office. A navy door loads the next file. The pipeline stays the built-in renderer. `Scn_T03_Branch` opens the lobby.
+The branch is five scene files in `Assets/Scenes/3D/`, one room each, built in code when you press Play. Lobby, relationship desk, meeting room, file room, then the compliance office. A navy door loads the next file. The pipeline stays the built-in renderer. `Scn_T03_Branch` opens the lobby. The case title on screen is Virtual bank branch: account-opening risk detection.
 
 The lesson on screen is English, including when the portal language is Traditional Chinese. It is written for someone new to AML. A cream panel under the top bar always says **Do this next**. **Words** defines customer, CDD, beneficial owner, red flag, source of funds, enhanced due diligence, mandate, and escalate. Each paper starts with why it matters. Each answer starts with why you asked.
 
-Hold the left mouse button to walk forward. Hold the right mouse button to walk backward. Move the mouse while a button is held to turn. Click an object to use it. Tab opens the task list. I opens notes. Esc pauses. The investigation centre uses the same mouse walk.
+Drag the mouse to look around. Click the floor to walk there. Click an object to use it. Tasks, notes, and pause are buttons on the top bar. The same mouse controls are used in the investigation centre. The keyboard is not part of either room.
 
 Rooms, in the order the coach sends you: lobby, relationship desk, meeting room, then the blue-floor compliance office. The file room holds a short CDD note. The ownership chart is the white board on the left wall of the meeting room. Follow it to a person, not only to the next company.
 
@@ -173,13 +173,13 @@ The twin is still schema 0.1. What you noticed (marks, questions, hints, time) i
 
 ## Topic 4 investigation room
 
-The investigation centre is six scene files in `Assets/Scenes/3D/`. Press Play on a file to start at that station: analyst desk, map wall, customer wall, link board, meeting table, or senior office. The room is still one greybox, built in code. `Scn_T04_Room` opens the analyst desk. The pipeline stays the built-in renderer. No extra packages.
+The investigation centre is six scene files in `Assets/Scenes/3D/`. Press Play on a file to start at that station: analyst desk, map wall, customer wall, link board, meeting table, or senior office. The room is one furnished set, built in code. `Scn_T04_Room` opens the analyst desk. The pipeline stays the built-in renderer. No extra packages. The case title on screen is Transaction monitoring room: alert triage simulation. Drag to look, click the floor to walk, and click a station or a file to use it.
 
 The room copy is English, including when the portal language is Traditional Chinese. It is written for someone new to the words. A card on arrival defines the job: an alert is activity that may not fit the customer. The four paths stay on screen.
 
 Close only when the explanation is clear and nothing suspicious remains. None of these six is that case. Ask for more information when a document can fill a real gap. Escalate when several red flags or a network remain. Draft an STR when there is reasonable suspicion of criminal proceeds or terrorist financing. Do not tell the customer. That disclosure is tipping off. The room writes a training flag. It does not contact a financial intelligence unit.
 
-How to play: hold the left mouse button to walk forward, the right mouse button to walk back, and move the mouse while a button is held to turn. Click an object to use it. Read the arrival card, sit at the desk, then open a file. The coach says to open A5, A1, or A6 before A3. Use the left rail or click the floor pads and the file cards. Inside a file, open at least two sources (payments, customer file, map, links, or screening) and write 50 characters before the four paths unlock. Mark a red flag only when you can point to it. The reason for each flag appears in the senior note after you file. Decisions stay filed. File the shift from the queue when all six are done.
+How to play: drag the mouse to look around, click the floor to walk, and click a station or a file to use it. Read the arrival card, sit at the desk, then open a file. The coach says to open A5, A1, or A6 before A3. Use the left rail or click the floor pads and the file cards. Inside a file, open at least two sources (payments, customer file, map, links, or screening) and write 50 characters before the four paths unlock. Mark a red flag only when you can point to it. The reason for each flag appears in the senior note after you file. Decisions stay filed. File the shift from the queue when all six are done.
 
 The six customers, Port Amber, Harbour, North Archive, and the sanctions sheet are training props. Brightwave Trading Ltd is the trade-payment company. It is not the Topic 3 onboarding company.
 
@@ -206,7 +206,7 @@ The meeting panel has a video slot for `media_ref` (`data/media/deepfake-hk-001/
 
 ## Language
 
-The header switches **English** and **繁體中文** with a short 繁 / EN toggle on the portal and on the exercise screens. Chinese copy is formal written Traditional Chinese for a bank compliance room, not spoken Cantonese. Script prompts stay in the Traditional Chinese of the case file either way. The embedded font is a subset of WenQuanYi Micro Hei (Apache 2.0) so those characters can draw without a local CJK install. See `Assets/Fonts/NOTICE.txt`.
+The header switches **English** and **繁體中文** with a short 繁 / EN toggle on the portal and on the exercise screens. Chinese copy is formal written Traditional Chinese for a bank compliance room, not spoken Cantonese. The three cases stay in English either way: Follow the money, the virtual bank branch, and the transaction monitoring room. Script prompts that are read from the case file stay in the language of that file. The embedded font is a subset of WenQuanYi Micro Hei (Apache 2.0) so those characters can draw without a local CJK install. See `Assets/Fonts/NOTICE.txt`.
 
 ## What this folder does not do
 

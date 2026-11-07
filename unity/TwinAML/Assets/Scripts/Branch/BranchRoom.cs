@@ -193,7 +193,7 @@ namespace TwinAml
                 Cube(folder, "Laptop", new Vector3(5.1f, 1.0f, 5.1f), new Vector3(0.42f, 0.06f, 0.3f), new Color(0.2f, 0.22f, 0.26f), true, 4);
                 Cube(folder, "Cup", new Vector3(6.1f, 0.98f, 5.45f), new Vector3(0.12f, 0.14f, 0.12f), new Color(0.85f, 0.88f, 0.9f), true);
                 RoomFinish.Seat(folder, "Seat.A", new Vector3(5.4f, 0.16f, 4.1f), navy);
-                RoomFinish.Seat(folder, "Seat.B", new Vector3(5.4f, 0.16f, 6.3f), wood);
+                RoomFinish.Seat(folder, "Seat.B", new Vector3(5.4f, 0.16f, 6.3f), wood, 180f);
                 HotCube(folder, "Chart", new Vector3(0.4f, 1.7f, 5.2f), new Vector3(0.08f, 1.35f, 1.7f), new Color(0.96f, 0.97f, 0.98f), "structure", "spot.structure");
                 return;
             }
@@ -333,7 +333,8 @@ namespace TwinAml
             var hit = GroundUnderCursor();
             if (hit.collider == null) return;
             var spot = hit.collider.GetComponentInParent<BranchHotspot>();
-            if (spot != null && hit.distance <= DoorReach)
+            var reach = Vector3.Distance(_player.transform.position, hit.point);
+            if (spot != null && reach <= DoorReach)
             {
                 PointerView.HasGoal = false;
                 Open(spot.HotspotId);

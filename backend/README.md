@@ -12,7 +12,13 @@ This process owns the training run:
 
 `rules[].when` stays a sentence. The machine records `rule_flagged` and `override` events. It does not let a model set the disposition.
 
-Sessions live in this process. A restart clears them. There is no database.
+Sessions and events are rows in `data/local/sessions.sqlite` (gitignored). A restart of this process keeps them. Workers on this same machine share that file. Do not copy the file to a second host and expect the two hosts to stay in sync.
+
+Closed sessions are deleted once `updated_at` is older than 7 days. The file keeps at most 2000 sessions. Past that cap, the oldest closed rows go first, then the oldest open rows. `GET /sessions` applies those same rules before it returns the list.
+
+Override the file, the cap, or the closed-session lifetime with `TWINAML_SESSIONS_DB`, `TWINAML_SESSION_CAP`, and `TWINAML_SESSION_TTL_HOURS`.
+
+Each request loads its own copy of a row. The player route (`GET /sessions/{id}` and the decision response) builds the node, the passed scenes, and the media check. The dashboard list and the evidence card read the twin, the teaching mark, and the event types from that copy. They do not stat media files.
 
 A Node/Hono process may serve those same routes in a later slice. `workers/api` is a legacy Cloudflare Worker scaffold, not that process, and not the demo deploy.
 
@@ -42,11 +48,13 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
 
-On a VPS, bind localhost and leave reload off:
+On a VPS, bind localhost, leave reload off, and start one process:
 
 ```bash
 uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
+
+Extra workers on this same machine share `data/local/sessions.sqlite`. One process is enough for the class.
 
 Then open `http://127.0.0.1:8000/health`.
 

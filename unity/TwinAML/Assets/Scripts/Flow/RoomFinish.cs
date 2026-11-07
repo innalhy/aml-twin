@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace TwinAml
 {
@@ -120,11 +121,12 @@ namespace TwinAml
             Block(world, "ChairBack", new Vector3(0f, 0.78f, -3.48f), new Vector3(0.52f, 0.48f, 0.06f), new Color(0.24f, 0.3f, 0.38f), 4, false);
         }
 
-        public static void Seat(Transform parent, string name, Vector3 feet, Color cloth)
+        public static void Seat(Transform parent, string name, Vector3 feet, Color cloth, float yaw = 0f)
         {
             var root = new GameObject(name);
             root.transform.SetParent(parent, false);
             root.transform.position = feet;
+            root.transform.rotation = Quaternion.Euler(0f, yaw, 0f);
             Block(root.transform, "Pad", new Vector3(0f, 0.42f, 0f), new Vector3(0.52f, 0.08f, 0.5f), cloth, 0, false);
             Block(root.transform, "Back", new Vector3(0f, 0.72f, -0.22f), new Vector3(0.52f, 0.48f, 0.07f), cloth, 0, false);
             var metal = new Color(0.35f, 0.37f, 0.4f);
@@ -252,7 +254,12 @@ namespace TwinAml
             go.transform.position = pos;
             go.transform.localScale = scale;
             var renderer = go.GetComponent<Renderer>();
-            if (renderer != null) renderer.sharedMaterial = ForStyle(color, style);
+            if (renderer != null)
+            {
+                renderer.sharedMaterial = ForStyle(color, style);
+                renderer.shadowCastingMode = solid ? ShadowCastingMode.On : ShadowCastingMode.Off;
+                renderer.receiveShadows = true;
+            }
             if (!solid)
             {
                 var collider = go.GetComponent<Collider>();

@@ -33,12 +33,12 @@ namespace TwinAml
 
         public static void Aim(Vector3 from, Vector3 look)
         {
+            HasGoal = false;
             var flat = look - from;
             flat.y = 0f;
             if (flat.sqrMagnitude < 0.0001f) return;
             Yaw = Quaternion.LookRotation(flat.normalized).eulerAngles.y;
             Pitch = 14f;
-            HasGoal = false;
         }
 
         /// <summary>

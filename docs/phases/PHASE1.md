@@ -35,7 +35,7 @@ Deploy path: **Linux VPS**. Static Vite build (`frontend/`) plus FastAPI (`backe
 - Deterministic twin state machine applying `twin_patch` and `choices[].effects` (including `risk.flags_add`, `risk.score_delta`, dotted keys as agreed in [`docs/effects.md`](../effects.md)). P1-S1 already inventories those keys across all 11 scripts.
 - Soft rule checks for each script’s teaching rules (human-readable `when` may stay non-executable; outcomes must still match that script’s teaching dispositions). The original example uses `R1_LIVENESS_TWICE` and `R2_SIGNALS_PLUS_BURST`. The other scripts use their own R1/R2 ids.
 - React scenario player + minimal compliance dashboard reading the same twin/events. The case list offers all 11 ids.
-- Persist session + events in that one API process (memory or a local file is enough for the MVP).
+- Persist session + events in `data/local/sessions.sqlite` on the API machine (one local file for this process).
 - English UI chrome; case content may stay Traditional Chinese.
 - Missing `media_ref` file → show missing-media state, do not crash the case.
 
