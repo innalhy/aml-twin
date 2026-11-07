@@ -62,6 +62,7 @@ def case_detail(case_id: str) -> dict:
             "when": rule["when"],
             "then": rule["then"],
             "note": rule.get("note", ""),
+            "flags": list(rule.get("flags") or []),
         }
         for rule in script.get("rules") or []
     ]
