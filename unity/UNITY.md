@@ -4,12 +4,39 @@ Immersive Editor face for COMP3424. The office is the training room. Wall panels
 
 Phase 1 content is pre-authored. There is no live video generation and no bank connection. Every screen says the interface is synthetic.
 
+## 3D scenes
+
+The topics wall is the flat training portal. The 3D rooms are separate scene files under `Assets/Scenes/3D/`. Open one of those files, or use **TwinAML → 3D Scenes**, then press Play. **TwinAML → Play Branch Lobby** starts in the bank lobby. Playing Boot, sign-in, the topics wall, or the dashboard opens that same lobby.
+
+Each file is one room. A navy door loads the next file. The rooms are greybox cubes, built when you press Play.
+
+Bank branch, in walk order:
+
+| File | Room |
+| --- | --- |
+| `Scn_Branch_Lobby.unity` | Lobby. The client starts here. |
+| `Scn_Branch_Desk.unity` | Relationship desk. Documents and the computer. |
+| `Scn_Branch_Meeting.unity` | Meeting room. Ownership chart. |
+| `Scn_Branch_Files.unity` | File room. Policy folder. |
+| `Scn_Branch_Compliance.unity` | Compliance office. The decision. |
+
+Investigation centre. Press Play on the file to start the camera at that station. The shift is still one room; the rail can look at the other stations.
+
+| File | Station |
+| --- | --- |
+| `Scn_Triage_Desk.unity` | Analyst desk |
+| `Scn_Triage_Map.unity` | Map wall |
+| `Scn_Triage_Profiles.unity` | Customer file wall |
+| `Scn_Triage_Links.unity` | Link board |
+| `Scn_Triage_Meeting.unity` | Meeting table |
+| `Scn_Triage_Senior.unity` | Senior office |
+
 ## Open it
 
 1. Install **Unity 2022.3 LTS** (this project was written for 2022.3.62f1). The folder on disk is now Unity 6000.6.8f1. Unity 6 can open the same folder and may ask to upgrade. Allow the upgrade if you want. Do not add a render-pipeline package unless you mean to. `UnityEngine.UI` and `UnityEngine.EventSystems` (`Text`, `Button`, `EventSystem`) come from `com.unity.ugui` 2.6.0 in `Packages/manifest.json`. That is the built-in uGUI package shipped with 6000.6.8f1. `com.unity.modules.ui` is a different module and does not contain those types.
 2. **Add** or **Open** the project folder `unity/TwinAML` (the folder that contains `Assets` and `ProjectSettings`).
 3. The pipeline is the **Built-in Render Pipeline**, so the first Play is not a pink URP screen. To move to URP later: install Universal RP, create a pipeline asset, and assign it under Project Settings → Graphics.
-4. First scene: **`Scn_Boot`**. It is scene 0 in Build Settings. Menu: **TwinAML → Play From Boot**. Or open `Assets/Scenes/Scn_Boot.unity` and press Play.
+4. First scene: **`Assets/Scenes/3D/Scn_Branch_Lobby.unity`**. It is scene 0 in Build Settings. Menu: **TwinAML → Play Branch Lobby**. Playing the topics wall opens this lobby.
 5. On the first Editor open, **TwinAML → Sync Scenes Into Build Settings** runs by itself and keeps every `Scn_*` scene in the build.
 
 Docker is not used.
@@ -18,7 +45,7 @@ Case JSON is read from `data/cases/` next to this Unity project (`Application.da
 
 ## What Play does
 
-`FlowController` is created when you press Play. It loads the scene you are in, or `Scn_Boot` if the open scene is not one of ours. UI is built in code (uGUI), so the `.unity` files only need a camera and a light. If a scene is missing from Build Settings, the same controller stays on the current scene and swaps panels. With the build list in place, it calls `SceneManager.LoadScene` for the scene id.
+`FlowController` is created when you press Play. It loads the scene you are in, or `Scn_Boot` if the open scene is not one of ours. Boot, sign-in, the topics wall, and the dashboard then load `Scn_Branch_Lobby`. UI is built in code (uGUI), so the `.unity` files only need a camera and a light. If a scene is missing from Build Settings, the same controller stays on the current scene and swaps panels. With the build list in place, it calls `SceneManager.LoadScene` for the scene id.
 
 Sign in with any display name. It is stored only in the local dashboard snapshot.
 
@@ -130,7 +157,7 @@ T02 B and C both end as `account_exit`, which this script lists as acceptable. T
 
 ## Topic 3 branch
 
-`Scn_T03_Branch` is one greybox floor, about 22 m by 16 m, built in code when you press Play. The scene file itself is a camera and a light, same as the panels. The pipeline stays the built-in renderer.
+The branch is five scene files in `Assets/Scenes/3D/`, one room each, built in code when you press Play. Lobby, relationship desk, meeting room, file room, then the compliance office. A navy door loads the next file. The pipeline stays the built-in renderer. `Scn_T03_Branch` opens the lobby.
 
 The lesson on screen is English, including when the portal language is Traditional Chinese. It is written for someone new to AML. A cream panel under the top bar always says **Do this next**. **Words** defines customer, CDD, beneficial owner, red flag, source of funds, enhanced due diligence, mandate, and escalate. Each paper starts with why it matters. Each answer starts with why you asked.
 
@@ -142,7 +169,7 @@ The twin is still schema 0.1. What you noticed (marks, questions, hints, time) i
 
 ## Topic 4 investigation room
 
-`Scn_T04_Room` is one greybox financial-crime room, built in code when you press Play. The scene file is a camera and a light. The pipeline stays the built-in renderer. No extra packages.
+The investigation centre is six scene files in `Assets/Scenes/3D/`. Press Play on a file to start at that station: analyst desk, map wall, customer wall, link board, meeting table, or senior office. The room is still one greybox, built in code. `Scn_T04_Room` opens the analyst desk. The pipeline stays the built-in renderer. No extra packages.
 
 The room copy is English, including when the portal language is Traditional Chinese. It is written for someone new to the words. A card on arrival defines the job: an alert is activity that may not fit the customer. The four paths stay on screen.
 
