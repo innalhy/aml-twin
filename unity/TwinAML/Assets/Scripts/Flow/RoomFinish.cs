@@ -40,7 +40,7 @@ namespace TwinAml
             var shader = ShaderFor();
             mat = new Material(shader);
             if (mat.HasProperty("_Color")) mat.color = color;
-            if (mat.HasProperty("_MainTex")) mat.mainTexture = Grain(color, style, key);
+            if (mat.HasProperty("_MainTex")) mat.mainTexture = Grain(style, key);
             mat.mainTextureScale = new Vector2(tile, tile);
             if (mat.HasProperty("_Glossiness")) mat.SetFloat("_Glossiness", gloss);
             if (mat.HasProperty("_Metallic")) mat.SetFloat("_Metallic", metal);
@@ -269,7 +269,7 @@ namespace TwinAml
             return _shader;
         }
 
-        static Texture2D Grain(Color color, int style, int seed)
+        static Texture2D Grain(int style, int seed)
         {
             Texture2D tex;
             if (Textures.TryGetValue(seed, out tex) && tex != null) return tex;
@@ -278,38 +278,33 @@ namespace TwinAml
             tex.wrapMode = TextureWrapMode.Repeat;
             tex.filterMode = FilterMode.Bilinear;
             var rng = new System.Random(seed == 0 ? 1 : seed);
-            var dark = Color.Lerp(color, Color.black, style == 1 ? 0.28f : 0.12f);
-            var light = Color.Lerp(color, Color.white, style == 3 ? 0.35f : 0.14f);
             for (var y = 0; y < n; y++)
             {
                 for (var x = 0; x < n; x++)
                 {
                     var noise = (float)rng.NextDouble();
-                    var t = noise;
+                    var t = 0.82f + noise * 0.16f;
                     if (style == 1)
                     {
                         var stripe = Mathf.Sin((x * 0.55f) + noise * 2.2f) * 0.5f + 0.5f;
                         var line = Mathf.Abs(Mathf.Sin(y * 0.35f + x * 0.04f));
-                        t = stripe * 0.75f + line * 0.25f;
+                        t = 0.62f + stripe * 0.28f + line * 0.1f;
                     }
                     else if (style == 2)
                     {
-                        var cell = ((x / 6) + (y / 6)) % 2 == 0 ? 0.35f : 0.65f;
-                        t = cell * 0.55f + noise * 0.45f;
+                        var cell = ((x / 6) + (y / 6)) % 2 == 0 ? 0.78f : 0.92f;
+                        t = cell + (noise - 0.5f) * 0.06f;
                     }
                     else if (style == 4)
                     {
-                        t = 0.45f + (x % 8 == 0 ? 0.25f : 0f) + noise * 0.15f;
+                        t = 0.8f + (x % 8 == 0 ? 0.12f : 0f) + noise * 0.08f;
                     }
                     else if (style == 3)
                     {
-                        t = y > n - 8 ? 0.85f : 0.25f + noise * 0.2f;
+                        t = y > n - 8 ? 1f : 0.75f + noise * 0.12f;
                     }
-                    else
-                    {
-                        t = 0.42f + noise * 0.2f;
-                    }
-                    tex.SetPixel(x, y, Color.Lerp(dark, light, Mathf.Clamp01(t)));
+                    var shade = Mathf.Clamp01(t);
+                    tex.SetPixel(x, y, new Color(shade, shade, shade));
                 }
             }
             tex.Apply(false, true);
