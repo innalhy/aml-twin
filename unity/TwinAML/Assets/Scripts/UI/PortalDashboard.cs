@@ -20,7 +20,7 @@ namespace TwinAml
         const float LeftW = 520f;
         const float CenterW = 752f;
         const float RightW = 556f;
-        const int Catalogue = 6;
+        const int Catalogue = 7;
 
         static readonly Color32 Page = new Color32(0xee, 0xf2, 0xf6, 0xff);
         static readonly Color32 Navy = new Color32(0x0d, 0x21, 0x37, 0xff);
@@ -288,7 +288,7 @@ namespace TwinAml
             var top = y + 40f;
             var cardW = (CenterW - 16f) / 2f;
             var cardH = 236f;
-            for (var i = 0; i < 5; i++)
+            for (var i = 0; i < 6; i++)
             {
                 var col = i % 2;
                 var row = i / 2;
@@ -300,7 +300,7 @@ namespace TwinAml
         static float RightColumn(RectTransform content, FlowController flow, float x, float y)
         {
             var featuredH = 268f;
-            PaintCourse(content, flow, 5, x, y, RightW, featuredH);
+            PaintCourse(content, flow, 6, x, y, RightW, featuredH);
 
             var recH = 210f;
             var rec = Card(content, "Recommended", x, y + featuredH + Gap, RightW, recH, Color.white);
@@ -335,13 +335,14 @@ namespace TwinAml
             y += leadH + 12f;
             var cardW = 608f;
             var cardH = 220f;
-            for (var i = 0; i < 6; i++)
+            var rows = (Catalogue + 2) / 3;
+            for (var i = 0; i < Catalogue; i++)
             {
                 var col = i % 3;
                 var row = i / 3;
                 PaintCourse(content, flow, i, Margin + col * (cardW + 16f), y + row * (cardH + 16f), cardW, cardH);
             }
-            return y + 2f * cardH + 16f + 28f;
+            return y + rows * cardH + (rows - 1) * 16f + 28f;
         }
 
         static float Reports(RectTransform content, FlowController flow, float y)
@@ -466,16 +467,21 @@ namespace TwinAml
             var extra = "";
             var passedT02 = TopicPassed(flow, "T02");
 
-            if (index == 0 || index == 1)
+            if (index == 0 || index == 1 || index == 2)
             {
-                var topic = index == 0 ? "T01" : "T02";
+                var topic = index == 0 ? "T01" : index == 1 ? "T02" : "T03";
                 var state = Playable(flow, topic);
                 var latest = Latest(flow, topic);
-                kicker = Locale.T(index == 0 ? "portal.t01.kicker" : "portal.t02.kicker");
-                title = Locale.T(index == 0 ? "portal.t01.title" : "portal.t02.title");
-                body = Locale.T(index == 0 ? "portal.t01.body" : "portal.t02.body");
+                kicker = Locale.T(index == 0 ? "portal.t01.kicker" : index == 1 ? "portal.t02.kicker" : "portal.t03.kicker");
+                title = Locale.T(index == 0 ? "portal.t01.title" : index == 1 ? "portal.t02.title" : "portal.t03.title");
+                body = Locale.T(index == 0 ? "portal.t01.body" : index == 1 ? "portal.t02.body" : "portal.t03.body");
                 if (latest != null && latest.LastChoice != null)
-                    extra = Locale.T("portal.score") + "  " + ScoreOf(latest) + "  ·  " + When(latest.LastChoice.ChosenUnixMs);
+                {
+                    extra = Locale.T("portal.score") + "  " + ScoreOf(latest);
+                    if (topic == "T03" && latest.LearningScore > 0)
+                        extra = Locale.T("portal.score") + "  " + latest.LearningScore + " / 100";
+                    extra += "  ·  " + When(latest.LastChoice.ChosenUnixMs);
+                }
                 if (state == 2)
                 {
                     status = Locale.T("portal.completed");
@@ -487,7 +493,7 @@ namespace TwinAml
                     status = Locale.T(state == 1 ? "portal.progressing" : "portal.notStarted");
                     if (state == 1) statusColor = Amber;
                     button = Locale.T(index == 0 ? "portal.continue" : "portal.start");
-                    if (index == 1)
+                    if (index != 0)
                     {
                         buttonBg = Orange;
                         buttonInk = OrangeInk;
@@ -496,17 +502,17 @@ namespace TwinAml
                 onClick = () =>
                 {
                     flow.StartTopic(topic);
-                    flow.Go(index == 0 ? SceneId.Scn_T01_Brief : SceneId.Scn_T02_Brief);
+                    flow.Go(index == 0 ? SceneId.Scn_T01_Brief : index == 1 ? SceneId.Scn_T02_Brief : SceneId.Scn_T03_Brief);
                 };
             }
-            else if (index == 2)
+            else if (index == 3)
             {
                 kicker = Locale.T("portal.notStarted");
                 title = Locale.T("portal.mod.tbml");
                 body = Locale.T("portal.mod.tbml.body");
                 status = Locale.T("portal.notStarted");
             }
-            else if (index == 3)
+            else if (index == 4)
             {
                 kicker = passedT02 ? Locale.T("portal.notStarted") : Locale.T("portal.locked");
                 title = Locale.T("portal.mod.rent");
@@ -514,7 +520,7 @@ namespace TwinAml
                 status = Locale.T(passedT02 ? "portal.notStarted" : "portal.locked");
                 if (!passedT02) extra = Locale.T("portal.prereq");
             }
-            else if (index == 4)
+            else if (index == 5)
             {
                 kicker = Locale.T("portal.notStarted");
                 title = Locale.T("portal.mod.controls");
@@ -531,7 +537,7 @@ namespace TwinAml
             }
 
             var card = Card(parent, "Course", x, y, w, h, Color.white);
-            Put(card, kicker, 12, FontStyle.Bold, index == 5 ? Blue : Muted, TextAnchor.UpperLeft, 16f, 14f, w - 32f, 18f);
+            Put(card, kicker, 12, FontStyle.Bold, index == 6 ? Blue : Muted, TextAnchor.UpperLeft, 16f, 14f, w - 32f, 18f);
             Put(card, title, 18, FontStyle.Bold, Ink, TextAnchor.UpperLeft, 16f, 36f, w - 32f, 48f);
             Put(card, body, 14, FontStyle.Normal, Muted, TextAnchor.UpperLeft, 16f, 88f, w - 32f, 56f);
             if (!string.IsNullOrEmpty(extra))
@@ -588,7 +594,7 @@ namespace TwinAml
                 builder.Append('\n').Append(Locale.T("field.choice")).Append(": ").Append(last.ChoiceId);
                 builder.Append("  (").Append(string.Join(" → ", last.ScriptChoiceIds.ToArray())).Append(")");
                 builder.Append('\n').Append(Locale.T("field.reaction")).Append(": ").Append(last.ReactionMs).Append(" ms");
-                builder.Append('\n').Append(Locale.T("portal.score")).Append(": ").Append(ScoreOf(session));
+                builder.Append('\n').Append(Locale.T("portal.score")).Append(": ").Append(session.LearningScore > 0 ? session.LearningScore + " / 100" : ScoreOf(session).ToString());
                 builder.Append("  ·  ").Append(When(last.ChosenUnixMs));
             }
             if (!string.IsNullOrEmpty(session.MappingNote))
@@ -602,6 +608,7 @@ namespace TwinAml
             progressing = 0;
             Mark(flow, "T01", ref done, ref progressing);
             Mark(flow, "T02", ref done, ref progressing);
+            Mark(flow, "T03", ref done, ref progressing);
             remaining = Catalogue - done - progressing;
             percent = done * 100 / Catalogue;
         }
@@ -649,6 +656,8 @@ namespace TwinAml
         {
             if (topic == "T01") return Locale.T("portal.t01.title");
             if (topic == "T02") return Locale.T("portal.t02.title");
+            if (topic == "T03") return Locale.T("portal.t03.title");
+            if (topic == "T04") return Locale.T("portal.t04.title");
             return topic ?? "";
         }
 

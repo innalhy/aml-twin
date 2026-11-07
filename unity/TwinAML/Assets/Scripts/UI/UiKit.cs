@@ -477,6 +477,10 @@ namespace TwinAml
                 case SceneId.Scn_T02_Decision: return 3;
                 case SceneId.Scn_T02_FeedbackA:
                 case SceneId.Scn_T02_FeedbackPass: return 4;
+                case SceneId.Scn_T03_Brief: return 0;
+                case SceneId.Scn_T03_Feedback: return 2;
+                case SceneId.Scn_T04_Brief: return 0;
+                case SceneId.Scn_T04_Report: return 2;
                 default: return -1;
             }
         }
@@ -486,6 +490,10 @@ namespace TwinAml
             var name = id.ToString();
             if (name.IndexOf("_T01_", StringComparison.Ordinal) >= 0)
                 return new[] { "step.t01.1", "step.t01.2", "step.t01.3", "step.t01.4", "step.t01.5" };
+            if (name.IndexOf("_T04_", StringComparison.Ordinal) >= 0)
+                return new[] { "step.t04.1", "step.t04.2", "step.t04.3" };
+            if (name.IndexOf("_T03_", StringComparison.Ordinal) >= 0)
+                return new[] { "step.t03.1", "step.t03.2", "step.t03.3" };
             return new[] { "step.t02.1", "step.t02.2", "step.t02.3", "step.t02.4", "step.t02.5" };
         }
 

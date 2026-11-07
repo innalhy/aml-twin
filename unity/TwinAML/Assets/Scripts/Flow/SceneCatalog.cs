@@ -21,7 +21,13 @@ namespace TwinAml
         Scn_T02_Chain,
         Scn_T02_Decision,
         Scn_T02_FeedbackA,
-        Scn_T02_FeedbackPass
+        Scn_T02_FeedbackPass,
+        Scn_T03_Brief,
+        Scn_T03_Branch,
+        Scn_T03_Feedback,
+        Scn_T04_Brief,
+        Scn_T04_Room,
+        Scn_T04_Report
     }
 
     public static class SceneCatalog
@@ -47,7 +53,13 @@ namespace TwinAml
             SceneId.Scn_T02_Chain,
             SceneId.Scn_T02_Decision,
             SceneId.Scn_T02_FeedbackA,
-            SceneId.Scn_T02_FeedbackPass
+            SceneId.Scn_T02_FeedbackPass,
+            SceneId.Scn_T03_Brief,
+            SceneId.Scn_T03_Branch,
+            SceneId.Scn_T03_Feedback,
+            SceneId.Scn_T04_Brief,
+            SceneId.Scn_T04_Room,
+            SceneId.Scn_T04_Report
         };
 
         public static bool TryParse(string sceneName, out SceneId id)
@@ -69,6 +81,8 @@ namespace TwinAml
             var name = id.ToString();
             if (name.IndexOf("_T01_", System.StringComparison.Ordinal) >= 0) return "T01";
             if (name.IndexOf("_T02_", System.StringComparison.Ordinal) >= 0) return "T02";
+            if (name.IndexOf("_T03_", System.StringComparison.Ordinal) >= 0) return "T03";
+            if (name.IndexOf("_T04_", System.StringComparison.Ordinal) >= 0) return "T04";
             return "";
         }
     }
