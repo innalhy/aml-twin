@@ -56,10 +56,10 @@ namespace TwinAml
             Score = null;
         }
 
-        public static void Begin(JsonValue script)
+        public static void Begin(string caseId)
         {
             Clear();
-            Alerts = TriageLibrary.Read(script);
+            Alerts = TriageLibrary.Read(CaseLibrary.LoadAlerts(caseId));
             for (var i = 0; i < Alerts.Count; i++)
             {
                 var work = new AlertWork();

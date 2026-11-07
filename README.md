@@ -121,10 +121,13 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 │   │   └── sessions.py
 │   └── tests/
 ├── data/
-│   ├── cases/                   # index: data/cases/README.md
+│   ├── cases/                   # index.json names every script
 │   │   ├── README.md
+│   │   ├── index.json
 │   │   ├── 01-deepfake-hk-001.example.json
-│   │   └── 02-…13-*.example.json
+│   │   ├── 13-alert-triage-shift-001.example.json
+│   │   ├── alert-triage-shift-001.alerts.json
+│   │   └── 02-…12-*.example.json
 │   ├── case-flow/               # human-review flows, zh-Hant and English
 │   │   ├── 01-deepfake-executive-impersonation.zh-Hant.md
 │   │   ├── 01-deepfake-executive-impersonation.en.md
@@ -133,7 +136,8 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 │       └── .gitkeep
 ├── packages/
 │   └── schemas/
-│       └── script.schema.json
+│       ├── script.schema.json
+│       └── alerts.schema.json
 └── scripts/
     ├── validate-cases.mjs       # schema + effect-key check, then the path test
     ├── apply-effects.mjs        # schema 0.1 patch apply used by the path test
@@ -168,7 +172,7 @@ npm install
 npm run dev
 ```
 
-Open `http://127.0.0.1:5173`. The page lists every case script. Start one, choose a branch, then open Dashboard. The Vite dev server proxies `/health`, `/cases`, and `/sessions` to port 8000, so start the API first. A missing `media_ref` file is shown as missing media. It does not stop the case.
+Open `http://127.0.0.1:5173`. The page lists every case script. Start one, choose a branch, then open Dashboard. A second click while that start or choice is in flight is ignored, and leaving the case list before Start finishes does not open the player. The dashboard lists every session the API returns. The Vite dev server proxies `/health`, `/cases`, and `/sessions` to port 8000, so start the API first. A missing `media_ref` file is shown as missing media. It does not stop the case.
 
 `npm run build` in `frontend/` typechecks, then writes `dist/`. Do not commit `dist/`.
 

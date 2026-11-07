@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   fetchCases,
   fetchEvidence,
   fetchSession,
   fetchSessions,
+  isAbortError,
   openSession,
   submitChoice,
   type CaseRow,
@@ -25,6 +26,20 @@ function useHash() {
 
 function go(hash: string) {
   window.location.hash = hash;
+}
+
+function catalogIsCurrent() {
+  const hash = window.location.hash;
+  return hash === "" || hash === "#" || hash === "#/";
+}
+
+function hashId(hash: string, prefix: string) {
+  const raw = hash.slice(prefix.length);
+  try {
+    return decodeURIComponent(raw);
+  } catch {
+    return raw;
+  }
 }
 
 function ruleFollowLabel(value: boolean | null) {
@@ -51,10 +66,10 @@ function MediaNote({ node }: { node: ScriptNode }) {
 function App() {
   const hash = useHash();
   if (hash.startsWith("#/play/")) {
-    return <Player sessionId={hash.slice("#/play/".length)} />;
+    return <Player sessionId={hashId(hash, "#/play/")} />;
   }
   if (hash.startsWith("#/dashboard/")) {
-    return <DashboardDetail sessionId={hash.slice("#/dashboard/".length)} />;
+    return <DashboardDetail sessionId={hashId(hash, "#/dashboard/")} />;
   }
   if (hash.startsWith("#/dashboard")) {
     return <Dashboard />;
@@ -66,23 +81,44 @@ function Catalog() {
   const [cases, setCases] = useState<CaseRow[] | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState("");
+  const starting = useRef(false);
+  const alive = useRef(true);
 
   useEffect(() => {
-    fetchCases()
-      .then((body) => setCases(body.cases))
-      .catch(() => setError("The API is not answering. Start it on port 8000, then refresh."));
+    alive.current = true;
+    const controller = new AbortController();
+    fetchCases(controller.signal)
+      .then((body) => {
+        if (!controller.signal.aborted) setCases(body.cases);
+      })
+      .catch((err) => {
+        if (isAbortError(err) || controller.signal.aborted) return;
+        setError("The API is not answering. Start it on port 8000, then refresh.");
+      });
+    return () => {
+      alive.current = false;
+      controller.abort();
+    };
   }, []);
 
   async function start(caseId: string) {
+    if (starting.current) return;
+    starting.current = true;
     setBusy(caseId);
     setError("");
     try {
       const session = await openSession(caseId);
-      go(`#/play/${session.session_id}`);
+      if (alive.current && catalogIsCurrent()) {
+        go(`#/play/${encodeURIComponent(session.session_id)}`);
+        return;
+      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not open a session");
-      setBusy("");
+      if (alive.current) {
+        setError(err instanceof Error ? err.message : "Could not open a session");
+      }
     }
+    starting.current = false;
+    if (alive.current) setBusy("");
   }
 
   return (
@@ -123,22 +159,55 @@ function Player({ sessionId }: { sessionId: string }) {
   const [session, setSession] = useState<SessionView | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [seenId, setSeenId] = useState(sessionId);
+  const choosing = useRef(false);
+  const alive = useRef(true);
+  const sessionIdRef = useRef(sessionId);
+  sessionIdRef.current = sessionId;
+
+  if (seenId !== sessionId) {
+    setSeenId(sessionId);
+    setSession(null);
+    setError("");
+    setBusy(false);
+    choosing.current = false;
+  }
 
   useEffect(() => {
-    fetchSession(sessionId)
-      .then(setSession)
-      .catch(() => setError("That session is not on this API process."));
+    alive.current = true;
+    const controller = new AbortController();
+    fetchSession(sessionId, controller.signal)
+      .then((next) => {
+        if (!controller.signal.aborted) setSession(next);
+      })
+      .catch((err) => {
+        if (isAbortError(err) || controller.signal.aborted) return;
+        setError("That session is not on this API process.");
+      });
+    return () => {
+      alive.current = false;
+      controller.abort();
+    };
   }, [sessionId]);
 
   async function choose(choiceId: string) {
+    if (choosing.current) return;
+    choosing.current = true;
+    const requested = sessionIdRef.current;
     setBusy(true);
     setError("");
     try {
-      setSession(await submitChoice(sessionId, choiceId));
+      const next = await submitChoice(requested, choiceId);
+      if (alive.current && sessionIdRef.current === requested) setSession(next);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Decision failed");
+      if (alive.current && sessionIdRef.current === requested) {
+        setError(err instanceof Error ? err.message : "Decision failed");
+      }
     } finally {
-      setBusy(false);
+      if (sessionIdRef.current === requested) {
+        choosing.current = false;
+        if (alive.current) setBusy(false);
+      }
     }
   }
 
@@ -166,7 +235,7 @@ function Player({ sessionId }: { sessionId: string }) {
         </p>
         <p className="nav">
           <a href="#/">Cases</a>
-          <a href={`#/dashboard/${session.session_id}`}>Dashboard</a>
+          <a href={`#/dashboard/${encodeURIComponent(session.session_id)}`}>Dashboard</a>
         </p>
         {error ? <p className="error">{error}</p> : null}
         {session.passed_scenes.map((scene) => (
@@ -242,6 +311,9 @@ function Player({ sessionId }: { sessionId: string }) {
             <li key={rule.id}>
               <code>{rule.id}</code>
               <span>{rule.when}</span>
+              {rule.flags && rule.flags.length > 0 ? (
+                <span className="note">{rule.flags.join(", ")}</span>
+              ) : null}
             </li>
           ))}
         </ul>
@@ -255,9 +327,16 @@ function Dashboard() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetchSessions()
-      .then((body) => setRows(body.sessions))
-      .catch(() => setError("The API is not answering. Start it on port 8000, then refresh."));
+    const controller = new AbortController();
+    fetchSessions(controller.signal)
+      .then((body) => {
+        if (!controller.signal.aborted) setRows(body.sessions);
+      })
+      .catch((err) => {
+        if (isAbortError(err) || controller.signal.aborted) return;
+        setError("The API is not answering. Start it on port 8000, then refresh.");
+      });
+    return () => controller.abort();
   }, []);
 
   return (
@@ -269,6 +348,7 @@ function Dashboard() {
         <a href="#/">Cases</a>
       </p>
       {error ? <p className="error">{error}</p> : null}
+      {rows === null && !error ? <p className="note">Loading sessions…</p> : null}
       {rows && rows.length === 0 ? <p className="note">No sessions yet. Start a case first.</p> : null}
       <ul className="cases">
         {(rows ?? []).map((row) => (
@@ -285,7 +365,7 @@ function Dashboard() {
                 {row.flags.length ? ` · ${row.flags.join(", ")}` : ""}
               </span>
             </div>
-            <a className="button" href={`#/dashboard/${row.session_id}`}>
+            <a className="button" href={`#/dashboard/${encodeURIComponent(row.session_id)}`}>
               Open
             </a>
           </li>
@@ -299,17 +379,39 @@ function DashboardDetail({ sessionId }: { sessionId: string }) {
   const [session, setSession] = useState<SessionView | null>(null);
   const [card, setCard] = useState<Evidence | null>(null);
   const [error, setError] = useState("");
+  const [cardError, setCardError] = useState("");
+  const [seenId, setSeenId] = useState(sessionId);
+
+  if (seenId !== sessionId) {
+    setSeenId(sessionId);
+    setSession(null);
+    setCard(null);
+    setError("");
+    setCardError("");
+  }
 
   useEffect(() => {
-    Promise.all([fetchSession(sessionId), fetchEvidence(sessionId)])
-      .then(([next, evidence]) => {
-        setSession(next);
-        setCard(evidence);
+    const controller = new AbortController();
+    fetchSession(sessionId, controller.signal)
+      .then((next) => {
+        if (!controller.signal.aborted) setSession(next);
       })
-      .catch(() => setError("That session is not on this API process."));
+      .catch((err) => {
+        if (isAbortError(err) || controller.signal.aborted) return;
+        setError("That session is not on this API process.");
+      });
+    fetchEvidence(sessionId, controller.signal)
+      .then((evidence) => {
+        if (!controller.signal.aborted) setCard(evidence);
+      })
+      .catch((err) => {
+        if (isAbortError(err) || controller.signal.aborted) return;
+        setCardError("The audit card is not on this API process.");
+      });
+    return () => controller.abort();
   }, [sessionId]);
 
-  if (!session || !card) {
+  if (!session) {
     return (
       <main>
         <p className="eyebrow">Dashboard</p>
@@ -330,7 +432,7 @@ function DashboardDetail({ sessionId }: { sessionId: string }) {
       </p>
       <p className="nav">
         <a href="#/dashboard">All sessions</a>
-        <a href={`#/play/${session.session_id}`}>Player</a>
+        <a href={`#/play/${encodeURIComponent(session.session_id)}`}>Player</a>
       </p>
       {error ? <p className="error">{error}</p> : null}
       <dl className="facts">
@@ -357,11 +459,19 @@ function DashboardDetail({ sessionId }: { sessionId: string }) {
       </dl>
       <article className="card">
         <h2>Audit card</h2>
-        <p>{card.mirrored}</p>
-        <p className="note">
-          {card.event_count} events · {card.override_count === 1 ? "1 override" : `${card.override_count} overrides`}
-          {card.customer_id ? ` · customer ${card.customer_id}` : ""}
-        </p>
+        {card ? (
+          <>
+            <p>{card.mirrored}</p>
+            <p className="note">
+              {card.event_count} events · {card.override_count === 1 ? "1 override" : `${card.override_count} overrides`}
+              {card.customer_id ? ` · customer ${card.customer_id}` : ""}
+            </p>
+          </>
+        ) : cardError ? (
+          <p className="error">{cardError}</p>
+        ) : (
+          <p className="note">Loading audit card…</p>
+        )}
       </article>
       <h2>Events</h2>
       <ol className="events">

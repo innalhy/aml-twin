@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/innalhy/aml-twin/packages/schemas/script.schema.json",
   "title": "TwinAML case script",
-  "description": "Minimal contract for a COMP3424 case. initial_twin_state is the mirror. nodes are the script. Rule predicates are human-readable strings until the state machine exists. effects and twin_patch are patches. Apply rules for schema 0.1 are in docs/effects.md.",
+  "description": "Minimal contract for a COMP3424 case. initial_twin_state is the mirror and stays an open object because each case carries its own fields. nodes are the script. Node ids are unique: scripts/validate-cases.mjs and the API loader both reject duplicates. Rule when text is for a person to read. rules[].flags names the mirror flags that stand for that rule, and those flags must appear in a flags_add on the same file. effects and twin_patch are patches. Apply rules for schema 0.1 are in docs/effects.md. A script file is at most 24 KiB. Topic 4 alert dossiers live in a sibling *.alerts.json file, not under teaching.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -10,6 +10,8 @@
     "case_id",
     "title",
     "start_node_id",
+    "teaching",
+    "rules",
     "initial_twin_state",
     "nodes"
   ],
@@ -38,7 +40,38 @@
     },
     "teaching": {
       "type": "object",
-      "additionalProperties": true
+      "additionalProperties": false,
+      "required": ["level", "rules_before_ai", "acceptable_dispositions", "poor_dispositions"],
+      "properties": {
+        "level": { "type": "string", "minLength": 1 },
+        "rules_before_ai": { "type": "boolean" },
+        "case_kind": {
+          "enum": ["public_record_inspired", "synthetic_course", "course_example"]
+        },
+        "disclaimer": { "type": "string" },
+        "themes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "sources": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/source" }
+        },
+        "acceptable_dispositions": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "poor_dispositions": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "incomplete_dispositions": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "preferred_disposition": { "type": "string", "minLength": 1 }
+      }
     },
     "rules": {
       "type": "array",
@@ -47,7 +80,8 @@
       }
     },
     "initial_twin_state": {
-      "type": "object"
+      "type": "object",
+      "description": "Open on purpose. Each case mirror has its own keys. The patch grammar in docs/effects.md is what checks writes against this object."
     },
     "nodes": {
       "type": "array",
@@ -58,17 +92,33 @@
     }
   },
   "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "minLength": 1 }
+      }
+    },
     "rule": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "when", "then"],
+      "required": ["id", "when", "then", "flags"],
       "properties": {
-        "id": { "type": "string" },
+        "id": { "type": "string", "minLength": 1 },
         "when": {
           "type": "string",
-          "description": "Readable predicate. Not evaluated by this schema."
+          "minLength": 1,
+          "description": "Readable predicate. The machine does not evaluate it."
         },
-        "then": { "type": "string" },
+        "then": { "type": "string", "minLength": 1 },
+        "flags": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Mirror flags written by flags_add when this rule is in play. The machine records rule_flagged from this list. It does not parse when."
+        },
         "note": { "type": "string" }
       }
     },
@@ -77,7 +127,7 @@
       "additionalProperties": false,
       "required": ["id", "type", "title"],
       "properties": {
-        "id": { "type": "string" },
+        "id": { "type": "string", "minLength": 1 },
         "type": {
           "enum": ["scene", "decision", "outcome"]
         },
@@ -97,7 +147,36 @@
           "type": "array",
           "items": { "$ref": "#/$defs/choice" }
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "type": { "const": "scene" } },
+            "required": ["type"]
+          },
+          "then": { "required": ["next"] }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "decision" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["choices"],
+            "properties": { "choices": { "minItems": 1 } }
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "outcome" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["terminal"],
+            "properties": { "terminal": { "const": true } }
+          }
+        }
+      ]
     },
     "choice": {
       "type": "object",

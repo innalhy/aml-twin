@@ -25,12 +25,14 @@
       "id": "R1_TRADE_DOC_GAP",
       "when": "trade.shipment_evidence 缺失，且付款人不是發票上的買家",
       "then": "require_edd_before_release",
+      "flags": ["TRADE_DOC_GAP", "R1_OVERRIDDEN"],
       "note": "放行前必須加強審查。不得把缺口當成單據在途。規則先於任何模型分數。"
     },
     {
       "id": "R2_TBML_PASSTHROUGH",
       "when": "貿易文件仍不合格，且同日拆往無貿易關係的戶口",
       "then": "require_str_or_exit_or_freeze",
+      "flags": ["PASS_THROUGH", "R2_IGNORED"],
       "note": "不得結為一般商業時差。覆寫必須留在事件軌上。"
     }
   ],

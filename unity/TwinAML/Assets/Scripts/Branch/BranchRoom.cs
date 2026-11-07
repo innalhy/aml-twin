@@ -29,8 +29,12 @@ namespace TwinAml
         bool _notesOpen;
         BranchHotspot _lit;
         Text _prompt;
+        Text _clock;
         InputField _reason;
         GameObject _ui;
+        int _clockSec = -1;
+        string _promptKey;
+        readonly List<BranchHotspot> _spots = new List<BranchHotspot>();
 
         public static void Enter()
         {
@@ -66,6 +70,7 @@ namespace TwinAml
             BuildZoneProps(world.transform, zone);
             BuildPeople(zone);
             EnsureEvents();
+            GetComponentsInChildren(false, _spots);
             if (!BranchProgress.GuideDismissed) _page = "guide";
             RebuildUi();
         }
@@ -298,8 +303,14 @@ namespace TwinAml
         {
             var typing = _reason != null && _reason.isFocused;
 
-            if (_player != null && _player.transform.position.y < -1.5f)
+            if (_body != null && _player != null && _player.transform.position.y < -1.5f)
+            {
+                _body.enabled = false;
                 _player.transform.position = new Vector3(2.2f, 0.4f, 1.8f);
+                _body.enabled = true;
+                PointerView.HasGoal = false;
+                _vy = 0f;
+            }
 
             var click = PointerView.TakeClick();
             if (_page == "" && _body != null && _player != null && _cam != null)
@@ -324,8 +335,15 @@ namespace TwinAml
                 _lit = near;
                 if (_lit != null) _lit.SetLit(true);
             }
-            if (_prompt != null)
-                _prompt.text = near == null ? BranchCopy.T("hud.controls") : BranchCopy.T("hud.use") + "  ·  " + BranchCopy.T(near.PromptKey);
+            var key = near == null ? "" : near.PromptKey;
+            if (_prompt != null && key != _promptKey)
+            {
+                _promptKey = key;
+                _prompt.text = near == null
+                    ? BranchCopy.T("hud.controls")
+                    : BranchCopy.T("hud.use") + "  ·  " + BranchCopy.T(key);
+            }
+            TickClock();
         }
 
         void UseOrWalk()
@@ -353,17 +371,28 @@ namespace TwinAml
         BranchHotspot Nearest()
         {
             if (_player == null) return null;
-            var spots = GetComponentsInChildren<BranchHotspot>();
             BranchHotspot best = null;
             var bestDistance = PromptReach;
-            for (var i = 0; i < spots.Length; i++)
+            var origin = _player.transform.position;
+            for (var i = 0; i < _spots.Count; i++)
             {
-                var distance = Vector3.Distance(_player.transform.position, spots[i].transform.position);
+                var spot = _spots[i];
+                if (spot == null) continue;
+                var distance = Vector3.Distance(origin, spot.transform.position);
                 if (distance >= bestDistance) continue;
                 bestDistance = distance;
-                best = spots[i];
+                best = spot;
             }
             return best;
+        }
+
+        void TickClock()
+        {
+            if (_clock == null) return;
+            var sec = Mathf.Max(0, BranchProgress.ElapsedMs() / 1000);
+            if (sec == _clockSec) return;
+            _clockSec = sec;
+            _clock.text = BranchCopy.T("hud.next") + "   ·   " + ZoneName() + "   " + Clock();
         }
 
         void Open(string id)
@@ -421,7 +450,7 @@ namespace TwinAml
 
         void EnsureEvents()
         {
-            if (FindObjectOfType<EventSystem>() != null) return;
+            if (FindAnyObjectByType<EventSystem>() != null) return;
             var events = new GameObject("TwinAML.EventSystem");
             events.transform.SetParent(transform, false);
             events.AddComponent<EventSystem>();
@@ -432,6 +461,9 @@ namespace TwinAml
         {
             _reason = null;
             _prompt = null;
+            _clock = null;
+            _promptKey = null;
+            _clockSec = -1;
             if (_ui != null)
             {
                 _ui.name = "UI.Old";
@@ -477,7 +509,8 @@ namespace TwinAml
             {
                 var coach = HudBox(_ui.transform, 24f, 76f, 1872f, 132f);
                 coach.gameObject.AddComponent<Image>().color = new Color(1f, 0.97f, 0.90f, 0.96f);
-                Label(coach, BranchCopy.T("hud.next") + "   ·   " + ZoneName() + "   " + Clock(), 16, FontStyle.Bold, UiKit.OrangeInk, TextAnchor.MiddleLeft, 20f, 10f, 1830f, 28f);
+                _clock = Label(coach, "", 16, FontStyle.Bold, UiKit.OrangeInk, TextAnchor.MiddleLeft, 20f, 10f, 1830f, 28f);
+                TickClock();
                 Label(coach, BranchCopy.T(BranchProgress.CoachKey()), 20, FontStyle.Normal, UiKit.Ink, TextAnchor.UpperLeft, 20f, 42f, 1830f, 80f);
             }
 
@@ -820,6 +853,9 @@ namespace TwinAml
         {
             var y = Title(panel, BranchProgress.ActionLabel(_choice), 24f);
             y = Body(panel, BranchCopy.T("decide.confirm"), y, 56f);
+            var flow = FlowController.Instance;
+            if (flow != null && !string.IsNullOrEmpty(flow.LastError))
+                y = Body(panel, flow.LastError, y, 72f);
             Label(panel, BranchCopy.T("hud.reason"), 16, FontStyle.Bold, UiKit.Muted, TextAnchor.MiddleLeft, 48f, y, 944f, 28f);
             y += 32f;
             var field = PanelBox(panel, 48f, y, 944f, 110f);
@@ -894,7 +930,7 @@ namespace TwinAml
         {
             if (_reason != null) BranchProgress.Reason = _reason.text ?? "";
             var flow = FlowController.Instance;
-            if (flow != null) flow.Commit(_choice);
+            if (flow != null && !flow.Commit(_choice)) RebuildUi();
         }
 
         void CloseButton(RectTransform panel)
@@ -967,16 +1003,10 @@ namespace TwinAml
 
         RaycastHit GroundUnderCursor()
         {
-            var hits = Physics.RaycastAll(_cam.ScreenPointToRay(Input.mousePosition), 40f);
-            System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
-            for (var i = 0; i < hits.Length; i++)
-            {
-                var col = hits[i].collider;
-                if (col == null) continue;
-                if (_player != null && (col.transform == _player.transform || col.transform.IsChildOf(_player.transform))) continue;
-                return hits[i];
-            }
-            return default(RaycastHit);
+            RaycastHit hit;
+            if (!PointerView.FirstHit(_cam, _player != null ? _player.transform : null, out hit))
+                return default(RaycastHit);
+            return hit;
         }
 
         static Transform Folder(Transform parent, string name)
@@ -1111,14 +1141,14 @@ namespace TwinAml
         public void Remember()
         {
             _renderer = GetComponent<Renderer>();
-            if (_renderer == null) return;
-            BaseColor = _renderer.material.color;
+            if (_renderer == null || _renderer.sharedMaterial == null) return;
+            BaseColor = _renderer.sharedMaterial.color;
         }
 
         public void SetLit(bool on)
         {
             if (_renderer == null) return;
-            _renderer.material.color = on ? Color.Lerp(BaseColor, Color.white, 0.5f) : BaseColor;
+            RoomFinish.Tint(_renderer, on ? Color.Lerp(BaseColor, Color.white, 0.5f) : BaseColor);
         }
     }
 }

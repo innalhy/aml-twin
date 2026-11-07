@@ -24,12 +24,14 @@
       "id": "R1_NO_SOURCE",
       "when": "客戶無法提供與檔案相符的資金來源",
       "then": "do_not_clear",
+      "flags": ["NO_SOURCE", "R1_OVERRIDDEN"],
       "note": "朋友換匯不是來源證明。不得在來源空白時結案。"
     },
     {
       "id": "R2_CASH_AND_OTC",
       "when": "入帳的主要去向是現金提取加上場外加密貨幣交易商",
       "then": "require_str_or_freeze_or_exit",
+      "flags": ["CASH_AND_OTC", "R2_IGNORED"],
       "note": "不得當個人投資結案。規則先於任何模型分數。"
     }
   ],

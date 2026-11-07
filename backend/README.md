@@ -4,13 +4,13 @@ This folder is the COMP3424 demo API. On the Linux VPS it runs behind nginx or C
 
 This process owns the training run:
 
-- load a script from `data/cases/`
+- load a script named by `data/cases/index.json`
 - open a session (`POST /sessions` with `case_id`)
 - accept a trainee decision (`POST /sessions/{id}/decisions`)
 - update the twin with the schema 0.1 patches in [`docs/effects.md`](../docs/effects.md)
 - append events on that same session
 
-`rules[].when` stays a sentence. The machine records `rule_flagged` and `override` events. It does not let a model set the disposition.
+`rules[].when` stays a sentence. `rules[].flags` is the list of mirror flags that stand for that rule. The machine records `rule_flagged` from that list. It does not let a model set the disposition.
 
 Sessions and events are rows in `data/local/sessions.sqlite` (gitignored). A restart of this process keeps them. Workers on this same machine share that file. Do not copy the file to a second host and expect the two hosts to stay in sync.
 
@@ -27,8 +27,8 @@ A Node/Hono process may serve those same routes in a later slice. `workers/api` 
 | Method | Path | Role |
 | --- | --- | --- |
 | `GET` | `/health` | `{"status":"ok","service":"twinaml-api"}` |
-| `GET` | `/cases` | Every `data/cases/*.example.json` script |
-| `GET` | `/cases/{case_id}` | Title, summary, and the human-readable rules |
+| `GET` | `/cases` | Every script named by `data/cases/index.json` |
+| `GET` | `/cases/{case_id}` | Title, summary, and the human-readable rules, including each rule's `flags` |
 | `POST` | `/sessions` | Body `{"case_id":"..."}`. Returns the waiting node, twin, and events |
 | `GET` | `/sessions` | Recent sessions for the dashboard |
 | `GET` | `/sessions/{id}` | One session, including ordered events |

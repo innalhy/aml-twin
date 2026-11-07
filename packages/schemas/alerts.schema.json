@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/innalhy/aml-twin/packages/schemas/alerts.schema.json",
+  "title": "TwinAML alert dossier",
+  "description": "Topic 4 investigation-room dossiers. This file is not a case script. The playable choices stay on the schema 0.1 script. correct, why, and script_choice are the room grade. The web API does not serve this file.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "case_id", "alerts"],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "case_id": { "type": "string", "minLength": 1 },
+    "alerts": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": { "$ref": "#/$defs/alert" }
+    }
+  },
+  "$defs": {
+    "alert": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "customer_name",
+        "customer_id",
+        "customer_type",
+        "occupation",
+        "amount_label",
+        "amount_hkd",
+        "priority",
+        "priority_rank",
+        "deadline",
+        "deadline_rank",
+        "risk_tag",
+        "region",
+        "trigger",
+        "guide",
+        "sample_note",
+        "kyc",
+        "geography_notes",
+        "screening",
+        "news",
+        "review_steps",
+        "transactions",
+        "red_flags",
+        "map_places",
+        "map_flows",
+        "link_nodes",
+        "link_edges",
+        "correct",
+        "acceptable",
+        "why",
+        "script_choice"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "customer_name": { "type": "string", "minLength": 1 },
+        "customer_id": { "type": "string", "minLength": 1 },
+        "customer_type": { "type": "string", "minLength": 1 },
+        "occupation": { "type": "string", "minLength": 1 },
+        "amount_label": { "type": "string", "minLength": 1 },
+        "amount_hkd": { "type": "number", "minimum": 0 },
+        "priority": { "type": "string", "minLength": 1 },
+        "priority_rank": { "type": "integer" },
+        "deadline": { "type": "string", "minLength": 1 },
+        "deadline_rank": { "type": "integer" },
+        "risk_tag": { "type": "string", "minLength": 1 },
+        "region": { "type": "string", "minLength": 1 },
+        "trigger": { "type": "string", "minLength": 1 },
+        "guide": { "type": "string", "minLength": 1 },
+        "sample_note": { "type": "string", "minLength": 1 },
+        "kyc": { "type": "array", "items": { "type": "string" } },
+        "geography_notes": { "type": "array", "items": { "type": "string" } },
+        "screening": { "type": "array", "items": { "type": "string" } },
+        "news": { "type": "array", "items": { "type": "string" } },
+        "review_steps": { "type": "array", "items": { "type": "string" } },
+        "transactions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/transaction" }
+        },
+        "red_flags": {
+          "type": "array",
+          "minItems": 3,
+          "items": { "$ref": "#/$defs/red_flag" }
+        },
+        "map_places": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/board_node" }
+        },
+        "map_flows": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/board_edge" }
+        },
+        "link_nodes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/board_node" }
+        },
+        "link_edges": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/board_edge" }
+        },
+        "correct": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/decision_key" }
+        },
+        "acceptable": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/decision_key" }
+        },
+        "why": { "$ref": "#/$defs/four" },
+        "script_choice": { "$ref": "#/$defs/four" }
+      }
+    },
+    "decision_key": {
+      "enum": ["close", "more", "escalate", "report"]
+    },
+    "four": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["close", "more", "escalate", "report"],
+      "properties": {
+        "close": { "type": "string", "minLength": 1 },
+        "more": { "type": "string", "minLength": 1 },
+        "escalate": { "type": "string", "minLength": 1 },
+        "report": { "type": "string", "minLength": 1 }
+      }
+    },
+    "transaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["when", "what", "amount", "detail"],
+      "properties": {
+        "when": { "type": "string" },
+        "what": { "type": "string" },
+        "amount": { "type": "string" },
+        "detail": { "type": "string" }
+      }
+    },
+    "red_flag": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "why", "evidence"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "why": { "type": "string", "minLength": 1 },
+        "evidence": { "type": "string", "minLength": 1 }
+      }
+    },
+    "board_node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "x", "y"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "label": { "type": "string" },
+        "kind": { "type": "string" },
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "hot": { "type": "boolean" }
+      }
+    },
+    "board_edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "to"],
+      "properties": {
+        "from": { "type": "string", "minLength": 1 },
+        "to": { "type": "string", "minLength": 1 },
+        "label": { "type": "string" }
+      }
+    }
+  }
+}

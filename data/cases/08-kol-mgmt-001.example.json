@@ -24,12 +24,14 @@
       "id": "R1_FRONT_COMPANY",
       "when": "聲稱的網紅管理業務沒有合約或員工紀錄，且入帳來自零售第三者",
       "then": "require_edd_or_exit",
+      "flags": ["NO_BUSINESS_RECORD", "R1_OVERRIDDEN"],
       "note": "不得在沒有合約時記成品牌合作。規則先於任何模型分數。"
     },
     {
       "id": "R2_FRAUD_MIX",
       "when": "入帳話術混合電話、投資或網戀模式，並快速轉出",
       "then": "require_str_or_freeze_or_exit",
+      "flags": ["FRAUD_MIX", "R2_IGNORED"],
       "note": "不得把這些入帳改記為品牌合作後結案。"
     }
   ],

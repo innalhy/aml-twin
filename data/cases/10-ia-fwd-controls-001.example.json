@@ -25,12 +25,14 @@
       "id": "R1_PREMIUM_PAYER",
       "when": "保費付款人不是保單持有人，也不是已核實的親屬或僱主",
       "then": "verify_before_accept",
+      "flags": ["THIRD_PARTY_PREMIUM", "R1_OVERRIDDEN"],
       "note": "核實前不得入帳。規則先於任何模型分數。"
     },
     {
       "id": "R2_PEP_AND_STR_LOG",
       "when": "政治人物篩查缺失，或可疑交易工作紙沒有處置",
       "then": "remediate_controls_and_escalate",
+      "flags": ["PEP_GAP", "STR_WORKSHEET_OPEN", "R2_IGNORED"],
       "note": "不得當成歷史例外關閉。補篩查與處理工作紙都要留在事件軌上。"
     }
   ],

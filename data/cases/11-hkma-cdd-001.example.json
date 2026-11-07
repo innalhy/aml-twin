@@ -25,12 +25,14 @@
       "id": "R1_CDD_INCOMPLETE",
       "when": "實益擁有人缺失或地址證明過期",
       "then": "restrict_and_refresh_cdd",
+      "flags": ["CDD_INCOMPLETE", "R1_OVERRIDDEN"],
       "note": "不得提高限額或擴大關係。規則先於任何模型分數。"
     },
     {
       "id": "R2_MONITORING_AND_STR",
       "when": "持續監測曾被關閉，且關閉期間警報已達內部門檻",
       "then": "require_str_and_control_fix",
+      "flags": ["MONITORING_OFF", "ALERTS_UNREPORTED", "MONITORING_BACKDATED"],
       "note": "不得事後補一筆已審視來結案。上報與管控修復都要留在事件軌上。"
     }
   ],

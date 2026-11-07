@@ -10,6 +10,7 @@ namespace TwinAml
     public static class RoomFinish
     {
         static Shader _shader;
+        static MaterialPropertyBlock _tint;
         static readonly System.Collections.Generic.Dictionary<int, Material> Cache =
             new System.Collections.Generic.Dictionary<int, Material>();
         static readonly System.Collections.Generic.Dictionary<int, Texture2D> Textures =
@@ -31,15 +32,26 @@ namespace TwinAml
             return Surface(color, gloss, metal, style, tile, emit);
         }
 
+        /// <summary>
+        /// Tints one renderer without cloning its shared material.
+        /// </summary>
+        public static void Tint(Renderer renderer, Color color)
+        {
+            if (renderer == null) return;
+            if (_tint == null) _tint = new MaterialPropertyBlock();
+            _tint.Clear();
+            _tint.SetColor("_Color", color);
+            renderer.SetPropertyBlock(_tint);
+        }
+
         public static Material Surface(Color color, float gloss, float metal, int style, float tile, bool emit)
         {
-            var bytes = (Color32)color;
-            var key = (bytes.r << 24) | (bytes.g << 16) | (bytes.b << 8) | (style & 15);
-            key = key ^ (int)(gloss * 100f) << 4;
+            var key = MaterialKey((Color32)color, style, gloss, metal, tile, emit);
             Material mat;
             if (Cache.TryGetValue(key, out mat) && mat != null) return mat;
             var shader = ShaderFor();
             mat = new Material(shader);
+            mat.hideFlags = HideFlags.HideAndDontSave;
             if (mat.HasProperty("_Color")) mat.color = color;
             if (mat.HasProperty("_MainTex")) mat.mainTexture = Grain(style, key);
             mat.mainTextureScale = new Vector2(tile, tile);
@@ -218,6 +230,7 @@ namespace TwinAml
             stem.transform.localScale = new Vector3(0.06f, 0.22f, 0.06f);
             var stemRenderer = stem.GetComponent<Renderer>();
             if (stemRenderer != null) stemRenderer.sharedMaterial = ForStyle(new Color(0.2f, 0.32f, 0.18f), 0);
+            StripCollider(stem);
             var leaves = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             leaves.name = "Leaves";
             leaves.transform.SetParent(parent, false);
@@ -225,6 +238,15 @@ namespace TwinAml
             leaves.transform.localScale = new Vector3(0.42f, 0.32f, 0.42f);
             var leafRenderer = leaves.GetComponent<Renderer>();
             if (leafRenderer != null) leafRenderer.sharedMaterial = ForStyle(new Color(0.22f, 0.42f, 0.24f), 0);
+            StripCollider(leaves);
+        }
+
+        static void StripCollider(GameObject go)
+        {
+            var collider = go.GetComponent<Collider>();
+            if (collider == null) return;
+            collider.enabled = false;
+            Object.Destroy(collider);
         }
 
         static void Leg(Transform parent, Vector3 pos)
@@ -267,6 +289,19 @@ namespace TwinAml
             }
         }
 
+        static int MaterialKey(Color32 bytes, int style, float gloss, float metal, float tile, bool emit)
+        {
+            unchecked
+            {
+                var key = ((int)bytes.r << 24) | ((int)bytes.g << 16) | ((int)bytes.b << 8) | (style & 15);
+                key = (key * 397) ^ (int)(gloss * 1000f);
+                key = (key * 397) ^ (int)(metal * 1000f);
+                key = (key * 397) ^ (int)(tile * 100f);
+                if (emit) key = (key * 397) ^ 1;
+                return key;
+            }
+        }
+
         static Shader ShaderFor()
         {
             if (_shader != null) return _shader;
@@ -282,6 +317,7 @@ namespace TwinAml
             if (Textures.TryGetValue(seed, out tex) && tex != null) return tex;
             const int n = 48;
             tex = new Texture2D(n, n, TextureFormat.RGB24, false);
+            tex.hideFlags = HideFlags.HideAndDontSave;
             tex.wrapMode = TextureWrapMode.Repeat;
             tex.filterMode = FilterMode.Bilinear;
             var rng = new System.Random(seed == 0 ? 1 : seed);

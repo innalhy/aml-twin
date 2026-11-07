@@ -45,7 +45,7 @@ Unity does not open a 6000.x project in an older Editor. 2022.3 LTS is not a sup
 
 Docker is not used.
 
-Case JSON is read from `data/cases/` next to this Unity project (`Application.dataPath/../../../data/cases`). Do not copy the scripts into the Unity folder. A missing file is shown on the brief panel. The exercise does not invent a second script format.
+Case JSON is read from `data/cases/` next to this Unity project (`Application.dataPath/../../../data/cases`). The room loads `data/cases/index.json` and then the file that index names for the topic's `case_id`. Topic 4 also reads `alert-triage-shift-001.alerts.json` from that same index. Do not copy the scripts into the Unity folder. A missing file is shown on the brief panel. The exercise does not invent a second script format.
 
 ## What Play does
 
@@ -123,7 +123,7 @@ flowchart TD
 | T01 Deepfake | `deepfake-hk-001` | `data/cases/01-deepfake-hk-001.example.json` | Trap = confirm the payment. Pass = withhold trust and report (暫停並舉報). |
 | T02 Mule and mixer | `hk-greythunder-mule-001` | `data/cases/06-greythunder-mule-001.example.json` | A = miss. B / C / D = pass: enhanced due diligence, outbound hold, draft STR. |
 | T03 Company onboarding | `hk-starlight-onboard-001` | `data/cases/12-starlight-onboard-001.example.json` | Open on the surface file, or documents only = miss. Enhanced due diligence, compliance referral, or refusal = pass. The lesson on screen is English. |
-| T04 Alert triage | `alert-triage-shift-001` | `data/cases/13-alert-triage-shift-001.example.json` | One English investigation room, six synthetic alerts. Close any file, or draft an STR on the name-only screening hit, and the shift fails. A pass is a room score of 60 or more with neither of those. `shift_reviewed` only means the six choices were written down. |
+| T04 Alert triage | `alert-triage-shift-001` | `data/cases/13-alert-triage-shift-001.example.json` and `data/cases/alert-triage-shift-001.alerts.json` | One English investigation room, six synthetic alerts. The script holds the choices. The alerts file holds the dossiers and the room grade. Close any file, or draft an STR on the name-only screening hit, and the shift fails. A pass is a room score of 60 or more with neither of those. `shift_reviewed` only means the six choices were written down. |
 
 T02 uses the mule-cluster script. The chain panel also draws the mixer picture from [`data/case-flow/02-crypto-mixers-mule-accounts.en.md`](../data/case-flow/02-crypto-mixers-mule-accounts.en.md). That picture is teaching context. It is not a second script, and it does not add effect keys. `hk-justicegate-crypto-001` is the nearby cash-and-OTC script and is not the one this room plays.
 

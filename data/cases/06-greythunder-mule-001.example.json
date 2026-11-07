@@ -24,12 +24,14 @@
       "id": "R1_MULE_CLUSTER",
       "when": "戶口與群組共用收款戶口或登入裝置",
       "then": "require_edd_before_release",
+      "flags": ["MULE_CLUSTER", "R1_OVERRIDDEN"],
       "note": "放行前必須加強審查。幫朋友不是群組事實的反證。"
     },
     {
       "id": "R2_FRAUD_PROCEEDS",
       "when": "入帳話術符合假冒機構或投資得益，並隨即彙集轉出",
       "then": "require_str_or_freeze_or_exit",
+      "flags": ["FRAUD_PROCEEDS", "R2_IGNORED"],
       "note": "不得接受「朋友的投資」作為結案理由。規則先於任何模型分數。"
     }
   ],

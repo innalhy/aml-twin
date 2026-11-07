@@ -192,8 +192,9 @@ if (mule.case_id !== "hk-greythunder-mule-001") {
 }
 
 const triage = load("13-alert-triage-shift-001.example.json");
-const alerts = triage.teaching.alerts;
-if (!Array.isArray(alerts) || alerts.length !== 6) {
+const alertPack = load("alert-triage-shift-001.alerts.json");
+const alerts = alertPack.alerts;
+if (alertPack.case_id !== triage.case_id || !Array.isArray(alerts) || alerts.length !== 6) {
   failed += 1;
   console.error("FAIL triage alert count");
 } else {

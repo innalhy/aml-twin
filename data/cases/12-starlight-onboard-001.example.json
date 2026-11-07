@@ -26,12 +26,14 @@
       "id": "R1_CDD_INCOMPLETE",
       "when": "公司客戶的實益擁有人、資金來源或開戶授權仍未能核實",
       "then": "do_not_open_order_edd_or_refuse",
+      "flags": ["UBO_UNDISCLOSED", "SOF_UNCLEAR", "R1_IGNORED"],
       "note": "不得按表面文件開戶。先識別並核實客戶與實益擁有人，並理解股權、控制權，以及業務關係的目的與性質。"
     },
     {
       "id": "R2_UNEXPLAINED_FILE",
       "when": "離岸控制鏈、交易規模或較高風險地區仍無法合理解釋",
       "then": "escalate_and_do_not_clear",
+      "flags": ["OFFSHORE_LAYER", "VOLUME_MISMATCH", "HIGH_RISK_GEOGRAPHY"],
       "note": "懷疑不等於已經證實。加強盡職審查是第一步。解釋仍然失敗時，才上報合規並考慮拒絕建立關係。本房間只在孿生狀態寫下草擬旗標，不會向聯合財富情報組提交報告。"
     }
   ],

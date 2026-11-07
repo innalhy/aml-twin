@@ -19,7 +19,7 @@ flowchart LR
   twin --> player["Web scenario player"]
 ```
 
-1. **Case** — `data/cases/*.json` loads one synthetic case.
+1. **Case** — `data/cases/index.json` names one synthetic case. The API loads that script and checks its sha256.
 2. **Script** — `nodes` are the scenario: scenes, decisions, and outcomes. `start_node_id` is the entry.
 3. **Decision** — the trainee picks one `choice` on a decision node.
 4. **Twin** — the state machine applies that choice's `effects` and the node's `twin_patch` to the twin state. Rules judge first. A model may explain only after that.
@@ -42,7 +42,7 @@ sequenceDiagram
   Note over Web: Player and dashboard read the same twin
 ```
 
-Those routes live on the FastAPI process: `GET /cases`, `POST /sessions`, `GET /sessions`, `GET /sessions/{id}`, `POST /sessions/{id}/decisions`, and `GET /sessions/{id}/evidence`. `GET /health` stays. The legacy Worker still exposes only the health check. It is not where sessions go.
+Those routes live on the FastAPI process: `GET /cases`, `POST /sessions`, `GET /sessions`, `GET /sessions/{id}`, `POST /sessions/{id}/decisions`, and `GET /sessions/{id}/evidence`. `GET /health` stays. The legacy Worker still exposes only the health check. It is not where sessions go. The web client sends `cache: no-store` on `/sessions` reads. A second click while a start or a decision is in flight is ignored, and the case list changes the hash only while that list is still showing. The dashboard renders every session `GET /sessions` returns. The audit card loads after the session view.
 
 ## What exists now
 
