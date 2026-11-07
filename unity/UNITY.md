@@ -6,7 +6,7 @@ Phase 1 content is pre-authored. There is no live video generation and no bank c
 
 ## Open it
 
-1. Install **Unity 2022.3 LTS** (this project was written for 2022.3.62f1). Unity 6 can open the same folder and may ask to upgrade. Allow the upgrade if you want. Do not add a render-pipeline package unless you mean to.
+1. Install **Unity 2022.3 LTS** (this project was written for 2022.3.62f1). The folder on disk is now Unity 6000.6.8f1. Unity 6 can open the same folder and may ask to upgrade. Allow the upgrade if you want. Do not add a render-pipeline package unless you mean to. `UnityEngine.UI` and `UnityEngine.EventSystems` (`Text`, `Button`, `EventSystem`) come from `com.unity.ugui` 2.6.0 in `Packages/manifest.json`. That is the built-in uGUI package shipped with 6000.6.8f1. `com.unity.modules.ui` is a different module and does not contain those types.
 2. **Add** or **Open** the project folder `unity/TwinAML` (the folder that contains `Assets` and `ProjectSettings`).
 3. The pipeline is the **Built-in Render Pipeline**, so the first Play is not a pink URP screen. To move to URP later: install Universal RP, create a pipeline asset, and assign it under Project Settings → Graphics.
 4. First scene: **`Scn_Boot`**. It is scene 0 in Build Settings. Menu: **TwinAML → Play From Boot**. Or open `Assets/Scenes/Scn_Boot.unity` and press Play.
