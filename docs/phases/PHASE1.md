@@ -1,6 +1,6 @@
 # Phase 1 — MVP (Chan Level 1)
 
-**Status:** P1-S1 (script contract freeze) is done. Later slices stay unstarted until the owner names one.  
+**Status:** P1-S1 through P1-S8 are done. The web player lists every script in `data/cases/`, including the two Editor-room scripts.  
 **Audience:** coding agents.  
 **Chan level:** Level 1 — scripted cases, offline-style mirror of `initial_twin_state`, not a live bank.
 
@@ -66,9 +66,11 @@ Deploy path: **Linux VPS**. Static Vite build (`frontend/`) plus FastAPI (`backe
 - **Done:** [`docs/effects.md`](../effects.md) lists every effect key in `deepfake-hk-001` and the ten `hk-*.example.json` scripts, and the apply order (clone `initial_twin_state`, apply `twin_patch`, then apply choice `effects`). `node scripts/validate-cases.mjs` checks the files and plays the eight `deepfake-hk-001` terminal paths in [`scripts/deepfake-paths.test.mjs`](../../scripts/deepfake-paths.test.mjs).
 
 ### P1-S2 — Twin state machine (library)
-- Pure TypeScript module under `workers/api` (or `packages/`) that: clone initial state → apply node patch → apply choice effects → advance node.
+- Pure library that: clone initial state → apply node patch → apply choice effects → advance node.
+- The demo API is FastAPI, so the library is `backend/app/effects.py` and `backend/app/machine.py`. `scripts/apply-effects.mjs` stays the schema-check applier.
 - Unit tests for the original example’s accept / redo liveness / reject / R1 override / STR / EDD / false-positive paths, and for each other script’s terminal dispositions.
 - **Done when:** tests cover terminal dispositions for all 11 scripts without HTTP.
+- **Done:** `backend/tests/test_machine.py` plays every terminal path in `data/cases/*.example.json` and checks the eight `deepfake-hk-001` endings.
 
 ### P1-S3 — Session store + API routes
 - Routes (suggested):
@@ -116,10 +118,12 @@ Deploy path: **Linux VPS**. Static Vite build (`frontend/`) plus FastAPI (`backe
 ## Done slices
 
 - [x] P1-S1
-- [ ] P1-S2
-- [ ] P1-S3
-- [ ] P1-S4
-- [ ] P1-S5
-- [ ] P1-S6
-- [ ] P1-S7
-- [ ] P1-S8
+- [x] P1-S2 — `backend/app/machine.py`, `backend/tests/test_machine.py`
+- [x] P1-S3 — `POST /sessions`, `GET /sessions`, `GET /sessions/{id}`, `POST /sessions/{id}/decisions`, `GET /health`
+- [x] P1-S4 — case list and scenario player in `frontend/`
+- [x] P1-S5 — ordered events and `teaching.poor_path` on the session
+- [x] P1-S6 — dashboard reads the same sessions
+- [x] P1-S7 — [`docs/deploy-vps.md`](../deploy-vps.md) proxies `/health`, `/cases`, and `/sessions`
+- [x] P1-S8 — [`docs/audit-evidence.md`](../audit-evidence.md) and the README run steps
+
+`GET /sessions/{id}/evidence` is a short audit card for one run. It is the same session, not a second store. The player also offers `hk-starlight-onboard-001` and `alert-triage-shift-001`, the Editor-room scripts already in `data/cases/`.

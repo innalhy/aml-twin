@@ -2,7 +2,7 @@
 
 Synthetic training scripts for the TwinAML demo. Each file is a Chan Level 1 case: `schema_version` `0.1`, validated against [`packages/schemas/script.schema.json`](../../packages/schemas/script.schema.json).
 
-`initial_twin_state` is the mirror. `nodes` are the script (`scene`, `decision`, `outcome`). `rules[].when` is a sentence for a person to read until a state machine exists. `effects` and `twin_patch` are patches. How the future machine applies them is frozen in [`docs/effects.md`](../../docs/effects.md). Rules decide the compliance outcome (rules-before-AI). A human override is an event: the scripts mark it with a flag such as `R1_OVERRIDDEN` instead of deleting the rule.
+`initial_twin_state` is the mirror. `nodes` are the script (`scene`, `decision`, `outcome`). `rules[].when` is a sentence for a person to read. The API machine applies `effects` and `twin_patch` as frozen in [`docs/effects.md`](../../docs/effects.md). It does not parse `when`. Rules decide the compliance outcome (rules-before-AI). A human override is an event: the scripts mark it with a flag such as `R1_OVERRIDDEN` instead of deleting the rule.
 
 The trainee role in every script is a fictional Hong Kong financial-institution AML or compliance officer. Decisions are customer due diligence, enhanced due diligence, a draft suspicious transaction report, an outbound hold or freeze recommendation, relationship or policy exit, or control remediation. The scripts do not simulate police raids.
 

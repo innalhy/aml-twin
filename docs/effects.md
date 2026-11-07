@@ -13,7 +13,7 @@ The use-counts in the tables below were taken across the first eleven files. Cas
 
 Case 13 uses the same grammar and does not add a suffix. Its choices write `risk.flags_add`, `risk.score_delta` (`20`, `10`, or `0`), and replace `kyc.status` and `triage.last`. The parent `triage` is on `initial_twin_state`. The outcome disposition is `shift_reviewed`, which means the six choices were written down. The Unity room grades that shift separately. Decision nodes in file 13 have no `twin_patch`.
 
-The machine is not built in this slice. P1-S2 implements the rules on this page. Rules in `rules[].when` stay human-readable sentences. This applier does not parse them.
+The demo API applies these keys in `backend/app/effects.py`. Rules in `rules[].when` stay human-readable sentences. The machine does not parse them. A new `R`-flag or an override choice is recorded as an event. The disposition string still comes from the outcome patch.
 
 ## Apply order
 
@@ -159,6 +159,14 @@ From the repo root:
 node scripts/validate-cases.mjs
 ```
 
-The script checks each `data/cases/*.example.json` file against `packages/schemas/script.schema.json`, checks that `start_node_id` and every `next` point at a node, and checks that every patch key follows the grammar above against that file's `initial_twin_state`. It then runs [`scripts/deepfake-paths.test.mjs`](../scripts/deepfake-paths.test.mjs), which clones `initial_twin_state` and plays all eight terminal paths of `deepfake-hk-001`. That file can also be run on its own. The state machine is still P1-S2. If `ajv` is not already installed, the script installs `ajv@8` under the OS temp directory. It does not add a dependency to this repo. GitHub Actions runs the same command on push and pull request (`.github/workflows/cases.yml`).
+The script checks each `data/cases/*.example.json` file against `packages/schemas/script.schema.json`, checks that `start_node_id` and every `next` point at a node, and checks that every patch key follows the grammar above against that file's `initial_twin_state`. It then runs [`scripts/deepfake-paths.test.mjs`](../scripts/deepfake-paths.test.mjs), which clones `initial_twin_state` and plays all eight terminal paths of `deepfake-hk-001`. That file can also be run on its own. The API machine is checked separately:
+
+```bash
+cd backend
+source .venv/bin/activate
+PYTHONPATH=. python -m unittest discover -s tests -v
+```
+
+If `ajv` is not already installed, the Node script installs `ajv@8` under the OS temp directory. It does not add a dependency to this repo. GitHub Actions runs `node scripts/validate-cases.mjs` on push and pull request (`.github/workflows/cases.yml`).
 
 The Unity training room applies this same order in the Editor for two topics. The choice lists are checked by [`scripts/unity-room-paths.test.mjs`](../scripts/unity-room-paths.test.mjs). See [`unity/UNITY.md`](../unity/UNITY.md). That room does not add effect keys.

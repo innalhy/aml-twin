@@ -42,20 +42,20 @@ sequenceDiagram
   Note over Web: Player and dashboard read the same twin
 ```
 
-The session routes in that diagram are not implemented yet. FastAPI currently exposes `GET /health` only. Those routes will be added on that VPS API process, not in a second service. The legacy Worker exposes the same health check and is not where those routes go for this demo.
+Those routes live on the FastAPI process: `GET /cases`, `POST /sessions`, `GET /sessions`, `GET /sessions/{id}`, `POST /sessions/{id}/decisions`, and `GET /sessions/{id}/evidence`. `GET /health` stays. The legacy Worker still exposes only the health check. It is not where sessions go.
 
 ## What exists now
 
 | Piece | Status |
 | --- | --- |
 | Script JSON and JSON Schema | Present. Eleven example cases. Effect keys are frozen in [`effects.md`](effects.md). |
-| FastAPI | `GET /health` in `backend/`. This is the demo API. |
+| FastAPI | `backend/`. Health, case list, sessions, decisions, events, and the twin. |
 | Legacy Cloudflare Worker | `GET /health` in `workers/api`. Scaffold only. Not the demo deploy. |
-| State machine, sessions, event log | Not built. P1-S2 is still unstarted. |
-| Web player and dashboard | Not built. `frontend/` is a placeholder that builds to static files for the VPS. |
+| State machine, sessions, event log | `backend/app/machine.py`. Sessions stay in that process. |
+| Web player and dashboard | `frontend/`. Both read the API twin. |
 | `data/media/` | Only `.gitkeep` is tracked. `media_ref` values in a script point at local files. |
 
-A rule's `when` text is a sentence for a person to read. The schema does not execute it. When the state machine exists, decide then whether to replace those sentences with executable conditions. Until then, do not invent a second script format beside this one.
+A rule's `when` text is a sentence for a person to read. The schema does not execute it, and the state machine does not either. Outcomes still come from the script's patches. Do not invent a second script format beside this one.
 
 ## Where state lives
 
@@ -66,12 +66,12 @@ The session twin starts as a deep clone of `initial_twin_state`. Patches then ac
 - **Decision effects**: after that patch, apply the chosen `choices[].effects`. Dotted keys write nested fields (`kyc.status`). `risk.flags_add` appends onto `risk.flags`. `risk.score_delta` adds to `risk.score`. Any other key replaces the value at that path.
 - **Outcome**: `type: outcome` and `terminal: true`. The outcome `twin_patch` writes `disposition`, and the session ends.
 
-Media is not in git. The `media_ref` on `n_intake` is `data/media/deepfake-hk-001/kyc-clip.mp4`, and that file is excluded by `.gitignore`. When the clip is missing, the player should later show a missing-file state. It should not abort the whole case.
+Media is not in git. The `media_ref` on `n_intake` is `data/media/deepfake-hk-001/kyc-clip.mp4`, and that file is excluded by `.gitignore`. When the clip is missing, the player shows a missing-file state and the case continues.
 
 ## Clients
 
-- **Now**: `frontend/`, React + Vite + TypeScript, static files on the Linux VPS. The target UI is a scenario player plus a simple dashboard that reads twin state.
-- **Editor room**: [`unity/UNITY.md`](../unity/UNITY.md). In scope. Unity 2022.3 LTS, first scene `Scn_Boot`. It applies the schema 0.1 patches locally while you play Topics 1, 2, and 3. Topic 3 is the English walkable branch. That mirror is the training-room twin for the Editor dashboard. It is not a second case format, and it is not the API state machine (P1-S2 is still unstarted). A later Unity build can call the VPS API when those routes exist.
+- **Web**: `frontend/`, React + Vite + TypeScript, static files on the Linux VPS. The scenario player and the dashboard read twin state from the API.
+- **Editor room**: [`unity/UNITY.md`](../unity/UNITY.md). In scope. Unity 2022.3 LTS, first scene `Scn_Boot`. It applies the schema 0.1 patches locally while you play Topics 1–4. That mirror is the training-room twin for the Editor dashboard. It is not a second case format, and it does not call the session API. Wiring that room to the API is P3-S4.
 
 ## Explicitly out of scope
 

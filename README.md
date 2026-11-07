@@ -38,7 +38,7 @@ Case flows for human review are in [`data/case-flow/`](data/case-flow/). Each ca
 | Organised-crime cashflow | [zh-Hant](data/case-flow/10-organised-crime-cashflow.zh-Hant.md) | [English](data/case-flow/10-organised-crime-cashflow.en.md) | `hk-triad-cashflow-001` |
 | Insurer and bank control gaps | [zh-Hant](data/case-flow/11-control-gaps.zh-Hant.md) | [English](data/case-flow/11-control-gaps.en.md) | `hk-ia-fwd-controls-001`, `hk-hkma-cdd-001` |
 
-What runs today is a scaffold. FastAPI in `backend/` answers `GET /health`. The Vite app is a placeholder page. The 11 scripts, the effect-key contract, and the JSON Schema are in the repo. Session routes, the scenario player, and the dashboard are not built. `workers/api` can answer the same health check. That Worker is a legacy scaffold, not the demo deploy.
+What runs today is the Phase 1 demo. FastAPI in `backend/` answers `GET /health`, lists the case scripts, opens a session, applies a choice, and stores the twin and the events. The Vite app is the scenario player and the dashboard. Both read that session. `workers/api` can answer the same health check only. That Worker is a legacy scaffold, not the demo deploy. One extra card, `GET /sessions/{id}/evidence`, summarises a run for the course note in [`docs/audit-evidence.md`](docs/audit-evidence.md).
 
 ## Architecture
 
@@ -46,8 +46,8 @@ One API and one web client on a self-hosted Linux VPS. The Unity Editor room is 
 
 | Piece | Where | Role |
 | --- | --- | --- |
-| Demo API | `backend/` | FastAPI. Today: `GET /health`. Case load, sessions, decisions, the twin state machine, and events will be added on this process. A Node/Hono process may serve the same routes later. |
-| Web | `frontend/` | React + Vite + TypeScript. Static files on the VPS. Today: a placeholder page. The scenario player and the dashboard are not built. Both will read the same twin. |
+| Demo API | `backend/` | FastAPI. Health, case list, sessions, decisions, the twin state machine, and events. A Node/Hono process may serve the same routes later. |
+| Web | `frontend/` | React + Vite + TypeScript. Static files on the VPS. Scenario player and dashboard. Both read the same twin. |
 | Unity | [`unity/TwinAML`](unity/UNITY.md) | Editor training room, in scope. Plays Topics 1–4 against schema 0.1 scripts. Topic 3 is an English walkable branch. Topic 4 is an English alert-triage room. Does not call the API yet. |
 | Legacy scaffold | `workers/api` | Cloudflare Worker (Hono) plus Wrangler config. Left in the tree. Not the COMP3424 demo target. |
 
@@ -61,10 +61,10 @@ Classroom demo. One API and one web client.
 
 | Layer | Current | Planned |
 | --- | --- | --- |
-| Demo API | FastAPI (`backend/`). `GET /health` only. | Load a case, open a session, accept a decision, apply rules, write events. A Node/Hono process may serve those same routes. |
-| Web | React + Vite + TypeScript (`frontend/`). Placeholder page that builds to `dist/`. | Scenario player and a simple dashboard that read the API’s twin state. Static files on the VPS. |
+| Demo API | FastAPI (`backend/`). Health, cases, sessions, decisions, twin, events. | A Node/Hono process may serve those same routes later. |
+| Web | React + Vite + TypeScript (`frontend/`). Player and dashboard, built to `dist/`. | Static files on the VPS. The dev server proxies the API paths. |
 | Legacy scaffold | Hono on a Cloudflare Worker (`workers/api`). `GET /health` only. Wrangler files may remain. | Not the demo path. See [`docs/deploy-vps.md`](docs/deploy-vps.md). |
-| Cases | 11 example scripts in [`data/cases/README.md`](data/cases/README.md). | Stay on `packages/schemas/script.schema.json`. A rule’s `when` text is for a person to read until a state machine exists. |
+| Cases | Every `data/cases/*.example.json` script, including the 11 and the two Editor-room scripts. | Stay on `packages/schemas/script.schema.json`. A rule’s `when` text stays human-readable. The machine applies patches and does not parse `when`. |
 | Media | `data/media/.gitkeep` only. Large video is gitignored. | Scripts may set `media_ref` to a local path. Binaries stay out of git. |
 | Contract | `packages/schemas/script.schema.json` (schema `0.1`). | One script format. Patch keys: [`docs/effects.md`](docs/effects.md). |
 | Docs | `docs/architecture.md`, `docs/effects.md`, `docs/comp3424-mapping.md`, `docs/deploy-vps.md`, [`docs/phases/`](docs/phases/README.md). | Slice checklists live in the phase docs. See [Implementation phases](#implementation-phases). |
@@ -105,21 +105,26 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 │   ├── index.html
 │   ├── package.json
 │   ├── public/_redirects        # SPA fallback
-│   ├── src/                     # placeholder page
+│   ├── src/                     # case list, player, dashboard
 │   ├── tsconfig.json
 │   ├── vite.config.ts
 │   └── wrangler.jsonc
 ├── backend/                     # demo API (FastAPI)
 │   ├── README.md
 │   ├── requirements.txt
-│   └── app/
-│       ├── __init__.py
-│       └── main.py              # GET /health
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── main.py              # /health, /cases, /sessions
+│   │   ├── effects.py           # schema 0.1 patch apply
+│   │   ├── machine.py           # session walk and events
+│   │   ├── cases.py
+│   │   └── sessions.py
+│   └── tests/
 ├── data/
 │   ├── cases/                   # index: data/cases/README.md
 │   │   ├── README.md
 │   │   ├── 01-deepfake-hk-001.example.json
-│   │   └── 02-…11-*.example.json
+│   │   └── 02-…13-*.example.json
 │   ├── case-flow/               # human-review flows, zh-Hant and English
 │   │   ├── 01-deepfake-executive-impersonation.zh-Hant.md
 │   │   ├── 01-deepfake-executive-impersonation.en.md
@@ -154,7 +159,7 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
 
-`http://127.0.0.1:8000/health` returns `{"status":"ok","service":"twinaml-api"}`. Details: [`backend/README.md`](backend/README.md).
+`http://127.0.0.1:8000/health` returns `{"status":"ok","service":"twinaml-api"}`. `GET /cases` lists the scripts. `POST /sessions` with `{"case_id":"deepfake-hk-001"}` opens a training run. Details: [`backend/README.md`](backend/README.md).
 
 Web, from `frontend/`:
 
@@ -163,7 +168,7 @@ npm install
 npm run dev
 ```
 
-Open `http://127.0.0.1:5173`. The page shows the TwinAML scaffold. It does not call the API. It is not a case player, and it has no dashboard.
+Open `http://127.0.0.1:5173`. The page lists every case script. Start one, choose a branch, then open Dashboard. The Vite dev server proxies `/health`, `/cases`, and `/sessions` to port 8000, so start the API first. A missing `media_ref` file is shown as missing media. It does not stop the case.
 
 `npm run build` in `frontend/` typechecks, then writes `dist/`. Do not commit `dist/`.
 
@@ -182,7 +187,15 @@ Check the case scripts from the repo root:
 node scripts/validate-cases.mjs
 ```
 
-That checks schema `0.1` and the effect-key grammar, then plays the eight `deepfake-hk-001` endings. Details: [`docs/effects.md`](docs/effects.md).
+That checks schema `0.1` and the effect-key grammar, then plays the eight `deepfake-hk-001` endings. The API machine is checked from `backend/`:
+
+```bash
+cd backend
+source .venv/bin/activate
+PYTHONPATH=. python -m unittest discover -s tests -v
+```
+
+Details: [`docs/effects.md`](docs/effects.md). The course note for one run is [`docs/audit-evidence.md`](docs/audit-evidence.md).
 
 The Unity room's six choice paths use the same applier:
 
@@ -220,18 +233,18 @@ In scope: load any of the 11 against `packages/schemas/script.schema.json`; sess
 
 Out of scope for Phase 1: Docker, Kubernetes, Neo4j, Kafka, FlexSim, a microservice split, wiring the Editor room to the live session API, a live language model that sets disposition, a real bank / HKMA / STR filing connection, multi-tenant billing, and session-time video synthesis. The Editor room in [`unity/UNITY.md`](unity/UNITY.md) stays in the demo and is not one of these slices. New mixer / peel-chain and synthetic-ID families beyond this library wait for Phase 2.
 
-Current status: the 11 scripts and the effect-key contract are in the repo. P1-S1 is done. FastAPI and the web app are still a health check and a placeholder page. Session routes, the scenario player, and the dashboard are not built.
+Current status: P1-S1 through P1-S8 are done. The API and the web player run the library, including the two Editor-room scripts. Phase 2 has not started.
 
 | Slice | Done when |
 | --- | --- |
-| P1-S1 — Script contract freeze | **Done.** [`docs/effects.md`](docs/effects.md) lists every effect key in the 11 scripts and the apply order. Check with `node scripts/validate-cases.mjs`. |
-| P1-S2 — Twin state machine | Unit tests cover terminal dispositions for the library without HTTP. |
-| P1-S3 — Session store + API routes | `curl` against the local API can finish one full path for a chosen `case_id`. `GET /health` stays. |
-| P1-S4 — Scenario player | The trainee can start any of the 11. A browser playthrough matches the API for at least two branches of the selected case. Missing media does not crash the case. |
-| P1-S5 — Event log + teaching score | `GET` session returns ordered events for replay, and a teaching poor disposition is marked for the dashboard. |
-| P1-S6 — Simple dashboard | After one playthrough, the dashboard shows that session (disposition, flags, timeline) from the API twin. |
-| P1-S7 — Deploy checklist | The owner can follow [`docs/deploy-vps.md`](docs/deploy-vps.md) to deploy the static site and the API. Tokens and TLS keys stay out of git. |
-| P1-S8 — Demo polish | A classmate can run the demo from this README alone, including a short audit-evidence note for COMP3424. |
+| P1-S1 — Script contract freeze | **Done.** [`docs/effects.md`](docs/effects.md). Check with `node scripts/validate-cases.mjs`. |
+| P1-S2 — Twin state machine | **Done.** `backend/tests/test_machine.py`. |
+| P1-S3 — Session store + API routes | **Done.** `POST /sessions` and `POST /sessions/{id}/decisions`. `GET /health` stays. |
+| P1-S4 — Scenario player | **Done.** The case list starts any script in `data/cases/`. Missing media stays on the page. |
+| P1-S5 — Event log + teaching score | **Done.** Ordered events, plus `poor_path` when the disposition is a teaching poor path. |
+| P1-S6 — Simple dashboard | **Done.** The dashboard reads the same sessions. |
+| P1-S7 — Deploy checklist | **Done.** [`docs/deploy-vps.md`](docs/deploy-vps.md) proxies `/health`, `/cases`, and `/sessions`. |
+| P1-S8 — Demo polish | **Done.** This README plus [`docs/audit-evidence.md`](docs/audit-evidence.md). |
 
 Slice detail: [`docs/phases/PHASE1.md`](docs/phases/PHASE1.md).
 
@@ -262,7 +275,7 @@ Slice detail: [`docs/phases/PHASE2.md`](docs/phases/PHASE2.md).
 
 Slice detail: [`docs/phases/PHASE3.md`](docs/phases/PHASE3.md).
 
-In this scaffold, mirroring is the 11 scripts. Shadowing and threading are Level 2 and are not built.
+Mirroring is the case library played through the API. Shadowing and threading are Level 2 and are not built. `GET /sessions/{id}/evidence` is a short card on top of the same session.
 
 ## Agent rules
 
