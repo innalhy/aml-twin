@@ -44,6 +44,8 @@ namespace TwinAml
         public bool Completed;
         public string TerminalNodeId = "";
         public string MappingNote = "";
+        public int LearningScore;
+        public int ElapsedMs;
         public List<ChoiceRecord> Choices = new List<ChoiceRecord>();
 
         public ChoiceRecord LastChoice
@@ -200,6 +202,8 @@ namespace TwinAml
             AddBool(obj, "dual_approval", session.DualApproval);
             AddBool(obj, "str_filed", session.StrFiled);
             AddNumber(obj, "risk_score", session.RiskScore);
+            AddNumber(obj, "learning_score", session.LearningScore);
+            AddNumber(obj, "elapsed_ms", session.ElapsedMs);
             obj.Object.Add(new JsonMember("flags", StringArray(session.Flags)));
             var choices = new JsonValue { Kind = JsonKind.Array, Array = new List<JsonValue>() };
             for (var i = 0; i < session.Choices.Count; i++)
@@ -237,6 +241,8 @@ namespace TwinAml
             session.DualApproval = ReadBool(obj, "dual_approval");
             session.StrFiled = ReadBool(obj, "str_filed");
             session.RiskScore = (int)ReadNumber(obj, "risk_score");
+            session.LearningScore = (int)ReadNumber(obj, "learning_score");
+            session.ElapsedMs = (int)ReadNumber(obj, "elapsed_ms");
             session.Completed = true;
             session.Flags = ReadStrings(obj.Get("flags"));
             session.Twin = obj.Get("mirror");

@@ -14,6 +14,10 @@ namespace TwinAml
         public const string T01CaseId = "deepfake-hk-001";
         public const string T02File = "06-greythunder-mule-001.example.json";
         public const string T02CaseId = "hk-greythunder-mule-001";
+        public const string T03File = "12-starlight-onboard-001.example.json";
+        public const string T03CaseId = "hk-starlight-onboard-001";
+        public const string T04File = "13-alert-triage-shift-001.example.json";
+        public const string T04CaseId = "alert-triage-shift-001";
 
         public static JsonValue Load(string fileName)
         {

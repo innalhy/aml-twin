@@ -13,6 +13,16 @@ namespace TwinAml
                 PortalDashboard.Build();
                 return;
             }
+            if (id == SceneId.Scn_T03_Branch)
+            {
+                BranchRoom.Enter();
+                return;
+            }
+            if (id == SceneId.Scn_T04_Room)
+            {
+                TriageRoom.Open();
+                return;
+            }
             var flow = FlowController.Instance;
             UiKit.BuildShell(id);
             switch (id)
@@ -36,6 +46,10 @@ namespace TwinAml
                 case SceneId.Scn_T02_Decision: Decision(); break;
                 case SceneId.Scn_T02_FeedbackA: Outcome("t02.feedback.a.title", "t02.feedback.a.body", false); break;
                 case SceneId.Scn_T02_FeedbackPass: Outcome("t02.feedback.pass.title", "t02.feedback.pass.body", false); break;
+                case SceneId.Scn_T03_Brief: BranchBrief(); break;
+                case SceneId.Scn_T03_Feedback: BranchFeedback(); break;
+                case SceneId.Scn_T04_Brief: TriageBrief(); break;
+                case SceneId.Scn_T04_Report: TriageReport(); break;
                 default: Boot(); break;
             }
             if (flow != null && !string.IsNullOrEmpty(flow.LastError) && IsExercise(id))
@@ -110,10 +124,115 @@ namespace TwinAml
                 flow.Go(SceneId.Scn_T02_Brief);
             });
             UiKit.EndCard();
+            UiKit.BeginCard();
+            UiKit.Heading(Locale.T("hub.t03.title"));
+            UiKit.Body(Locale.T("hub.t03.body"));
+            UiKit.Button(Locale.T("hub.start"), Btn.Orange, () =>
+            {
+                flow.StartTopic("T03");
+                flow.Go(SceneId.Scn_T03_Brief);
+            });
+            UiKit.EndCard();
+            UiKit.BeginCard();
+            UiKit.Heading(Locale.T("hub.t04.title"));
+            UiKit.Body(Locale.T("hub.t04.body"));
+            UiKit.Button(Locale.T("hub.start"), Btn.Orange, () =>
+            {
+                flow.StartTopic("T04");
+                flow.Go(SceneId.Scn_T04_Brief);
+            });
+            if (TriageShift.Alerts.Count == 6 && !TriageShift.Finished && flow.Session != null && flow.Session.Topic == "T04" && flow.Session.Script != null)
+                UiKit.Button(Locale.T("hub.t04.resume"), Btn.Soft, () => flow.Go(SceneId.Scn_T04_Room));
+            UiKit.EndCard();
             UiKit.ButtonRow(
                 Locale.T("nav.dashboard"), Btn.Soft, () => flow.Go(SceneId.Scn_Dashboard),
                 Locale.T("nav.settings"), Btn.Soft, () => flow.Go(SceneId.Scn_Settings));
             UiKit.Note(Locale.T("hub.done") + ": " + flow.Completed.Count);
+        }
+
+        static void BranchBrief()
+        {
+            var flow = FlowController.Instance;
+            UiKit.Title(BranchCopy.T("t03.brief.title"));
+            UiKit.Body(BranchCopy.T("t03.brief.goal"));
+            UiKit.Body(BranchCopy.T("t03.brief.how"));
+            UiKit.Note(BranchCopy.T("t03.brief.note"));
+            UiKit.Button(BranchCopy.T("t03.enter"), Btn.Slate, () => flow.Go(SceneId.Scn_T03_Branch));
+            UiKit.Button(Locale.T("back.hub"), Btn.Soft, () => flow.Go(SceneId.Scn_TopicsHub));
+        }
+
+        static void BranchFeedback()
+        {
+            var flow = FlowController.Instance;
+            var choice = "";
+            if (flow != null && flow.Session != null && flow.Session.LastChoice != null)
+                choice = flow.Session.LastChoice.ChoiceId;
+            UiKit.Title(BranchCopy.T("t03.feedback.title"));
+            UiKit.Body(BranchProgress.Feedback(choice));
+            UiKit.Note(BranchCopy.T("t03.feedback.record"));
+            TwinCard();
+            UiKit.Button(BranchCopy.T("t03.replay"), Btn.Slate, () =>
+            {
+                flow.StartTopic("T03");
+                flow.Go(SceneId.Scn_T03_Brief);
+            });
+            UiKit.ButtonRow(
+                Locale.T("back.hub"), Btn.Soft, () => flow.Go(SceneId.Scn_TopicsHub),
+                Locale.T("open.dashboard"), Btn.Slate, () => flow.Go(SceneId.Scn_Dashboard));
+        }
+
+        static void TriageBrief()
+        {
+            var flow = FlowController.Instance;
+            UiKit.Title(Locale.T("t04.brief.title"));
+            UiKit.Body(Locale.T("t04.brief.goal"));
+            UiKit.Body(Locale.T("t04.brief.how"));
+            UiKit.Body(Locale.T("t04.brief.paths"));
+            UiKit.Body(Locale.T("t04.brief.tip"));
+            var session = flow.Session;
+            if (session != null && session.Script != null)
+            {
+                UiKit.BeginCard();
+                UiKit.Heading(Locale.T("script.heading"));
+                UiKit.Body(session.CaseTitle);
+                var summary = session.Script.Get("summary");
+                if (summary != null && summary.Kind == JsonKind.String) UiKit.Body(summary.String);
+                UiKit.Body(RulesText(session.Script));
+                UiKit.Note(CaseLibrary.Candidates(CaseLibrary.T04File)[0]);
+                UiKit.EndCard();
+            }
+            UiKit.Button(Locale.T("t04.enter"), Btn.Orange, () => flow.Go(SceneId.Scn_T04_Room));
+            UiKit.Button(Locale.T("back.hub"), Btn.Soft, () => flow.Go(SceneId.Scn_TopicsHub));
+        }
+
+        static void TriageReport()
+        {
+            var flow = FlowController.Instance;
+            UiKit.Title(Locale.T("t04.report.title"));
+            var score = TriageShift.Score;
+            if (score == null || !TriageShift.Finished)
+            {
+                UiKit.Body(Locale.T("t04.report.empty"));
+                UiKit.Button(Locale.T("t04.enter"), Btn.Orange, () => flow.Go(SceneId.Scn_T04_Room));
+                UiKit.Button(Locale.T("back.hub"), Btn.Soft, () => flow.Go(SceneId.Scn_TopicsHub));
+                return;
+            }
+            UiKit.Body(score.Verdict);
+            UiKit.Body(score.ScoreLine);
+            UiKit.Body(score.TimeLine);
+            UiKit.Body(score.Suggestion);
+            for (var i = 0; i < score.Lines.Count; i++) UiKit.Body(score.Lines[i]);
+            UiKit.Note("Do not tell a customer that an STR was drafted or might be drafted. This room only writes a training flag.");
+            if (flow.Session != null && !string.IsNullOrEmpty(flow.Session.MappingNote))
+                UiKit.Note(flow.Session.MappingNote);
+            UiKit.Button(Locale.T("t04.again"), Btn.Orange, () =>
+            {
+                flow.StartTopic("T04");
+                flow.Go(SceneId.Scn_T04_Brief);
+            });
+            UiKit.ButtonRow(
+                Locale.T("back.hub"), Btn.Soft, () => flow.Go(SceneId.Scn_TopicsHub),
+                Locale.T("open.dashboard"), Btn.Slate, () => flow.Go(SceneId.Scn_Dashboard));
         }
 
         static void TopicBrief(string topic)
@@ -418,7 +537,9 @@ namespace TwinAml
         {
             var name = id.ToString();
             return name.IndexOf("_T01_", System.StringComparison.Ordinal) >= 0
-                || name.IndexOf("_T02_", System.StringComparison.Ordinal) >= 0;
+                || name.IndexOf("_T02_", System.StringComparison.Ordinal) >= 0
+                || name.IndexOf("_T03_", System.StringComparison.Ordinal) >= 0
+                || name.IndexOf("_T04_", System.StringComparison.Ordinal) >= 0;
         }
     }
 }

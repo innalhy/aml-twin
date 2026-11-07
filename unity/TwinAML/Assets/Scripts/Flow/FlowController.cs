@@ -121,6 +121,17 @@ namespace TwinAml
                     session.Script = CaseLibrary.Load(CaseLibrary.T01File);
                     session.CaseId = CaseLibrary.T01CaseId;
                 }
+                else if (topic == "T03")
+                {
+                    BranchProgress.Reset();
+                    session.Script = CaseLibrary.Load(CaseLibrary.T03File);
+                    session.CaseId = CaseLibrary.T03CaseId;
+                }
+                else if (topic == "T04")
+                {
+                    session.Script = CaseLibrary.Load(CaseLibrary.T04File);
+                    session.CaseId = CaseLibrary.T04CaseId;
+                }
                 else
                 {
                     session.Script = CaseLibrary.Load(CaseLibrary.T02File);
@@ -133,6 +144,7 @@ namespace TwinAml
                     throw new EffectException("Loaded file case_id does not match " + session.CaseId + ".");
                 session.Twin = session.Script.Require("initial_twin_state").Clone();
                 TwinProjector.Apply(session, null);
+                if (topic == "T04") TriageShift.Begin(session.Script);
                 session.Trap = false;
                 session.FundsRisk = false;
                 session.Completed = false;
@@ -141,8 +153,57 @@ namespace TwinAml
             {
                 LastError = err.Message;
                 session.Script = null;
+                if (topic == "T04") TriageShift.Clear();
             }
             Session = session;
+        }
+
+        public void FinishTriage()
+        {
+            if (Session != null && Session.Completed && Session.Topic == "T04")
+            {
+                Go(SceneId.Scn_T04_Report);
+                return;
+            }
+            if (Session == null || Session.Script == null || Session.Topic != "T04" || !TriageShift.AllDecided())
+            {
+                LastError = "Finish the six alerts before the shift report.";
+                return;
+            }
+            try
+            {
+                var ids = TriageShift.ChoiceIds();
+                var played = EffectApplier.Play(Session.Script, ids);
+                Session.Twin = played.Twin;
+                Session.TerminalNodeId = played.NodeId;
+                TwinProjector.Apply(Session, null);
+                var score = TriageShift.BuildScore();
+                Session.Trap = score.HardFail || score.Overall < 60;
+                Session.FundsRisk = Session.Trap;
+                Session.MappingNote = "Topic 4 grades the six dispositions in the room. shift_reviewed means the queue was written down. A pass is a training score of 60 or more, with no closed file and no STR filed on the name-only screening hit.";
+                Session.Completed = true;
+                var record = new ChoiceRecord();
+                record.ChoiceId = Session.Trap ? "shift_below_pass" : "shift_pass";
+                record.SceneId = SceneId.Scn_T04_Room.ToString();
+                record.CaseId = Session.CaseId;
+                record.ShownUnixMs = TriageShift.StartedMs > 0 ? TriageShift.StartedMs : NowMs();
+                record.ChosenUnixMs = NowMs();
+                record.ReactionMs = (int)Math.Max(0, record.ChosenUnixMs - record.ShownUnixMs);
+                record.Trap = Session.Trap;
+                for (var i = 0; i < ids.Count; i++) record.ScriptChoiceIds.Add(ids[i]);
+                Session.Choices.Add(record);
+                LastError = "";
+                TriageShift.Finished = true;
+                Completed.Add(Session);
+                DashboardStore.Write(Trainee, Completed);
+            }
+            catch (Exception err)
+            {
+                LastError = err.Message;
+                Debug.LogError("TwinAML shift failed: " + err.Message);
+                return;
+            }
+            Go(SceneId.Scn_T04_Report);
         }
 
         public void ArmChoiceClock()
@@ -164,7 +225,7 @@ namespace TwinAml
             {
                 var topic = SceneCatalog.TopicOf(choice.Next);
                 if (string.IsNullOrEmpty(Trainee)) Trainee = "Editor";
-                if (topic == "T01" || topic == "T02") StartTopic(topic);
+                if (topic == "T01" || topic == "T02" || topic == "T03") StartTopic(topic);
             }
             if (Session == null || Session.Script == null)
             {
@@ -177,6 +238,13 @@ namespace TwinAml
                 Session.Twin = played.Twin;
                 Session.TerminalNodeId = played.NodeId;
                 TwinProjector.Apply(Session, choice);
+                if (Session.Topic == "T03")
+                {
+                    Session.LearningScore = BranchProgress.Score(choice.ChoiceId);
+                    Session.ElapsedMs = BranchProgress.ElapsedMs();
+                    var lesson = BranchProgress.MappingLine(choice.ChoiceId);
+                    Session.MappingNote = string.IsNullOrEmpty(Session.MappingNote) ? lesson : Session.MappingNote + " " + lesson;
+                }
                 var chosenAt = NowMs();
                 var record = new ChoiceRecord();
                 record.ChoiceId = choice.ChoiceId;
@@ -239,7 +307,7 @@ namespace TwinAml
 
         void EnsureTopic(string topic)
         {
-            if (topic != "T01" && topic != "T02") return;
+            if (topic != "T01" && topic != "T02" && topic != "T03" && topic != "T04") return;
             if (Session != null && Session.Topic == topic && Session.Script != null)
                 return;
             if (string.IsNullOrEmpty(Trainee)) Trainee = "Editor";
