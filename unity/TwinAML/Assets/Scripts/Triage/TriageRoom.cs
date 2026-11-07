@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace TwinAml
@@ -98,7 +99,11 @@ namespace TwinAml
             }
             BuildWorld();
             BuildCanvas();
-            Snap("overview");
+            var station = "desk";
+            SceneId sceneId;
+            if (SceneCatalog.TryParse(SceneManager.GetActiveScene().name, out sceneId))
+                station = SceneCatalog.TriageStation(sceneId);
+            Snap(station);
             RefreshNow();
         }
 
@@ -208,9 +213,9 @@ namespace TwinAml
             text.rectTransform.offsetMin = new Vector2(24f, 90f);
             text.rectTransform.offsetMax = new Vector2(-24f, -24f);
             var button = Pin(panel, "Back", 24f, 340f, 280f, 48f);
-            MakeButton(button, "Back to topics", new Color(0.18f, 0.44f, 0.93f), Color.white, delegate
+            MakeButton(button, "Bank branch", new Color(0.18f, 0.44f, 0.93f), Color.white, delegate
             {
-                FlowController.Instance.Go(SceneId.Scn_TopicsHub);
+                FlowController.Instance.Go(SceneId.Scn_Branch_Lobby);
             });
         }
 
@@ -235,6 +240,11 @@ namespace TwinAml
             Screen(root, -0.78f, "QUEUE");
             Screen(root, 0f, "CASE");
             Screen(root, 0.78f, "NOTE");
+
+            Box(root, "MeetTable", new Vector3(-5.4f, 0.55f, -4.2f), new Vector3(1.8f, 0.08f, 0.9f), Hex(0x314256), false);
+            Box(root, "MeetScreen", new Vector3(-5.4f, 1.35f, -4.7f), new Vector3(1.1f, 0.62f, 0.06f), Hex(0x14344c), false);
+            WorldLabel(root, "Case brief", new Vector3(-5.4f, 1.35f, -4.62f), 0.035f, Hex(0xb7e3ff), true);
+            Pad(root, "MeetPad", new Vector3(-5.4f, 0.02f, -3.2f), new Vector3(1.2f, 0.03f, 0.6f), Hex(0x2f6fed), "MEET");
 
             Box(root, "SeniorDesk", new Vector3(5.7f, 0.72f, 3.55f), new Vector3(1.5f, 0.08f, 0.8f), Hex(0x314256), false);
             Shape(root, "Senior", PrimitiveType.Capsule, new Vector3(6.15f, 1.05f, 4.15f), new Vector3(0.42f, 0.55f, 0.42f), Hex(0x8ea0b8), false);

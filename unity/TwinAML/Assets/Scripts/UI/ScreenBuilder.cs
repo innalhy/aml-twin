@@ -13,12 +13,12 @@ namespace TwinAml
                 PortalDashboard.Build();
                 return;
             }
-            if (id == SceneId.Scn_T03_Branch)
+            if (id == SceneId.Scn_T03_Branch || SceneCatalog.IsBranchRoom(id))
             {
                 BranchRoom.Enter();
                 return;
             }
-            if (id == SceneId.Scn_T04_Room)
+            if (id == SceneId.Scn_T04_Room || SceneCatalog.IsTriageRoom(id))
             {
                 TriageRoom.Open();
                 return;

@@ -298,11 +298,30 @@ namespace TwinAml
 
         void Enter(SceneId id)
         {
+            if (IsPortalFront(id) || id == SceneId.Scn_T03_Branch)
+            {
+                Go(SceneId.Scn_Branch_Lobby);
+                return;
+            }
+            if (id == SceneId.Scn_T04_Room)
+            {
+                Go(SceneId.Scn_Triage_Desk);
+                return;
+            }
             _entered = true;
             _committedThisScreen = false;
             Current = id;
             EnsureTopic(SceneCatalog.TopicOf(id));
             ScreenBuilder.Build(id);
+        }
+
+        static bool IsPortalFront(SceneId id)
+        {
+            return id == SceneId.Scn_Boot
+                || id == SceneId.Scn_Login
+                || id == SceneId.Scn_Intro
+                || id == SceneId.Scn_TopicsHub
+                || id == SceneId.Scn_Dashboard;
         }
 
         void EnsureTopic(string topic)
