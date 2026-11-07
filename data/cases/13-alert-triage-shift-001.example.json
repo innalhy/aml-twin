@@ -1,0 +1,650 @@
+{
+  "schema_version": "0.1",
+  "case_id": "alert-triage-shift-001",
+  "title": "Alert triage shift — six synthetic alerts",
+  "locale": "en",
+  "summary": "Synthetic training shift for a new transaction-monitoring analyst. Six fictional alerts, one sitting. The twin records the six dispositions in alert order. shift_reviewed means the queue was written down. The Unity room grades the quality of those choices. No customer, account, list, or country in this file is real. Port Amber is a training place. The sanctions sheet is a training sheet.",
+  "start_node_id": "n_shift_open",
+  "teaching": {
+    "level": "chan-1-scripted-mirror",
+    "rules_before_ai": true,
+    "case_kind": "course_example",
+    "disclaimer": "Synthetic training scenario. Not a bank file, not a government list, and not a filing to a financial intelligence unit.",
+    "themes": ["transaction monitoring", "alert triage", "red flags", "suspicious transaction report", "tipping off"],
+    "acceptable_dispositions": ["shift_reviewed"],
+    "poor_dispositions": [],
+    "alerts": [
+      {
+        "id": "A1",
+        "title": "Rapid pass-through",
+        "customer_name": "Alex Chan",
+        "customer_id": "SYN-CUST-A1",
+        "customer_type": "Individual",
+        "occupation": "Trade consultant (declared)",
+        "amount_label": "HKD 1,800,000 in, then HKD 1,650,000 out",
+        "amount_hkd": 1800000,
+        "priority": "High",
+        "priority_rank": 2,
+        "deadline": "Today",
+        "deadline_rank": 2,
+        "risk_tag": "Pass-through",
+        "region": "Hong Kong",
+        "trigger": "In 72 hours the account received three credits totalling HKD 1,800,000. Within the next 24 hours, HKD 1,650,000 left to third-party accounts.",
+        "guide": "Ask whether this money had a reason to arrive and leave so fast. Then check who sent it. A job title is not an explanation.",
+        "sample_note": "Alex Chan received HKD 1,800,000 in three credits over 72 hours and sent HKD 1,650,000 to third parties within 24 hours. Declared work is a trade consultancy, and past turnover does not match this size. The sending accounts are linked to closed suspicious files. There is no commercial purpose on the file. Escalate, and consider an STR if the investigation still cannot explain the flow. Do not tell the customer.",
+        "kyc": [
+          "Declared occupation: trade consultant. Declared monthly income: HKD 45,000.",
+          "Account opened 14 months ago. Typical monthly turnover before this week: under HKD 80,000.",
+          "No trade invoices, contracts, or client list are on the file.",
+          "The customer has not been asked about this week’s credits yet. Do not contact them about a possible report."
+        ],
+        "geography_notes": [
+          "The money never leaves Hong Kong on this map. A domestic flow can still be a pass-through.",
+          "The training map is not a live payment network."
+        ],
+        "screening": [
+          "No sanctions-style name hit on Alex Chan in this training pack.",
+          "The sending accounts, not the customer name, are the screening point: they match closed internal files."
+        ],
+        "news": [
+          "No adverse news in this training pack. Absence of news is not a reason to close."
+        ],
+        "review_steps": [
+          "Add the three credits and the later debits. Compare the speed and the amount with the declared income.",
+          "Open the link board and read which sending accounts were already closed as suspicious.",
+          "Look for a contract or invoice. There is none on the file.",
+          "Escalate. An STR may follow once the write-up is done. Do not close, and do not tell the customer."
+        ],
+        "transactions": [
+          {"when": "Day 1", "what": "Inward transfer", "amount": "HKD 600,000", "detail": "From SYN-ACC-CLOSED-1. That account was closed last quarter after a suspicious-activity file."},
+          {"when": "Day 2", "what": "Inward transfer", "amount": "HKD 700,000", "detail": "From SYN-ACC-CLOSED-2. Same closed-file cluster."},
+          {"when": "Day 2", "what": "Inward transfer", "amount": "HKD 500,000", "detail": "From SYN-ACC-CLOSED-3. Same cluster."},
+          {"when": "Day 3", "what": "Outward transfer", "amount": "HKD 400,000", "detail": "To third party SYN-TP-1. No invoice on file."},
+          {"when": "Day 3", "what": "Outward transfer", "amount": "HKD 750,000", "detail": "To third party SYN-TP-2. Payment reference is blank."},
+          {"when": "Day 3", "what": "Outward transfer", "amount": "HKD 500,000", "detail": "To third party SYN-TP-3. Same day as the other two exits."}
+        ],
+        "red_flags": [
+          {"id": "pass_through", "title": "Rapid in-and-out", "why": "Large credits leave again within a day. The account is a stop, not a place the money stays.", "evidence": "HKD 1.65 million of HKD 1.8 million left within 24 hours of the last credit."},
+          {"id": "income_gap", "title": "Activity does not match the customer", "why": "Monitoring asks whether the activity fits what the institution knows. A declared income of HKD 45,000 a month does not fit this week.", "evidence": "Declared monthly income HKD 45,000. Prior monthly turnover under HKD 80,000."},
+          {"id": "closed_links", "title": "Senders already closed as suspicious", "why": "The source of the credits is part of the suspicion, not a neutral bank transfer.", "evidence": "Three sending accounts were closed after earlier suspicious-activity files."},
+          {"id": "no_purpose", "title": "No commercial purpose on the file", "why": "A pass-through with no contract is not explained by the words trade consultant.", "evidence": "No invoice, contract, or client list."}
+        ],
+        "map_places": [
+          {"id": "hk", "label": "Hong Kong\ncustomer account", "kind": "country", "x": -0.8, "y": 0.2},
+          {"id": "tp", "label": "Hong Kong\nthird parties", "kind": "account", "x": 1.1, "y": -0.2}
+        ],
+        "map_flows": [
+          {"from": "hk", "to": "tp", "label": "HKD 1.65 million same day"}
+        ],
+        "link_nodes": [
+          {"id": "chan", "label": "Alex Chan", "kind": "person", "x": 0, "y": 0.1},
+          {"id": "closed", "label": "Closed suspicious\naccounts", "kind": "account", "x": -1.5, "y": 0.7},
+          {"id": "out", "label": "Third-party\naccounts", "kind": "account", "x": 1.5, "y": -0.4}
+        ],
+        "link_edges": [
+          {"from": "closed", "to": "chan", "label": "HKD 1.8 million in"},
+          {"from": "chan", "to": "out", "label": "HKD 1.65 million out"}
+        ],
+        "correct": ["escalate"],
+        "acceptable": ["report"],
+        "why": {
+          "close": "A job title does not explain HKD 1.8 million in and HKD 1.65 million out, or the link to closed suspicious accounts. Closing drops a pass-through.",
+          "more": "The gap is not a missing invoice you can politely wait for. The speed, the size, and the closed sending accounts are already enough to escalate.",
+          "escalate": "Pass-through, an income mismatch, and links to closed suspicious accounts are enough to hand the file to a senior investigator. An STR may follow when the write-up is finished.",
+          "report": "The suspicion is real, so a draft STR is not absurd. On this shift the better first step is to escalate and finish the write-up. If you do draft, do not tell the customer."
+        },
+        "script_choice": {"close": "a1_close", "more": "a1_more", "escalate": "a1_escalate", "report": "a1_report"}
+      },
+      {
+        "id": "A2",
+        "title": "Structured cash deposits",
+        "customer_name": "Mina Wong",
+        "customer_id": "SYN-CUST-A2",
+        "customer_type": "Individual",
+        "occupation": "Retail shop owner (declared)",
+        "amount_label": "HKD 450,000 cash over five days",
+        "amount_hkd": 450000,
+        "priority": "High",
+        "priority_rank": 3,
+        "deadline": "Today",
+        "deadline_rank": 3,
+        "risk_tag": "Structuring",
+        "region": "Hong Kong",
+        "trigger": "On five consecutive days the account took a cash deposit of HKD 90,000. Total HKD 450,000. Several deposits were made by other people.",
+        "guide": "Compare each cash amount with the declared income, and see who stood at the counter. Repeating an amount just under a threshold is a pattern, not a coincidence, until someone explains it.",
+        "sample_note": "Mina Wong deposited HKD 90,000 cash on each of five days, HKD 450,000 in total. Other people made several of the deposits. Declared monthly income is HKD 30,000, which does not match the cash. The amounts sit just under a reporting threshold used in this training file. Escalate or draft an STR. Do not tell the customer.",
+        "kyc": [
+          "Declared monthly income: HKD 30,000. Shop takings are described as card and cash, usually under HKD 40,000 a month.",
+          "No seasonal reason, supplier refund, or property sale is on the file.",
+          "Branch notes: three of the five deposits were handed in by people who are not the customer. Their names are SYN-DEP-1, SYN-DEP-2, and SYN-DEP-3. Relationship: not recorded."
+        ],
+        "geography_notes": [
+          "All five deposits were made at Hong Kong branches after 18:00.",
+          "A local cash pattern can still be suspicious. Geography is not only about foreign countries."
+        ],
+        "screening": [
+          "No sanctions-style name hit on Mina Wong in this training pack."
+        ],
+        "news": [
+          "No adverse news in this training pack."
+        ],
+        "review_steps": [
+          "List the five amounts. Notice they are identical and just under the threshold used in this file.",
+          "Read who handed in the cash. Other people deposited, and the relationship is blank.",
+          "Compare HKD 450,000 with declared monthly income of HKD 30,000.",
+          "Escalate or draft an STR. Closing is not available on these facts."
+        ],
+        "transactions": [
+          {"when": "Mon 18:40", "what": "Cash deposit", "amount": "HKD 90,000", "detail": "Deposited by the customer at a Hong Kong branch."},
+          {"when": "Tue 19:05", "what": "Cash deposit", "amount": "HKD 90,000", "detail": "Deposited by SYN-DEP-1. Relationship not on file."},
+          {"when": "Wed 18:50", "what": "Cash deposit", "amount": "HKD 90,000", "detail": "Deposited by SYN-DEP-2."},
+          {"when": "Thu 19:10", "what": "Cash deposit", "amount": "HKD 90,000", "detail": "Deposited by the customer."},
+          {"when": "Fri 18:35", "what": "Cash deposit", "amount": "HKD 90,000", "detail": "Deposited by SYN-DEP-3."}
+        ],
+        "red_flags": [
+          {"id": "structured", "title": "Structured cash deposits", "why": "Repeating an amount just under a threshold is a known way to avoid a report. The pattern itself is the signal.", "evidence": "Five deposits, each HKD 90,000, on five days."},
+          {"id": "third_party", "title": "Other people deposited the cash", "why": "Third-party cash breaks the link between the customer and the money.", "evidence": "SYN-DEP-1, SYN-DEP-2, and SYN-DEP-3 handed in cash. Relationship not recorded."},
+          {"id": "income_gap", "title": "Cash does not match declared income", "why": "The shop’s declared income cannot carry this cash without an explanation.", "evidence": "Declared monthly income HKD 30,000 against HKD 450,000 in five days."},
+          {"id": "after_hours", "title": "Same time of day, after the shop would close", "why": "A repeated after-hours slot makes the pattern look organised.", "evidence": "Every deposit is after 18:00."}
+        ],
+        "map_places": [
+          {"id": "hk", "label": "Hong Kong branches\nfive cash deposits", "kind": "country", "x": 0, "y": 0}
+        ],
+        "map_flows": [],
+        "link_nodes": [
+          {"id": "wong", "label": "Mina Wong", "kind": "person", "x": 0.2, "y": 0.2},
+          {"id": "deps", "label": "Three other\ndepositors", "kind": "person", "x": -1.4, "y": -0.4},
+          {"id": "cash", "label": "HKD 450,000\ncash", "kind": "money", "x": 1.3, "y": -0.3}
+        ],
+        "link_edges": [
+          {"from": "deps", "to": "wong", "label": "deposited for her"},
+          {"from": "cash", "to": "wong", "label": "five equal amounts"}
+        ],
+        "correct": ["escalate", "report"],
+        "acceptable": ["more"],
+        "why": {
+          "close": "Equal cash amounts, other people at the counter, and income of HKD 30,000 do not support a close. Structuring is a suspicious pattern, not a bookkeeping habit.",
+          "more": "You could ask who the depositors are. The pattern is already strong enough to escalate or draft an STR. Waiting for a story is the weaker first step.",
+          "escalate": "Structured cash, third-party depositors, and an income mismatch justify a deeper investigation. An STR can follow if the story fails.",
+          "report": "Reasonable suspicion is available on these facts: repeated amounts under a threshold, third-party cash, and income that cannot explain it. Do not tell the customer."
+        },
+        "script_choice": {"close": "a2_close", "more": "a2_more", "escalate": "a2_escalate", "report": "a2_report"}
+      },
+      {
+        "id": "A3",
+        "title": "Trade payment that does not match",
+        "customer_name": "Brightwave Trading Ltd",
+        "customer_id": "SYN-CORP-A3",
+        "customer_type": "Company",
+        "occupation": "Importer (declared)",
+        "amount_label": "HKD 2,000,000 supplier payment",
+        "amount_hkd": 2000000,
+        "priority": "Medium",
+        "priority_rank": 5,
+        "deadline": "3 days",
+        "deadline_rank": 5,
+        "risk_tag": "Trade documents",
+        "region": "Port Amber",
+        "trigger": "A three-month-old company wants to pay HKD 2,000,000 to a new supplier in Port Amber. The invoice, the goods description, and the bill of lading do not describe the same shipment.",
+        "guide": "A new company and a large payment need documents that agree with each other. Find what does not match before you decide the payment is suspicious or fine. This is the file that can wait for papers. It is not the first file to open if a sanctions hit or a same-day outflow is still in the queue.",
+        "sample_note": "Brightwave Trading Ltd was incorporated three months ago and wants to pay HKD 2,000,000 to a supplier incorporated last month in Port Amber. The invoice says electronics. The bill of lading says textiles and a much smaller weight. The beneficiary name on the payment does not match the supplier on the invoice. Ask for a consistent invoice, transport document, and supplier pack before release. If those papers cannot be reconciled, escalate. Do not file an STR only because the documents are missing.",
+        "kyc": [
+          "Company incorporated three months ago. Expected monthly turnover was declared as HKD 2,000,000 on day one. No prior trade at that size.",
+          "One director: SYN-DIR-A3. Beneficial owner form is signed but the owner’s source of wealth is a single line: family funds.",
+          "No warehouse, website, or major customer is on the file."
+        ],
+        "geography_notes": [
+          "Port Amber is a fictional place. This shift marks it higher risk on a training country list. That list is not the live FATF list.",
+          "Higher-risk geography plus broken documents means ask for papers. It does not, by itself, mean file an STR today."
+        ],
+        "screening": [
+          "The supplier name has no hit on the training sanctions sheet.",
+          "The company and the director have no hit on that sheet."
+        ],
+        "news": [
+          "No adverse news in this training pack. The supplier was incorporated last month, which is a file fact, not a news article."
+        ],
+        "review_steps": [
+          "Put the invoice, the bill of lading, and the payment beneficiary side by side.",
+          "Note the company age and the size of the first large payment.",
+          "Treat Port Amber as higher risk only inside this training list.",
+          "Ask for a consistent document pack. Escalate only if the pack cannot explain the shipment."
+        ],
+        "transactions": [
+          {"when": "Today", "what": "Proposed outward payment", "amount": "HKD 2,000,000", "detail": "Beneficiary SYN-SUP-AMBER. Not yet released."},
+          {"when": "Invoice", "what": "Commercial invoice", "amount": "HKD 2,000,000", "detail": "Goods described as consumer electronics. Supplier name SYN-SUP-INVOICE, which is not the payment beneficiary."},
+          {"when": "Transport", "what": "Bill of lading", "amount": "Weight 1.2 tonnes", "detail": "Goods described as textiles. Port of loading: Port Amber. The weight is light for the invoice value."}
+        ],
+        "red_flags": [
+          {"id": "doc_mismatch", "title": "Invoice, goods, and transport do not match", "why": "Trade monitoring compares the payment with the shipment. Three different stories is a document gap, not a completed suspicion.", "evidence": "Invoice says electronics. Bill of lading says textiles. Beneficiary name differs from the invoice supplier."},
+          {"id": "new_company", "title": "New company, large first payment", "why": "Three months of life and a HKD 2 million payment need more than a declared expected turnover.", "evidence": "Incorporated three months ago. No prior trade at this size."},
+          {"id": "new_supplier", "title": "Supplier is also brand new", "why": "A new buyer paying a new supplier is thin. It is a reason to ask, not yet a reason to report.", "evidence": "Supplier incorporated last month."},
+          {"id": "corridor", "title": "Training higher-risk corridor", "why": "Geography raises the questions you ask. It does not replace the documents.", "evidence": "Port Amber is marked higher risk only on this shift’s fictional list."}
+        ],
+        "map_places": [
+          {"id": "hk", "label": "Hong Kong\nBrightwave Trading", "kind": "country", "x": -1.2, "y": 0.2},
+          {"id": "amber", "label": "Port Amber\nfictional, higher risk", "kind": "country", "x": 1.2, "y": 0.2, "hot": true}
+        ],
+        "map_flows": [
+          {"from": "hk", "to": "amber", "label": "HKD 2,000,000 proposed"}
+        ],
+        "link_nodes": [
+          {"id": "co", "label": "Brightwave\nTrading", "kind": "company", "x": -0.2, "y": 0.2},
+          {"id": "inv", "label": "Invoice\nelectronics", "kind": "document", "x": -1.5, "y": 0.8},
+          {"id": "bl", "label": "Bill of lading\ntextiles", "kind": "document", "x": -1.4, "y": -0.7},
+          {"id": "sup", "label": "Payment beneficiary\nPort Amber", "kind": "company", "x": 1.4, "y": 0.1}
+        ],
+        "link_edges": [
+          {"from": "inv", "to": "co", "label": "does not match"},
+          {"from": "bl", "to": "co", "label": "does not match"},
+          {"from": "co", "to": "sup", "label": "proposed payment"}
+        ],
+        "correct": ["more"],
+        "acceptable": ["escalate"],
+        "why": {
+          "close": "The papers describe two different shipments and two different suppliers. There is no clear explanation yet, so you cannot close.",
+          "more": "The right first step is to ask for a consistent invoice, a transport document, and a supplier pack. Missing papers are a gap you can still fill.",
+          "escalate": "Escalating is reasonable if you think the mismatch will not be explained. It is a stronger step than this file needs today. Asking for the documents comes first.",
+          "report": "Broken documents are a reason to ask, not yet reasonable suspicion of criminal proceeds. Do not draft an STR only because the file is incomplete."
+        },
+        "script_choice": {"close": "a3_close", "more": "a3_more", "escalate": "a3_escalate", "report": "a3_report"}
+      },
+      {
+        "id": "A4",
+        "title": "Shared beneficiary network",
+        "customer_name": "North Pier, Lantern Desk, and Grey Wharf",
+        "customer_id": "SYN-CORP-A4",
+        "customer_type": "Three companies",
+        "occupation": "Declared as unrelated trading companies",
+        "amount_label": "HKD 960,000 moved, HKD 640,000 ends with one person",
+        "amount_hkd": 960000,
+        "priority": "High",
+        "priority_rank": 4,
+        "deadline": "2 days",
+        "deadline_rank": 4,
+        "risk_tag": "Hidden control",
+        "region": "Hong Kong",
+        "trigger": "Three companies that look unrelated paid each other over six days. The money ends with one person, Sam Ho (SYN-PERSON-A4).",
+        "guide": "The company names are the distraction. Open the link board. Shared address, shared director, shared phone, and one person at the end of the money are the case.",
+        "sample_note": "North Pier Ltd, Lantern Desk Ltd, and Grey Wharf Ltd paid each other over six days. They share Flat 12, 8 Synthetic Wharf, the director Sam Ho, and one phone. HKD 640,000 then left Grey Wharf for Sam Ho personally. The companies are not unrelated. Escalate and identify him as the person at the end of the flow. Do not close on the company names.",
+        "kyc": [
+          "Each company filed a beneficial-owner form naming a different nominee. All three nominees list the same correspondence address.",
+          "Director on all three registries in this pack: Sam Ho (SYN-PERSON-A4).",
+          "Phone on all three files: +852 0000 0144.",
+          "Registered office on all three: Flat 12, 8 Synthetic Wharf, Training District."
+        ],
+        "geography_notes": [
+          "Every company is in Hong Kong. The risk here is shared control, not a foreign corridor.",
+          "Use the link board, not the map, as the main picture for this file."
+        ],
+        "screening": [
+          "No sanctions-style name hit on the companies or on Sam Ho in this training pack."
+        ],
+        "news": [
+          "No adverse news in this training pack. The shared filings are internal synthetic records."
+        ],
+        "review_steps": [
+          "Open the link board before you read the company names as three customers.",
+          "Mark the shared address, the shared director, and the shared phone.",
+          "Follow the last payment to Sam Ho.",
+          "Escalate so the beneficial owner can be treated as one person, not three companies."
+        ],
+        "transactions": [
+          {"when": "Day 1", "what": "Internal transfer", "amount": "HKD 220,000", "detail": "North Pier Ltd to Lantern Desk Ltd. Reference: consulting."},
+          {"when": "Day 3", "what": "Internal transfer", "amount": "HKD 410,000", "detail": "Lantern Desk Ltd to Grey Wharf Ltd. Reference: stock."},
+          {"when": "Day 4", "what": "Internal transfer", "amount": "HKD 180,000", "detail": "North Pier Ltd to Grey Wharf Ltd. Reference: balance."},
+          {"when": "Day 6", "what": "Outward transfer", "amount": "HKD 640,000", "detail": "Grey Wharf Ltd to Sam Ho, personal account SYN-ACC-A4P."}
+        ],
+        "red_flags": [
+          {"id": "shared_address", "title": "One registered address", "why": "Three supposedly separate firms using one office is a common way to hide a single controller.", "evidence": "Flat 12, 8 Synthetic Wharf on all three files."},
+          {"id": "shared_director", "title": "One director", "why": "The same director on all three companies is control, even if the nominee owners differ.", "evidence": "Sam Ho is the director of North Pier, Lantern Desk, and Grey Wharf."},
+          {"id": "shared_phone", "title": "One phone number", "why": "A shared phone is another thread tying the firms to one desk.", "evidence": "+852 0000 0144 on all three files."},
+          {"id": "funnel", "title": "Funds end with one person", "why": "The payments are not three businesses trading. They converge.", "evidence": "HKD 640,000 leaves Grey Wharf for Sam Ho’s personal account."}
+        ],
+        "map_places": [
+          {"id": "hk", "label": "Hong Kong\nall three companies", "kind": "country", "x": 0, "y": 0}
+        ],
+        "map_flows": [],
+        "link_nodes": [
+          {"id": "a", "label": "North Pier", "kind": "company", "x": -1.5, "y": 0.8},
+          {"id": "b", "label": "Lantern Desk", "kind": "company", "x": -1.5, "y": -0.5},
+          {"id": "c", "label": "Grey Wharf", "kind": "company", "x": 0.1, "y": 0.1},
+          {"id": "addr", "label": "Flat 12\nSynthetic Wharf", "kind": "address", "x": 0.3, "y": 1.15},
+          {"id": "phone", "label": "+852 0000 0144", "kind": "phone", "x": 1.35, "y": 0.7},
+          {"id": "sam", "label": "Sam Ho\npersonal account", "kind": "person", "x": 1.45, "y": -0.7}
+        ],
+        "link_edges": [
+          {"from": "a", "to": "b", "label": "HKD 220,000"},
+          {"from": "b", "to": "c", "label": "HKD 410,000"},
+          {"from": "a", "to": "c", "label": "HKD 180,000"},
+          {"from": "a", "to": "addr", "label": "same office"},
+          {"from": "b", "to": "addr", "label": "same office"},
+          {"from": "c", "to": "addr", "label": "same office"},
+          {"from": "c", "to": "phone", "label": "same phone"},
+          {"from": "c", "to": "sam", "label": "HKD 640,000"}
+        ],
+        "correct": ["escalate"],
+        "acceptable": ["report", "more"],
+        "why": {
+          "close": "Three shared identifiers and a payment to one person are not three unrelated customers. Closing stops at the company names.",
+          "more": "You could ask the companies to explain the consulting references. The shared address, director, and phone are already on the file, so the stronger step is to escalate and map the owner.",
+          "escalate": "Map the shared address, director, and phone, and name Sam Ho as the person at the end of the money. That is the investigation this file needs.",
+          "report": "A draft STR is not absurd once the funds converge on one person. The best first step is still to escalate and write the ownership picture. If you draft, do not tell the companies."
+        },
+        "script_choice": {"close": "a4_close", "more": "a4_more", "escalate": "a4_escalate", "report": "a4_report"}
+      },
+      {
+        "id": "A5",
+        "title": "Similar-name screening hit",
+        "customer_name": "Noah Hale",
+        "customer_id": "SYN-CUST-A5",
+        "customer_type": "Individual",
+        "occupation": "New customer, account not opened yet",
+        "amount_label": "No payment yet",
+        "amount_hkd": 0,
+        "priority": "Critical",
+        "priority_rank": 1,
+        "deadline": "2 hours",
+        "deadline_rank": 1,
+        "risk_tag": "Screening",
+        "region": "Harbour",
+        "trigger": "The training screening sheet produced a high name-similarity hit between the applicant Noah Hale and a sheet entry N. Hale. The account has not been opened. No payment is waiting.",
+        "guide": "Open this early. A similar name is a question, not a verdict. Compare date of birth, nationality, and the document number. Do not clear the hit, and do not draft an STR, on the name alone. Amount is zero. Urgency is not the same as amount.",
+        "sample_note": "Applicant Noah Hale matched training-sheet entry N. Hale on the name only. Date of birth 1994-04-02 does not match the sheet date 1971-11-19. The passport number and the address also differ. Do not open the account and do not release any future payment until the hit is resolved with documents. Do not draft an STR only because the names are similar. Ask for the identity pack or escalate the hit for a specialist review.",
+        "kyc": [
+          "Application only. Account status: not opened.",
+          "Applicant date of birth: 1994-04-02. Document: passport SYN-P-A5. Address: 4 Training Lane, Harbour.",
+          "Declared nationality in this pack: Harbour resident. Harbour is a training label, not a country."
+        ],
+        "geography_notes": [
+          "The applicant’s document says Harbour. The sheet entry says a different training place, North Archive.",
+          "Both names are fictional. This is not a government sanctions list."
+        ],
+        "screening": [
+          "Hit strength in this pack: high, on the name N. Hale.",
+          "Sheet date of birth: 1971-11-19. Applicant: 1994-04-02. These are not the same person on the documents you have.",
+          "Sheet document number: SYN-LIST-9. Applicant passport: SYN-P-A5.",
+          "Sheet address: 90 Archive Road, North Archive. Applicant address does not match.",
+          "What you must not do: clear the hit because the dates differ without a recorded review, or file an STR because the names look alike."
+        ],
+        "news": [
+          "No news article. The only external item is the training sheet entry, and it is labelled as a training sheet."
+        ],
+        "review_steps": [
+          "Treat the hit as a hold. Do not open the account while it is unresolved.",
+          "Compare date of birth, document number, and address. Write down each difference.",
+          "Either ask for the identity pack or escalate the hit to the screening specialist.",
+          "Do not draft an STR on the name alone, and do not tell the applicant that a report is being considered."
+        ],
+        "transactions": [
+          {"when": "Today", "what": "No transaction", "amount": "HKD 0", "detail": "The alert is an onboarding screening hit. Nothing has been paid."}
+        ],
+        "red_flags": [
+          {"id": "name_hit", "title": "High-similarity name hit", "why": "A close name stops the onboarding. It does not identify the applicant as the listed person.", "evidence": "Training sheet hit on N. Hale, marked high similarity."},
+          {"id": "dob_gap", "title": "Date of birth does not match", "why": "A different date of birth is strong evidence of a different person, and it still has to be reviewed and recorded.", "evidence": "Applicant 1994-04-02. Sheet 1971-11-19."},
+          {"id": "doc_gap", "title": "Passport and address do not match the sheet", "why": "You need the document comparison on the file before anyone clears or reports.", "evidence": "Passport SYN-P-A5 versus sheet document SYN-LIST-9. Addresses differ."}
+        ],
+        "map_places": [
+          {"id": "home", "label": "Harbour\napplicant document", "kind": "country", "x": -1.1, "y": 0},
+          {"id": "list", "label": "North Archive\nsheet entry", "kind": "country", "x": 1.15, "y": 0.15, "hot": true}
+        ],
+        "map_flows": [],
+        "link_nodes": [
+          {"id": "noah", "label": "Noah Hale\napplicant", "kind": "person", "x": -1.1, "y": 0.1},
+          {"id": "hit", "label": "Sheet entry\nN. Hale", "kind": "document", "x": 1.0, "y": 0.55},
+          {"id": "dob", "label": "Dates of birth\ndo not match", "kind": "document", "x": 1.0, "y": -0.6}
+        ],
+        "link_edges": [
+          {"from": "noah", "to": "hit", "label": "name only"},
+          {"from": "noah", "to": "dob", "label": "1994 vs 1971"}
+        ],
+        "correct": ["more", "escalate"],
+        "acceptable": [],
+        "why": {
+          "close": "You cannot clear a screening hit, or open the account, just because the dates look different. The review has to be recorded. Closing is the miss.",
+          "more": "Ask for the identity pack and record every field that does not match. That is a sound way to resolve a possible false hit. Keep the account unopened until the review is done.",
+          "escalate": "Handing a high-similarity hit to the screening specialist is also sound, especially with a two-hour clock. Do not open the account in the meantime.",
+          "report": "A similar name is not reasonable suspicion. Drafting an STR here fails the shift. Compare the documents first."
+        },
+        "script_choice": {"close": "a5_close", "more": "a5_more", "escalate": "a5_escalate", "report": "a5_report"}
+      },
+      {
+        "id": "A6",
+        "title": "Many small credits, one exit",
+        "customer_name": "Jordan Lee",
+        "customer_id": "SYN-CUST-A6",
+        "customer_type": "Individual",
+        "occupation": "University student (declared)",
+        "amount_label": "38 credits, then one exit of HKD 186,000",
+        "amount_hkd": 186000,
+        "priority": "High",
+        "priority_rank": 2,
+        "deadline": "Today",
+        "deadline_rank": 2,
+        "risk_tag": "Fan-in",
+        "region": "Hong Kong",
+        "trigger": "In one day the account received 38 small transfers. The notes say commission or collection. Almost the whole balance then left to an offshore crypto venue.",
+        "guide": "Do not judge this by one small payment. Count the pattern: many credits in, one exit out, and a reference such as commission. A student account with no business is part of the mismatch.",
+        "sample_note": "Jordan Lee, a student, received 38 transfers in one day totalling about HKD 186,000. References include commission and collection. The balance then left to offshore crypto venue SYN-OTC. Past turnover is low and there is no business on the file. This looks like funds being gathered and moved on. Escalate or draft an STR. Do not tell the customer.",
+        "kyc": [
+          "Declared status: full-time student. Declared income: family support, about HKD 8,000 a month.",
+          "Account opened 11 months ago. Typical month before today: two or three small credits under HKD 3,000.",
+          "No business registration, marketplace shop, or employer is on the file."
+        ],
+        "geography_notes": [
+          "The credits arrive in Hong Kong. The exit is to a training label, Offshore Crypto Venue SYN-OTC. That venue is fictional.",
+          "The picture to remember is fan-in, then one door out."
+        ],
+        "screening": [
+          "No sanctions-style name hit on Jordan Lee in this training pack."
+        ],
+        "news": [
+          "Training clip, not a real article: a campus board offers a fee for letting people use your account. Use it only as a hint that the pattern is known. It is not evidence about this customer."
+        ],
+        "review_steps": [
+          "Count the credits and read the references. Commission and collection are the words on the payments.",
+          "Compare today’s total with a student account that usually sees a few thousand dollars.",
+          "Follow the single exit to the crypto venue.",
+          "Escalate or draft an STR. Do not ask the customer in a way that reveals a possible report."
+        ],
+        "transactions": [
+          {"when": "Today, morning", "what": "38 inward transfers", "amount": "about HKD 2,000 to HKD 8,000 each", "detail": "Total about HKD 186,000. References include commission and collection. Senders are 38 different synthetic accounts."},
+          {"when": "Today, 16:10", "what": "Outward transfer", "amount": "HKD 186,000", "detail": "To Offshore Crypto Venue SYN-OTC. The student balance is left near zero."}
+        ],
+        "red_flags": [
+          {"id": "fan_in", "title": "Many small credits in one day", "why": "A sudden fan-in is how gathered funds arrive before they move again.", "evidence": "38 credits in one day on an account that usually sees two or three."},
+          {"id": "exit", "title": "Gathered funds leave at once", "why": "The account did not keep the money. It consolidated and pushed it out.", "evidence": "HKD 186,000 left the same day to SYN-OTC."},
+          {"id": "references", "title": "Notes say commission or collection", "why": "Those words often describe a fee for receiving someone else’s money.", "evidence": "Payment references include commission and collection."},
+          {"id": "profile", "title": "Student profile, no business reason", "why": "The activity does not fit family support of HKD 8,000 a month.", "evidence": "No shop, employer, or business registration on the file."}
+        ],
+        "map_places": [
+          {"id": "hk", "label": "Hong Kong\n38 credits", "kind": "country", "x": -1.1, "y": 0.1},
+          {"id": "otc", "label": "Offshore crypto venue\nfictional", "kind": "account", "x": 1.2, "y": -0.1, "hot": true}
+        ],
+        "map_flows": [
+          {"from": "hk", "to": "otc", "label": "HKD 186,000 same day"}
+        ],
+        "link_nodes": [
+          {"id": "lee", "label": "Jordan Lee\nstudent", "kind": "person", "x": -1.2, "y": 0.1},
+          {"id": "fan", "label": "38 small credits", "kind": "money", "x": 0.1, "y": 0.75},
+          {"id": "ref", "label": "Notes say\ncommission", "kind": "document", "x": 0.1, "y": -0.75},
+          {"id": "otc", "label": "Crypto venue\nSYN-OTC", "kind": "account", "x": 1.45, "y": 0}
+        ],
+        "link_edges": [
+          {"from": "fan", "to": "lee", "label": "one day"},
+          {"from": "ref", "to": "lee", "label": "on the payments"},
+          {"from": "lee", "to": "otc", "label": "HKD 186,000 out"}
+        ],
+        "correct": ["escalate", "report"],
+        "acceptable": ["more"],
+        "why": {
+          "close": "Thirty-eight credits and a same-day exit do not match a student account. Closing treats a fan-in as ordinary pocket money.",
+          "more": "You could ask about the commission notes. The pattern is already visible, and contacting the customer risks tipping them off if you mention a report. Escalating or drafting is the stronger first step.",
+          "escalate": "Fan-in, a same-day exit to a crypto venue, and a profile that does not fit are enough to escalate. An STR can be drafted with that write-up.",
+          "report": "Reasonable suspicion of gathered funds, which may be criminal proceeds, is available. Draft the STR and do not tell the customer."
+        },
+        "script_choice": {"close": "a6_close", "more": "a6_more", "escalate": "a6_escalate", "report": "a6_report"}
+      }
+    ]
+  },
+  "rules": [
+    {
+      "id": "R1_PASS_THROUGH",
+      "when": "Large credits leave to third parties within a day and do not match the customer's known income",
+      "then": "escalate_before_close",
+      "note": "Do not close a pass-through on the job title alone."
+    },
+    {
+      "id": "R2_STRUCTURING",
+      "when": "Repeated cash deposits sit just under a reporting threshold and other people deposit them",
+      "then": "escalate_or_draft_str",
+      "note": "Structuring to avoid a threshold is a suspicious indicator. Reporting is not a punishment."
+    },
+    {
+      "id": "R3_TRADE_DOCS",
+      "when": "The invoice, the goods description, and the transport document do not match",
+      "then": "request_documents_before_release",
+      "note": "Ask for the missing trade documents before you treat the payment as suspicious or as cleared."
+    },
+    {
+      "id": "R4_SHARED_CONTROL",
+      "when": "Unrelated companies share an address, a director, or a phone and the funds end with one person",
+      "then": "escalate_and_map_the_beneficiary",
+      "note": "Draw the link before you close the alert."
+    },
+    {
+      "id": "R5_SCREENING_HIT",
+      "when": "A name is similar to a list entry but the date of birth, nationality, or document number does not match",
+      "then": "hold_for_review",
+      "note": "Do not clear the hit on the name, and do not file an STR only because the names are similar. The sheet in this shift is a training sheet."
+    },
+    {
+      "id": "R6_FAN_IN",
+      "when": "Many small credits arrive in one day and leave at once to a crypto platform",
+      "then": "escalate_or_draft_str",
+      "note": "Fan-in plus a fast exit can be gathered proceeds. Do not tell the customer you are reporting."
+    },
+    {
+      "id": "R7_NO_TIPPING_OFF",
+      "when": "An STR is drafted or about to be drafted",
+      "then": "do_not_disclose_to_the_customer",
+      "note": "Tipping off is prohibited. This room only drafts a training flag. It does not file with a financial intelligence unit."
+    }
+  ],
+  "initial_twin_state": {
+    "phase": "alert_triage",
+    "customer": {
+      "id": "SYN-SHIFT-12",
+      "display_name": "Morning alert queue",
+      "segment": "transaction_monitoring"
+    },
+    "kyc": {
+      "status": "shift_open",
+      "signals": []
+    },
+    "account": {
+      "id": "SYN-QUEUE-12",
+      "opened": true,
+      "holds": []
+    },
+    "transactions": [],
+    "risk": {
+      "score": 0,
+      "flags": []
+    },
+    "triage": {
+      "last": "none"
+    },
+    "disposition": null
+  },
+  "nodes": [
+    {
+      "id": "n_shift_open",
+      "type": "scene",
+      "title": "Morning queue",
+      "prompt": "You are a new transaction-monitoring analyst. Six synthetic alerts are waiting. Work them in any order. The twin records your six decisions in alert order when the shift is filed.",
+      "next": "n_a1",
+      "twin_patch": {"phase": "alert_triage"}
+    },
+    {
+      "id": "n_a1",
+      "type": "decision",
+      "title": "A1 Rapid pass-through",
+      "prompt": "Alex Chan received HKD 1,800,000 in 72 hours and sent HKD 1,650,000 to third parties within 24 hours. The sending accounts were already closed as suspicious.",
+      "choices": [
+        {"id": "a1_close", "label": "Close", "next": "n_a2", "rationale": "Closes a pass-through that does not match the customer.", "effects": {"triage.last": "a1_close", "kyc.status": "closed_alert", "risk.flags_add": ["A1_CLOSE"], "risk.score_delta": 0}},
+        {"id": "a1_more", "label": "Ask for more information", "next": "n_a2", "rationale": "Waits for a document the speed and the closed accounts already outrun.", "effects": {"triage.last": "a1_more", "kyc.status": "pending_info", "risk.flags_add": ["A1_MORE"], "risk.score_delta": 0}},
+        {"id": "a1_escalate", "label": "Escalate the investigation", "next": "n_a2", "rationale": "Hands the pass-through to a senior investigator.", "effects": {"triage.last": "a1_escalate", "kyc.status": "escalated", "risk.flags_add": ["A1_ESCALATE"], "risk.score_delta": 20}},
+        {"id": "a1_report", "label": "Draft an STR", "next": "n_a2", "rationale": "Drafts a training STR before the write-up. Still a reasonable suspicion.", "effects": {"triage.last": "a1_report", "kyc.status": "str_drafted", "risk.flags_add": ["A1_REPORT", "STR_DRAFTED"], "risk.score_delta": 10}}
+      ]
+    },
+    {
+      "id": "n_a2",
+      "type": "decision",
+      "title": "A2 Structured cash",
+      "prompt": "Mina Wong deposited HKD 90,000 cash on five days. Other people made several deposits. Declared income is HKD 30,000 a month.",
+      "choices": [
+        {"id": "a2_close", "label": "Close", "next": "n_a3", "rationale": "Closes structured third-party cash.", "effects": {"triage.last": "a2_close", "kyc.status": "closed_alert", "risk.flags_add": ["A2_CLOSE"], "risk.score_delta": 0}},
+        {"id": "a2_more", "label": "Ask for more information", "next": "n_a3", "rationale": "Asks who the depositors are. Weaker than escalating or drafting.", "effects": {"triage.last": "a2_more", "kyc.status": "pending_info", "risk.flags_add": ["A2_MORE"], "risk.score_delta": 10}},
+        {"id": "a2_escalate", "label": "Escalate the investigation", "next": "n_a3", "rationale": "Escalates structured cash.", "effects": {"triage.last": "a2_escalate", "kyc.status": "escalated", "risk.flags_add": ["A2_ESCALATE"], "risk.score_delta": 20}},
+        {"id": "a2_report", "label": "Draft an STR", "next": "n_a3", "rationale": "Drafts a training STR for structured third-party cash.", "effects": {"triage.last": "a2_report", "kyc.status": "str_drafted", "risk.flags_add": ["A2_REPORT", "STR_DRAFTED"], "risk.score_delta": 20}}
+      ]
+    },
+    {
+      "id": "n_a3",
+      "type": "decision",
+      "title": "A3 Trade documents",
+      "prompt": "Brightwave Trading Ltd wants to pay HKD 2,000,000. The invoice, the bill of lading, and the beneficiary do not match.",
+      "choices": [
+        {"id": "a3_close", "label": "Close", "next": "n_a4", "rationale": "Closes a payment whose documents disagree.", "effects": {"triage.last": "a3_close", "kyc.status": "closed_alert", "risk.flags_add": ["A3_CLOSE"], "risk.score_delta": 0}},
+        {"id": "a3_more", "label": "Ask for more information", "next": "n_a4", "rationale": "Asks for a consistent trade pack before release.", "effects": {"triage.last": "a3_more", "kyc.status": "pending_info", "risk.flags_add": ["A3_MORE"], "risk.score_delta": 20}},
+        {"id": "a3_escalate", "label": "Escalate the investigation", "next": "n_a4", "rationale": "Escalates before the document request. Reasonable, not the best first step.", "effects": {"triage.last": "a3_escalate", "kyc.status": "escalated", "risk.flags_add": ["A3_ESCALATE"], "risk.score_delta": 10}},
+        {"id": "a3_report", "label": "Draft an STR", "next": "n_a4", "rationale": "Drafts an STR only because the papers are missing.", "effects": {"triage.last": "a3_report", "kyc.status": "str_drafted", "risk.flags_add": ["A3_REPORT", "STR_DRAFTED"], "risk.score_delta": 0}}
+      ]
+    },
+    {
+      "id": "n_a4",
+      "type": "decision",
+      "title": "A4 Shared control",
+      "prompt": "Three companies share an address, a director, and a phone. The money ends with Sam Ho.",
+      "choices": [
+        {"id": "a4_close", "label": "Close", "next": "n_a5", "rationale": "Closes a network that shares control.", "effects": {"triage.last": "a4_close", "kyc.status": "closed_alert", "risk.flags_add": ["A4_CLOSE"], "risk.score_delta": 0}},
+        {"id": "a4_more", "label": "Ask for more information", "next": "n_a5", "rationale": "Asks the companies to explain payments the file already links.", "effects": {"triage.last": "a4_more", "kyc.status": "pending_info", "risk.flags_add": ["A4_MORE"], "risk.score_delta": 10}},
+        {"id": "a4_escalate", "label": "Escalate the investigation", "next": "n_a5", "rationale": "Escalates and maps the person at the end of the money.", "effects": {"triage.last": "a4_escalate", "kyc.status": "escalated", "risk.flags_add": ["A4_ESCALATE"], "risk.score_delta": 20}},
+        {"id": "a4_report", "label": "Draft an STR", "next": "n_a5", "rationale": "Drafts a training STR on the converged funds.", "effects": {"triage.last": "a4_report", "kyc.status": "str_drafted", "risk.flags_add": ["A4_REPORT", "STR_DRAFTED"], "risk.score_delta": 10}}
+      ]
+    },
+    {
+      "id": "n_a5",
+      "type": "decision",
+      "title": "A5 Screening hit",
+      "prompt": "Noah Hale matches training-sheet entry N. Hale on the name. The date of birth, passport, and address do not match. The account is not open.",
+      "choices": [
+        {"id": "a5_close", "label": "Close", "next": "n_a6", "rationale": "Clears a name hit without a recorded review.", "effects": {"triage.last": "a5_close", "kyc.status": "closed_alert", "risk.flags_add": ["A5_CLOSE"], "risk.score_delta": 0}},
+        {"id": "a5_more", "label": "Ask for more information", "next": "n_a6", "rationale": "Holds onboarding and asks for the identity pack.", "effects": {"triage.last": "a5_more", "kyc.status": "pending_info", "risk.flags_add": ["A5_MORE"], "risk.score_delta": 20}},
+        {"id": "a5_escalate", "label": "Escalate the investigation", "next": "n_a6", "rationale": "Escalates the hit for a specialist review. Account stays unopened.", "effects": {"triage.last": "a5_escalate", "kyc.status": "escalated", "risk.flags_add": ["A5_ESCALATE"], "risk.score_delta": 20}},
+        {"id": "a5_report", "label": "Draft an STR", "next": "n_a6", "rationale": "Drafts an STR only because the names are similar.", "effects": {"triage.last": "a5_report", "kyc.status": "str_drafted", "risk.flags_add": ["A5_REPORT", "STR_DRAFTED"], "risk.score_delta": 0}}
+      ]
+    },
+    {
+      "id": "n_a6",
+      "type": "decision",
+      "title": "A6 Fan-in and exit",
+      "prompt": "Student Jordan Lee received 38 small transfers in one day, referenced as commission or collection, then sent the balance to a crypto venue.",
+      "choices": [
+        {"id": "a6_close", "label": "Close", "next": "n_outcome_shift", "rationale": "Closes a fan-in on a student account.", "effects": {"triage.last": "a6_close", "kyc.status": "closed_alert", "risk.flags_add": ["A6_CLOSE"], "risk.score_delta": 0}},
+        {"id": "a6_more", "label": "Ask for more information", "next": "n_outcome_shift", "rationale": "Asks the customer about commission notes and risks tipping off.", "effects": {"triage.last": "a6_more", "kyc.status": "pending_info", "risk.flags_add": ["A6_MORE"], "risk.score_delta": 10}},
+        {"id": "a6_escalate", "label": "Escalate the investigation", "next": "n_outcome_shift", "rationale": "Escalates the fan-in and the same-day exit.", "effects": {"triage.last": "a6_escalate", "kyc.status": "escalated", "risk.flags_add": ["A6_ESCALATE"], "risk.score_delta": 20}},
+        {"id": "a6_report", "label": "Draft an STR", "next": "n_outcome_shift", "rationale": "Drafts a training STR for gathered funds leaving the same day.", "effects": {"triage.last": "a6_report", "kyc.status": "str_drafted", "risk.flags_add": ["A6_REPORT", "STR_DRAFTED"], "risk.score_delta": 20}}
+      ]
+    },
+    {
+      "id": "n_outcome_shift",
+      "type": "outcome",
+      "title": "Shift written down",
+      "prompt": "The six dispositions are on the twin. shift_reviewed means the queue was recorded. It is not itself a pass. The room score is the grade.",
+      "terminal": true,
+      "twin_patch": {"disposition": "shift_reviewed"}
+    }
+  ]
+}
