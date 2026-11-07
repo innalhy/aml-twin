@@ -27,7 +27,7 @@ namespace TwinAml
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void Bootstrap()
         {
-            if (FindObjectOfType<FlowController>() != null) return;
+            if (FindAnyObjectByType<FlowController>() != null) return;
             var go = new GameObject("TwinAML.Flow");
             go.AddComponent<FlowController>();
         }

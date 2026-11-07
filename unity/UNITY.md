@@ -33,9 +33,13 @@ Investigation centre. Press Play on the file to start the camera at that station
 
 ## Open it
 
-1. Install **Unity 2022.3 LTS** (this project was written for 2022.3.62f1). The folder on disk is now Unity 6000.6.8f1. Unity 6 can open the same folder and may ask to upgrade. Allow the upgrade if you want. Do not add a render-pipeline package unless you mean to. `UnityEngine.UI` and `UnityEngine.EventSystems` (`Text`, `Button`, `EventSystem`) come from `com.unity.ugui` 2.6.0 in `Packages/manifest.json`. That is the built-in uGUI package shipped with 6000.6.8f1. `com.unity.modules.ui` is a different module and does not contain those types.
-2. **Add** or **Open** the project folder `unity/TwinAML` (the folder that contains `Assets` and `ProjectSettings`).
-3. The pipeline is the **Built-in Render Pipeline**, so the first Play is not a pink URP screen. To move to URP later: install Universal RP, create a pipeline asset, and assign it under Project Settings → Graphics.
+The supported Editor is **Unity 6000.6.8f1** (Unity 6.6). On the course Mac that install is `/Applications/Unity/Unity-6000.6.8f1`. Hub reads `ProjectSettings/ProjectVersion.txt`, which names `6000.6.8f1` (changeset `237b6593792b`), so it opens this folder with that Editor and does not ask for 2022.3.62f1.
+
+Unity does not open a 6000.x project in an older Editor. 2022.3 LTS is not a supported path for this room.
+
+1. In Unity Hub, **Add** or **Open** the project folder `unity/TwinAML` (the folder that contains `Assets` and `ProjectSettings`). Do not open the repo root.
+2. The pipeline is the **Built-in Render Pipeline**. `GraphicsSettings` has no custom pipeline asset, so the first Play is not a pink URP screen. Do not add a Universal RP or High Definition RP package.
+3. UI is **uGUI**, built in code. The manifest pins `com.unity.ugui` **2.6.0**, the core package that ships with Unity 6000.6. `UnityEngine.UI` and `UnityEngine.EventSystems` (`Text`, `Button`, `EventSystem`) come from that package. `com.unity.modules.ui` is a different module and does not contain those types. The first open may rewrite `Packages/packages-lock.json` if the Editor records more built-in dependencies of that package. Buttons use `StandaloneInputModule` and the legacy Input Manager (`activeInputHandler: 0` in `ProjectSettings.asset`). Do not install the Input System package. If the Editor asks to enable it, keep **Input Manager (Old)**.
 4. First scene: **`Assets/Scenes/3D/Scn_Branch_Lobby.unity`**. It is scene 0 in Build Settings. Menu: **TwinAML → Play Branch Lobby**. Playing the topics wall opens this lobby.
 5. On the first Editor open, **TwinAML → Sync Scenes Into Build Settings** runs by itself and keeps every `Scn_*` scene in the build.
 
