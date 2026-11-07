@@ -103,7 +103,7 @@ namespace TwinAml.EditorTools
                 if (same) return;
             }
             EditorBuildSettings.scenes = desired.ToArray();
-            Debug.Log("TwinAML build settings now start at Scn_Boot.");
+            Debug.Log("TwinAML build settings now start at Scn_Branch_Lobby.");
         }
     }
 }
