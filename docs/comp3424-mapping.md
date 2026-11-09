@@ -28,7 +28,7 @@ Level 2 lets one session shadow the trainee. The trainee's choices become events
 
 Level 2 is done when the same case can end as "onboarding refused" and as "opened, then cleared as a false positive", the dashboard shows different `disposition` values and flags, and the ordered events can be replayed.
 
-Anything beyond that (bidirectional control of a real system, autonomous agents) is outside this demo. The Editor training room under [`unity/`](../unity/UNITY.md) is in scope. It plays two scripts locally. It does not shadow a live session on the API. Wiring that room to the session API is P3-S4 and is not built.
+Anything beyond that (bidirectional control of a real system, autonomous agents) is outside this demo. The Editor training room is on branch [`unity`](https://github.com/innalhy/aml-twin/tree/unity) (`git fetch && git checkout unity`). It is in scope. It plays two scripts locally. It does not shadow a live session on the API. Wiring that room to the session API is P3-S4 and is not built.
 
 ## Mirroring, shadowing, threading
 
@@ -58,7 +58,7 @@ If a language model is added later, it may explain or draft narrative only after
 | Discrete-event simulation, FlexSim | No production-line simulation. The simulation is a branching script plus a state machine. |
 | IoT sensing | The trainee's decision is the input event. There is no sensor. |
 | NVIDIA Omniverse, VR, metaverse | Not in scope. The web app is the face. |
-| Unity | Editor training room, in scope. Plays two scripts locally. A later build may call the same VPS API. |
+| Unity | Editor training room on branch `unity` (`git fetch && git checkout unity`). In scope. Plays two scripts locally. A later build may call the same VPS API. |
 | Artificial intelligence / machine learning | Considered only after rules, and it cannot replace the rules. |
 
 ## How a trainee can describe the assignment
