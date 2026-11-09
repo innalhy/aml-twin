@@ -19,7 +19,7 @@ This file is the working agreement for AI agents in **TwinAML**, a COMP3424 demo
    - `workers/api` and the Wrangler config files may remain as a legacy Cloudflare scaffold. They are not the COMP3424 demo target.
    - case scripts in `data/cases/`
    - notes in `docs/`
-   - one Unity Editor room in `unity/TwinAML` (see `unity/UNITY.md`). Open it with Unity 6000.6.8f1. It is in scope. It plays pre-authored scripts locally. It is not a second API.
+   - one Unity Editor room on the long-lived branch `unity` (`unity/TwinAML`; see `unity/UNITY.md` on that branch). It is not in the `main` tree. Check it out with `git fetch origin && git checkout unity`, then open it with Unity 6000.6.8f1. It is in scope. It plays pre-authored scripts locally. It is not a second API.
 3. Do not add Docker, Kubernetes, Neo4j, Kafka, FlexSim, a microservice split, a second Unity project, or other enterprise pieces unless the owner explicitly asks in that session. Docker is not a supported way to run or deploy this demo. Do not reintroduce `docker-compose.yml` or a container cluster as a requirement. FlexSim is out of scope for the demo.
 4. Prefer the web client for the VPS demo. The Editor room is the immersive face and stays in the demo. It is not a second platform and it does not replace the API.
 5. English is the primary language for docs and UI copy. Keep course terms in English when they are the lecture vocabulary: mirroring, shadowing, threading, Chan Level 1, Chan Level 2, rules-before-AI. Do not switch docs or the placeholder UI back to Traditional Chinese.
@@ -38,7 +38,7 @@ This file is the working agreement for AI agents in **TwinAML**, a COMP3424 demo
 - `docs/cloudflare.md` — pointer only. The Worker scaffold is not the demo target.
 - `data/cases/01-deepfake-hk-001.example.json` — the Level 1 example script.
 - `packages/schemas/script.schema.json` — the minimal script contract.
-- `unity/UNITY.md` — Editor training room: `Scn_Boot`, Topic 1, Topic 2.
+- Branch `unity`, file `unity/UNITY.md` — Editor training room: `Scn_Boot`, Topic 1, Topic 2. `main` does not contain that tree. `git fetch origin && git checkout unity`.
 
 ## Cursor Cloud specific instructions
 

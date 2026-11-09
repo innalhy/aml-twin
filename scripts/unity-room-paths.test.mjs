@@ -4,7 +4,9 @@
  * From the repo root:
  *   node scripts/unity-room-paths.test.mjs
  *
- * Keep the lists aligned with unity/TwinAML/Assets/Scripts/Flow/RoomPaths.cs.
+ * Keep the lists aligned with RoomPaths.cs on branch `unity`:
+ * unity/TwinAML/Assets/Scripts/Flow/RoomPaths.cs
+ * (`git fetch origin && git checkout unity`). That file is not on `main`.
  */
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";

@@ -26,7 +26,7 @@ A session starts with a `case_id`. The VPS API, the scenario player, and the das
 | `hk-ia-fwd-controls-001` | Insurer controls (synthetic insurer) |
 | `hk-hkma-cdd-001` | Bank CDD / monitoring / STR (synthetic bank) |
 
-Deploy path: **Linux VPS**. Static Vite build (`frontend/`) plus FastAPI (`backend/`) behind nginx or Caddy with HTTPS. See [`docs/deploy-vps.md`](../deploy-vps.md). A Node/Hono process may serve the same API routes later. `workers/api` may remain as a legacy scaffold and is not this deploy path. FlexSim is out of scope. The Unity Editor room in [`unity/UNITY.md`](../../unity/UNITY.md) is in scope and is not a site on the VPS.
+Deploy path: **Linux VPS**. Static Vite build (`frontend/`) plus FastAPI (`backend/`) behind nginx or Caddy with HTTPS. See [`docs/deploy-vps.md`](../deploy-vps.md). A Node/Hono process may serve the same API routes later. `workers/api` may remain as a legacy scaffold and is not this deploy path. FlexSim is out of scope. The Unity Editor room is on branch [`unity`](https://github.com/innalhy/aml-twin/blob/unity/unity/UNITY.md) (`unity/UNITY.md`). It is in scope and is not a site on the VPS. `main` does not contain that tree.
 
 ## In scope
 
@@ -42,7 +42,7 @@ Deploy path: **Linux VPS**. Static Vite build (`frontend/`) plus FastAPI (`backe
 ## Out of scope (Phase 1)
 
 - Docker, Kubernetes, Neo4j, Kafka, microservices.
-- Wiring the Editor room to the live session API. The room under [`unity/`](../../unity/UNITY.md) already plays two scripts locally and stays in the demo. That room is not one of the slices below, and it does not implement P1-S2.
+- Wiring the Editor room to the live session API. The room on branch [`unity`](https://github.com/innalhy/aml-twin/blob/unity/unity/UNITY.md) already plays two scripts locally and stays in the demo. That room is not one of the slices below, and it does not implement P1-S2.
 - New case families beyond the 11 scripts. Phase 2 adds mixer / peel-chain and synthetic-ID cases.
 - Live LLM judging disposition.
 - Real bank / HKMA / STR filing integration.

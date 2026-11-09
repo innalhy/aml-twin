@@ -82,6 +82,8 @@ data/media/**
 .dev.vars.*
 
 # --- Unity ---
+# The Editor project lives on branch `unity`. These rules ignore generated
+# folders if that tree is checked out into this working copy.
 unity/TwinAML/[Ll]ibrary/
 unity/TwinAML/[Tt]emp/
 unity/TwinAML/[Oo]bj/

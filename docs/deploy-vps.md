@@ -10,7 +10,7 @@ Hostnames, certificates, and private keys stay on that machine. This repository 
 | --- | --- | --- |
 | Web | `frontend/` (Vite). `npm run build` writes `dist/`. | Static files. The proxy serves them. |
 | API | `backend/` FastAPI. Health, cases, sessions, decisions. | `uvicorn` bound to `127.0.0.1:8000`. |
-| Unity | [`unity/TwinAML`](../unity/UNITY.md) | Editor training room on a workstation. In scope for the demo. It is not a site on the VPS, and it does not call this API yet. |
+| Unity | Branch [`unity`](https://github.com/innalhy/aml-twin/blob/unity/unity/UNITY.md), `unity/TwinAML` | Editor training room on a workstation. In scope for the demo. It is not a site on the VPS, and it does not call this API yet. `main` does not contain the project. `git fetch origin && git checkout unity`. |
 | Legacy scaffold | `workers/api`, `workers/api/wrangler.jsonc`, `frontend/wrangler.jsonc` | Left in the tree. Not the COMP3424 demo target. |
 
 A Node/Hono process may be the API instead of FastAPI when it serves the same routes. This repo does not ship a Node server entrypoint. `workers/api` is Hono for the Workers runtime (`wrangler dev` / `wrangler deploy`). Use the FastAPI app for the VPS until a later slice adds a Node listener.

@@ -1,6 +1,6 @@
 # TwinAML architecture (simplified)
 
-TwinAML is a digital twin for training. It is not a bank production system. The twin lives in the backend: one case state, plus the events that change it. The web app is the face. The Unity Editor room is the immersive face and is in scope for the demo. Neither face gets a second copy of the state.
+TwinAML is a digital twin for training. It is not a bank production system. The twin lives in the backend: one case state, plus the events that change it. The web app is the face. The Unity Editor room, on branch `unity`, is the immersive face and is in scope for the demo. Neither face gets a second copy of the state.
 
 This demo stays one API and one web client on purpose. It does not split into microservices, and it does not use Neo4j, Kafka, Docker, Kubernetes, or FlexSim.
 
@@ -73,7 +73,7 @@ Media is not in git. The `media_ref` on `n_intake` is `data/media/deepfake-hk-00
 ## Clients
 
 - **Web**: `frontend/`, React + Vite + TypeScript, static files on the Linux VPS. The scenario player and the dashboard read twin state from the API.
-- **Editor room**: [`unity/UNITY.md`](../unity/UNITY.md). In scope. Unity 6000.6.8f1, first scene `Scn_Branch_Lobby`. It applies the schema 0.1 patches locally while you play Topics 1–4. That mirror is the training-room twin for the Editor dashboard. It is not a second case format, and it does not call the session API. Wiring that room to the API is P3-S4.
+- **Editor room**: branch `unity`, file [`unity/UNITY.md`](https://github.com/innalhy/aml-twin/blob/unity/unity/UNITY.md). `main` does not contain `unity/`. Check it out with `git fetch origin && git checkout unity`. In scope. Unity 6000.6.8f1, first scene `Scn_Branch_Lobby`. It applies the schema 0.1 patches locally while you play Topics 1–4. That mirror is the training-room twin for the Editor dashboard. It is not a second case format, and it does not call the session API. Wiring that room to the API is P3-S4.
 
 ## Explicitly out of scope
 

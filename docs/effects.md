@@ -169,4 +169,4 @@ PYTHONPATH=. python -m unittest discover -s tests -v
 
 If `ajv` is not already installed, the Node script installs `ajv@8` under the OS temp directory. It does not add a dependency to this repo. GitHub Actions runs `node scripts/validate-cases.mjs` on push and pull request (`.github/workflows/cases.yml`).
 
-The Unity training room applies this same order in the Editor for two topics. The choice lists are checked by [`scripts/unity-room-paths.test.mjs`](../scripts/unity-room-paths.test.mjs). See [`unity/UNITY.md`](../unity/UNITY.md). That room does not add effect keys.
+The Unity training room applies this same order in the Editor for two topics. The choice lists are checked by [`scripts/unity-room-paths.test.mjs`](../scripts/unity-room-paths.test.mjs). The room sources are on branch [`unity`](https://github.com/innalhy/aml-twin/blob/unity/unity/UNITY.md) (`unity/UNITY.md`). `main` does not contain that tree. That room does not add effect keys.

@@ -45,6 +45,7 @@ Describe what a production-minded TwinAML could become after Phases 1–2: ML th
 
 ### P3-S4 — Immersive client (Unity)
 - Same session API; no forked twin.
+- The current Editor project is on branch `unity` (`unity/TwinAML`). `main` does not contain that tree. `git fetch origin && git checkout unity`.
 - **Done when:** one Phase 1 path playable in Unity against the VPS session API.
 
 ### P3-S5 — Multi-jurisdiction packs
