@@ -50,7 +50,18 @@ class BundledWeekTest(unittest.TestCase):
         self.assertGreaterEqual(len(self.bundle.accounts), 30)
         self.assertEqual(len(self.bundle.transactions), 37)
         self.assertIn("SYN-MIX-01", set(self.bundle.accounts["account_id"]))
-        self.assertIn("deepfake-hk-001", set(self.bundle.accounts["case_label"]))
+        labels = set(self.bundle.accounts["case_label"]) - {""}
+        self.assertIn("deepfake-hk-001", labels)
+        self.assertTrue(
+            {
+                "mule-rent-001",
+                "greythunder-mule-001",
+                "justicegate-crypto-001",
+                "triad-cashflow-001",
+                "daybreak-tbml-001",
+            }.issubset(labels)
+        )
+        self.assertFalse(any(label.startswith("hk-") for label in labels))
 
     def test_amount_line_stress(self) -> None:
         baseline = run_report(self.bundle, 10_000)
@@ -91,7 +102,7 @@ class BundledWeekTest(unittest.TestCase):
         mule = next(case for case in report.graph_cases if case.typology == "mule_to_mixer")
         self.assertEqual(set(cycle.account_ids), {"SYN-CY-A", "SYN-CY-B", "SYN-CY-C", "SYN-CY-D"})
         self.assertTrue(set(cycle.txn_ids).issubset(listed))
-        self.assertEqual(cycle.narrative_labels, ("hk-triad-cashflow-001",))
+        self.assertEqual(cycle.narrative_labels, ("triad-cashflow-001",))
         self.assertTrue({"SYN-DF-01", "SYN-MIX-01", "SYN-MU-L1"}.issubset(mule.account_ids))
         self.assertIn("SYN-CTRL-01", mule.context_ids)
         self.assertIn("deepfake-hk-001", mule.narrative_labels)

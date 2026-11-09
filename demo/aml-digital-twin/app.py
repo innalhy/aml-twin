@@ -232,7 +232,7 @@ line adds rows. It does not link them.
 are three cases, and that count stays put while you move the line:
 
 1. **Smurfing** — many payments under the starting line, into one account, in a short window. Smurfing means the slices stay under a line on purpose. The line here is the classroom dial.
-2. **Circular flow** — the money comes back. A circular flow is a loop with no merchant on it. The amount rule already lists each hop; the case keeps the loop together. The narrative label `hk-triad-cashflow-001` points at the course script about flows with no commercial purpose.
+2. **Circular flow** — the money comes back. A circular flow is a loop with no merchant on it. The amount rule already lists each hop; the case keeps the loop together. The narrative label `triad-cashflow-001` points at the course script about flows with no commercial purpose.
 3. **Mule to mixer** — funds arrive and most of them leave the same day, ending at a wallet on the sandbox watchlist. A mule account moves someone else's funds. A mixer, here, is that pooling wallet. The video-KYC note on Kai Mensah is the deepfake theme from `deepfake-hk-001`. The note is stored on the account. The path test does not read it.
 
 AML, in this demo, means the firm's controls when money may be the proceeds of crime. This sandbox stops at the alert picture. The playable scripts under `data/cases/` are where a trainee chooses a disposition.

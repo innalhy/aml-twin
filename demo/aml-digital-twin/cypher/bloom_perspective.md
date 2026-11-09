@@ -69,7 +69,7 @@ Paste the Cypher from `stories.cypher`. Bloom can store a search phrase as Cyphe
 ## What to point at while hovering
 
 - **Smurfing.** Eight `SENT` arrows into one account, amounts between HKD 6,200 and HKD 9,400, plus dashed `USES_DEVICE` edges into `DEV-SMURF-7`. Smurfing here means many payments kept under a line. The line in this demo is the classroom dial, not a statute.
-- **Circular flow.** Four `SENT` arrows in a loop. Memos say consulting and loan. No merchant sits on the loop. The narrative label `hk-triad-cashflow-001` points at the course script about flows with no commercial purpose.
+- **Circular flow.** Four `SENT` arrows in a loop. Memos say consulting and loan. No merchant sits on the loop. The narrative label `triad-cashflow-001` points at the course script about flows with no commercial purpose.
 - **Mule to mixer.** A mule account moves someone else's funds onward. A mixer, in this ledger, is the watchlist wallet that pools the last hop. The path is the story. The video-KYC sentence on `SYN-DF-01` is the deepfake theme from `deepfake-hk-001` (liveness failed twice, then passed). The note rides along. It does not, by itself, select the path.
 
 ## What to say if someone asks whether this is the bank

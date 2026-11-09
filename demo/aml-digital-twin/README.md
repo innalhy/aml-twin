@@ -102,7 +102,7 @@ Goal: the same payments, read as three cases.
 
 1. Open the three expanders under **Graph-linked cases** and read the plain-language paragraph in each.
 2. **Smurfing** (`G-SMURF-SYN-SM-HUB`). Eight senders, one hub, HKD 62,900, all on 3 March 2026, and they share handset `DEV-SMURF-7`. At HKD 10,000 the amount rule lists none of them. At HKD 5,000 it lists all eight, still as eight rows.
-3. **Circular flow** (`G-CYCLE-1`). Aaron Bell, Bea Cho, Chris Dang, and Dana Eng pay around a loop on 4 March (HKD 18,000, 17,500, 17,000, 16,500). Memos say consulting and loan. The amount rule already has four rows. The case keeps the loop. The narrative label on the accounts is `hk-triad-cashflow-001`.
+3. **Circular flow** (`G-CYCLE-1`). Aaron Bell, Bea Cho, Chris Dang, and Dana Eng pay around a loop on 4 March (HKD 18,000, 17,500, 17,000, 16,500). Memos say consulting and loan. The amount rule already has four rows. The case keeps the loop. The narrative label on the accounts is `triad-cashflow-001`.
 4. **Mule to mixer** (`G-MULE-SYN-MIX-01`). Victim payments and a supplier payment land on accounts that pay most of the money onward the same day, and the last hop is `SYN-MIX-01` on the sandbox watchlist. Kai Mensah (`SYN-DF-01`) carries the video-KYC note: liveness failed twice, then passed. That note is the deepfake theme from `deepfake-hk-001`. The path test does not read the note. A `CONTROLS` link runs from the synthetic recruiter to the three mule accounts. That link is not a payment.
 5. Open **Network**. Orange, teal, and purple match the three cases. Switch the "Show" box to **Mule to mixer** and hover Kai Mensah, Lee Kwan, and SYN Mixer Pool. Dashed rose edges are `CONTROLS` or `USES_DEVICE`.
 
@@ -138,7 +138,7 @@ Goal: the room can say what the rules caught, what they flooded, and what they l
 1. Turn on **Show facilitator answer key**. Every planted row should match the detected story. A mismatch is a bug in this sandbox, not a new typology.
 2. Talk through three quiet or noisy rows:
    - Salaries and office rent alert at HKD 10,000 and sit in no network case.
-   - The jewellery-export invoice (`hk-daybreak-tbml-001` on the two trade desks) is one large payment with no loop and no path to the mixer. The graph leaves it as an amount-rule row. This sandbox has no shipment record to test, so do not promote it to a trade-finance finding.
+   - The jewellery-export invoice (`daybreak-tbml-001` on the two trade desks) is one large payment with no loop and no path to the mixer. The graph leaves it as an amount-rule row. This sandbox has no shipment record to test, so do not promote it to a trade-finance finding.
    - Grocery takings at the North Point Grocer stay under the bottom of the dial.
 3. Rules decide the alerts. The answer key is the scenario script. Nothing on this page asks a language model to score a customer.
 
@@ -157,16 +157,16 @@ Use the bundled week. Leave Neo4j closed unless day 5 already worked, in which c
 
 ## Narrative labels
 
-`case_label` points at a course script. It is a teaching crosswalk.
+`case_label` points at a course script. It is a teaching crosswalk. The label matches the script filename. `deepfake-hk-001` keeps `hk` in the middle of the slug, as in `01-deepfake-hk-001.example.json`.
 
 | Label | Where it sits in this ledger | Course script |
 | --- | --- | --- |
 | `deepfake-hk-001` | Kai Mensah, video-KYC liveness failed twice, then passed | [`01-deepfake-hk-001.example.json`](../../data/cases/01-deepfake-hk-001.example.json) |
-| `hk-mule-rent-001` | Lee Kwan, login described as rented; recruiter `CONTROLS` link | [`03-mule-rent-001.example.json`](../../data/cases/03-mule-rent-001.example.json) |
-| `hk-greythunder-mule-001` | Grey Cluster Desk, second hop | [`06-greythunder-mule-001.example.json`](../../data/cases/06-greythunder-mule-001.example.json) |
-| `hk-justicegate-crypto-001` | Cash-out Desk and SYN Mixer Pool | [`05-justicegate-crypto-001.example.json`](../../data/cases/05-justicegate-crypto-001.example.json) |
-| `hk-triad-cashflow-001` | The four-account loop, memos say consulting and loan | [`09-triad-cashflow-001.example.json`](../../data/cases/09-triad-cashflow-001.example.json) |
-| `hk-daybreak-tbml-001` | Daybreak Shell Desk to Overseas Buyer Desk, jewellery-export memo | [`02-daybreak-tbml-001.example.json`](../../data/cases/02-daybreak-tbml-001.example.json) |
+| `mule-rent-001` | Lee Kwan, login described as rented; recruiter `CONTROLS` link | [`03-mule-rent-001.example.json`](../../data/cases/03-mule-rent-001.example.json) |
+| `greythunder-mule-001` | Grey Cluster Desk, second hop | [`06-greythunder-mule-001.example.json`](../../data/cases/06-greythunder-mule-001.example.json) |
+| `justicegate-crypto-001` | Cash-out Desk and SYN Mixer Pool | [`05-justicegate-crypto-001.example.json`](../../data/cases/05-justicegate-crypto-001.example.json) |
+| `triad-cashflow-001` | The four-account loop, memos say consulting and loan | [`09-triad-cashflow-001.example.json`](../../data/cases/09-triad-cashflow-001.example.json) |
+| `daybreak-tbml-001` | Daybreak Shell Desk to Overseas Buyer Desk, jewellery-export memo | [`02-daybreak-tbml-001.example.json`](../../data/cases/02-daybreak-tbml-001.example.json) |
 
 Smurfing has no `case_id` of its own in the library. The nearest write-ups are the mule and mixer flows in [`data/case-flow/02-crypto-mixers-mule-accounts.en.md`](../../data/case-flow/02-crypto-mixers-mule-accounts.en.md) and [`data/case-flow/06-account-rental-mule-clusters.en.md`](../../data/case-flow/06-account-rental-mule-clusters.en.md). Public-reporting notes for those scripts live in [`data/cases/README.md`](../../data/cases/README.md). This sandbox does not add a new regulatory claim on top of them.
 
