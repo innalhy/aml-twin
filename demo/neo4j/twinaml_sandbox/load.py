@@ -47,7 +47,7 @@ class Bundle:
 
 
 def load_bundled() -> Bundle:
-    """Load the CSV files shipped in ``demo/aml-digital-twin/data``."""
+    """Load the CSV files shipped in ``demo/neo4j/data``."""
     return load_directory(DATA_DIR, source_name="bundled synthetic week")
 
 
