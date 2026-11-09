@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { lazy, Suspense, useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from "react";
 import type { AmlView } from "../../packages/aml/types";
 import { SIMULATION_RUBRIC_GUIDE, SIMULATION_RUBRIC_LABELS, type SimulationAction, type SimulationControl, type SimulationDecision, type SimulationDisposition, type SimulationEvidence, type SimulationRubric, type SimulationView } from "../../packages/aml/simulation-types";
 import { apiFetch, loadResume, saveResume, sessionKey } from "./account-api";
@@ -10,6 +10,14 @@ type Run = AmlView & { simulation?: SimulationView };
 type Action = SimulationAction | { type: "switch_role"; role: "analyst" | "reviewer" };
 type Act = (action: Action, notice: string) => Promise<Run | null>;
 type Tab = "desk" | "evidence" | "decision" | "review" | "activity" | "debrief";
+type Station = { id: string; label: string; onActivate: () => void };
+const SceneViewport = lazy(async () => ({ default: (await import("./SceneViewport")).SceneViewport }));
+const MONITORING_STATIONS = [
+  { id: "desk", label: "Alert terminal" },
+  { id: "evidence", label: "Evidence monitor" },
+  { id: "decision", label: "Assessment desk" },
+  { id: "review", label: "Reviewer station" },
+] as const;
 const words = (value: string) => value.replaceAll("_", " ");
 const formatTime = (value: string) => new Date(value).toLocaleString("en-GB", { timeZone: "Asia/Hong_Kong", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit", hour12: false });
 function saveFile(value: string, filename: string, type: string) {
@@ -70,7 +78,26 @@ export function buildBlindReviewPacket(view: Run) {
   };
 }
 
-export function AmlSimulation({ accountId, onProgress }: { accountId: string | null; onProgress?: (view: AmlView) => void }) {
+function focusWorkspace(target: HTMLElement | null) {
+  target?.focus({ preventScroll: true });
+  target?.scrollIntoView({ block: "start" });
+}
+
+function MonitoringRoom({ stations, sim, role }: { stations: readonly Station[]; sim?: SimulationView; role?: string }) {
+  return <div className="sim-monitoring-room">
+    <div className="sim-monitoring-room-bar">
+      <div><strong>Transaction monitoring room</strong><p>Explore the room and select a station to open its workspace.</p></div>
+      <div className="sim-monitoring-room-state">
+        {sim ? <><span>Minute {sim.elapsedMinutes} / {sim.endMinute}</span><span>{sim.ended ? "Completed" : role === "reviewer" ? "Reviewer" : "Analyst"}</span></> : <span>Assignment briefing</span>}
+      </div>
+    </div>
+    <Suspense fallback={<p className="sim-scene-loading" role="status">Loading the 3D monitoring room…</p>}>
+      <SceneViewport kind="monitoring" hotspots={stations} />
+    </Suspense>
+  </div>;
+}
+
+export function AmlSimulation({ accountId, onProgress, immersive = false }: { accountId: string | null; onProgress?: (view: AmlView) => void; immersive?: boolean }) {
   const storageKey = sessionKey(RUN_KEY, accountId);
   const [view, setView] = useState<Run | null>(null);
   const [loading, setLoading] = useState(true);
@@ -78,6 +105,7 @@ export function AmlSimulation({ accountId, onProgress }: { accountId: string | n
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [retry, setRetry] = useState(0);
+  const briefingId = useId();
   const pending = useRef(false);
   const progressCallback = useRef(onProgress);
   progressCallback.current = onProgress;
@@ -135,19 +163,31 @@ export function AmlSimulation({ accountId, onProgress }: { accountId: string | n
   return <div className="aml-sim" aria-busy={loading || busy}>
     {error && <div className="portal-message portal-error" role="alert"><span>{error}</span><button disabled={busy} onClick={() => { if (view) void refresh(); else setRetry((value) => value + 1); }}>Try again</button></div>}
     {notice && <div className="sim-notice" role="status"><span>{notice}</span><button onClick={() => setNotice("")} aria-label="Dismiss simulation notification">×</button></div>}
-    {loading ? <div className="sim-loading" role="status"><h1>Restoring your simulation…</h1><p>The server is loading the clock, evidence and saved decisions.</p></div> : view?.simulation ? <SimulationConsole key={view.id} view={view} simulation={view.simulation} busy={busy} act={act} onStart={start} onRefresh={refresh} /> : <section className="sim-welcome">
+    {loading ? <div className="sim-loading" role="status"><h1>Restoring your simulation…</h1><p>The server is loading the clock, evidence and saved decisions.</p></div> : view?.simulation ? <SimulationConsole key={view.id} view={view} simulation={view.simulation} busy={busy} act={act} onStart={start} onRefresh={refresh} immersive={immersive} /> : <section className={`sim-welcome${immersive ? " sim-welcome-immersive" : ""}`}>
       <span className="portal-tag">DISCRETE-EVENT AML SIMULATION</span><h1>Investigate the activity.<br />Make a defensible decision.</h1><p>Take a retail-account alert from first review to a documented assessment. Request evidence, wait for independent responses, recommend controls and practise the reviewer handoff while scheduled payments continue.</p>
-      <div className="sim-welcome-grid"><Panel title="Your assignment"><ul><li>A customer profile and transaction history</li><li>A monitoring alert with the contributing records</li><li>Pending payments with real simulation deadlines</li></ul></Panel><Panel title="How it works"><ul><li>Reading pauses the simulation clock</li><li>Checks take time and may be inconclusive</li><li>Recommendations need review and operational execution</li></ul></Panel><Panel title="Your assessment"><ul><li>Cite the evidence available when you decide</li><li>Consider an alternative explanation and missing information</li><li>Review the consequences and your decision process</li></ul></Panel></div>
-      <button className="portal-button portal-button-gold" disabled={busy} onClick={() => { void start(); }}>{busy ? "Starting assignment…" : "Start AML simulation →"}</button><p className="sim-muted sim-small">Synthetic bank data · 60 simulated minutes · Guided practice roles · Practitioner validation pending</p>
+      {immersive && <MonitoringRoom stations={[
+        { id: "desk", label: "Briefing", onActivate: () => focusWorkspace(document.getElementById(`${briefingId}-desk`)) },
+        { id: "evidence", label: "Evidence guide", onActivate: () => focusWorkspace(document.getElementById(`${briefingId}-evidence`)) },
+        { id: "decision", label: "Assessment guide", onActivate: () => focusWorkspace(document.getElementById(`${briefingId}-decision`)) },
+        { id: "review", label: "Start assignment", onActivate: () => { void start(); } },
+      ]} />}
+      <div className="sim-welcome-grid">
+        <Panel title="Your assignment" id={immersive ? `${briefingId}-desk` : undefined}><ul><li>A customer profile and transaction history</li><li>A monitoring alert with the contributing records</li><li>Pending payments with real simulation deadlines</li></ul></Panel>
+        <Panel title="How it works" id={immersive ? `${briefingId}-evidence` : undefined}><ul><li>Reading pauses the simulation clock</li><li>Checks take time and may be inconclusive</li><li>Recommendations need review and operational execution</li></ul></Panel>
+        <Panel title="Your assessment" id={immersive ? `${briefingId}-decision` : undefined}><ul><li>Cite the evidence available when you decide</li><li>Consider an alternative explanation and missing information</li><li>Review the consequences and your decision process</li></ul></Panel>
+      </div>
+      <button className="portal-button portal-button-gold" disabled={busy} onClick={() => { void start(); }}>{busy ? "Starting assignment…" : immersive ? "Start 3D simulation →" : "Start AML simulation →"}</button><p className="sim-muted sim-small">Synthetic bank data · 60 simulated minutes · Guided practice roles · Practitioner validation pending</p>
     </section>}
   </div>;
 }
 
-function SimulationConsole({ view, simulation: sim, busy, act, onStart, onRefresh }: { view: Run; simulation: SimulationView; busy: boolean; act: Act; onStart: () => void; onRefresh: () => void }) {
+function SimulationConsole({ view, simulation: sim, busy, act, onStart, onRefresh, immersive }: { view: Run; simulation: SimulationView; busy: boolean; act: Act; onStart: () => void; onRefresh: () => void; immersive: boolean }) {
   const [tab, setTab] = useState<Tab>(sim.ended ? "debrief" : "desk");
   const [citations, setCitations] = useState<string[]>([]);
   const [endConfirm, setEndConfirm] = useState(false);
   const [newConfirm, setNewConfirm] = useState(false);
+  const roomRef = useRef<HTMLElement>(null);
+  const workspaceRef = useRef<HTMLElement>(null);
   const latestDecision = sim.decisions.at(-1);
   const roleLocked = busy || sim.ended;
   useEffect(() => { if (sim.ended) { setTab("debrief"); setEndConfirm(false); } }, [sim.ended]);
@@ -157,11 +197,20 @@ function SimulationConsole({ view, simulation: sim, busy, act, onStart, onRefres
   return <>
     <div className="sim-heading"><div><span className="portal-tag">AML INVESTIGATION SIMULATION</span><h1>Retail account investigation</h1><p>Build your assessment from the available records. The clock moves when you advance it.</p></div><div className="sim-heading-actions"><button className="portal-text-button" disabled={busy} onClick={onRefresh}>Refresh records</button><button className="portal-button portal-button-subtle" disabled={busy} onClick={() => sim.ended ? onStart() : setNewConfirm(true)}>New assignment</button></div></div>
     {newConfirm && <div className="sim-confirm" role="group" aria-label="Start another assignment"><div><strong>Start a separate assignment?</strong><p>This run stays saved on the server. The new assignment will become this browser’s current simulation.</p></div><button className="portal-button portal-button-blue" disabled={busy} onClick={onStart}>Start new assignment</button><button className="portal-text-button" disabled={busy} onClick={() => setNewConfirm(false)}>Keep this assignment</button></div>}
+    {immersive && <section ref={roomRef} className="sim-room-region" tabIndex={-1} aria-label="3D monitoring room">
+      <MonitoringRoom sim={sim} role={view.role} stations={MONITORING_STATIONS.map((station) => ({
+        ...station,
+        onActivate: () => {
+          setTab(station.id);
+          focusWorkspace(workspaceRef.current);
+        },
+      }))} />
+    </section>}
     <div className="sim-briefing"><p>{sim.briefing}</p><span className="sim-status">{sim.ended ? "Completed" : "In progress"}</span></div>
     <SimulationRunSummary view={view} />
     <div className="sim-clock-bar"><div><strong>{sim.ended ? "Simulation complete" : "Clock paused while reading"}</strong><span>Advance to deliver checks, apply approved controls and process due payments.</span></div><div className="sim-clock-actions"><button className="portal-button portal-button-subtle" disabled={busy || sim.ended || sim.elapsedMinutes >= sim.endMinute} onClick={() => act({ type: "simulation_advance", mode: "work", minutes: 1 }, "Simulation advanced by one minute.")}>+1 min</button><button className="portal-button portal-button-subtle" disabled={busy || sim.ended || sim.elapsedMinutes >= sim.endMinute} onClick={() => act({ type: "simulation_advance", mode: "work", minutes: 5 }, "Simulation advanced by five minutes.")}>+5 min</button><button className="portal-button portal-button-blue" disabled={busy || sim.ended || sim.elapsedMinutes >= sim.endMinute} onClick={() => act({ type: "simulation_advance", mode: "next" }, "Simulation advanced to the next scheduled event.")}>Next event →</button></div></div>
     <div className="sim-role-bar"><div><span className="sim-muted">Practice identity</span><strong>{view.role === "reviewer" ? "Simulated reviewer" : "Simulated analyst"}</strong></div><div className="sim-role-buttons" role="group" aria-label="Simulation practice role"><button aria-pressed={view.role === "analyst"} disabled={roleLocked} onClick={() => act({ type: "switch_role", role: "analyst" }, "Switched to the simulated analyst role.")}>Analyst</button><button aria-pressed={view.role === "reviewer"} disabled={roleLocked} onClick={() => act({ type: "switch_role", role: "reviewer" }, "Switched to the simulated reviewer role. This is a practice handoff.")}>Reviewer</button></div><p>Role switching is guided practice. A self-reviewed run is not independent practitioner validation.</p></div>
-    <nav className="sim-tabs" aria-label="Simulation workspace">{([["desk", "Investigation desk"], ["evidence", "Evidence"], ["decision", "Assessment"], ["review", `Review${reviewCount ? ` (${reviewCount})` : ""}`], ["activity", "Activity"], ["debrief", "Debrief"]] as [Tab, string][]).map(([id, label]) => <button key={id} aria-current={tab === id ? "page" : undefined} disabled={busy || id === "debrief" && !sim.ended} className={tab === id ? "is-active" : ""} onClick={() => setTab(id)}>{label}</button>)}</nav>
+    <nav ref={workspaceRef} tabIndex={immersive ? -1 : undefined} className="sim-tabs" aria-label="Simulation workspace">{([["desk", "Investigation desk"], ["evidence", "Evidence"], ["decision", "Assessment"], ["review", `Review${reviewCount ? ` (${reviewCount})` : ""}`], ["activity", "Activity"], ["debrief", "Debrief"]] as [Tab, string][]).map(([id, label]) => <button key={id} aria-current={tab === id ? "page" : undefined} disabled={busy || id === "debrief" && !sim.ended} className={tab === id ? "is-active" : ""} onClick={() => setTab(id)}>{label}</button>)}{immersive && <button className="sim-return-to-room" onClick={() => focusWorkspace(roomRef.current)}>↑ Back to 3D room</button>}</nav>
     <div className="sim-tab-panel" hidden={tab !== "desk"}><div className="sim-columns"><div><CustomerRecords view={view} /><Panel title="Transaction history"><TransactionTable view={view} simulation={sim} /></Panel></div><div><PaymentQueue simulation={sim} /><ControlForm simulation={sim} role={view.role} busy={busy} act={act} citations={citations} onEvidence={() => setTab("evidence")} /><Panel title="Next investigative steps"><p>Request the records that could change your assessment. The available responses and pending payments follow the server’s simulation clock.</p><button className="portal-button portal-button-blue" onClick={() => setTab("evidence")}>Open evidence requests →</button></Panel></div></div></div>
     <div className="sim-tab-panel" hidden={tab !== "evidence"}><div className="sim-columns"><div><Panel title="Available evidence"><p className="sim-muted">Select records to cite in your assessment or control recommendation. Only released evidence is available.</p><SimulationEvidenceList evidence={sim.evidence} citations={citations} onToggle={toggleCitation} disabled={busy || sim.ended} /></Panel><div className="sim-citation-bar"><span>{citations.length} record{citations.length === 1 ? "" : "s"} selected</span><button className="portal-button portal-button-blue" disabled={busy || sim.ended} onClick={() => setTab("decision")}>Write assessment →</button></div></div><div><Panel title="Request further checks"><div className="sim-checks">{sim.requests.map((check) => <article className="sim-check" key={check.id}><div className="sim-check-heading"><h3>{check.title}</h3><span className={`sim-status sim-status-${check.status}`}>{words(check.status)}</span></div><p>{check.description}</p><dl className="sim-compact-definition"><div><dt>Source</dt><dd>{check.source}</dd></div><div><dt>Turnaround</dt><dd>{check.delayMinutes} simulated minutes</dd></div>{check.dueMinute !== null && <div><dt>{check.status === "complete" ? "Available from" : "Due at"}</dt><dd>Minute {check.dueMinute}</dd></div>}</dl><button className="portal-button portal-button-subtle" disabled={busy || sim.ended || view.role !== "analyst" || check.status !== "available"} onClick={() => act({ type: "simulation_request", requestId: check.id }, "Check requested. Advance the clock to receive its response.")}>{check.status === "pending" ? "Awaiting response" : check.status === "complete" ? "Response received" : check.status === "locked" ? "Earlier check required" : "Request check"}</button></article>)}</div>{view.role !== "analyst" && !sim.ended && <p className="sim-form-help">Switch to the analyst practice role to request checks.</p>}</Panel></div></div></div>
     <div className="sim-tab-panel" hidden={tab !== "decision"}><div className="sim-columns"><div><DecisionForm simulation={sim} role={view.role} busy={busy} citations={citations} act={act} onEvidence={() => setTab("evidence")} /><Panel title="Saved assessments">{!sim.decisions.length ? <p className="sim-empty">No assessment has been submitted. Draft your reasoning above.</p> : sim.decisions.slice().reverse().map((decision) => <DecisionRecord key={decision.id} decision={decision} evidence={sim.evidence} />)}</Panel></div><div><Panel title="Account control recommendations"><p>Recommend a hold or release from the investigation desk. The reviewer assesses it separately from this written assessment.</p><button className="portal-button portal-button-subtle" onClick={() => setTab("desk")}>Open account controls →</button></Panel><Panel title="Assess the evidence available now"><p>State what the records support, which alternative explanation you considered and what remains unknown. Escalating an alert does not establish a crime.</p><p>Your saved assessment retains the records available at that minute. Later evidence is not added to that decision’s evidence snapshot.</p></Panel></div></div></div>
@@ -174,7 +223,7 @@ function SimulationConsole({ view, simulation: sim, busy, act, onStart, onRefres
   </>;
 }
 
-function Panel({ title, children }: { title: string; children: ReactNode }) { return <section className="portal-card sim-panel"><h2>{title}</h2>{children}</section>; }
+function Panel({ title, children, id }: { title: string; children: ReactNode; id?: string }) { return <section className="portal-card sim-panel" id={id} tabIndex={id ? -1 : undefined}><h2>{title}</h2>{children}</section>; }
 export function SimulationRunSummary({ view }: { view: Run }) {
   const sim = view.simulation;
   if (!sim) return null;

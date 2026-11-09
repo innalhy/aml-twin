@@ -5,7 +5,7 @@ import { apiFetch, loadResume, sessionKey } from "./account-api";
 import { AmlSimulation } from "./AmlSimulation";
 import type { AmlView } from "../../packages/aml/types";
 import type { CaseLibraryView } from "../../packages/investigation/types";
-import { ComplianceTools, LearningDashboard, LearningIcon, LEARNING_ROLES, primaryTopicCase, roleTopics, SimulationCatalog, type LearningRole } from "./LearningCenter";
+import { ComplianceTools, LearningDashboard, LearningIcon, GUIDED_SCENES, LEARNING_ROLES, primaryTopicCase, roleTopics, SimulationCatalog, type LearningRole } from "./LearningCenter";
 import "./training-portal.css";
 import "./learning-center.css";
 
@@ -18,6 +18,15 @@ function currentPage(): Page {
   const path = window.location.pathname.replace(/\/$/, "") || "/";
   return path === "/cases" ? "training" : (Object.keys(paths) as Page[]).find((page) => paths[page] === path) || "dashboard";
 }
+function wantsScene() {
+  return new URLSearchParams(window.location.search).get("view") === "3d";
+}
+function caseScene(caseId: string) {
+  if (caseId === GUIDED_SCENES.onboarding) return "onboarding";
+  if (caseId === GUIDED_SCENES.branch) return "branch";
+  return undefined;
+}
+
 function savedTheme(): Theme { try { return localStorage.getItem("twinaml-theme") === "dark" ? "dark" : "light"; } catch { return "light"; } }
 function exportFile(value: string, name: string, type: string) {
   const url = URL.createObjectURL(new Blob([value], { type }));
@@ -52,6 +61,7 @@ export function TrainingPortal({ accountId }: { accountId: string | null }) {
     setRole(next);
     try { localStorage.setItem(sessionKey("twinaml-learning-role", accountId), next.id); } catch { /* Role selection still works for this visit. */ }
   }
+  const [immersiveCase, setImmersiveCase] = useState(wantsScene);
   const [showPlayer, setShowPlayer] = useState(() => Boolean(new URLSearchParams(window.location.search).get("run")));
   const simulationProgress = useCallback((view: AmlView) => {
     const simulation = view.simulation;
@@ -73,6 +83,7 @@ export function TrainingPortal({ accountId }: { accountId: string | null }) {
       const selected = new URLSearchParams(window.location.search).get("run");
       if (selected && selected !== run?.id) { window.location.reload(); return; }
       setPage(currentPage()); setShowPlayer(Boolean(selected));
+      setImmersiveCase(wantsScene());
       setCourseScope(new URLSearchParams(window.location.search).get("role") || "");
       setCourseOverview(Number(new URLSearchParams(window.location.search).get("topic")) || null);
     };
@@ -92,30 +103,38 @@ export function TrainingPortal({ accountId }: { accountId: string | null }) {
       .finally(() => { if (active) setHistoryLoading(false); });
     return () => { active = false; };
   }, [accountId, run?.id, run?.revision, historyRetry]);
-  function navigate(next: Page, player = false) {
+  function navigate(next: Page) {
     if (next === "simulation") { openSimulation(simulationSummary?.id); return; }
-    setPage(next); setShowPlayer(player);
-    if (!player) { setCourseScope(""); setCourseOverview(null); }
-    // A run query belongs only to a selected player, never another training area.
-    const url = `${paths[next]}${player && run ? `?run=${encodeURIComponent(run.id)}` : ""}`;
-    window.history.pushState({}, "", url); window.scrollTo(0, 0);
+    setPage(next);
+    setShowPlayer(false);
+    setImmersiveCase(false);
+    setCourseScope("");
+    setCourseOverview(null);
+    window.history.pushState({}, "", paths[next]);
+    window.scrollTo(0, 0);
   }
   function openSimulation(id?: string) {
     setSimulationSelection(id || null); setPage("simulation");
     window.history.pushState({}, "", `/simulation${id ? `?run=${encodeURIComponent(id)}` : ""}`); window.scrollTo(0, 0);
   }
-  async function start(caseId: string) {
-    if (busy) return;
-    if (run?.caseId === caseId && !run.debrief) { navigate("training", true); return; }
-    const next = await training.start(caseId);
-    if (!next) return;
-    setPage("training"); setShowPlayer(true);
-    window.history.pushState({}, "", `/training?run=${encodeURIComponent(next.id)}`); window.scrollTo(0, 0);
+  function openCasePlayer(id: string, immersive: boolean) {
+    setPage("training");
+    setShowPlayer(true);
+    setImmersiveCase(immersive);
+    const query = new URLSearchParams({ run: id });
+    if (immersive) query.set("view", "3d");
+    window.history.pushState({}, "", `/training?${query}`);
+    window.scrollTo(0, 0);
   }
-  async function resume(id: string) {
+  async function start(caseId: string, immersive = false) {
+    if (busy) return;
+    const next = run?.caseId === caseId && !run.debrief ? run : await training.start(caseId);
+    if (next) openCasePlayer(next.id, immersive);
+  }
+  async function resume(id: string, immersive = false) {
     if (busy) return;
     if (run?.id !== id && !await training.resume(id)) return;
-    setPage("training"); setShowPlayer(true); window.history.pushState({}, "", `/training?run=${encodeURIComponent(id)}`); window.scrollTo(0, 0);
+    openCasePlayer(id, immersive);
   }
   const runs = accountRuns.filter((saved) => saved.kind === "case");
   if (run) {
@@ -146,13 +165,17 @@ export function TrainingPortal({ accountId }: { accountId: string | null }) {
     if (saved) void resume(saved.id); else void start(entry.caseId);
   }
   const scopedRole = LEARNING_ROLES.find((item) => item.id === courseScope);
+  const guidedScene = immersiveCase && run ? caseScene(run.caseId) : undefined;
+  const activeNavigation = page === "simulation" || (page === "training" && showPlayer && guidedScene)
+    ? "scenes"
+    : page;
 
   return <div className={`portal portal-${theme}`}>
     <a className="portal-skip" href="#portal-content">Skip to content</a>
     <header className="portal-header">
       <a className="portal-brand" href="/" onClick={(event) => { event.preventDefault(); navigate("dashboard"); }}><span className="portal-brand-mark">T</span><span>TwinAML</span></a>
       <nav className="portal-nav" aria-label="Training portal">
-        {([["dashboard", "My Learning"], ["training", "Courses"], ["scenes", "Simulations"], ["tools", "Compliance Tools"], ["reports", "Progress"]] as [Page, string][]).map(([id, label]) => <button key={id} className={page === id || id === "scenes" && page === "simulation" ? "is-active" : ""} aria-current={page === id || id === "scenes" && page === "simulation" ? "page" : undefined} onClick={() => navigate(id)}>{label}</button>)}
+        {([["dashboard", "My Learning"], ["training", "Courses"], ["scenes", "Simulations"], ["tools", "Compliance Tools"], ["reports", "Progress"]] as [Page, string][]).map(([id, label]) => <button key={id} className={activeNavigation === id ? "is-active" : ""} aria-current={activeNavigation === id ? "page" : undefined} onClick={() => navigate(id)}>{label}</button>)}
       </nav>
       <div className="portal-header-tools">
         <button className="portal-icon-button" aria-label="Help and guidance" title="Help and guidance" onClick={() => navigate("help")}><Icon name="help" /></button>
@@ -164,12 +187,20 @@ export function TrainingPortal({ accountId }: { accountId: string | null }) {
     <main id="portal-content" className={`portal-main ${page === "dashboard" || page === "scenes" ? "portal-main-wide" : ""}`} aria-busy={busy}>
       {error && page !== "simulation" && <div className="portal-message portal-error" role="alert">{error}<button disabled={busy} onClick={training.retry}>Try again</button></div>}
       {historyError && <div className="portal-message portal-error" role="alert">{historyError}<button onClick={() => setHistoryRetry((value) => value + 1)}>Reload progress</button></div>}
-      {page === "simulation" && <AmlSimulation key={simulationSelection || "current-simulation"} accountId={accountId} onProgress={simulationProgress} />}
+      {page === "simulation" && <AmlSimulation immersive key={simulationSelection || "current-simulation"} accountId={accountId} onProgress={simulationProgress} />}
       {page !== "simulation" && (!library ? <div className="portal-loading" role="status"><span className="portal-loading-mark">T</span><h1>{busy ? "Opening your training workspace…" : "Your workspace is unavailable"}</h1><p>{busy ? "Loading your topics and saved progress." : "Use Try again above to reconnect."}</p></div> : <>
         {page === "dashboard" && <LearningDashboard library={library} role={role} onRole={selectRole} completed={completed} active={activeTopics} busy={busy} onTopic={openTopic} onRolePath={() => openRolePath()} onCourses={() => navigate("training")} onSimulations={() => navigate("scenes")} onProgress={() => navigate("reports")} />}
-        {page === "scenes" && <SimulationCatalog library={library} runs={runs} run={run} simulation={simulationSummary} busy={busy} onStart={(id) => { void start(id); }} onResume={(id) => { void resume(id); }} onSimulation={() => openSimulation(simulationSummary?.id)} onHelp={() => navigate("help")} onIntro={() => navigate("intro")} />}
+        {page === "scenes" && <SimulationCatalog library={library} runs={runs} run={run} simulation={simulationSummary} busy={busy} onStart={(id) => { void start(id, true); }} onResume={(id) => { void resume(id, true); }} onSimulation={() => openSimulation(simulationSummary?.id)} onHelp={() => navigate("help")} onIntro={() => navigate("intro")} />}
         {page === "tools" && <ComplianceTools onSimulation={() => openSimulation(simulationSummary?.id)} />}
-        {page === "training" && (run && showPlayer ? <TrainingPlayer run={run} busy={busy} onChoose={training.choose} onReplay={() => { void start(run.caseId); }} onLeave={() => navigate("training")} /> : <><div className="learning-course-filter"><span><LearningIcon name="book" size={18} /> Course library</span><label>Learning path<select aria-label="Course learning path" value={courseScope} onChange={(event) => { const selected = LEARNING_ROLES.find((item) => item.id === event.target.value); if (selected) openRolePath(selected); else navigate("training"); }}><option value="">All courses</option>{LEARNING_ROLES.map((item) => <option key={item.id} value={item.id}>{item.short}</option>)}</select></label></div><TrainingTopics key={`${courseScope}-${courseOverview}`} initialOverview={courseOverview} library={scopedRole ? { ...library, workflows: roleTopics(library, scopedRole) } : library} run={run} busy={busy} completedTopics={completed} onStart={(id) => { if (id === "mule-mixer-001") openSimulation(simulationSummary?.id); else void start(id); }} /></>)}
+        {page === "training" && (run && showPlayer ? <TrainingPlayer
+          key={run.id}
+          run={run}
+          busy={busy}
+          scene={guidedScene}
+          onChoose={training.choose}
+          onReplay={() => { void start(run.caseId, immersiveCase); }}
+          onLeave={() => navigate(guidedScene ? "scenes" : "training")}
+        /> : <><div className="learning-course-filter"><span><LearningIcon name="book" size={18} /> Course library</span><label>Learning path<select aria-label="Course learning path" value={courseScope} onChange={(event) => { const selected = LEARNING_ROLES.find((item) => item.id === event.target.value); if (selected) openRolePath(selected); else navigate("training"); }}><option value="">All courses</option>{LEARNING_ROLES.map((item) => <option key={item.id} value={item.id}>{item.short}</option>)}</select></label></div><TrainingTopics key={`${courseScope}-${courseOverview}`} initialOverview={courseOverview} library={scopedRole ? { ...library, workflows: roleTopics(library, scopedRole) } : library} run={run} busy={busy} completedTopics={completed} onStart={(id) => { if (id === "mule-mixer-001") openSimulation(simulationSummary?.id); else void start(id); }} /></>)}
         {page === "reports" && <><PageHeading title="Training reports" subtitle="Investigation simulations, saved assessments and guided scenario outcomes." /><div className="portal-report-metrics"><Metric label="Topics completed" value={`${completed.size} / ${library.workflows.length}`} note="Distinct topics with a completed session" /><Metric label="Guided scenario outcomes" value={completedRuns.length ? `${Math.round(acceptable / completedRuns.length * 100)}%` : "—"} note={completedRuns.length ? `${acceptable} of ${completedRuns.length} completed sessions` : "Complete a session to see your result"} /><Metric label="Sessions logged" value={String(reportRuns.length)} note={accountId ? "Saved to your training account" : "Current sessions in this browser"} /></div><SimulationReports runs={simulationRuns} onResume={openSimulation} /><Card title="Guided scenario outcomes">{historyLoading && <p role="status" className="portal-muted">Refreshing saved sessions…</p>}{runs.length ? <div className="portal-table-wrap"><table className="portal-table"><thead><tr><th>Training module</th><th>Progress</th><th>Outcome</th><th>Last saved</th><th><span className="sr-only">Action</span></th></tr></thead><tbody>{runs.map((saved) => <tr key={saved.id}><td><strong>{saved.title}</strong><small>Run {saved.id.slice(0, 8)}</small></td><td>{saved.progress.split("·")[0]}</td><td><span className={`portal-status ${outcome(saved) === "acceptable" ? "is-complete" : outcome(saved) === "poor" ? "is-poor" : ""}`}>{outcome(saved)}</span></td><td>{saved.updatedAt ? new Date(saved.updatedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "Current session"}</td><td><button className="portal-text-button" disabled={busy} onClick={() => void resume(saved.id)}>View session →</button></td></tr>)}</tbody></table></div> : <EmptyTraining onStart={() => navigate("training")} />}</Card><div className="portal-two-columns"><Card title="Export your training summary"><p>Download the simulation progress and guided scenario outcomes shown above as a CSV file.</p><button className="portal-button portal-button-blue" disabled={!reportRuns.length} onClick={() => exportFile(["Module,Run ID,Progress,Outcome,Last saved", ...reportRuns.map((saved) => [saved.title, saved.id, saved.progress, outcome(saved), saved.updatedAt].map(quoted).join(","))].join("\r\n"), "twinaml-training-summary.csv", "text/csv;charset=utf-8")}>Export summary <Icon name="download" /></button></Card><Card title="About these reports"><p>Reports describe your training performance with synthetic scenarios. Reaction time and certification scores are not tracked. {accountId ? "All your account’s case sessions are included." : "Sign in on an account-enabled environment to collect sessions across devices."}</p>{run && <button className="portal-text-button" onClick={() => exportFile(JSON.stringify(run, null, 2), `twinaml-session-${run.id}.json`, "application/json")}>Download current session & event history →</button>}</Card></div></>}
         {page === "help" && <Help onTopics={() => navigate("training")} onIntro={() => navigate("intro")} />}
         {page === "intro" && <Intro onStart={() => navigate("training")} />}
@@ -188,7 +219,7 @@ function PageHeading({ title, subtitle }: { title: string; subtitle: string }) {
 function Card({ title, children }: { title: string; children: ReactNode }) { return <section className="portal-card"><h2>{title}</h2>{children}</section>; }
 function Metric({ label, value, note }: { label: string; value: string; note: string }) { return <div className="portal-card portal-report-metric"><span>{label}</span><strong>{value}</strong><small>{note}</small></div>; }
 function EmptyTraining({ onStart }: { onStart: () => void }) { return <div className="portal-empty"><Icon name="document" /><h3>Your learning story starts here.</h3><p>Choose a topic and make your first decision. Your session outcome will appear here.</p><button className="portal-button portal-button-blue" onClick={onStart}>Explore training topics →</button></div>; }
-function Help({ onTopics, onIntro }: { onTopics: () => void; onIntro: () => void }) { return <><PageHeading title="Help & guidance" subtitle="Everything you need to get started with your training." /><div className="portal-help-grid"><Card title="Getting started"><p>Choose a topic, review the records and decide how to handle the situation. The digital twin records your decisions and shows their consequences.</p><button className="portal-button portal-button-blue" onClick={onIntro}>How training works →</button></Card><Card title="Explore a training topic"><p>You can revisit the evidence, try another approach and read the teaching notes after reaching an outcome.</p><button className="portal-button portal-button-gold" onClick={onTopics}>Choose a learning topic →</button></Card></div><Card title="Frequently asked questions"><div className="portal-faq">{[["Is this connected to a real bank?", "No. All people, accounts, documents and payments in TwinAML are fictional. Actions affect only the synthetic training run."], ["How is my progress saved?", "Submitted decisions are saved by the server. In anonymous practice, this browser keeps a shortcut to your current run. Signed-in accounts can use My progress to resume earlier runs across devices."], ["Can I try a different decision?", "Yes. Finish a case and choose Try again. This creates a new session so your earlier decisions remain recorded. An earlier choice cannot be changed inside the same run."], ["What happens if I make the wrong decision?", "The case shows the simulated consequence and explains the authored rules in its teaching notes. These outcomes are learning feedback, not professional compliance advice."], ["Where are the investigation tools?", "Open the AML operations workbench for monitoring, entity exploration and STR practice, or The Second Ledger for timed evidence checks and investigation decisions."], ["Why is a topic an overview?", "An overview contains the teaching flow but has no playable script yet. Playable topics show a Start topic or Continue topic button."]].map(([question, answer]) => <details key={question}><summary>{question}</summary><p>{answer}</p></details>)}</div></Card></>; }
+function Help({ onTopics, onIntro }: { onTopics: () => void; onIntro: () => void }) { return <><PageHeading title="Help & guidance" subtitle="Everything you need to get started with your training." /><div className="portal-help-grid"><Card title="Getting started"><p>Choose a topic, review the records and decide how to handle the situation. The digital twin records your decisions and shows their consequences.</p><button className="portal-button portal-button-blue" onClick={onIntro}>How training works →</button></Card><Card title="Explore a training topic"><p>You can revisit the evidence, try another approach and read the teaching notes after reaching an outcome.</p><button className="portal-button portal-button-gold" onClick={onTopics}>Choose a learning topic →</button></Card></div><Card title="Frequently asked questions"><div className="portal-faq">{[["How do I explore a 3D simulation?", "Drag inside the scene to look around. Select a marker on a file or workstation to open the related exercise panel. You can also use the keyboard and the scene’s action list."], ["Is this connected to a real bank?", "No. All people, accounts, documents and payments in TwinAML are fictional. Actions affect only the synthetic training run."], ["How is my progress saved?", "Submitted decisions are saved by the server. In anonymous practice, this browser keeps a shortcut to your current run. Signed-in accounts can use My progress to resume earlier runs across devices."], ["Can I try a different decision?", "Yes. Finish a case and choose Try again. This creates a new session so your earlier decisions remain recorded. An earlier choice cannot be changed inside the same run."], ["What happens if I make the wrong decision?", "The case shows the simulated consequence and explains the authored rules in its teaching notes. These outcomes are learning feedback, not professional compliance advice."], ["Where are the investigation tools?", "Open the AML operations workbench for monitoring, entity exploration and STR practice, or The Second Ledger for timed evidence checks and investigation decisions."], ["Why is a topic an overview?", "An overview contains the teaching flow but has no playable script yet. Playable topics show a Start topic or Continue topic button."]].map(([question, answer]) => <details key={question}><summary>{question}</summary><p>{answer}</p></details>)}</div></Card></>; }
 function Intro({ onStart }: { onStart: () => void }) { return <div className="portal-intro"><span className="portal-tag">WELCOME TO TWINAML</span><h1>Practise the decision.<br />Understand the consequence.</h1><p>Step into a realistic situation, follow the evidence, and see how your choices change the digital twin.</p><div className="portal-intro-steps">{[["01", "Review the situation", "Read the briefing and examine the available records."], ["02", "Make your call", "Verify, escalate or approve within the synthetic scenario."], ["03", "Learn from the outcome", "Review your path, the rules and the teaching notes."]].map(([number, title, text]) => <div className="portal-card" key={number}><span>{number}</span><h2>{title}</h2><p>{text}</p></div>)}</div><button className="portal-button portal-button-gold" onClick={onStart}>Choose a learning topic →</button><p className="portal-muted portal-small">Synthetic practice data · No live payments · Rules before AI</p></div>; }
 
 function Icon({ name }: { name: string }) {

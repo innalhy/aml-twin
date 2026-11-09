@@ -123,9 +123,14 @@ export function LearningResources({ onCase }: { onCase: () => void }) {
   </div></section>;
 }
 
+export const GUIDED_SCENES = {
+  onboarding: "bank-cdd-001",
+  branch: "mule-rent-001",
+} as const;
+
 const ENVIRONMENTS = [
-  { id: "onboarding", title: "Client onboarding & due diligence", category: "Client onboarding", level: "Application", skills: ["CDD", "Customer risk"], caseId: "bank-cdd-001", description: "Review a customer relationship, identify due diligence gaps and decide how to respond.", format: "Guided case", imageAlt: "A private banking meeting room with a walnut desk and cream chairs" },
-  { id: "branch", title: "Branch suspicious activity review", category: "Branch operations", level: "Foundation", skills: ["Red flags", "Mule accounts"], caseId: "mule-rent-001", description: "Examine unusual account activity and recognise the signs of an account rental scheme.", format: "Guided case", imageAlt: "A bright bank branch with service counters and consultation desks" },
+  { id: "onboarding", title: "Client onboarding & due diligence", category: "Client onboarding", level: "Application", skills: ["CDD", "Customer risk"], caseId: GUIDED_SCENES.onboarding, description: "Review a customer relationship, identify due diligence gaps and decide how to respond.", format: "Guided case", imageAlt: "A private banking meeting room with a walnut desk and cream chairs" },
+  { id: "branch", title: "Branch suspicious activity review", category: "Branch operations", level: "Foundation", skills: ["Red flags", "Mule accounts"], caseId: GUIDED_SCENES.branch, description: "Examine unusual account activity and recognise the signs of an account rental scheme.", format: "Guided case", imageAlt: "A bright bank branch with service counters and consultation desks" },
   { id: "monitoring", title: "Transaction monitoring & investigation", category: "Transaction monitoring", level: "Advanced", skills: ["Investigation", "Transaction monitoring"], caseId: null, description: "Investigate an evolving account, request evidence and manage time-sensitive payments.", format: "Timed simulation", imageAlt: "An analyst workstation displaying financial charts and transaction networks" },
 ];
 export type LearningSavedRun = { id: string; title: string; progress: string };
@@ -151,12 +156,41 @@ export function SimulationCatalog({ library, runs, run, simulation, busy, onStar
   return <>
     <section className="learning-hero simulation-catalog-hero"><div className="learning-container">
       <p className="learning-eyebrow"><span />SIMULATION CENTER <span className="learning-divider">/</span> LEARN THROUGH EXPERIENCE</p>
-      <h1>Step into your next scenario.</h1><p className="learning-hero-description">Choose a guided case or timed investigation. Build confidence through practice.</p>
+      <h1>Step into your next scenario.</h1><p className="learning-hero-description">Explore a 3D banking environment, inspect evidence, and make decisions in a guided case or timed investigation.</p>
       <div className="simulation-filters"><span><LearningIcon name="filter" size={19} /> Find your simulation</span><label><span className="sr-only">Environment</span><select value={environment} onChange={(event) => setEnvironment(event.target.value)}><option value="all">All environments</option>{ENVIRONMENTS.map((scene) => <option key={scene.id}>{scene.category}</option>)}</select></label><label><span className="sr-only">Difficulty</span><select value={level} onChange={(event) => setLevel(event.target.value)}><option value="all">All difficulty levels</option>{["Foundation", "Application", "Advanced"].map((item) => <option key={item}>{item}</option>)}</select></label><label><span className="sr-only">Core skill</span><select value={skill} onChange={(event) => setSkill(event.target.value)}><option value="all">All core skills</option>{ENVIRONMENTS.flatMap((scene) => scene.skills).map((item) => <option key={item}>{item}</option>)}</select></label></div>
     </div></section>
     <div className="learning-container simulation-catalog-body"><div className="simulation-catalog-heading"><div><h2>Choose your learning environment</h2><p role="status">{filtered.length} of {scenes.length} simulations <span>·</span> All available in your browser</p></div>{(environment !== "all" || level !== "all" || skill !== "all") && <button className="portal-text-button" onClick={reset}>Clear filters</button>}</div>
       <div className="simulation-catalog-layout"><div className="simulation-scene-grid">
-        {filtered.map((scene) => <article className="portal-card simulation-scene" key={scene.id}><div className="simulation-scene-image"><img src={`/images/${scene.id}.webp`} alt={scene.imageAlt} /><span>{scene.level}</span></div><div className="simulation-scene-content"><p className="learning-course-kicker"><LearningIcon name={scene.caseId ? "book" : "clock"} size={14} />{scene.format}</p><h3>{scene.title}</h3><p className="simulation-scene-description">{scene.description}</p><div className="simulation-skill-tags">{scene.skills.map((item) => <span key={item}>{item}</span>)}</div><div className="simulation-scene-progress"><span className={`learning-status ${scene.complete ? "is-complete" : scene.started ? "is-active" : ""}`}>{scene.complete ? "Completed · replay available" : scene.started ? "In progress" : "Not started"}</span>{!scene.caseId && simulation && !simulation.ended && <small>Minute {simulation.minute} of {simulation.endMinute}</small>}</div><div className="simulation-device"><LearningIcon name="screen" size={16} />Browser-based · No headset required</div><button className="portal-button simulation-start" disabled={busy || !scene.available} onClick={() => { if (!scene.caseId) onSimulation(); else if (scene.savedId && !scene.complete) onResume(scene.savedId); else onStart(scene.caseId); }}>{!scene.available ? "Unavailable" : scene.complete ? "Review / replay" : scene.started ? "Continue simulation" : "Start simulation"}<LearningIcon name="arrow" size={16} /></button></div></article>)}
+        {filtered.map((scene) => {
+          const launch = () => {
+            if (!scene.caseId) onSimulation();
+            else if (scene.savedId && !scene.complete) onResume(scene.savedId);
+            else onStart(scene.caseId);
+          };
+          let action = "Enter 3D scene";
+          if (!scene.available) action = "Unavailable";
+          else if (scene.complete) action = scene.caseId ? "Replay in 3D" : "Review in 3D";
+          else if (scene.started) action = "Continue in 3D";
+          const progressClass = scene.complete ? "is-complete" : scene.started ? "is-active" : "";
+
+          return <article className="portal-card simulation-scene" key={scene.id}>
+            <div className="simulation-scene-image"><img src={`/images/${scene.id}.webp`} alt={scene.imageAlt} /><span>{scene.level}</span></div>
+            <div className="simulation-scene-content">
+              <p className="learning-course-kicker"><LearningIcon name={scene.caseId ? "book" : "clock"} size={14} />{scene.format}</p>
+              <h3>{scene.title}</h3>
+              <p className="simulation-scene-description">{scene.description}</p>
+              <div className="simulation-skill-tags">{scene.skills.map((item) => <span key={item}>{item}</span>)}</div>
+              <div className="simulation-scene-progress">
+                <span className={`learning-status ${progressClass}`}>{scene.complete ? "Completed · replay available" : scene.started ? "In progress" : "Not started"}</span>
+                {!scene.caseId && simulation && !simulation.ended && <small>Minute {simulation.minute} of {simulation.endMinute}</small>}
+              </div>
+              <div className="simulation-device"><LearningIcon name="screen" size={16} />Interactive 3D · Runs in your browser</div>
+              <button className="portal-button simulation-start" disabled={busy || !scene.available} onClick={launch} aria-label={`${action}: ${scene.title}`}>
+                {action}<LearningIcon name="arrow" size={16} />
+              </button>
+            </div>
+          </article>;
+        })}
         {!filtered.length && <div className="portal-card simulation-no-results"><LearningIcon name="filter" size={32} /><h3>No simulations match these filters</h3><p>Try another environment, difficulty level or skill.</p><button className="portal-button portal-button-blue" onClick={reset}>Reset filters</button></div>}
       </div><aside className="simulation-catalog-aside"><section className="portal-card"><span className="learning-action-icon"><LearningIcon name="chart" /></span><h2>Your practice overview</h2><p className="learning-aside-description">Every scenario is a step forward.</p><dl className="simulation-overview-stats"><div><dt>Completed environments</dt><dd>{scenes.filter((scene) => scene.complete).length}<small> / {scenes.length}</small></dd></div><div><dt>In progress</dt><dd>{scenes.filter((scene) => scene.started && !scene.complete).length}</dd></div></dl><p className="learning-caption">SKILLS TO PRACTISE</p><div className="simulation-skill-tags"><span>CDD</span><span>Red flags</span><span>Investigation</span></div></section>
         <section className="portal-card simulation-guide"><SectionHeading title="Simulation guide" icon="book" /><button onClick={onIntro}>How the training works <LearningIcon name="arrow" size={14} /></button><button onClick={onHelp}>Controls, saving & replay <LearningIcon name="arrow" size={14} /></button><button onClick={onHelp}>Help & troubleshooting <LearningIcon name="arrow" size={14} /></button></section>

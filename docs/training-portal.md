@@ -5,9 +5,9 @@ The portal uses the navy-and-white learning-center layout from the supplied dash
 | Route | What a trainee can do |
 | --- | --- |
 | `/` | Choose a professional role, view the role-based learning path and progress, launch recommended courses and open public resources. |
-| `/simulations` | Filter three illustrated environments by setting, difficulty or skill, then launch or resume the existing exercises. |
+| `/simulations` | Filter three 3D environments by setting, difficulty or skill, then enter or resume an exercise. |
 | `/tools` | Open the AML operations workbench, Second Ledger and timed investigation. |
-| `/simulation` | Investigate an evolving bank account with timed checks, payments, controls, assessments and a simulated reviewer. |
+| `/simulation` | Work from a 3D monitoring room to investigate an evolving bank account with timed checks, payments, controls, assessments and a simulated reviewer. |
 | `/training`, `/cases` | Choose one of eleven topic workflows, continue the selected session or open related original scripts. |
 | `/reports` | Review session outcomes, resume a run and export the visible summary as CSV or current session as JSON. |
 | `/intro`, `/help` | Read the training introduction and practical guidance. |
@@ -29,15 +29,15 @@ The top navigation is **My Learning**, **Courses**, **Simulations**, **Complianc
 
 Five professional roles reorder the existing topic workflows: frontline/onboarding, KYC/due diligence, transaction monitoring/investigations, compliance/management, and product/technology. **Open this role path** opens `/training?role=…`; the course filter can return to the full library. Read-only topics open their existing overview with `?topic=…`. These preferences survive refresh without creating a second case state model. Role progress counts only playable modules, excluding read-only overviews without a completion event. Topic 02 includes completion and in-progress state from the timed investigation.
 
-The `/simulations` gallery maps its illustrated cards to actual exercises:
+The simulation gallery launches three WebGL scenes built from procedural models. Drag to look around, and select marked objects to open the related work. The scene also provides keyboard controls and a list of the same actions. When WebGL is unavailable, the exercise remains playable through those actions and its standard panels.
 
-| Environment | Existing exercise |
+| 3D environment | Exercise and interactions |
 | --- | --- |
-| Client onboarding & due diligence | `bank-cdd-001` guided case |
-| Branch suspicious activity review | `mule-rent-001` guided case |
-| Transaction monitoring & investigation | `/simulation` timed AML investigation |
+| Private banking office | `bank-cdd-001`: examine the customer file, make a due diligence decision and review the saved activity. |
+| Retail bank branch | `mule-rent-001`: investigate the branch alert, examine its evidence and decide how to respond. |
+| Transaction monitoring room | `/simulation`: use the workstations to open the alert, evidence, assessment and reviewer panels. The clock advances through the existing exercise controls. |
 
-The filters use editorial learning levels and skills. Progress and resume actions use current server runs and account history. Illustrations are static previews of a setting; exercises remain browser-based, with no 3D/VR runtime, headset integration or claimed VR hours. No webinar registrations, community forum or professional certification are simulated. The resource links open the HKMA AML/CFT page and JFIU guidance in a separate tab. See [asset prompts and provenance](learning-center-assets.md) for the three local WebP images.
+The renderer loads on demand. Scene interactions open the same evidence and submit through the same server-backed decision controls as the standard exercises. Guided launches add `view=3d` to the selected run URL so a refresh restores the scene and session. The course library also provides the standard case player. The gallery's [image thumbnails](learning-center-assets.md) are illustrative previews.
 
 The layout adapts to desktop, tablet and mobile. On small phones, the role choices become a labelled select, course and simulation cards stack vertically, and the top navigation can scroll. Filters and selections have accessible labels and focus styles. Dark mode and reduced-motion preferences are supported.
 
@@ -45,10 +45,10 @@ The layout adapts to desktop, tablet and mobile. On small phones, the role choic
 
 1. Start the local development environment with `npm run dev` and open `/`.
 2. Switch professional roles and confirm the header, recommendations and course list change. Refresh to check the role preference is retained. Open the KYC path and its read-only synthetic-identity overview.
-3. Open **Simulations**, combine environment/difficulty/skill filters, check the empty state and reset filters. Launch each card and confirm the intended existing exercise opens.
-4. Save a decision in a guided case, return to the gallery and continue it. Refresh the player and confirm its server session resumes. Completed exercises must offer replay.
+3. Open **Simulations**, combine environment/difficulty/skill filters, check the empty state and reset filters. Enter each 3D scene, move the camera and use the marked objects to open the intended exercise panels. Confirm the action list still works with WebGL unavailable.
+4. Save a decision in a guided case, return to the gallery and continue it. Refresh the player and confirm it restores the same 3D scene and server session. Completed exercises must offer replay.
 5. Open the timed investigation, start or resume an assignment, advance the clock and return to My Learning. The monitoring path should show Topic 02 in progress. Ended simulations count toward completion.
 6. Inspect **Progress**, export the summary, open **Settings**, change theme, and follow the workbench and Second Ledger links from **Compliance Tools**.
 7. Check 1440px desktop, 768px tablet and 390px mobile layouts. In a Clerk-enabled environment, separately verify sign-in and account-owned history; anonymous development intentionally bypasses sign-in.
 
-Checks: frontend `npm run build` and `node --test tests/account-api.test.mjs tests/training-cases.test.mjs tests/aml-simulation.test.mjs`. No engine or case-schema change is required by this visual update. Publishing to the VPS is a separate explicit action.
+Checks: frontend `npm run build` and `node --test tests/account-api.test.mjs tests/training-cases.test.mjs tests/aml-simulation.test.mjs`. The existing engines and case schemas drive both the scene interactions and the standard exercise panels.

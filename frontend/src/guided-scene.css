@@ -1,0 +1,174 @@
+.training-player-immersive .course-player-top,
+.training-player-immersive .course-stage-nav,
+.training-player-immersive .course-player-heading {
+  margin-bottom: 18px;
+}
+
+.training-player-immersive .course-stage-chips {
+  margin-bottom: 12px;
+}
+
+.course-immersive-badge {
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: #17385f;
+  color: #f4f8ff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.course-immersive {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 365px);
+  gap: 18px;
+}
+
+.course-immersive-scene,
+.course-immersive-workspace {
+  min-width: 0;
+}
+
+.course-immersive-loading {
+  display: grid;
+  min-height: clamp(270px, 50vw, 490px);
+  place-items: center;
+  border-radius: 12px;
+  background: #142c46;
+  color: #f4f8ff;
+}
+
+.course-immersive-workspace {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-self: start;
+  border: 1px solid var(--portal-border, #d5deeb);
+  border-radius: 12px;
+  background: var(--portal-card, #fff);
+  overflow: hidden;
+}
+
+.course-immersive-controls {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  padding: 7px;
+  background: var(--portal-soft, #f4f7fb);
+  border-bottom: 1px solid var(--portal-border, #d5deeb);
+}
+
+.course-immersive-controls button {
+  min-height: 40px;
+  padding: 8px 4px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--portal-ink, #223a61);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.course-immersive-controls button:hover,
+.course-immersive-controls button[aria-pressed="true"] {
+  border-color: var(--portal-border, #d5deeb);
+  background: var(--portal-card, #fff);
+  color: var(--portal-blue, #2469df);
+}
+
+.course-immersive-controls button:focus-visible,
+.course-immersive-panel h2:focus-visible {
+  outline: 2px solid var(--portal-blue, #2469df);
+  outline-offset: 2px;
+}
+
+.course-immersive-panel {
+  min-height: 270px;
+  max-height: 440px;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  padding: 20px;
+}
+
+.course-immersive-panel > h2 {
+  font-size: 20px;
+  margin: 0 0 15px;
+  scroll-margin-block-start: 16px;
+}
+
+.course-immersive-panel h3 {
+  font-size: 14px;
+  margin: 18px 0 8px;
+}
+
+.course-immersive-panel > p,
+.course-immersive-panel .course-copy p {
+  color: var(--portal-muted, #5d6e89);
+  line-height: 1.65;
+  margin: 0 0 13px;
+}
+
+.course-immersive-panel .course-immersive-record-title,
+.course-immersive-panel .course-evidence > h3 {
+  margin-top: 0;
+}
+
+.course-immersive-panel .course-choice-section,
+.course-immersive-history {
+  border-top: 1px solid var(--portal-border, #d5deeb);
+  margin-top: 16px;
+  padding-top: 14px;
+}
+
+.course-immersive-panel .course-choice-section > h3 {
+  margin-top: 0;
+}
+
+.course-immersive-history > summary {
+  cursor: pointer;
+  font-weight: 650;
+}
+
+.course-immersive-history > summary > span {
+  color: var(--portal-muted, #5d6e89);
+  margin-left: 5px;
+}
+
+.course-immersive-history[open] > summary {
+  margin-bottom: 16px;
+}
+
+.course-immersive-panel .course-outcome {
+  padding: 14px;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.course-immersive-panel .course-outcome h2 {
+  font-size: 15px;
+}
+
+.course-immersive-panel .course-action-stack > button,
+.course-immersive-next {
+  min-height: 44px;
+  overflow-wrap: anywhere;
+}
+
+.course-immersive-next {
+  width: 100%;
+  margin-top: 16px;
+}
+
+@media (max-width: 900px) {
+  .course-immersive {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .course-immersive-panel {
+    min-height: 0;
+    max-height: none;
+    overflow: visible;
+  }
+}
