@@ -2,41 +2,41 @@
 
 ## What it is?
 
-TwinAML is a COMP3424 course demo of a digital twin for AML simulation training. The platform idea is proprietary: this tree is a classroom demo, not a bank production system and not an open-source release. The Phase 1 case library is **11** synthetic scripts under [`data/cases/`](data/cases/README.md). `deepfake-hk-001` is the original course example (video-KYC deepfake). The other ten are `public_record_inspired`. The same folder also holds two Editor-room scripts: Topic 3 company onboarding (`hk-starlight-onboard-001`) and Topic 4 alert triage (`alert-triage-shift-001`). Every customer, account, and amount in them is synthetic. The full index and disclaimer are in [`data/cases/README.md`](data/cases/README.md). The twin is backend state plus the events that change it. The web app is the face that will render that state.
+TwinAML is a COMP3424 course demo of a digital twin for AML simulation training. The platform idea is proprietary: this tree is a classroom demo, not a bank production system and not an open-source release. The Phase 1 case library is **11** synthetic scripts under [`data/cases/`](data/cases/README.md). `deepfake-hk-001` is the original course example (video-KYC deepfake). The other ten are `public_record_inspired`. The same folder also holds two Editor-room scripts: Topic 3 company onboarding (`starlight-onboard-001`) and Topic 4 alert triage (`alert-triage-shift-001`). Every customer, account, and amount in them is synthetic. The full index and disclaimer are in [`data/cases/README.md`](data/cases/README.md). The twin is backend state plus the events that change it. The web app is the face that will render that state.
 
 | case_id | Theme |
 | --- | --- |
 | `deepfake-hk-001` | Original course example: video-KYC deepfake |
-| `hk-daybreak-tbml-001` | TBML / shell / fake jewellery-diamond exports |
-| `hk-mule-rent-001` | Account rental |
-| `hk-wiseword-amlmonth-001` | One mule, several typologies |
-| `hk-justicegate-crypto-001` | Cash + crypto OTC |
-| `hk-greythunder-mule-001` | Mule cluster |
-| `hk-crossborder-tel-001` | Cross-border phone-fraud corridor |
-| `hk-kol-mgmt-001` | KOL / influencer front |
-| `hk-triad-cashflow-001` | Organised-crime cashflow indicators |
-| `hk-ia-fwd-controls-001` | Insurer controls (synthetic insurer) |
-| `hk-hkma-cdd-001` | Bank CDD / monitoring / STR (synthetic bank) |
-| `hk-starlight-onboard-001` | Topic 3: company onboarding, hidden beneficial owner |
+| `daybreak-tbml-001` | TBML / shell / fake jewellery-diamond exports |
+| `mule-rent-001` | Account rental |
+| `wiseword-amlmonth-001` | One mule, several typologies |
+| `justicegate-crypto-001` | Cash + crypto OTC |
+| `greythunder-mule-001` | Mule cluster |
+| `crossborder-tel-001` | Cross-border phone-fraud corridor |
+| `kol-mgmt-001` | KOL / influencer front |
+| `triad-cashflow-001` | Organised-crime cashflow indicators |
+| `ia-fwd-controls-001` | Insurer controls (synthetic insurer) |
+| `hkma-cdd-001` | Bank CDD / monitoring / STR (synthetic bank) |
+| `starlight-onboard-001` | Topic 3: company onboarding, hidden beneficial owner |
 | `alert-triage-shift-001` | Topic 4: one monitoring shift, six synthetic alerts |
 
 A trainee is meant to choose one of those scripts by `case_id` and decide inside it. Rules in the script decide compliance outcomes (rules-before-AI). A language model, if one is added later, may explain a decision only after those rules have fired, and a human override must be stored as an event.
 
-Case flows for human review are in [`data/case-flow/`](data/case-flow/). Each case is two Markdown files, Traditional Chinese and English, and each flow is a Mermaid diagram. The playable scripts stay in `data/cases/`, numbered `01`–`13`. `12` is the fictional company-onboarding lesson used by the Editor branch. `13` is the English alert-triage shift. `case_id` is unchanged.
+Case flows for human review are in [`data/case-flow/`](data/case-flow/). Each case is two Markdown files, Traditional Chinese and English, and each flow is a Mermaid diagram. The playable scripts stay in `data/cases/`, numbered `01`–`13`. `12` is the fictional company-onboarding lesson used by the Editor branch. `13` is the English alert-triage shift.
 
 | Case | Traditional Chinese | English | Playable script |
 | --- | --- | --- | --- |
 | Deepfake executive impersonation | [zh-Hant](data/case-flow/01-deepfake-executive-impersonation.zh-Hant.md) | [English](data/case-flow/01-deepfake-executive-impersonation.en.md) | `deepfake-hk-001` |
 | Mule accounts and a crypto mixer | [zh-Hant](data/case-flow/02-crypto-mixers-mule-accounts.zh-Hant.md) | [English](data/case-flow/02-crypto-mixers-mule-accounts.en.md) | Nearby mule and crypto scripts. See the flow page. |
 | Synthetic identity fraud | [zh-Hant](data/case-flow/03-synthetic-identity-fraud.zh-Hant.md) | [English](data/case-flow/03-synthetic-identity-fraud.en.md) | No playable script in the eleven. |
-| Trade-based money laundering | [zh-Hant](data/case-flow/04-trade-based-money-laundering.zh-Hant.md) | [English](data/case-flow/04-trade-based-money-laundering.en.md) | `hk-daybreak-tbml-001` |
-| Cross-border phone-fraud corridor | [zh-Hant](data/case-flow/05-crossborder-phone-fraud.zh-Hant.md) | [English](data/case-flow/05-crossborder-phone-fraud.en.md) | `hk-crossborder-tel-001` |
-| Account rental and mule clusters | [zh-Hant](data/case-flow/06-account-rental-mule-clusters.zh-Hant.md) | [English](data/case-flow/06-account-rental-mule-clusters.en.md) | `hk-mule-rent-001`, `hk-greythunder-mule-001` |
-| Cash and crypto OTC cashing-out | [zh-Hant](data/case-flow/07-cash-crypto-otc.zh-Hant.md) | [English](data/case-flow/07-cash-crypto-otc.en.md) | `hk-justicegate-crypto-001` |
-| KOL management front company | [zh-Hant](data/case-flow/08-kol-management-front.zh-Hant.md) | [English](data/case-flow/08-kol-management-front.en.md) | `hk-kol-mgmt-001` |
-| Multi-typology mule account | [zh-Hant](data/case-flow/09-multi-typology-mule.zh-Hant.md) | [English](data/case-flow/09-multi-typology-mule.en.md) | `hk-wiseword-amlmonth-001` |
-| Organised-crime cashflow | [zh-Hant](data/case-flow/10-organised-crime-cashflow.zh-Hant.md) | [English](data/case-flow/10-organised-crime-cashflow.en.md) | `hk-triad-cashflow-001` |
-| Insurer and bank control gaps | [zh-Hant](data/case-flow/11-control-gaps.zh-Hant.md) | [English](data/case-flow/11-control-gaps.en.md) | `hk-ia-fwd-controls-001`, `hk-hkma-cdd-001` |
+| Trade-based money laundering | [zh-Hant](data/case-flow/04-trade-based-money-laundering.zh-Hant.md) | [English](data/case-flow/04-trade-based-money-laundering.en.md) | `daybreak-tbml-001` |
+| Cross-border phone-fraud corridor | [zh-Hant](data/case-flow/05-crossborder-phone-fraud.zh-Hant.md) | [English](data/case-flow/05-crossborder-phone-fraud.en.md) | `crossborder-tel-001` |
+| Account rental and mule clusters | [zh-Hant](data/case-flow/06-account-rental-mule-clusters.zh-Hant.md) | [English](data/case-flow/06-account-rental-mule-clusters.en.md) | `mule-rent-001`, `greythunder-mule-001` |
+| Cash and crypto OTC cashing-out | [zh-Hant](data/case-flow/07-cash-crypto-otc.zh-Hant.md) | [English](data/case-flow/07-cash-crypto-otc.en.md) | `justicegate-crypto-001` |
+| KOL management front company | [zh-Hant](data/case-flow/08-kol-management-front.zh-Hant.md) | [English](data/case-flow/08-kol-management-front.en.md) | `kol-mgmt-001` |
+| Multi-typology mule account | [zh-Hant](data/case-flow/09-multi-typology-mule.zh-Hant.md) | [English](data/case-flow/09-multi-typology-mule.en.md) | `wiseword-amlmonth-001` |
+| Organised-crime cashflow | [zh-Hant](data/case-flow/10-organised-crime-cashflow.zh-Hant.md) | [English](data/case-flow/10-organised-crime-cashflow.en.md) | `triad-cashflow-001` |
+| Insurer and bank control gaps | [zh-Hant](data/case-flow/11-control-gaps.zh-Hant.md) | [English](data/case-flow/11-control-gaps.en.md) | `ia-fwd-controls-001`, `hkma-cdd-001` |
 
 What runs today is the Phase 1 demo. FastAPI in `backend/` answers `GET /health`, lists the case scripts, opens a session, applies a choice, and stores the twin and the events. The Vite app is the scenario player and the dashboard. Both read that session. `workers/api` can answer the same health check only. That Worker is a legacy scaffold, not the demo deploy. One extra card, `GET /sessions/{id}/evidence`, summarises a run for the course note in [`docs/audit-evidence.md`](docs/audit-evidence.md).
 
@@ -216,7 +216,7 @@ The Editor project lives on branch [`unity`](https://github.com/innalhy/aml-twin
 git fetch && git checkout unity
 ```
 
-In Unity 6000.6.8f1, open the project folder `unity/TwinAML` (not the repo root), then open `Assets/Scenes/3D/Scn_Branch_Lobby.unity` and press Play (or use the menu **TwinAML → Play Branch Lobby**). Notes are in `unity/UNITY.md` on that branch. Case JSON is read from `data/cases/`. Topic 1 is `deepfake-hk-001`. Topic 2 is `hk-greythunder-mule-001`. Topic 3 is `hk-starlight-onboard-001`, a walkable branch taught in English. Topic 4 is `alert-triage-shift-001`, an English investigation room with six synthetic alerts. The dashboard in that room is the TwinAML AML Training Portal. It reads the twin written by those choices and still writes `twinaml-dashboard.json`. Docker is not involved.
+In Unity 6000.6.8f1, open the project folder `unity/TwinAML` (not the repo root), then open `Assets/Scenes/3D/Scn_Branch_Lobby.unity` and press Play (or use the menu **TwinAML → Play Branch Lobby**). Notes are in `unity/UNITY.md` on that branch. Case JSON is read from `data/cases/`. Topic 1 is `deepfake-hk-001`. Topic 2 is `greythunder-mule-001`. Topic 3 is `starlight-onboard-001`, a walkable branch taught in English. Topic 4 is `alert-triage-shift-001`, an English investigation room with six synthetic alerts. The dashboard in that room is the TwinAML AML Training Portal. It reads the twin written by those choices and still writes `twinaml-dashboard.json`. Docker is not involved.
 
 ## Optional behavioral sandbox
 
