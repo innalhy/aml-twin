@@ -12,10 +12,10 @@ These documents are **plans for coding agents**. They define scope, slices, acce
 
 1. Read `AGENTS.md` and this README first.
 2. Work **one slice** from the active phase doc (see “Implementation slices”).
-3. Stay on the stack in root `README.md`: FastAPI (`backend/`) + React Vite static files (`frontend/`) on a Linux VPS. See [`docs/deploy-vps.md`](../deploy-vps.md). `workers/api` may remain as a legacy scaffold. FlexSim stays out. The Unity Editor room stays in scope and is not a second API.
+3. Stay on the stack in root `README.md`: FastAPI (`backend/`) + React Vite static files (`frontend/`) on a Linux VPS. See [`docs/deploy-vps.md`](../deploy-vps.md). `workers/api` may remain as a legacy scaffold. FlexSim stays out. The Unity Editor room stays in scope on branch `unity` (`git fetch && git checkout unity`) and is not a second API.
 4. **Rules-before-AI**: rules and the state machine decide outcomes. A language model may explain after the fact; it must never silently change disposition.
 5. Commit **directly to `main`** unless the owner says otherwise. Do not open a feature branch or PR by default.
-6. Do not reintroduce Docker, Kubernetes, Neo4j, Kafka, FlexSim, a second Unity project, or a live bank connection unless the active phase slice explicitly allows it. The Editor room under `unity/` is already in the demo.
+6. Do not reintroduce Docker, Kubernetes, Neo4j, Kafka, FlexSim, a second Unity project, or a live bank connection unless the active phase slice explicitly allows it. The Editor room is already in the demo on branch `unity` (`git fetch && git checkout unity`).
 
 ## Current repo baseline
 
