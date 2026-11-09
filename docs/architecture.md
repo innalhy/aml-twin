@@ -1,16 +1,32 @@
 # TwinAML architecture (simplified)
 
+## Training portal
+
+The default React client at `/` is the [training portal](training-portal.md). It renders existing case sessions and account run summaries through a dashboard, topics, staged player and reports. Thirteen scripts share eleven topic workflows. Local theme and navigation preferences are separate from the server's authoritative twin and decision history.
+
+The [AML investigation simulation](aml-simulation.md) at `/simulation` extends the existing `AmlState` and `aml_sessions` storage, with a private scenario assignment, release schedule, controls and assessment records. It uses the same ledger and API revision/ownership boundaries. Its public view explicitly selects released records and omits the hidden assignment and future evidence. The existing operations and script engines remain compatible with earlier runs.
+
+## Hong Kong AML workflow
+
+The operations client at `/operations` uses `packages/aml/types.ts` and `workers/api/src/aml.ts`. A synthetic Hong Kong ledger feeds an executable, versioned rapid-fan-out monitoring rule. Generated alerts retain the rule snapshot, calculated values, time window and contributing transaction IDs. Alerts can be claimed and linked to distinct investigation cases. Findings cite source evidence and transactions; cases move through analyst submission and reviewer return or approval. STR approval produces a training draft only.
+
+The API owns the whole workflow state. Node persists it in an additive `aml_sessions` SQLite table with transactional revision checks; the optional Worker adapter uses the same engine in its per-run Durable Object. The React client keeps selections and unsaved drafts locally, and only a resume ID in browser storage. Switchable classroom roles are enforced by the engine but are not authenticated users. Rule configuration, data injection and reruns belong to administrator mode.
+
+The original paired investigation remains at `/investigation` and the node/choice library at `/cases`, on their existing APIs and storage. No saved pilot sessions are migrated or overwritten. See [AML workflow](aml-workflow.md) for scope, screens and checks.
+
 TwinAML is a digital twin for training. It is not a bank production system. The twin lives in the backend: one case state, plus the events that change it. The web app is only the face. Unity can later be another face. It does not get a second copy of the state.
 
 This demo stays one API and one web client on purpose. It does not split into microservices, and it does not use Neo4j, Kafka, Docker, or Kubernetes.
 
 The primary runtime is one Node server in `workers/api`, with a file-backed SQLite database. It serves the built React interface from `frontend/dist/` and the investigation API on the same origin. The optional Cloudflare Worker adapter uses the same Hono routes, investigation engine, and content pack. FastAPI in `backend/` remains a health-only stub.
 
-The playable investigation runtime is described under [Investigation pilot](#investigation-pilot). The eleven-script flow below is implemented by the case library at `/cases`.
+On Node, Clerk verifies the learner's Google or other configured sign-in method. The API verifies Clerk bearer-token signatures, issuer, expiry and authorized party, then uses the verified user ID for SQLite run ownership. Additive `users` and `run_owners` tables connect all three training areas to **My progress**; snapshots and rules remain in their existing engines. New runs require sign-in and owned runs are private. Earlier anonymous runs are preserved for explicit adoption. The optional Worker remains anonymous. See [accounts and setup](accounts.md).
+
+The playable investigation runtime is described under [Investigation pilot](#investigation-pilot). The thirteen-script flow across eleven topics below is implemented by the case library at `/cases`.
 
 ## Case library (node/choice flow)
 
-`scripts/export-case-library.mjs` packages the eleven `data/case-flow/*.en.md` pages (the brief and the model teaching flow) and the eleven `data/cases/` scripts into the server-only `workers/api/src/case-library.json`. `workers/api/src/cases.ts` stores a case session as its event list only. Each read replays the `decision_made` events through `play()` in `scripts/apply-effects.mjs`, so the twin and current node are always rebuilt from events, never kept as a second copy. The browser receives the visited nodes, the current choice labels, the twin and the events. Choice rationales, rule notes and the model teaching flow are sent only after an outcome node is reached. The rating comes from the script's `teaching.acceptable_dispositions`, `incomplete_dispositions` and `poor_dispositions`.
+`scripts/export-case-library.mjs` packages the eleven `data/case-flow/*.en.md` pages (the brief and the model teaching flow) and the thirteen `data/cases/` scripts into the server-only `workers/api/src/case-library.json`. `workers/api/src/cases.ts` stores a case session as its event list only. Each read replays the `decision_made` events through `play()` in `scripts/apply-effects.mjs`, so the twin and current node are always rebuilt from events, never kept as a second copy. The browser receives the visited nodes, the current choice labels, the twin and the events. Choice rationales, rule notes and the model teaching flow are sent only after an outcome node is reached. The rating comes from the script's `teaching.acceptable_dispositions`, `incomplete_dispositions` and `poor_dispositions`.
 
 The export reads each case-flow page by its structure, so keep it: a first heading `# <number>. <title>` matching the file number; links to the page's own scripts as `](../cases/<file>.json)` before the first `##`; a `## Real-world flow` section with an opening paragraph (optionally `Method and logic: ...`) and a Mermaid diagram; and a `## Platform teaching flow` section with `Trainee role:` and `Training goal:` paragraphs, a Mermaid diagram, and optional notes after it. Mermaid nodes must be written as `id["label"]` (a step) or `id{"label"}` (a decision). Every script must be linked from exactly one page. The export fails with the page name when any of this is missing.
 

@@ -124,13 +124,16 @@ test("duplicate requests never release twice and unknown requests cannot create 
   assert.equal(state.events.filter((row) => row.type === "evidence_released").length, 1);
 });
 
-test("unreleased, wrong-customer and unknown citations reject without decisions", () => {
+test("unreleased, wrong-customer, unknown and empty citations reject without decisions", () => {
   let state = createSession("citations", pack);
-  for (const id of ["EV-007", "EV-011", "unlisted"]) {
+  for (const id of ["EV-007", "EV-011", "unlisted", ""]) {
     state = decide(state, "escalation", [id]);
     assert.equal(state.decisions.length, 0);
     assert.equal(state.events.at(-1).type, "decision_rejected");
   }
+  state = decide(state, "closure", ["", "EV-007"]);
+  assert.equal(state.decisions.length, 0);
+  assert.equal(state.events.at(-1).type, "decision_rejected");
   assert.ok(!JSON.stringify(sessionView(state, pack)).includes("EV-007"));
   state = hold(state, "unknown");
   assert.equal(state.events.at(-1).type, "action_rejected");

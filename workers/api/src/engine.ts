@@ -30,7 +30,7 @@ export interface SessionState {
 }
 
 export class InputError extends Error {
-  constructor(message: string, readonly status: 400 | 409 | 413 = 400) {
+  constructor(message: string, readonly status: 400 | 404 | 409 | 413 = 400) {
     super(message);
   }
 }
@@ -222,7 +222,7 @@ function act(state: SessionState, pack: InvestigationPack, action: Investigation
       return;
     }
     case "decision": {
-      const unavailable = action.evidenceIds.find((id) => !visible(state, id) || !pack.evidence.some((row) => row.id === id && row.customerId === action.customerId));
+      const unavailable = action.evidenceIds.some((id) => !visible(state, id) || !pack.evidence.some((row) => row.id === id && row.customerId === action.customerId));
       if (unavailable) {
         emit(state, "decision_rejected", action.customerId, "", `reason=evidence_not_available;decision=${action.disposition}`);
         return;

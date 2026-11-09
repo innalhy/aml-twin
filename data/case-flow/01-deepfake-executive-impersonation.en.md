@@ -1,6 +1,6 @@
 # 1. Deepfake executive impersonation
 
-The playable script stays at [`data/cases/01-deepfake-hk-001.example.json`](../cases/01-deepfake-hk-001.example.json). Its `case_id` is `deepfake-001`. This page is for human review. It sets out the real-world flow and the platform teaching flow for that deepfake case.
+The Figma portal scenario is [Project Meridian acquisition deposit](../cases/12-project-meridian.example.json), case ID `project-meridian-001`. Its staged Brief, Email, Video, Pay and Outcome screens use synthetic written records; no video binary or real payment is included. The original playable script stays at [`data/cases/01-deepfake-hk-001.example.json`](../cases/01-deepfake-hk-001.example.json). Its `case_id` is `deepfake-001`. This page is for human review. It sets out the real-world flow and the platform teaching flow for that deepfake case.
 
 ## Real-world flow
 

@@ -1,8 +1,8 @@
 import { useEffect, useState, type ReactNode } from "react";
+import { apiFetch, loadResume, saveResume, sessionKey } from "./account-api";
 import type { Disposition, InvestigationAction, Row, SessionView } from "../../packages/investigation/types";
 
 const SESSION_KEY = "twinaml-second-ledger-session";
-const API_BASE = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
 const amounts = new Intl.NumberFormat("en-US");
 const dispositions: Record<Disposition, string> = { continue_review: "Continue review", closure: "Close alert", escalation: "Escalate concern" };
 type Tab = "evidence" | "transfers" | "requests" | "activity" | "debrief";
@@ -13,13 +13,13 @@ class ApiError extends Error {
   constructor(message: string, public status: number) { super(message); }
 }
 async function readSession(path: string, body?: object): Promise<SessionView> {
-  const response = await fetch(`${API_BASE}${path}`, body ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) } : undefined);
+  const response = await apiFetch(path, body ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) } : undefined);
   const result = await response.json().catch(() => null);
   if (!response.ok) throw new ApiError(result?.error?.replaceAll("_", " ") || "The investigation desk could not respond. Please try again.", response.status);
   if (!result || !Array.isArray(result.customers)) throw new Error("The investigation desk returned an unreadable response. Please try again.");
   return result;
 }
-function savedSessionId() { try { return localStorage.getItem(SESSION_KEY); } catch { return null; } }
+function savedSessionId(key: string) { return loadResume(key); }
 function utcTime(snapshot: string, minute: number) { return new Date(new Date(snapshot).getTime() + minute * 60_000).toLocaleTimeString("en-GB", { timeZone: "UTC", hour: "2-digit", minute: "2-digit" }); }
 function dateLabel(value: string) {
   if (!value) return "—";
@@ -43,10 +43,11 @@ function DocumentText({ text }: { text: string }) {
 function eventTitle(type: string) { return type.replaceAll("_", " ").replace(/^./, (c) => c.toUpperCase()); }
 function customerName(customers: Row[], id: string) { return customers.find((item) => item.customer_id === id)?.display_name || id; }
 
-export function App() {
+export function App({ accountId = null }: { accountId?: string | null }) {
+  const storageKey = sessionKey(SESSION_KEY, accountId);
   const [session, setSession] = useState<SessionView | null>(null);
   const [busy, setBusy] = useState(false);
-  const [loading, setLoading] = useState(Boolean(savedSessionId()));
+  const [loading, setLoading] = useState(Boolean(savedSessionId(storageKey)));
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [customerId, setCustomerId] = useState("");
@@ -55,7 +56,7 @@ export function App() {
   const [info, setInfo] = useState<"briefing" | "policy" | null>(null);
   const [drafts, setDrafts] = useState<Record<string, Draft>>({});
   useEffect(() => {
-    const id = savedSessionId();
+    const id = savedSessionId(storageKey);
     if (!id) return;
     let cancelled = false;
     readSession(`/api/sessions/${encodeURIComponent(id)}`).then((view) => {
@@ -69,13 +70,13 @@ export function App() {
     try {
       const view = await readSession("/api/sessions", {});
       setSession(view); setCustomerId(""); setEvidenceId(""); setDrafts({}); setTab("evidence"); setInfo("briefing");
-      try { localStorage.setItem(SESSION_KEY, view.id); setNotice("Your shift is ready. Reading documents does not move simulation time."); }
-      catch { setNotice("Your shift is ready. This browser cannot save a resume link; export your history before closing."); }
+      try { saveResume(storageKey, view.id); setNotice("Your shift is ready. Reading documents does not move simulation time."); }
+      catch { setNotice(accountId ? "Your shift is saved to your account. Use My progress to resume it if browser storage is unavailable." : "Your shift is ready. This browser cannot save a resume link; export your history before closing."); }
     } catch (err) { setError(err instanceof Error ? err.message : "Unable to start a shift."); }
     finally { setBusy(false); }
   }
   async function refreshSession() {
-    const id = session?.id || savedSessionId();
+    const id = session?.id || savedSessionId(storageKey);
     if (!id) return;
     setBusy(true); setError("");
     try { setSession(await readSession(`/api/sessions/${encodeURIComponent(id)}`)); setNotice("The desk is up to date."); }
@@ -133,7 +134,7 @@ export function App() {
       <div className="training-label"><span className="status-dot" />Training simulation <span className="unit-label">SCU</span></div>
       <div className="top-actions"><a className="text-button" href="/cases">Case library</a>{session && <><button className="text-button export-button" onClick={exportHistory}>Export history</button><button className="text-button" disabled={busy} onClick={refreshSession}>Refresh</button></>}<button className="new-shift" disabled={busy || loading} onClick={startSession}>{session ? "New shift" : "Start shift"}</button></div>
     </header>
-    {(error || notice) && <div className={`message ${error ? "error-message" : "notice-message"}`} role={error ? "alert" : "status"}>{error || notice}{error && <button className="text-button" disabled={busy} onClick={session || savedSessionId() ? refreshSession : startSession}>Try again</button>}</div>}
+    {(error || notice) && <div className={`message ${error ? "error-message" : "notice-message"}`} role={error ? "alert" : "status"}>{error || notice}{error && <button className="text-button" disabled={busy} onClick={session || savedSessionId(storageKey) ? refreshSession : startSession}>Try again</button>}</div>}
     {loading ? <main id="investigation" className="welcome"><p className="eyebrow">Opening your desk</p><h1>Resuming your shift…</h1><p>Your case history and available records are being restored.</p></main> : !session ?
       <main id="investigation" className="welcome">
         <div className="welcome-copy"><p className="eyebrow">AN INVESTIGATION IN UNCERTAINTY</p><h1>The Second<br /><em>Ledger.</em></h1><p className="welcome-lead">Six alerts. Two urgent payment trails. One desk to understand what the evidence supports.</p><p>Step into a fictional bank as an AML analyst. Explore customer files, follow the money, request independent checks, and document your decisions while pending payments come due.</p><button className="primary-button welcome-start" disabled={busy} onClick={startSession}>{busy ? "Opening your desk…" : "Begin your first shift →"}</button><p className="welcome-note">All records are synthetic. SCU is a fictional currency unit.<br />Simulation time stays paused while you read.</p></div>

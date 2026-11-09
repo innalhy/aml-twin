@@ -7,11 +7,20 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
 import { createNodeServer } from "../dist/server.mjs";
+import { configureClerk, sessionToken } from "./clerk-fixture.mjs";
+
+configureClerk();
 
 const temporary = await mkdtemp(resolve(tmpdir(), "twinaml-node-test-"));
 const dbPath = resolve(temporary, "sessions.sqlite");
 let server;
 let base;
+const token = sessionToken("user_node_tests");
+function authenticatedFetch(url, options = {}) {
+  const headers = new Headers(options.headers);
+  headers.set("Authorization", `Bearer ${token}`);
+  return fetch(url, { ...options, headers });
+}
 async function start() {
   server = createNodeServer(dbPath);
   server.listen(0, "127.0.0.1");
@@ -30,8 +39,8 @@ function rawPath(path) {
 try {
   await start();
   await test("SQLite preserves the exact session after closing and reopening the server", async () => {
-    const initial = await (await fetch(`${base}/api/sessions`, { method: "POST" })).json();
-    const response = await fetch(`${base}/api/sessions/${initial.id}/actions`, {
+    const initial = await (await authenticatedFetch(`${base}/api/sessions`, { method: "POST" })).json();
+    const response = await authenticatedFetch(`${base}/api/sessions/${initial.id}/actions`, {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ type: "hold", revision: initial.revision, customerId: "SYN-001", reason: "Persist this decision" }),
     });
@@ -39,7 +48,7 @@ try {
     const changed = await response.json();
     await close();
     await start();
-    assert.deepEqual(await (await fetch(`${base}/api/sessions/${initial.id}`)).json(), changed);
+    assert.deepEqual(await (await authenticatedFetch(`${base}/api/sessions/${initial.id}`)).json(), changed);
   });
 
   await test("static routing cannot read source, databases, traversal paths, or malformed URLs", async () => {
@@ -52,9 +61,9 @@ try {
   });
 
   await test("chunked bodies enforce the same16KiB bound without losing the error response", async () => {
-    const initial = await (await fetch(`${base}/api/sessions`, { method: "POST" })).json();
+    const initial = await (await authenticatedFetch(`${base}/api/sessions`, { method: "POST" })).json();
     const body = new ReadableStream({ start(controller) { controller.enqueue(new TextEncoder().encode("x".repeat(17000))); controller.close(); } });
-    const response = await fetch(`${base}/api/sessions/${initial.id}/actions`, {
+    const response = await authenticatedFetch(`${base}/api/sessions/${initial.id}/actions`, {
       method: "POST", headers: { "Content-Type": "application/json" }, body, duplex: "half",
     });
     assert.equal(response.status, 413);

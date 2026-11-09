@@ -3,8 +3,11 @@ import { randomUUID } from "node:crypto";
 
 const base = process.env.TWINAML_TEST_API_URL ?? "http://127.0.0.1:8787";
 let checks = 0;
+let token;
 async function request(path, options = {}) {
-  const response = await fetch(`${base}${path}`, options);
+  const headers = new Headers(options.headers);
+  if (token) headers.set("Authorization", `Bearer ${token}`);
+  const response = await fetch(`${base}${path}`, { ...options, headers });
   const body = await response.json();
   return { status: response.status, body, headers: response.headers };
 }
@@ -30,6 +33,12 @@ const health = await request("/health");
 assert.deepEqual(health.body, { status: "ok", service: "twinaml-api" });
 assert.equal(health.headers.get("cache-control"), "no-store");
 checks++;
+
+if ((await request("/api/account")).body.enabled) {
+  token = process.env.TWINAML_TEST_CLERK_TOKEN;
+  assert(token, "Account-enabled API checks require TWINAML_TEST_CLERK_TOKEN from a dedicated Clerk test user.");
+  assert.equal((await request("/api/account")).status, 200);
+}
 
 assert.equal((await request(`/api/sessions/${randomUUID()}`)).status, 404);
 assert.equal((await request("/api/sessions/not-a-session")).status, 400);
@@ -130,6 +139,10 @@ assert.equal((await postJson("/api/case-sessions", { caseId: "not-a-case" })).st
 let run = (await postJson("/api/case-sessions", { caseId: "mule-rent-001" })).body;
 assert.equal(run.caseId, "mule-rent-001");
 assert.equal(run.debrief, null);
+const invalidChoice = await postJson(`/api/case-sessions/${run.id}/decisions`, { revision: run.revision, choiceId: "not-on-this-node" });
+assert.equal(invalidChoice.status, 400);
+assert.equal(invalidChoice.body.error, "invalid_choice");
+assert.equal((await request(`/api/case-sessions/${run.id}`)).body.revision, run.revision);
 assert.equal((await postJson(`/api/case-sessions/${run.id}/decisions`, { revision: run.revision + 1, choiceId: "interview" })).status, 409);
 for (const choiceId of ["interview", "exit_and_str"]) {
   const step = await postJson(`/api/case-sessions/${run.id}/decisions`, { revision: run.revision, choiceId });

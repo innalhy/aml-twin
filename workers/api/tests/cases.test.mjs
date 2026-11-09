@@ -20,7 +20,7 @@ function endings(state) {
 test("the library lists eleven workflows and every script once", () => {
   assert.equal(library.workflows.length, 11);
   assert.deepEqual(library.workflows.map((workflow) => workflow.number), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
-  assert.equal(new Set(caseIds).size, 11);
+  assert.equal(new Set(caseIds).size, 13);
   for (const workflow of library.workflows) {
     assert.ok(workflow.role && workflow.goal && workflow.method && workflow.realWorld.length >= 2, `workflow ${workflow.number} brief`);
     assert.equal(workflow.walkthrough === null, workflow.cases.length > 0, `workflow ${workflow.number} walkthrough`);
@@ -66,4 +66,40 @@ test("decisions are checked against the current node, revision and case state", 
   const closed = decide(interviewed, "exit_only");
   assert.equal(caseView(closed).debrief.rating, "poor");
   assert.throws(() => decide(closed, "exit_only"), (error) => error.message === "case_closed" && error.status === 409);
+});
+
+
+test("Figma scenarios reveal records in order and preserve distinct rule outcomes", () => {
+  const meridian = createCaseSession("run-meridian", "project-meridian-001");
+  assert.equal(caseView(meridian).twin.phase, "brief");
+  assert.equal(caseView(meridian).story.length, 1);
+  const email = decide(meridian, "open_email");
+  assert.equal(caseView(email).twin.phase, "email");
+  assert.ok(!caseView(email).story.some((item) => item.id === "n_video"), "video is not released before opening it");
+  const reported = caseView(decide(email, "report_email"));
+  assert.equal(reported.debrief.rating, "acceptable");
+  assert.equal(reported.twin.payment.status, "blocked");
+  assert.equal(reported.twin.controls.reported, true);
+  const video = decide(email, "open_video");
+  const review = decide(video, "review_payment");
+  const confirmation = decide(review, "prepare_payment");
+  assert.equal(caseView(confirmation).debrief, null, "preparing a payment does not release it");
+  assert.equal(caseView(confirmation).twin.payment.status, "awaiting_confirmation");
+  const paid = caseView(decide(confirmation, "confirm_payment"));
+  assert.equal(paid.debrief.rating, "poor");
+  assert.equal(paid.twin.payment.status, "sent");
+  assert.equal(caseView(decide(confirmation, "cancel_and_verify")).debrief.rating, "acceptable");
+  assert.equal(caseView(decide(review, "request_documents")).debrief.rating, "incomplete");
+
+  let mule = createCaseSession("run-mule", "mule-mixer-001");
+  for (const [choice, phase] of [["open_bank", "bank"], ["open_chain", "onchain"], ["make_decision", "decision"]]) {
+    mule = decide(mule, choice);
+    assert.equal(caseView(mule).twin.phase, phase);
+  }
+  const held = caseView(decide(mule, "edd_hold"));
+  assert.equal(held.debrief.rating, "acceptable");
+  assert.deepEqual(held.twin.account.holds, ["outbound"]);
+  assert.equal(caseView(decide(mule, "draft_str")).debrief.rating, "acceptable");
+  assert.equal(caseView(decide(mule, "clear_investment")).debrief.rating, "poor");
+  assert.equal(caseView(decide(mule, "exit_only")).debrief.rating, "incomplete");
 });

@@ -4,7 +4,7 @@ Synthetic training scripts for the TwinAML demo. Each file is a Chan Level 1 cas
 
 The web case library at `/cases` plays these scripts; see the root README. `initial_twin_state` is the mirror. `nodes` are the script (`scene`, `decision`, `outcome`). `rules[].when` is a sentence for a person to read until a state machine exists. `effects` and `twin_patch` are patches. How the future machine applies them is frozen in [`docs/effects.md`](../../docs/effects.md). Rules decide the compliance outcome (rules-before-AI). A human override is an event: the scripts mark it with a flag such as `R1_OVERRIDDEN` instead of deleting the rule.
 
-The trainee role in every script is a fictional financial-institution AML or compliance officer. Decisions are customer due diligence, enhanced due diligence, a draft suspicious transaction report, an outbound hold or freeze recommendation, relationship or policy exit, or control remediation. The scripts do not simulate police raids.
+The original eleven scripts put the trainee in a fictional financial-institution AML or compliance role. The portal's Project Meridian script uses a junior finance role; its mule/mixer script uses a monitoring analyst role. Decisions cover verification, internal escalation, customer due diligence, enhanced due diligence, a draft suspicious transaction report, an outbound hold recommendation, relationship or policy exit, or control remediation. The scripts do not simulate police raids.
 
 Identifiers are synthetic (`SYN-` customers, accounts, policies, and counterparties). Prompt amounts are scenario figures for teaching. They are not the public-case totals.
 
@@ -22,7 +22,7 @@ The legitimate lookalike is separate authored evidence content, not the existing
 
 ## Index
 
-Titles below are short English labels. Files are numbered `01`–`11` in this order. Every script is English (`locale` `en`); the validator rejects any other locale or Chinese, Japanese or Korean text. The original Traditional Chinese text was translated in October 2026 without changing ids, rules, effects or dispositions. `case_id` is unchanged.
+Titles below are short English labels. Files are numbered `01`–`13` in this order, across eleven topic workflows. Every script is English (`locale` `en`); the validator rejects any other locale or Chinese, Japanese or Korean text. The original Traditional Chinese text was translated in October 2026 without changing ids, rules, effects or dispositions. The original eleven `case_id` values are unchanged.
 
 | File | case_id | Themes | case_kind |
 | --- | --- | --- | --- |
@@ -37,6 +37,8 @@ Titles below are short English labels. Files are numbered `01`–`11` in this or
 | [09-triad-cashflow-001.example.json](09-triad-cashflow-001.example.json) | `triad-cashflow-001` | Flows with no commercial purpose, organised-crime proceeds indicator | `public_record_inspired` |
 | [10-ia-fwd-controls-001.example.json](10-ia-fwd-controls-001.example.json) | `insurer-controls-001` | Insurer controls: third-party premium, PEP screening, STR worksheet | `public_record_inspired` |
 | [11-hkma-cdd-001.example.json](11-hkma-cdd-001.example.json) | `bank-cdd-001` | Bank CDD, ongoing monitoring, STR failures | `public_record_inspired` |
+| [12-project-meridian.example.json](12-project-meridian.example.json) | `project-meridian-001` | Executive impersonation, email and meeting transcript, independent payment verification | Synthetic portal scenario |
+| [13-mule-mixer.example.json](13-mule-mixer.example.json) | `mule-mixer-001` | Rapid bank transfers, crypto mixer exposure, evidence-led escalation | Synthetic portal scenario |
 
 ## Public reporting context
 

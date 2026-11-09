@@ -1,5 +1,7 @@
 # 2. Crypto mixers and mule accounts
 
+The playable Figma portal scenario is [Mule accounts and crypto mixers](../cases/13-mule-mixer.example.json), case ID `mule-mixer-001`. It walks through a payment-monitoring brief, bank records, a synthetic chain observation and the A–D decision below. The outcomes preserve qualified evidence, EDD and human STR review; they do not operate a live bank or filing system.
+
 This page is for human review. Nearby playable scripts in `data/cases/` are `mule-rent-001`, `wiseword-amlmonth-001`, `greythunder-mule-001`, and `justicegate-crypto-001`. The decision node on this page is this teaching flow. It is not a line-by-line map of those scripts.
 
 ## Real-world flow

@@ -18,6 +18,16 @@ Open `http://127.0.0.1:8787` for the built frontend and API together. For fronte
 
 The server persists sessions in `data/local/investigation.sqlite` at the repository root. That directory is ignored by Git. The session's revision check and state update occur in a synchronous SQLite transaction. Sessions survive server restarts; preserving this database preserves the runs.
 
+Configure Clerk before creating new Node runs: see [accounts, Google sign-in and environment setup](../../docs/accounts.md) and `.env.example`. For a local environment file, launch with `node --env-file=.env dist/server.mjs` from this directory; `npm run start:node` otherwise uses the process environment. Google is enabled in the owner's Clerk application, not through local password endpoints.
+
+For an explicitly anonymous local or hosted development environment, set both `NODE_ENV=development` and `TWINAML_DEV_MODE=1`, with a separate absolute `TWINAML_DB` path such as the root `data/local/development.sqlite`. For example, from this directory after building:
+
+```bash
+NODE_ENV=development TWINAML_DEV_MODE=1 TWINAML_DB="$PWD/../../data/local/development.sqlite" node dist/server.mjs
+```
+
+This administrative mode disables the account/authentication API bindings; `/api/account` returns `{ "enabled": false, "configured": false, "user": null }`, and the existing frontend opens anonymous training runs. Build the matching frontend with `VITE_CLERK_PUBLISHABLE_KEY` and `VITE_API_URL` empty for same-origin development. The server refuses this mode unless `NODE_ENV` is exactly `development`, and refuses a database containing account-owned runs. It never infers anonymous access from missing Clerk keys. Keep production settings and data separate; development runs are accessible by their opaque IDs and have no account progress list.
+
 The production bundle `dist/server.mjs` includes Hono, the engine, and server-only evidence. It runs with Node alone and does not require esbuild or Wrangler on the VPS. Keep it at `workers/api/dist/server.mjs` alongside the built `frontend/dist/` tree. Native SQLite is experimental on Node 22 and may print a startup warning.
 
 | Environment | Default | Purpose |
@@ -26,10 +36,27 @@ The production bundle `dist/server.mjs` includes Hono, the engine, and server-on
 | `HOST` | `127.0.0.1` | Listen address; suitable behind a VPS reverse proxy. |
 | `TWINAML_DB` | root `data/local/investigation.sqlite` | Persistent database path. Relative paths resolve from the working directory. |
 | `TWINAML_FRONTEND_ORIGIN` | empty | Exact public frontend origin, such as `https://aml.example.com`. Separate several origins with commas. |
+| `TWINAML_DEV_MODE` | unset | Only `1` enables anonymous development; requires `NODE_ENV=development` and a database without account-owned runs. |
+| `NODE_ENV` | unset | Must be exactly `development` when anonymous development mode is requested. |
+| `CLERK_ISSUER` | empty | Exact Clerk Frontend API origin used as the session-token issuer. Required for accounts. |
+| `CLERK_SECRET_KEY` | empty | Server-only Clerk key for signature-key lookup. Set this or `CLERK_JWT_KEY`. |
+| `CLERK_JWT_KEY` | empty | Optional PEM JWT public key for offline verification; supports escaped newlines. |
 
 On a VPS, run the process under the host's service manager and put the existing reverse proxy with HTTPS in front of port 8787. Back up the database using SQLite's backup mechanism or stop the server before copying the database and its WAL files. No hosting purchase, server provisioning, or deployment is performed by the build commands.
 
 ## Session API
+
+The Hong Kong AML workflow uses its own authoritative snapshots in the additive `aml_sessions` SQLite table. Existing pilot and case-library tables are unchanged. The optional Worker adapter uses an `aml_session` table in the same per-run Durable Object class and calls the same engine. The shared workflow types are in `packages/aml/types.ts`; the generated alerts, cases, rule runs and audit events are persisted together. All mutations require the observed revision and are transactional. Role switching is an audited classroom action, not authentication.
+
+AML action bodies are bounded to 128 KiB to accommodate the structured narrative and STR fields, with field-level limits enforced by the engine. The original exercise and case-library body limits remain 16 KiB.
+
+| AML workflow route | Result |
+| --- | --- |
+| `POST /api/aml-sessions` | Create a synthetic Hong Kong training session, run monitoring and return `AmlView` (201). |
+| `GET /api/aml-sessions/:id` | Read the authoritative workflow snapshot; unknown runs return 404. |
+| `POST /api/aml-sessions/:id/actions` | Validate and apply an `AmlActionInput`, returning the updated view. |
+
+See [`../../docs/aml-workflow.md`](../../docs/aml-workflow.md) for the monitoring rule, source validation, case lifecycle and simulated reviewer/STR boundaries. The original APIs follow.
 
 | Route | Result |
 | --- | --- |
@@ -63,17 +90,19 @@ npm run test:node
 npm run test:api
 ```
 
-Engine tests use esbuild and Node's built-in test runner. `npm test` also walks every path in all eleven case scripts. `test:node` launches isolated temporary SQLite servers, checks persistence and safe static serving, and cleans them up. Its frontend-serving check runs when `frontend/dist` is built. `test:api` checks any running adapter at port 8787, or `TWINAML_TEST_API_URL`.
+Engine tests use esbuild and Node's built-in test runner. `npm test` also walks every path in all eleven case scripts. `test:node` launches isolated temporary SQLite servers, checks Clerk JWT verification, ownership, persistence, legacy adoption, explicit development-mode boundaries and safe static serving, and cleans them up. Its frontend-serving check runs when `frontend/dist` is built. `test:api` checks any running adapter at port 8787, or `TWINAML_TEST_API_URL`; for account-enabled Node, supply a valid short-lived `TWINAML_TEST_CLERK_TOKEN` from the connected instance.
 
 ## Hosting scope
 
-The pilot has no login or instructor administration screen. Its unguessable session ID acts as a bearer capability: anyone who receives that ID can read and alter the session. Use only synthetic classroom data. Add access control and resource limits before exposing it as a public service.
+On Node, Clerk authenticates learners and new runs are assigned to their verified Clerk user ID. All owned-run reads and writes check that owner, returning 404 to other users and guests. `GET /api/account/runs` lists only the caller's progress. `POST /api/account/claim` explicitly adopts an unowned legacy run by its original opaque ID; until claimed, that ID remains its bearer capability. Missing Clerk configuration fails closed for new runs. The switchable analyst/reviewer/administrator selector still simulates classroom roles inside the learner's own run; it does not grant institutional or instructor access. See [account API and migration](../../docs/accounts.md).
 
 Browser API access is restricted to local origins on ports 5173/4173/8787 and the exact configured frontend origin. Set `TWINAML_FRONTEND_ORIGIN` to the HTTPS origin used by the reverse proxy before hosting. It does not reflect arbitrary origins. Static files are restricted to `frontend/dist`; API paths never fall back to the frontend, and traversal or symlink escapes are refused.
 
 ## Optional Cloudflare adapter
 
 The Worker uses one SQLite-backed Durable Object per opaque session UUID. Its local state is separate from the Node database and lives in `.wrangler/state`. The adapters share behavior, not live storage; there is no automatic session migration between them.
+
+Accounts and My progress are implemented for Node/VPS. The optional Worker returns `enabled: false` from `/api/account` and retains anonymous bearer-ID sessions.
 
 ```bash
 npm run types

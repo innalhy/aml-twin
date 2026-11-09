@@ -1,0 +1,13 @@
+{
+  "name": "twinaml",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "setup": "node scripts/dev.mjs --setup",
+    "dev": "node scripts/dev.mjs",
+    "deploy:dev": "node scripts/deploy-dev.mjs"
+  }
+}

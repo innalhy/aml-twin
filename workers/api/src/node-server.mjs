@@ -10,6 +10,9 @@ import api from "./api.ts";
 import pack from "./investigation-pack.json";
 import { applyAction, createSession, InputError, sessionView, STATE_VERSION } from "./engine.ts";
 import { CASE_STATE_VERSION, caseView, createCaseSession, decideCase } from "./cases.ts";
+import { AML_STATE_VERSION, amlView, applyAmlAction, createAmlSession } from "./aml.ts";
+import { createAccounts } from "./accounts.mjs";
+import { createClerkAuth } from "./clerk-auth.ts";
 
 const ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const STATIC_DIR = resolve(ROOT, "frontend/dist");
@@ -19,16 +22,31 @@ const MIME = {
   ".jpeg": "image/jpeg", ".webp": "image/webp", ".ico": "image/x-icon", ".woff2": "font/woff2", ".txt": "text/plain; charset=utf-8",
 };
 
-function sqliteStore(path) {
+function sqliteStore(path, developmentMode = false) {
   mkdirSync(dirname(path), { recursive: true });
   const db = new DatabaseSync(path);
-  db.exec("PRAGMA journal_mode = WAL; PRAGMA busy_timeout = 5000; CREATE TABLE IF NOT EXISTS sessions (id TEXT PRIMARY KEY, snapshot TEXT NOT NULL); CREATE TABLE IF NOT EXISTS case_sessions (id TEXT PRIMARY KEY, snapshot TEXT NOT NULL)");
+  if (developmentMode && db.prepare("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'run_owners'").get()
+      && db.prepare("SELECT 1 FROM run_owners LIMIT 1").get()) {
+    db.close();
+    throw new Error("Anonymous development mode requires a database without account-owned runs; use a separate development database");
+  }
+  db.exec("PRAGMA journal_mode = WAL; PRAGMA busy_timeout = 5000; CREATE TABLE IF NOT EXISTS sessions (id TEXT PRIMARY KEY, snapshot TEXT NOT NULL); CREATE TABLE IF NOT EXISTS case_sessions (id TEXT PRIMARY KEY, snapshot TEXT NOT NULL); CREATE TABLE IF NOT EXISTS aml_sessions (id TEXT PRIMARY KEY, snapshot TEXT NOT NULL)");
   const select = db.prepare("SELECT snapshot FROM sessions WHERE id = ?");
   const insert = db.prepare("INSERT INTO sessions (id, snapshot) VALUES (?, ?)");
   const update = db.prepare("UPDATE sessions SET snapshot = ? WHERE id = ?");
   const selectCase = db.prepare("SELECT snapshot FROM case_sessions WHERE id = ?");
   const insertCase = db.prepare("INSERT INTO case_sessions (id, snapshot) VALUES (?, ?)");
   const updateCase = db.prepare("UPDATE case_sessions SET snapshot = ? WHERE id = ?");
+  const selectAml = db.prepare("SELECT snapshot FROM aml_sessions WHERE id = ?");
+  const insertAml = db.prepare("INSERT INTO aml_sessions (id, snapshot) VALUES (?, ?)");
+  const updateAml = db.prepare("UPDATE aml_sessions SET snapshot = ? WHERE id = ?");
+  function loadAml(id) {
+    const row = selectAml.get(id);
+    if (!row) return null;
+    const state = JSON.parse(row.snapshot);
+    if (state.version !== AML_STATE_VERSION) throw new InputError("incompatible_session", 409);
+    return state;
+  }
   function loadCase(id) {
     const row = selectCase.get(id);
     if (!row) return null;
@@ -43,28 +61,93 @@ function sqliteStore(path) {
     if (state.version !== STATE_VERSION) throw new InputError("incompatible_session", 409);
     return state;
   }
+  const accounts = createAccounts(db, (kind, id) => {
+    if (kind === "aml") {
+      const state = loadAml(id);
+      if (state?.simulation) {
+        const view = amlView(state).simulation;
+        return { title: "AML investigation simulation", progress: `${view.ended ? "Completed" : `Minute ${view.elapsedMinutes} of ${view.endMinute}`} · ${view.decisions.length} assessments recorded`, route: "/simulation" };
+      }
+      return state ? { title: "Hong Kong AML training", progress: `${state.alerts.filter((alert) => alert.status === "closed").length}/${state.alerts.length} alerts closed · ${state.cases.length} cases` } : null;
+    }
+    if (kind === "case") {
+      const state = loadCase(id);
+      if (!state) return null;
+      const view = caseView(state);
+      return { title: view.title, progress: view.debrief ? `Completed · ${view.debrief.rating}` : `${state.revision} decisions saved` };
+    }
+    if (kind === "investigation") {
+      const state = load(id);
+      return state ? { title: "The Second Ledger", progress: `${state.ended ? "Completed" : `Minute ${state.minute} of 30`} · ${state.decisions.length} decisions saved` } : null;
+    }
+    return null;
+  });
+  function insertRun(kind, id, state, insertStatement, userId) {
+    db.exec("BEGIN IMMEDIATE");
+    try {
+      insertStatement.run(id, JSON.stringify(state));
+      accounts.addOwner(kind, id, userId);
+      db.exec("COMMIT");
+    } catch (error) {
+      db.exec("ROLLBACK");
+      throw error;
+    }
+  }
   return {
     close: () => db.close(),
+    accounts,
+    aml: {
+      create(id, userId, simulation = false) {
+        const state = createAmlSession(id, simulation);
+        insertRun("aml", id, state, insertAml, userId);
+        return amlView(state);
+      },
+      read(id, userId) {
+        if (!accounts.canAccess("aml", id, userId)) return { error: "session_not_found", status: 404 };
+        const state = loadAml(id);
+        return state ? { view: amlView(state) } : { error: "session_not_found", status: 404 };
+      },
+      action(id, input, userId) {
+        db.exec("BEGIN IMMEDIATE");
+        try {
+          const current = accounts.canAccess("aml", id, userId) ? loadAml(id) : null;
+          if (!current) {
+            db.exec("COMMIT");
+            return { error: "session_not_found", status: 404 };
+          }
+          const state = applyAmlAction(current, input);
+          updateAml.run(JSON.stringify(state), id);
+          accounts.touch("aml", id);
+          db.exec("COMMIT");
+          return { view: amlView(state) };
+        } catch (error) {
+          db.exec("ROLLBACK");
+          throw error;
+        }
+      },
+    },
     cases: {
-      create(id, caseId) {
+      create(id, caseId, userId) {
         const state = createCaseSession(id, caseId);
-        insertCase.run(id, JSON.stringify(state));
+        insertRun("case", id, state, insertCase, userId);
         return caseView(state);
       },
-      read(id) {
+      read(id, userId) {
+        if (!accounts.canAccess("case", id, userId)) return { error: "session_not_found", status: 404 };
         const state = loadCase(id);
         return state ? { view: caseView(state) } : { error: "session_not_found", status: 404 };
       },
-      decide(id, input) {
+      decide(id, input, userId) {
         db.exec("BEGIN IMMEDIATE");
         try {
-          const current = loadCase(id);
+          const current = accounts.canAccess("case", id, userId) ? loadCase(id) : null;
           if (!current) {
             db.exec("COMMIT");
             return { error: "session_not_found", status: 404 };
           }
           const state = decideCase(current, input);
           updateCase.run(JSON.stringify(state), id);
+          accounts.touch("case", id);
           db.exec("COMMIT");
           return { view: caseView(state) };
         } catch (error) {
@@ -73,25 +156,27 @@ function sqliteStore(path) {
         }
       },
     },
-    create(id) {
+    create(id, userId) {
       const state = createSession(id, pack);
-      insert.run(id, JSON.stringify(state));
+      insertRun("investigation", id, state, insert, userId);
       return sessionView(state, pack);
     },
-    read(id) {
+    read(id, userId) {
+      if (!accounts.canAccess("investigation", id, userId)) return { error: "session_not_found", status: 404 };
       const state = load(id);
       return state ? { view: sessionView(state, pack) } : { error: "session_not_found", status: 404 };
     },
-    action(id, input) {
+    action(id, input, userId) {
       db.exec("BEGIN IMMEDIATE");
       try {
-        const current = load(id);
+        const current = accounts.canAccess("investigation", id, userId) ? load(id) : null;
         if (!current) {
           db.exec("COMMIT");
           return { error: "session_not_found", status: 404 };
         }
         const state = applyAction(current, pack, input);
         update.run(JSON.stringify(state), id);
+        accounts.touch("investigation", id);
         db.exec("COMMIT");
         return { view: sessionView(state, pack) };
       } catch (error) {
@@ -134,8 +219,18 @@ async function staticResponse(path, method) {
 }
 
 export function createNodeServer(dbPath = process.env.TWINAML_DB ?? resolve(ROOT, "data/local/investigation.sqlite")) {
-  const store = sqliteStore(resolve(dbPath));
-  const env = { store, cases: store.cases, frontendOrigin: process.env.TWINAML_FRONTEND_ORIGIN ?? "" };
+  const developmentMode = process.env.TWINAML_DEV_MODE === "1";
+  if (developmentMode && process.env.NODE_ENV !== "development") throw new Error("TWINAML_DEV_MODE=1 requires NODE_ENV=development");
+  const store = sqliteStore(resolve(dbPath), developmentMode);
+  const frontendOrigin = process.env.TWINAML_FRONTEND_ORIGIN ?? "";
+  const env = {
+    store, cases: store.cases, aml: store.aml, accounts: developmentMode ? undefined : store.accounts, frontendOrigin,
+    authenticate: developmentMode ? undefined : createClerkAuth({
+      frontendOrigin, issuer: process.env.CLERK_ISSUER,
+      secretKey: process.env.CLERK_SECRET_KEY,
+      jwtKey: process.env.CLERK_JWT_KEY?.replaceAll("\\n", "\n"),
+    }),
+  };
   const server = createServer((req, res) => { void serve(req, res); });
   server.on("close", () => store.close());
   async function serve(req, res) {

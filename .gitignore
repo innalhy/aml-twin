@@ -44,6 +44,8 @@ htmlcov/
 # --- Node / React (Vite) ---
 node_modules/
 frontend/dist/
+frontend/dist-dev/
+frontend/dist-production/
 frontend/build/
 apps/*/dist/
 .npm/
@@ -53,6 +55,8 @@ apps/*/dist/
 # --- Logs & local data ---
 *.log
 logs/
+.playwright-cli/
+output/playwright/
 tmp/
 temp/
 data/local/

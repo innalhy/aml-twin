@@ -1,0 +1,258 @@
+{
+  "schema_version": "0.1",
+  "case_id": "mule-mixer-001",
+  "title": "Mule accounts and crypto mixers",
+  "locale": "en",
+  "summary": "Review a synthetic payment-monitoring alert, bank-account activity and on-chain observations. Decide how to respond to a sudden inflow followed by rapid transfers toward a mixer-linked service.",
+  "start_node_id": "n_brief",
+  "teaching": {
+    "level": "chan-1-scripted-mirror",
+    "rules_before_ai": true,
+    "acceptable_dispositions": [
+      "edd_hold",
+      "str_drafted"
+    ],
+    "incomplete_dispositions": [
+      "exit_without_review"
+    ],
+    "poor_dispositions": [
+      "false_positive_cleared"
+    ]
+  },
+  "rules": [
+    {
+      "id": "MM1_PROFILE_AND_FLOW",
+      "when": "Credits materially exceed the customer profile and most funds leave quickly for multiple unrelated recipients.",
+      "then": "require_investigation",
+      "note": "Review the combined pattern, the source of funds and the purpose of the transfers. A description such as investment is not supporting evidence."
+    },
+    {
+      "id": "MM2_CHAIN_CONTEXT",
+      "when": "Unexplained rapid pass-through activity is accompanied by a synthetic on-chain observation linking the destination to a mixer service.",
+      "then": "require_edd_or_str_review",
+      "note": "The chain observation is a training indicator, not proof that the customer committed a crime. Preserve the records, limit further exposure in the exercise and seek the required human review."
+    }
+  ],
+  "initial_twin_state": {
+    "phase": "brief",
+    "customer": {
+      "id": "SYN-MM-001",
+      "display_name": "Jamie Chan (synthetic)",
+      "profile": "Salaried office assistant; expected monthly credits HKD 24,000"
+    },
+    "account": {
+      "id": "SYN-MM-1102",
+      "holds": []
+    },
+    "kyc": {
+      "status": "review_required",
+      "source_of_funds": "not_supported"
+    },
+    "transactions": [],
+    "monitoring": {
+      "credit_hkd": 620000,
+      "outbound_hkd": 598000,
+      "window_minutes": 28,
+      "mixer_observation": "not_reviewed"
+    },
+    "risk": {
+      "score": 45,
+      "flags": [
+        "RAPID_PASS_THROUGH",
+        "PROFILE_MISMATCH"
+      ]
+    },
+    "disposition": null
+  },
+  "nodes": [
+    {
+      "id": "n_brief",
+      "type": "decision",
+      "title": "Payment-monitoring alert",
+      "prompt": "You are the AML analyst reviewing a newly generated alert for Jamie Chan, a synthetic retail customer. A sudden credit is followed by several outgoing payments.\n\nYour task is to compare the account activity with the customer profile, inspect the on-chain evidence and record a proportionate next step.\n\nThe records, addresses, labels and funds in this exercise are fictional. No account restriction or report is sent to a live system.",
+      "twin_patch": {
+        "phase": "brief"
+      },
+      "choices": [
+        {
+          "id": "open_bank",
+          "label": "Open the bank-account activity",
+          "next": "n_bank",
+          "rationale": "Start with the underlying records and the customer profile rather than the alert label alone."
+        }
+      ]
+    },
+    {
+      "id": "n_bank",
+      "type": "decision",
+      "title": "Bank-account activity",
+      "prompt": "CUSTOMER PROFILE\nJamie Chan (synthetic), salaried office assistant\nExpected monthly credits: HKD 24,000\nDeclared activity: salary and household spending\nAccount: SYN-MM-1102\n\nACTIVITY — 18 JUN, HKT\n10:02 — Credit HKD 620,000 from SYN-SENDER-701; reference: investment\n10:09 — Debit HKD 200,000 to SYN-RECIPIENT-101\n10:17 — Debit HKD 198,000 to SYN-RECIPIENT-102\n10:30 — Debit HKD 200,000 to SYN-OTC-103\n\nHKD 598,000 (96.5%) left within 28 minutes. There is no supporting source-of-funds record or investment contract in the file. The three recipients have no documented relationship to the customer.\n\nThe synthetic OTC conversion record references wallet SYN-WALLET-7A.",
+      "twin_patch": {
+        "phase": "bank"
+      },
+      "choices": [
+        {
+          "id": "open_chain",
+          "label": "Inspect the on-chain evidence",
+          "next": "n_chain",
+          "rationale": "The bank pattern needs context. Review the referenced conversion and chain observation before deciding.",
+          "effects": {
+            "transactions": [
+              {
+                "id": "MM-TX-01",
+                "kind": "credit",
+                "amount": 620000
+              },
+              {
+                "id": "MM-TX-02",
+                "kind": "outbound",
+                "amount": 200000
+              },
+              {
+                "id": "MM-TX-03",
+                "kind": "outbound",
+                "amount": 198000
+              },
+              {
+                "id": "MM-TX-04",
+                "kind": "outbound_otc",
+                "amount": 200000
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_chain",
+      "type": "decision",
+      "title": "On-chain evidence",
+      "prompt": "SYNTHETIC CHAIN OBSERVATION\nSource record: CHAIN-MM-01\nOTC conversion record: OTC-MM-03\nWallet: SYN-WALLET-7A\n\n10:36 — The synthetic OTC record links the conversion to SYN-WALLET-7A.\n10:42 — The wallet sends the converted funds through SYN-HOP-2B.\n10:47 — The next hop enters SYN-MIXER-POOL, labelled mixer-linked in this exercise.\n\nThe worksheet shows a link between the bank record, the conversion record and the chain observation. The label alone does not establish criminal intent or identify the final beneficiary.\n\nConsider this observation together with the profile mismatch, rapid fan-out and missing supporting records.",
+      "twin_patch": {
+        "phase": "onchain"
+      },
+      "choices": [
+        {
+          "id": "make_decision",
+          "label": "Record your decision",
+          "next": "n_decision",
+          "rationale": "Combine the account evidence and chain context; do not treat either an investment label or a mixer label as a complete conclusion.",
+          "effects": {
+            "monitoring.mixer_observation": "reviewed",
+            "risk.flags_add": [
+              "MIXER_LINK_OBSERVED"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_decision",
+      "type": "decision",
+      "title": "How do you handle the alert?",
+      "prompt": "The customer profile does not explain the HKD 620,000 credit. Most funds left within 28 minutes for unrelated recipients. The conversion record links one route to the synthetic mixer observation, and source-of-funds evidence is absent.\n\nSelect one response. Each choice is recorded in the training run; no live account control or external STR submission occurs.",
+      "twin_patch": {
+        "phase": "decision"
+      },
+      "choices": [
+        {
+          "id": "clear_investment",
+          "label": "A. Close as a normal investment",
+          "next": "n_clear",
+          "rationale": "The investment reference does not explain the profile mismatch, rapid transfers or missing supporting records.",
+          "effects": {
+            "risk.flags_add": [
+              "COMBINED_SIGNALS_IGNORED"
+            ]
+          }
+        },
+        {
+          "id": "edd_hold",
+          "label": "B. Request source-of-funds evidence and hold outbound payments",
+          "next": "n_edd",
+          "rationale": "Preserve the evidence and investigate the unexplained activity while limiting further outbound exposure in the simulation.",
+          "effects": {
+            "kyc.status": "edd_ordered",
+            "account.holds": [
+              "outbound"
+            ],
+            "risk.flags_add": [
+              "EDD_HOLD"
+            ]
+          }
+        },
+        {
+          "id": "draft_str",
+          "label": "C. Draft an STR for review and recommend a hold",
+          "next": "n_str",
+          "rationale": "A cited draft and human review retain the combined account and chain evidence. This is a training draft, not a filing.",
+          "effects": {
+            "account.holds": [
+              "outbound"
+            ],
+            "risk.flags_add": [
+              "STR_DRAFTED",
+              "HOLD_RECOMMENDED"
+            ]
+          }
+        },
+        {
+          "id": "exit_only",
+          "label": "D. Exit the relationship without further investigation",
+          "next": "n_exit",
+          "rationale": "Ending the relationship alone does not resolve the unexplained activity or preserve a completed reporting review.",
+          "effects": {
+            "kyc.status": "exit_started",
+            "risk.flags_add": [
+              "REVIEW_INCOMPLETE"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_clear",
+      "type": "outcome",
+      "title": "The combined warning signs were missed",
+      "prompt": "The alert was closed without resolving the profile mismatch or the unsupported rapid transfers. The investment reference was accepted as an explanation despite the remaining records. Review the account flow and chain context together before closing.",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "outcome",
+        "disposition": "false_positive_cleared"
+      }
+    },
+    {
+      "id": "n_edd",
+      "type": "outcome",
+      "title": "EDD opened and outbound activity held",
+      "prompt": "The training account is held for outbound payments while source-of-funds and transfer-purpose evidence are requested. The bank records and the synthetic chain observation remain linked in the review. Further evidence and human review determine the next step.",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "outcome",
+        "disposition": "edd_hold"
+      }
+    },
+    {
+      "id": "n_str",
+      "type": "outcome",
+      "title": "STR draft prepared for human review",
+      "prompt": "The draft cites the profile mismatch, rapid pass-through, missing source evidence and the qualified chain observation. A human reviewer must assess the draft and the recommended hold. Nothing is filed or restricted outside this simulation.",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "outcome",
+        "disposition": "str_drafted"
+      }
+    },
+    {
+      "id": "n_exit",
+      "type": "outcome",
+      "title": "Relationship exit does not finish the review",
+      "prompt": "The exit request is recorded, but the source-of-funds investigation and reporting assessment remain incomplete. Preserve the evidence and complete the review rather than treating exit as a substitute.",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "outcome",
+        "disposition": "exit_without_review"
+      }
+    }
+  ]
+}

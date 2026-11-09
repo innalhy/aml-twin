@@ -2,7 +2,17 @@
 
 ## What it is?
 
-TwinAML is a COMP3424 course demo of a digital twin for AML simulation training. The platform idea is proprietary: this tree is a classroom demo, not a bank production system and not an open-source release. The Phase 1 case library is **11** synthetic scripts under [`data/cases/`](data/cases/README.md). `deepfake-001` is the original course example (video-KYC deepfake). The other ten are `public_record_inspired`. Every customer, account, and amount in them is synthetic. The full index and disclaimer are in [`data/cases/README.md`](data/cases/README.md). The twin is backend state plus the events that change it. The web app renders that state.
+**Open Simulation at `/simulation` for an AML investigation exercise.** The server assigns a hidden evidence variant, advances a 60-minute discrete-event clock, releases requested checks on schedule and processes pending transfers. Analyst control recommendations require a separate simulated reviewer approval and operational delay. Assessments retain citations, alternatives, missing information and the evidence available when submitted. Reports include practice reviews, payment consequences and a blind review packet for external discussion. See [`docs/aml-simulation.md`](docs/aml-simulation.md). The source data and calibration assumptions are versioned and explicitly unvalidated; independent practitioner review remains pending.
+
+The default page is the **TwinAML AML Training Portal**, based on the English Figma UI drafts: a progress dashboard, topic library, staged scenario player, training reports, help and appearance settings. Start at `/`, choose **My Training**, and open a topic. Project Meridian follows an urgent executive email, a meeting transcript and a payment decision; the mule/mixer exercise follows bank activity and on-chain evidence. Decisions and outcomes use the existing server-side case engine. Reports show actual saved outcomes rather than the illustrative metrics in the draft. See [`docs/training-portal.md`](docs/training-portal.md) for routes and the verification exercise.
+
+The **Hong Kong AML operations workbench** is at `/operations`: generated alerts, alert details, entity exploration, investigation cases and reviewer decisions. It follows documented SAS-style operations with its own interface and synthetic data. It is not a SAS product or a live bank system. The API runs a versioned monitoring rule over the synthetic ledger and retains the contributing transactions. Instructor/administrator mode can change the parameters, add a synthetic transaction and rerun detection. See [`docs/aml-workflow.md`](docs/aml-workflow.md) for its rule contract and an end-to-end exercise.
+
+The earlier **Second Ledger** exercise remains at `/investigation`, with its existing saved sessions. `/cases` is an alias for the portal's topic library at `/training`. These are separate training runs; one Node API and SQLite database own their authoritative state. Existing script IDs and saved decisions are preserved.
+
+The Node application now supports **Clerk accounts with Google sign-in** and **My progress** across all three training areas. New runs are private to the signed-in account; saved actions can be resumed from another device. Existing runs can be explicitly added to an account. The owner's existing Clerk development application is connected locally, and its Google sign-in controls have been verified. For a new checkout, follow [`docs/accounts.md`](docs/accounts.md); `.env.example` files are included in `frontend/` and `workers/api/`. Production Clerk setup and deployment remain pending. The separate [development environments](docs/development.md) use explicit anonymous mode with synthetic test data.
+
+TwinAML is a COMP3424 course demo of a digital twin for AML simulation training. The platform idea is proprietary: this tree is a classroom demo, not a bank production system and not an open-source release. The case library has **13** synthetic scripts across **11** topic workflows under [`data/cases/`](data/cases/README.md): the original eleven scripts plus `project-meridian-001` and `mule-mixer-001` from the portal design. `deepfake-001` is the original course example (video-KYC deepfake). Ten scripts are `public_record_inspired`. Every customer, account, and amount in them is synthetic. The full index and disclaimer are in [`data/cases/README.md`](data/cases/README.md). The twin is backend state plus the events that change it. The web app renders that state.
 
 | case_id | Theme |
 | --- | --- |
@@ -20,7 +30,7 @@ TwinAML is a COMP3424 course demo of a digital twin for AML simulation training.
 
 The **case library** at `/cases` plays these scripts. A trainee picks one of the eleven workflows, reads how the scheme works in the real world, then makes the decisions inside a script while the twin state and event log update beside it. Rules in the script decide the outcome (rules-before-AI). The debrief shows whether the ending was acceptable, incomplete or poor, the rationale for every choice, the rules, and the model teaching flow. A language model, if one is added later, may explain a decision only after those rules have fired, and a human override must be stored as an event.
 
-Case flows are in [`data/case-flow/`](data/case-flow/). Each case has an English Markdown file with Mermaid flow diagrams. The playable scripts stay in `data/cases/`, numbered `01`–`11`. `case_id` is unchanged. `node scripts/export-case-library.mjs` packages the flow pages and scripts into the server-only `workers/api/src/case-library.json`; the case library reads only that file. Workflows 2 and 3 have no script yet, so the library shows their teaching flow read-only.
+Case flows are in [`data/case-flow/`](data/case-flow/). Each case has an English Markdown file with Mermaid flow diagrams. The playable scripts stay in `data/cases/`, numbered `01`–`13`. Original `case_id` values are unchanged. `node scripts/export-case-library.mjs` packages the flow pages and scripts into the server-only `workers/api/src/case-library.json`; the case library reads only that file. Workflow 2 now includes the mule/mixer scenario; workflow 3 shows its teaching flow read-only.
 
 TwinAML ships English only: docs, UI copy and case content. `node scripts/validate-cases.mjs` fails on a script whose `locale` is not `en` or that contains Chinese, Japanese or Korean text, and the library export refuses the same.
 
@@ -75,13 +85,13 @@ Classroom demo. One API and one web client.
 | Layer | Current | Planned |
 | --- | --- | --- |
 | Demo API | Node + Hono + built-in SQLite (`workers/api`). Health, persistent investigation sessions and case-library sessions; optional Worker adapter shares the engines. | Versioned rule packs (Phase 2). |
-| Web | React + Vite + TypeScript (`frontend/`). Playable paired investigation desk at `/` and the eleven-workflow case library at `/cases`, served by Node. | Additional ARG episodes and a session dashboard (P1-S6). |
+| Web | React + Vite + TypeScript (`frontend/`). Training portal at `/`, Hong Kong AML workflow at `/operations`, paired investigation at `/investigation`, and the eleven-workflow library at `/cases`, served by Node. | Additional training scenarios. |
 | Local Python stub | FastAPI (`backend/`). Optional. `GET /health` with the same JSON. | Any investigation support would need an implementation; it stays off the deploy path. |
 | Cases | 11 example scripts in [`data/cases/README.md`](data/cases/README.md). | Stay on `packages/schemas/script.schema.json`. A rule’s `when` text is for a person to read; the script's branches and teaching dispositions decide the outcome. |
 | Media | `data/media/.gitkeep` only. Large video is gitignored. | Scripts may set `media_ref` to a local path. Binaries stay out of git. |
 | Contract | `packages/schemas/script.schema.json` (schema `0.1`). | One script format. Patch keys: [`docs/effects.md`](docs/effects.md). |
 | Docs | `docs/architecture.md`, `docs/arg-investigation.md`, `docs/vps.md`, and the historical [`docs/phases/`](docs/phases/README.md). | The eleven-script roadmap remains in the phase docs. See [Implementation phases](#implementation-phases). |
-| Deploy | VPS deployment on hosted port 8080, reached through `https://amltwin.spectrumvps.tech` (the earlier `https://amlsim.spectrumvps.tech` still works): built Node server, `frontend/dist/`, and persistent SQLite. Optional Wrangler configs remain for Worker/Pages hosting. | Account access controls and class-size capacity validation remain future hosting work. |
+| Deploy | VPS deployment on hosted port 8080, reached through [https://amltwin.spectrumvps.tech](https://amltwin.spectrumvps.tech): built Node server, `frontend/dist/`, and persistent SQLite. Optional Wrangler configs remain for Worker/Pages hosting. | Connect Clerk and release account-enabled build; class-size capacity validation remains future hosting work. |
 
 Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, Kafka, a microservice split, a Unity project, and a live bank connection.
 
@@ -166,30 +176,24 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 
 ## Run locally
 
-Use Node 22.13 or later. Start the Node API and the web app in two terminals. No Cloudflare account is required.
-
-API, from `workers/api/`:
+Use Node 22.13 or later. From the repository root:
 
 ```bash
-npm ci
-npm run build:node
-npm run start:node
-```
-
-`http://127.0.0.1:8787/health` returns `{"status":"ok","service":"twinaml-api"}`.
-
-Web, from `frontend/`:
-
-```bash
-npm ci
+npm run setup
 npm run dev
 ```
 
-Open `http://127.0.0.1:5173` for The Second Ledger, or `http://127.0.0.1:5173/cases` for the case library. Begin a shift to open a persistent investigation session. Reading pauses simulation time; advance by work time or to the next event to complete requested checks and process payment deadlines. The Vite development server proxies `/api` to the Node API on port 8787. An existing shift resumes after refresh; a new shift preserves the previous session and starts another.
+This starts Vite and the watched Node API together. API edits rebuild and restart automatically; Ctrl-C stops both. Synthetic runs use a separate ignored `data/local/development.sqlite`, and no Clerk or Cloudflare account is needed. The launcher explicitly enables anonymous development and keeps local requests on the Vite proxy. See [development setup](docs/development.md) for details and [account setup](docs/accounts.md) for separate Clerk sign-in testing. Normal Node launches retain their account requirement.
+
+`http://127.0.0.1:8787/health` returns `{"status":"ok","service":"twinaml-api"}`.
+
+Open `http://127.0.0.1:5173` for the training portal, or `/operations` for the Hong Kong AML workflow. Start a training run to receive rule-generated alerts, claim an alert, create a case, record cited findings and submit it for review. The role selector provides analyst, reviewer and administrator practice. Existing runs resume after refresh, and a new run preserves the previous one on the server. The Vite development server proxies `/api` to the Node API on port 8787.
+
+The original Second Ledger exercise is at `http://127.0.0.1:5173/investigation`; its reading-paused clock, evidence requests and payment deadlines are unchanged. Open `http://127.0.0.1:5173/cases` for the scripted case library.
 
 For a single-server build, run `npm run build` in `frontend/` and open the Node server at `http://127.0.0.1:8787`; it serves the built interface and API together. Local development needs no cross-origin configuration. The current optional FastAPI app cannot serve investigation sessions. See [`docs/vps.md`](docs/vps.md) for hosting notes. Optional Pages/Worker hosting uses `VITE_API_URL` and `FRONTEND_ORIGIN`.
 
-The Node server defaults to `HOST=127.0.0.1`, `PORT=8787`, and the SQLite file `data/local/investigation.sqlite`. Keep that file to resume sessions after a server restart. Set `TWINAML_DB` for a persistent storage location and `TWINAML_FRONTEND_ORIGIN` to the public origin when hosting behind an HTTPS reverse proxy. Runtime settings are documented in [`workers/api/README.md`](workers/api/README.md).
+Direct Node launches default to `HOST=127.0.0.1`, `PORT=8787`, and the SQLite file `data/local/investigation.sqlite`; the root development launcher pins its separate `development.sqlite`. Keep the relevant file to resume sessions after a server restart. Set `TWINAML_DB` for a persistent storage location and `TWINAML_FRONTEND_ORIGIN` to the public origin when hosting behind an HTTPS reverse proxy. Runtime settings are documented in [`workers/api/README.md`](workers/api/README.md).
 
 `npm run build` in `frontend/` typechecks, then writes `dist/`. Do not commit `dist/`.
 
@@ -214,7 +218,11 @@ That checks schema `0.1`, the English-only rule and the effect-key grammar, then
 
 ## Deploy
 
-TwinAML is deployed on `hosting-vps` at [https://amltwin.spectrumvps.tech](https://amltwin.spectrumvps.tech); the case library is at [https://amltwin.spectrumvps.tech/cases](https://amltwin.spectrumvps.tech/cases). The earlier `https://amlsim.spectrumvps.tech` hostname routes to the same service. The HTTPS domain routes to the Node service, which serves the built frontend and API together on hosted port 8080; local development keeps port 8787. Tailscale access is required for direct VPS administration. The release layout, persistent SQLite storage, service commands and update/rollback steps are in [`docs/vps.md`](docs/vps.md). Account access controls and class-size load testing remain incomplete. The historical phase plans below retain their original Cloudflare targets.
+The Figma portal changes are local source changes and have not been deployed. The hosting notes below describe the existing release; after a future portal release, `/` becomes the dashboard and the AML workflow moves to `/operations`.
+
+TwinAML is deployed on the owner's **4-vCPU / 8-GB OVH VPS** at [https://amltwin.spectrumvps.tech](https://amltwin.spectrumvps.tech): the Hong Kong AML workflow is at `/`, the earlier pilot is at `/investigation`, and the case library is at [`/cases`](https://amltwin.spectrumvps.tech/cases). A dedicated Cloudflare Tunnel reaches the Node service on `127.0.0.1:8080`; local development keeps port 8787. Use Tailscale and SSH alias `ovh-ca` for direct administration. The current release, migrated SQLite sessions, service commands and update/rollback steps are in [`docs/vps.md`](docs/vps.md). Clerk accounts are implemented in source; connecting the owner's instance and releasing the account-enabled build to production remain pending, as does class-size load testing. The historical phase plans below retain their original Cloudflare targets.
+
+A separate hosted development app is available at [https://dev-amltwin.spectrumvps.tech](https://dev-amltwin.spectrumvps.tech). It uses its own service, releases and test database on OVH port 8081, with a development banner and anonymous synthetic runs. From the repository root, `npm run deploy:dev` builds and releases the current source only to that environment, backing up its SQLite database and checking startup. See [development releases](docs/development.md#hosted-development-on-ovh).
 
 Optional steps for Pages and the Worker remain in [`docs/cloudflare.md`](docs/cloudflare.md). Cloudflare account ids and API tokens are not stored in this repo.
 

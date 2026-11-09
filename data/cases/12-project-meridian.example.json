@@ -1,0 +1,288 @@
+{
+  "schema_version": "0.1",
+  "case_id": "project-meridian-001",
+  "title": "Project Meridian acquisition deposit",
+  "locale": "en",
+  "summary": "Play the junior finance colleague handling an urgent acquisition deposit. Review a synthetic CEO email, a board-sync transcript and wire instructions before deciding whether to pay, verify or report. No real payment is made.",
+  "start_node_id": "n_brief",
+  "teaching": {
+    "level": "chan-1-scripted-mirror",
+    "rules_before_ai": true,
+    "acceptable_dispositions": [
+      "request_reported",
+      "payment_stopped"
+    ],
+    "incomplete_dispositions": [
+      "documents_only"
+    ],
+    "poor_dispositions": [
+      "payment_sent_to_fraudster"
+    ]
+  },
+  "rules": [
+    {
+      "id": "PM1_INDEPENDENT_CHECK",
+      "when": "An urgent payment to a new beneficiary has not been confirmed using the company directory and a second approver.",
+      "then": "hold_and_verify",
+      "note": "An email or a familiar face on a video call is not independent payment authorisation. Use a known directory number; do not use the number supplied in the request."
+    },
+    {
+      "id": "PM2_REPORT_SUSPICION",
+      "when": "A request combines secrecy, urgency and an unfamiliar beneficiary.",
+      "then": "report_and_preserve_evidence",
+      "note": "Pause the payment, preserve the email and meeting record, and escalate through the company reporting channel. Asking the sender for more paperwork alone does not independently verify the request."
+    }
+  ],
+  "initial_twin_state": {
+    "phase": "brief",
+    "customer": {
+      "id": "SYN-MERIDIAN",
+      "display_name": "Meridian Holdings (synthetic)"
+    },
+    "payment": {
+      "amount_hkd": 4800000,
+      "beneficiary": "Harbour Advisory Services Ltd (synthetic)",
+      "account": "SYN-HK-8201-0068",
+      "status": "not_prepared",
+      "independently_verified": false,
+      "second_approver": false
+    },
+    "controls": {
+      "reported": false,
+      "directory_callback": "not_done"
+    },
+    "risk": {
+      "score": 20,
+      "flags": []
+    },
+    "disposition": null
+  },
+  "nodes": [
+    {
+      "id": "n_brief",
+      "type": "decision",
+      "title": "Today's case: Project Meridian acquisition deposit",
+      "prompt": "You work in junior finance at Meridian Holdings. Someone claiming to be from the CEO’s office says a confidential acquisition needs a deposit today. Treat it like a normal rushed day at work: read the email and the recording, then decide whether to send the money or hold and check.\n\nWhat is on your desk\nAn urgent email that appears to be from the CEO; a board-sync meeting transcript; wire instructions for a beneficiary company and account.\n\nWhat your company normally expects\nUse the usual company channels. For large payments, call a number from the company directory. Get a second person to approve large or urgent wires. If something feels off, hold the payment and escalate to your manager.\n\nAll names, accounts and funds in this exercise are synthetic.",
+      "twin_patch": {
+        "phase": "brief"
+      },
+      "choices": [
+        {
+          "id": "open_email",
+          "label": "Open the email",
+          "next": "n_email",
+          "rationale": "Reading the source request gives you a record to check before making a payment decision."
+        }
+      ]
+    },
+    {
+      "id": "n_email",
+      "type": "decision",
+      "title": "Email from the CEO’s office",
+      "prompt": "From: Adrian Lau <adrian.lau@meridian-holdings.example>\nTo: Junior Finance\nSubject: Confidential — Project Meridian deposit today\nTime: 09:05 HKT\n\nPlease prepare the HKD 4,800,000 acquisition deposit today. Harbour Advisory Services Ltd is handling the settlement. The wire instructions are attached.\n\nKeep this inside the deal team until the acquisition is announced. We will confirm the details on the board-sync call in a few minutes. Please do not delay the transaction by circulating it to the wider finance team.\n\nAdrian\nCEO, Meridian Holdings\n\nAttachment: Meridian-deposit-instructions.txt\nBeneficiary: Harbour Advisory Services Ltd (synthetic)\nAccount: SYN-HK-8201-0068\nAmount: HKD 4,800,000\nReference: Project Meridian deposit\n\nThe displayed sender name and email address are observations, not proof of authorisation.",
+      "twin_patch": {
+        "phase": "email"
+      },
+      "choices": [
+        {
+          "id": "open_video",
+          "label": "Open the board-sync recording",
+          "next": "n_video",
+          "rationale": "Compare the meeting request with the email, while retaining the option to verify independently."
+        },
+        {
+          "id": "report_email",
+          "label": "Report this request and hold the payment",
+          "next": "n_reported",
+          "rationale": "The unfamiliar beneficiary, secrecy and urgency justify preserving the request and escalating before funds leave.",
+          "effects": {
+            "controls.reported": true,
+            "payment.status": "held",
+            "risk.flags_add": [
+              "REQUEST_REPORTED"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_video",
+      "type": "decision",
+      "title": "Board-sync recording",
+      "prompt": "SYNTHETIC MEETING TRANSCRIPT — 09:18 HKT\nNo video file is included in this classroom demo.\n\nCEO: Thank you for joining at short notice. The Project Meridian deposit must be completed before lunch. The beneficiary is the one in the attachment.\nFinance colleague: Yes, please follow the CEO’s instructions. We can complete the internal paperwork after the deal closes.\nCEO: Keep the deal confidential. I am moving to another meeting, so send the payment confirmation by email.\n\nThe meeting ends without an independent callback or a second approver on the payment. A familiar voice or image cannot establish that the instruction is authentic.\n\nYou still have access to the company directory and your finance manager.",
+      "twin_patch": {
+        "phase": "video"
+      },
+      "choices": [
+        {
+          "id": "review_payment",
+          "label": "Review the payment details",
+          "next": "n_pay_review",
+          "rationale": "Reviewing the wire details does not itself authorise or send a payment.",
+          "effects": {
+            "payment.status": "under_review"
+          }
+        },
+        {
+          "id": "report_video",
+          "label": "Report this request and hold the payment",
+          "next": "n_reported",
+          "rationale": "Preserving the email and meeting record while pausing the payment gives a second reviewer a chance to authenticate the request.",
+          "effects": {
+            "controls.reported": true,
+            "payment.status": "held",
+            "risk.flags_add": [
+              "REQUEST_REPORTED"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_pay_review",
+      "type": "decision",
+      "title": "Review the payment",
+      "prompt": "PAYMENT REVIEW — SYNTHETIC FUNDS\nPayer: Meridian Holdings\nBeneficiary: Harbour Advisory Services Ltd\nBeneficiary account: SYN-HK-8201-0068\nAmount: HKD 4,800,000\nPurpose: Project Meridian acquisition deposit\nIndependent directory callback: not completed\nSecond approval: not recorded\n\nChoose how to handle the request. Preparing a payment does not satisfy either of the missing controls.",
+      "twin_patch": {
+        "phase": "pay"
+      },
+      "choices": [
+        {
+          "id": "prepare_payment",
+          "label": "Prepare the payment for confirmation",
+          "next": "n_pay_confirm",
+          "rationale": "You are moving toward payment while independent authorisation is still missing.",
+          "effects": {
+            "payment.status": "awaiting_confirmation",
+            "risk.flags_add": [
+              "AUTHORISATION_UNVERIFIED"
+            ]
+          }
+        },
+        {
+          "id": "verify_callback",
+          "label": "Hold and verify using the company directory",
+          "next": "n_stopped",
+          "rationale": "A callback through the established company directory is independent of the suspicious email and meeting.",
+          "effects": {
+            "payment.status": "held",
+            "controls.directory_callback": "completed",
+            "risk.flags_add": [
+              "INDEPENDENT_CHECK"
+            ]
+          }
+        },
+        {
+          "id": "request_documents",
+          "label": "Ask the sender for more documents only",
+          "next": "n_documents",
+          "rationale": "More material from the same sender does not authenticate the request; independent verification is still needed.",
+          "effects": {
+            "payment.status": "held",
+            "risk.flags_add": [
+              "INDEPENDENT_CHECK_MISSING"
+            ]
+          }
+        },
+        {
+          "id": "escalate_request",
+          "label": "Hold and escalate for a second review",
+          "next": "n_reported",
+          "rationale": "The finance manager can independently authenticate the instruction before any payment is released.",
+          "effects": {
+            "controls.reported": true,
+            "payment.status": "held",
+            "risk.flags_add": [
+              "SECOND_REVIEW_REQUESTED"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_pay_confirm",
+      "type": "decision",
+      "title": "Confirm the simulated payment",
+      "prompt": "You are about to send HKD 4,800,000 in the simulation to Harbour Advisory Services Ltd, account SYN-HK-8201-0068.\n\nThe directory callback and second approval are still missing. The urgency and the familiar people on the call have not removed those requirements.\n\nConfirming changes this training run only. It does not send real money.",
+      "twin_patch": {
+        "phase": "pay"
+      },
+      "choices": [
+        {
+          "id": "confirm_payment",
+          "label": "Confirm simulated payment",
+          "next": "n_scammed",
+          "rationale": "The transfer was released without independent authorisation or dual approval. The request controlled the entire verification channel.",
+          "effects": {
+            "payment.status": "sent",
+            "risk.flags_add": [
+              "PAYMENT_CONTROL_BYPASSED"
+            ],
+            "risk.score_delta": 60
+          }
+        },
+        {
+          "id": "cancel_and_verify",
+          "label": "Cancel payment and verify independently",
+          "next": "n_stopped",
+          "rationale": "Stopping at confirmation still prevents the simulated loss and allows an independent directory callback.",
+          "effects": {
+            "payment.status": "held",
+            "controls.directory_callback": "completed",
+            "risk.flags_add": [
+              "INDEPENDENT_CHECK"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n_reported",
+      "type": "outcome",
+      "title": "Good catch — request reported",
+      "prompt": "You held the payment and preserved the request for review. A callback through the company directory confirms that the CEO did not authorise this deposit. The suspicious email and the meeting transcript are retained for the internal investigation. No synthetic funds left the account.",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "outcome",
+        "disposition": "request_reported",
+        "payment.status": "blocked",
+        "controls.reported": true
+      }
+    },
+    {
+      "id": "n_stopped",
+      "type": "outcome",
+      "title": "Payment stopped by independent verification",
+      "prompt": "The directory callback reaches the real CEO’s office. It confirms that the acquisition deposit was not authorised. The request is reported through the internal channel and the synthetic funds remain in the account.",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "outcome",
+        "disposition": "payment_stopped",
+        "payment.status": "blocked",
+        "controls.reported": true
+      }
+    },
+    {
+      "id": "n_documents",
+      "type": "outcome",
+      "title": "More documents, but no independent check",
+      "prompt": "The payment is still on hold, so no synthetic funds have left. The additional invoice comes from the same requester and does not verify the authority to pay. Complete a directory callback and second review before releasing any funds.",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "outcome",
+        "disposition": "documents_only"
+      }
+    },
+    {
+      "id": "n_scammed",
+      "type": "outcome",
+      "title": "The simulated funds went to a fraudster",
+      "prompt": "The payment was released and the recipient account moved the funds onward. A later directory callback confirms that the real CEO did not authorise the request. The familiar people in the recording were impersonations. This is a training outcome; no real funds were transferred.",
+      "terminal": true,
+      "twin_patch": {
+        "phase": "outcome",
+        "disposition": "payment_sent_to_fraudster"
+      }
+    }
+  ]
+}
