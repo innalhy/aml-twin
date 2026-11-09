@@ -42,13 +42,13 @@ What runs today is the Phase 1 demo. FastAPI in `backend/` answers `GET /health`
 
 ## Architecture
 
-One API and one web client on a self-hosted Linux VPS. The Unity Editor room is the immersive face and stays in the demo.
+One API and one web client on a self-hosted Linux VPS. The Unity Editor room is the immersive face. It lives on branch [`unity`](https://github.com/innalhy/aml-twin/tree/unity). Check it out with `git fetch && git checkout unity`.
 
 | Piece | Where | Role |
 | --- | --- | --- |
 | Demo API | `backend/` | FastAPI. Health, case list, sessions, decisions, the twin state machine, and events. A Node/Hono process may serve the same routes later. |
 | Web | `frontend/` | React + Vite + TypeScript. Static files on the VPS. Scenario player and dashboard. Both read the same twin. |
-| Unity | [`unity/TwinAML`](unity/UNITY.md) | Editor training room, in scope. Unity 6000.6.8f1. Plays Topics 1–4 against schema 0.1 scripts. Topic 3 is an English walkable branch. Topic 4 is an English alert-triage room. Does not call the API yet. |
+| Unity | Branch [`unity`](https://github.com/innalhy/aml-twin/tree/unity) | Editor training room. `git fetch && git checkout unity`, then open `unity/TwinAML` in Unity 6000.6.8f1. Plays Topics 1–4 against schema 0.1 scripts. Topic 3 is an English walkable branch. Topic 4 is an English alert-triage room. Does not call the API yet. |
 | Legacy scaffold | `workers/api` | Cloudflare Worker (Hono) plus Wrangler config. Left in the tree. Not the COMP3424 demo target. |
 
 The web app does not keep a private copy of the case world. Compliance outcomes come from the rules in the script and from the state machine that will apply them.
@@ -70,7 +70,7 @@ Classroom demo. One API and one web client.
 | Docs | `docs/architecture.md`, `docs/effects.md`, `docs/comp3424-mapping.md`, `docs/deploy-vps.md`, [`docs/phases/`](docs/phases/README.md). | Slice checklists live in the phase docs. See [Implementation phases](#implementation-phases). |
 | Deploy | Linux VPS. nginx or Caddy, HTTPS, static `frontend/dist`, API on localhost. | [`docs/deploy-vps.md`](docs/deploy-vps.md). |
 
-Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, Kafka, FlexSim, a microservice split, and a live bank connection. The Unity training room is the Editor face in [`unity/UNITY.md`](unity/UNITY.md). It stays in the demo. It does not replace the API.
+Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, Kafka, FlexSim, a microservice split, and a live bank connection. The Unity training room is the Editor face on branch [`unity`](https://github.com/innalhy/aml-twin/tree/unity) (`git fetch && git checkout unity`). It stays in the demo. It does not replace the API.
 
 ## Repo layout
 
@@ -92,9 +92,6 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 │       └── PHASE3.md            # vision only; not the course demo
 ├── demo/
 │   └── aml-digital-twin/        # optional one-week behavioral sandbox (CSV, Streamlit, Bloom notes)
-├── unity/                       # Editor training room. See unity/UNITY.md
-│   ├── UNITY.md                 # scene map, T01/T02 paths, how to press Play
-│   └── TwinAML/                 # Unity 6000.6.8f1 project. First scene: Scn_Branch_Lobby
 ├── workers/
 │   └── api/                     # legacy Cloudflare Worker scaffold (not the demo API)
 │       ├── README.md
@@ -147,6 +144,8 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
     ├── unity-room-paths.test.mjs # six Editor-room paths through the same applier
     └── .gitkeep
 ```
+
+The Unity Editor project is on branch [`unity`](https://github.com/innalhy/aml-twin/tree/unity). Check it out with `git fetch && git checkout unity`, then open `unity/TwinAML`. Scene notes are in `unity/UNITY.md` on that branch.
 
 `frontend/package-lock.json` and `workers/api/package-lock.json` are tracked. `frontend/dist/`, `node_modules/`, `.venv/`, `.env`, and files under `data/media/` other than `.gitkeep` are not.
 
@@ -211,7 +210,13 @@ node scripts/unity-room-paths.test.mjs
 
 ## Unity training room
 
-Open [`unity/UNITY.md`](unity/UNITY.md). In Unity 6000.6.8f1, open the project folder `unity/TwinAML` (not the repo root), then open `Assets/Scenes/3D/Scn_Branch_Lobby.unity` and press Play (or use the menu **TwinAML → Play Branch Lobby**). Case JSON is read from `data/cases/`. Topic 1 is `deepfake-hk-001`. Topic 2 is `hk-greythunder-mule-001`. Topic 3 is `hk-starlight-onboard-001`, a walkable branch taught in English. Topic 4 is `alert-triage-shift-001`, an English investigation room with six synthetic alerts. The dashboard in that room is the TwinAML AML Training Portal. It reads the twin written by those choices and still writes `twinaml-dashboard.json`. Docker is not involved.
+The Editor project lives on branch [`unity`](https://github.com/innalhy/aml-twin/tree/unity). This branch of the repo (`main`) does not carry `unity/`.
+
+```bash
+git fetch && git checkout unity
+```
+
+In Unity 6000.6.8f1, open the project folder `unity/TwinAML` (not the repo root), then open `Assets/Scenes/3D/Scn_Branch_Lobby.unity` and press Play (or use the menu **TwinAML → Play Branch Lobby**). Notes are in `unity/UNITY.md` on that branch. Case JSON is read from `data/cases/`. Topic 1 is `deepfake-hk-001`. Topic 2 is `hk-greythunder-mule-001`. Topic 3 is `hk-starlight-onboard-001`, a walkable branch taught in English. Topic 4 is `alert-triage-shift-001`, an English investigation room with six synthetic alerts. The dashboard in that room is the TwinAML AML Training Portal. It reads the twin written by those choices and still writes `twinaml-dashboard.json`. Docker is not involved.
 
 ## Optional behavioral sandbox
 
@@ -241,7 +246,7 @@ Chan levels follow the course: Level 1 is a scripted mirror, Level 2 is a near-r
 
 In scope: load any of the 11 against `packages/schemas/script.schema.json`; session routes that take `case_id`; deterministic `twin_patch` and choice effects as in [`docs/effects.md`](docs/effects.md); English UI chrome (case prompts may stay Traditional Chinese); a missing `media_ref` file shows a missing-media state.
 
-Out of scope for Phase 1: Docker, Kubernetes, Neo4j, Kafka, FlexSim, a microservice split, wiring the Editor room to the live session API, a live language model that sets disposition, a real bank / HKMA / STR filing connection, multi-tenant billing, and session-time video synthesis. The Editor room in [`unity/UNITY.md`](unity/UNITY.md) stays in the demo and is not one of these slices. New mixer / peel-chain and synthetic-ID families beyond this library wait for Phase 2.
+Out of scope for Phase 1: Docker, Kubernetes, Neo4j, Kafka, FlexSim, a microservice split, wiring the Editor room to the live session API, a live language model that sets disposition, a real bank / HKMA / STR filing connection, multi-tenant billing, and session-time video synthesis. The Editor room stays in the demo on branch [`unity`](https://github.com/innalhy/aml-twin/tree/unity) (`git fetch && git checkout unity`) and is not one of these slices. New mixer / peel-chain and synthetic-ID families beyond this library wait for Phase 2.
 
 Current status: P1-S1 through P1-S8 are done. The API and the web player run the library, including the two Editor-room scripts. Phase 2 has not started.
 
@@ -273,7 +278,7 @@ Slice detail: [`docs/phases/PHASE1.md`](docs/phases/PHASE1.md).
 
 Slice detail: [`docs/phases/PHASE2.md`](docs/phases/PHASE2.md).
 
-**Phase 3 — vision (Chan Level 3).** Planning only. This is not a COMP3424 commitment. After Phases 1–2, a model may assist once rules have fired, optional connectors may seed a twin from fixtures, and a Unity face may call the same API. The Editor room under [`unity/`](unity/UNITY.md) already plays Topics 1–4 on this machine. P3-S4, that room against the VPS session API, is not built. Models do not become the system of record. There is no second twin, and training data stays labeled synthetic.
+**Phase 3 — vision (Chan Level 3).** Planning only. This is not a COMP3424 commitment. After Phases 1–2, a model may assist once rules have fired, optional connectors may seed a twin from fixtures, and a Unity face may call the same API. The Editor room on branch [`unity`](https://github.com/innalhy/aml-twin/tree/unity) already plays Topics 1–4 (`git fetch && git checkout unity`). P3-S4, that room against the VPS session API, is not built. Models do not become the system of record. There is no second twin, and training data stays labeled synthetic.
 
 | Slice | Done when |
 | --- | --- |
@@ -292,8 +297,8 @@ Mirroring is the case library played through the API. Shadowing and threading ar
 Short rules for classmates and coding agents. The full agreement is [`AGENTS.md`](AGENTS.md).
 
 1. Change one small slice at a time. After it, say what a trainee or reviewer can now see or run.
-2. Keep one web client (`frontend/`), one VPS API (FastAPI in `backend/`, or later a Node/Hono process with the same routes), and the Unity Editor room. `workers/` may stay as a legacy scaffold. Case scripts live in `data/cases/`. Notes live in `docs/`.
-3. Leave Docker, Kubernetes, Neo4j, Kafka, FlexSim, a service split, and a second Unity project out unless the owner asks in that session. The Editor room in `unity/TwinAML` stays.
+2. Keep one web client (`frontend/`) and one VPS API (FastAPI in `backend/`, or later a Node/Hono process with the same routes). The Unity Editor room lives on branch `unity` (`git fetch && git checkout unity`). `workers/` may stay as a legacy scaffold. Case scripts live in `data/cases/`. Notes live in `docs/`.
+3. Leave Docker, Kubernetes, Neo4j, Kafka, FlexSim, a service split, and a second Unity project out unless the owner asks in that session. The Editor room stays on branch `unity`.
 4. English is the primary language for docs and UI copy. Keep course terms in English: mirroring, shadowing, threading, Chan Level 1, Chan Level 2, rules-before-AI.
 5. The twin is backend state plus events. The web app renders that state.
 6. Rules decide compliance outcomes. A model may explain only after rules have fired. A human override is an event.
