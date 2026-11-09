@@ -90,6 +90,8 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 │       ├── PHASE1.md            # Chan Level 1 MVP slices
 │       ├── PHASE2.md            # Chan Level 2 slices
 │       └── PHASE3.md            # vision only; not the course demo
+├── demo/
+│   └── aml-digital-twin/        # optional one-week behavioral sandbox (CSV, Streamlit, Bloom notes)
 ├── workers/
 │   └── api/                     # legacy Cloudflare Worker scaffold (not the demo API)
 │       ├── README.md
@@ -215,6 +217,10 @@ git fetch && git checkout unity
 ```
 
 In Unity 6000.6.8f1, open the project folder `unity/TwinAML` (not the repo root), then open `Assets/Scenes/3D/Scn_Branch_Lobby.unity` and press Play (or use the menu **TwinAML → Play Branch Lobby**). Notes are in `unity/UNITY.md` on that branch. Case JSON is read from `data/cases/`. Topic 1 is `deepfake-hk-001`. Topic 2 is `hk-greythunder-mule-001`. Topic 3 is `hk-starlight-onboard-001`, a walkable branch taught in English. Topic 4 is `alert-triage-shift-001`, an English investigation room with six synthetic alerts. The dashboard in that room is the TwinAML AML Training Portal. It reads the twin written by those choices and still writes `twinaml-dashboard.json`. Docker is not involved.
+
+## Optional behavioral sandbox
+
+[`demo/aml-digital-twin/`](demo/aml-digital-twin/README.md) is a one-week classroom sandbox. It loads a synthetic ledger, moves an amount line, and draws the same payments as a network. Streamlit and the bundled CSV are enough. Neo4j Bloom is optional. The folder does not replace the API, the web client, or the Unity room. The amount line in that app is a classroom dial.
 
 ## Deploy
 
