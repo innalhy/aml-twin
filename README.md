@@ -91,7 +91,7 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Neo4j, K
 │       ├── PHASE2.md            # Chan Level 2 slices
 │       └── PHASE3.md            # vision only; not the course demo
 ├── demo/
-│   └── aml-digital-twin/        # optional one-week behavioral sandbox (CSV, Streamlit, Bloom notes)
+│   └── neo4j/                   # optional one-week behavioral sandbox (CSV, Streamlit, Bloom notes)
 ├── workers/
 │   └── api/                     # legacy Cloudflare Worker scaffold (not the demo API)
 │       ├── README.md
@@ -220,7 +220,7 @@ In Unity 6000.6.8f1, open the project folder `unity/TwinAML` (not the repo root)
 
 ## Optional behavioral sandbox
 
-[`demo/aml-digital-twin/`](demo/aml-digital-twin/README.md) is a one-week classroom sandbox. It loads a synthetic ledger, moves an amount line, and draws the same payments as a network. Streamlit and the bundled CSV are enough. Neo4j Bloom is optional. The folder does not replace the API, the web client, or the Unity room. The amount line in that app is a classroom dial.
+[`demo/neo4j/`](demo/neo4j/README.md) is a one-week classroom sandbox. It loads a synthetic ledger, moves an amount line, and draws the same payments as a network. Streamlit and the bundled CSV are enough. Neo4j Bloom is optional. The folder does not replace the API, the web client, or the Unity room. The amount line in that app is a classroom dial.
 
 ## Deploy
 
