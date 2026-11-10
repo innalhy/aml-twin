@@ -1,6 +1,6 @@
 # Case scripts
 
-Synthetic training scripts for the TwinAML demo. Each file is a Chan Level 1 case: `schema_version` `0.1`, validated against [`packages/schemas/script.schema.json`](../../packages/schemas/script.schema.json).
+Synthetic training scripts for the TwinAML demo. Each file is a DT Level 1 case: `schema_version` `0.1`, validated against [`packages/schemas/script.schema.json`](../../packages/schemas/script.schema.json).
 
 `initial_twin_state` is the mirror. `nodes` are the script (`scene`, `decision`, `outcome`). `rules[].when` is a sentence for a person to read. The API machine applies `effects` and `twin_patch` as frozen in [`docs/effects.md`](../../docs/effects.md). It does not parse `when`. Rules decide the compliance outcome (rules-before-AI). A human override is an event: the scripts mark it with a flag such as `R1_OVERRIDDEN` instead of deleting the rule.
 
@@ -20,7 +20,7 @@ Titles below are short English labels. Files are numbered `01`–`13`. The JSON 
 
 | File | case_id | Themes | case_kind |
 | --- | --- | --- | --- |
-| [01-deepfake-hk-001.example.json](01-deepfake-hk-001.example.json) | `deepfake-hk-001` | Video-KYC deepfake signals, third-party burst, OTC crypto | Course example (no `case_kind`; Chan Level 1 worked example) |
+| [01-deepfake-hk-001.example.json](01-deepfake-hk-001.example.json) | `deepfake-hk-001` | Video-KYC deepfake signals, third-party burst, OTC crypto | Course example (no `case_kind`; DT Level 1 worked example) |
 | [02-daybreak-tbml-001.example.json](02-daybreak-tbml-001.example.json) | `daybreak-tbml-001` | Trade-based money laundering, shell company, fake jewellery or diamond exports, third-party payers | `public_record_inspired` |
 | [03-mule-rent-001.example.json](03-mule-rent-001.example.json) | `mule-rent-001` | Social-media account rental sold as safe or legal, third-party control | `public_record_inspired` |
 | [04-wiseword-amlmonth-001.example.json](04-wiseword-amlmonth-001.example.json) | `wiseword-amlmonth-001` | One mule account, several typologies (job, romance, shopping, gambling) | `public_record_inspired` |

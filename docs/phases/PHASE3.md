@@ -1,7 +1,7 @@
-# Phase 3 — Vision (Chan Level 3)
+# Phase 3 — Vision (DT Level 3)
 
 **Status:** roadmap / planning doc only. **Not** part of the COMP3424 MVP commitment.  
-**Chan level:** Level 3 — near-realtime twin plus ML assist; possible live system links. Treat as product vision.
+**DT Level:** Level 3 — near-realtime twin plus ML assist; possible live system links. Treat as product vision.
 
 ## Goal
 

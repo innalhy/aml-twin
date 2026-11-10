@@ -22,7 +22,7 @@ This file is the working agreement for AI agents in **TwinAML**, a COMP3424 demo
    - one Unity Editor room on long-lived branch `unity` (`git fetch && git checkout unity`), in `unity/TwinAML` (see `unity/UNITY.md` on that branch). Open it with Unity 6000.6.8f1. It is in scope. It plays pre-authored scripts locally. It is not a second API. Leave that tree on branch `unity`.
 3. Do not add Docker, Kubernetes, Neo4j, Kafka, FlexSim, a microservice split, a second Unity project, or other enterprise pieces unless the owner explicitly asks in that session. Docker is not a supported way to run or deploy this demo. Do not reintroduce `docker-compose.yml` or a container cluster as a requirement. FlexSim is out of scope for the demo.
 4. Prefer the web client for the VPS demo. The Editor room is the immersive face and stays in the demo on branch `unity` (`git fetch && git checkout unity`). It is not a second platform and it does not replace the API.
-5. English is the primary language for docs and UI copy. Keep course terms in English when they are the lecture vocabulary: mirroring, shadowing, threading, Chan Level 1, Chan Level 2, rules-before-AI. Do not switch docs or the placeholder UI back to Traditional Chinese.
+5. English is the primary language for docs and UI copy. Keep course terms in English when they are the lecture vocabulary: mirroring, shadowing, threading, DT Level 1, DT Level 2, rules-before-AI. Do not switch docs or the placeholder UI back to Traditional Chinese.
 6. Never commit secrets, API keys, `.env` files, TLS private keys, or large media. `data/media/` stays empty aside from `.gitkeep`. Scripts may reference media paths; the binaries stay local. Do not commit Cloudflare account identifiers into the legacy scaffold.
 7. Do not invent a second state model. The twin is backend state plus events. The web app renders that state. It does not own a private copy of the case world. The Editor room applies the same schema 0.1 mirror locally. It does not call the session API (that wiring is P3-S4). It does not invent another script format.
 8. Rules decide compliance outcomes. Do not let a language model become the system of record. Any later model may explain a decision only after rules have fired, and a human override must be stored as an event.
@@ -33,7 +33,7 @@ This file is the working agreement for AI agents in **TwinAML**, a COMP3424 demo
 - `README.md` — what TwinAML is, the folder map, how to run the stubs.
 - `docs/architecture.md` — case → script → decision → twin → events → dashboard.
 - `docs/effects.md` — how `twin_patch` and `choices[].effects` apply (schema 0.1).
-- `docs/comp3424-mapping.md` — Chan Level 1/2, mirroring / shadowing / threading, rules-before-AI.
+- `docs/comp3424-mapping.md` — DT Level 1/2, mirroring / shadowing / threading, rules-before-AI.
 - `docs/deploy-vps.md` — Linux VPS: static site, API, nginx or Caddy, HTTPS.
 - `docs/cloudflare.md` — pointer only. The Worker scaffold is not the demo target.
 - `data/cases/01-deepfake-hk-001.example.json` — the Level 1 example script.

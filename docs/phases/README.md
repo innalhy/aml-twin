@@ -2,7 +2,7 @@
 
 These documents are **plans for coding agents**. They define scope, slices, acceptance criteria, and what is out of scope. **Do not implement code from this folder until the owner asks to start a named phase and a named slice.**
 
-| Doc | Chan level | Goal |
+| Doc | DT Level | Goal |
 | --- | --- | --- |
 | [PHASE1.md](./PHASE1.md) | Level 1 (scripted mirror) | All 11 synthetic cases end-to-end on a Linux VPS (static web + API) |
 | [PHASE2.md](./PHASE2.md) | Level 2 (near-realtime bidirectional) | Configurable rules, case families beyond the 11, realtime twin updates, audit export |
