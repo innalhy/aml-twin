@@ -1,14 +1,14 @@
 # TwinAML
 
-## What this project is for
+## What this project is for?
 
 TwinAML is a COMP3424 course demo of a digital twin for AML simulation training. The platform idea is proprietary. This tree is a classroom demo. It is not a bank production system, and it is not an open-source release.
 
-The classroom demo on this branch (`main`) has two pieces.
+The classroom demo on this branch (`main`) consists of two parts.
 
-The **Learning Center** is the web training shell. FastAPI in `backend/` loads a case script, opens a session, applies a choice, and stores the twin and the events. The Vite app in `frontend/` is the case list, the scenario player, and the dashboard. The player and the dashboard both read that session. The page title in the app is TwinAML. This README uses “Learning Center” for that shell.
+- The **Learning Center** is the web training shell. FastAPI in `backend/` loads a case script, opens a session, applies a choice, and stores the twin and the events. The Vite app in `frontend/` is the case list, the scenario player, and the dashboard. The player and the dashboard both read that session. The page title in the app is TwinAML. This README uses “Learning Center” for that shell.
 
-The **behavioral sandbox** in [`demo/neo4j/`](demo/neo4j/README.md) is the other classroom piece. It loads a synthetic ledger, moves an amount line, and draws the same payments as a network. Neo4j Bloom is the graph view of that ledger.
+- The **Behavioral Sandbox** in [`demo/neo4j/`](demo/neo4j/README.md) is the other classroom piece. It loads a synthetic ledger, moves an amount line, and draws the same payments as a network. Neo4j Bloom is the graph view of that ledger.
 
 A trainee picks a script by `case_id` and decides inside it. Rules in the script decide compliance outcomes (rules-before-AI). A language model, if one is added later, may explain a decision only after those rules have fired. A human override must be stored as an event.
 
@@ -34,11 +34,11 @@ The tables below leave off a leading `hk-`. `deepfake-hk-001` keeps `hk` in the 
 | `starlight-onboard-001` | Company onboarding, hidden beneficial owner |
 | `alert-triage-shift-001` | One monitoring shift, six synthetic alerts |
 
-## Case flows
+## Case Flows
 
 English review pages live in [`data/case-flow/`](data/case-flow/). Each page is a Mermaid teaching diagram for human review. The playable scripts stay in [`data/cases/`](data/cases/). `starlight-onboard-001` and `alert-triage-shift-001` are playable and have no case-flow page.
 
-| Case | English flow | Playable script |
+| Case | English Flow | Playable Script |
 | --- | --- | --- |
 | Deepfake executive impersonation | [English](data/case-flow/01-deepfake-executive-impersonation.en.md) | `deepfake-hk-001` |
 | Mule accounts and a crypto mixer | [English](data/case-flow/02-crypto-mixers-mule-accounts.en.md) | `mule-rent-001`, `wiseword-amlmonth-001`, `greythunder-mule-001`, `justicegate-crypto-001` |
@@ -56,7 +56,7 @@ The mixer page names those four scripts as nearby playable scripts. The page is 
 
 ## Architecture
 
-One Learning Center API and one web client, plus the behavioral sandbox. The Learning Center deploy is a self-hosted Linux VPS. The sandbox can run on the same machine or on a presenter's laptop. Bloom stays on the presenter's machine.
+One Learning Center API and one web client, plus the behavioral sandbox. The Learning Center deploys on a Linux VPS. The sandbox can run on the same machine or on a presenter's laptop. Bloom stays on the presenter's machine.
 
 ```mermaid
 flowchart LR
@@ -90,7 +90,7 @@ An Editor project lives only on branch [`unity`](https://github.com/innalhy/aml-
 
 The sandbox does not write the Learning Center session store. Its own note is [`demo/neo4j/README.md`](demo/neo4j/README.md).
 
-## What kind of digital twin this is
+## What kind of digital twin this is?
 
 TwinAML is a digital twin for AML simulation training. The course reading of that claim is [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md). The subject is Digital Twins: Simulation and Case Studies. This demo uses a synthetic AML investigation as the case.
 
@@ -102,7 +102,7 @@ This twin is not a 3D office, a geometric twin, or a spatial facility twin. Ther
 
 The Learning Center session log is the DT Level 1 record. The Streamlit / Neo4j sandbox is the DT Level 2 and DT Level 3 piece of this demo: the ledger follows the amount line, and Bloom is the graph. Mirroring is what the case library and the ledger do now.
 
-## Tech stack
+## Tech Stack
 
 Classroom demo. One Learning Center API, one web client, and the behavioral sandbox.
 
@@ -122,7 +122,7 @@ Classroom demo. One Learning Center API, one web client, and the behavioral sand
 
 Out of scope unless the owner asks in that session: Docker, Kubernetes, Kafka, FlexSim, a microservice split, and a live bank connection. Neo4j belongs to the behavioral sandbox. Cloudflare Pages and Workers are not the demo deploy, and they cannot host the Streamlit app.
 
-## Repo layout
+## Repo Layout
 
 ```
 ├── README.md
@@ -222,11 +222,11 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Kafka, F
 
 The folder `unity/` is not on this branch. The Editor project lives only on branch `unity`.
 
-## Run and deploy
+## Run and Deploy
 
 Docker is not a run path and not a deploy path. Hostnames, certificates, and private keys stay on the machine that serves them. This repository does not store them, and it does not publish a live Streamlit URL.
 
-### Run locally
+### Run Locally
 
 Start the Learning Center API and the web app in two terminals.
 
