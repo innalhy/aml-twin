@@ -1,7 +1,7 @@
-# Phase 2 — Near-realtime twin (Chan Level 2)
+# Phase 2 — Near-realtime twin (DT Level 2)
 
 **Status:** plan only. Start only after Phase 1 success criteria are met.  
-**Chan level:** Level 2 — near-realtime bidirectional session↔twin updates; configurable rules; still no live core bank.
+**DT Level:** Level 2 — near-realtime bidirectional session↔twin updates; configurable rules; still no live core bank.
 
 ## Goal
 
@@ -23,7 +23,7 @@ Extend TwinAML so training decisions write back promptly to twin state (WebSocke
 - Production billing / SaaS metering.
 - Live core-banking or regulator STR submission.
 - Long-form video synthesis inside a live session.
-- Chan Level 3 ML as system of record.
+- DT Level 3 ML as system of record.
 - Docker/K8s as required path (still discouraged unless owner asks).
 
 ## Success criteria (phase done)

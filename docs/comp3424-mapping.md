@@ -2,9 +2,9 @@
 
 Subject: [COMP3424 Digital Twins: Simulation and Case Studies](https://www.polyu.edu.hk/comp/docdrive/ug/subject/COMP3424.pdf) (The Hong Kong Polytechnic University, 3 credits). The subject asks students to understand digital twins, simulation, and how to connect a twin to artificial intelligence. Application settings include government and other non-factory examples. TwinAML uses **AML simulation training** as the case, not a FlexSim production line.
 
-The three terms below are the teaching contract for this demo. Chan Level 1 and Level 2 here mean two delivery stages: first build the mirror, then let one training session follow it. That is the assignment scope. It is not a wholesale import of a factory digital-twin maturity model. Mirroring, shadowing, and threading follow the three capabilities commonly described for industrial digital twins (Jiang, Yin, Li, Luo, Kaynak, *Industrial applications of digital twins*, 2021; Saracco's mirror / shadow / thread). All three live in the same simplified API on the Linux VPS. They do not justify a separate enterprise architecture. FlexSim is out of scope for this demo.
+The three terms below are the teaching contract for this demo. DT Level 1 and Level 2 here mean two delivery stages: first build the mirror, then let one training session follow it. That is the assignment scope. It is not a wholesale import of a factory digital-twin maturity model. Mirroring, shadowing, and threading follow the three capabilities commonly described for industrial digital twins (Jiang, Yin, Li, Luo, Kaynak, *Industrial applications of digital twins*, 2021; Saracco's mirror / shadow / thread). All three live in the same simplified API on the Linux VPS. They do not justify a separate enterprise architecture. FlexSim is out of scope for this demo.
 
-## Chan Level 1 — script mirror
+## DT Level 1 — script mirror
 
 **This repository is at this level.**
 
@@ -16,7 +16,7 @@ Level 1 is the digital model of one case. The physical world in this demo is not
 
 Level 1 is done when a case file validates against `packages/schemas/script.schema.json` and the rules are written in that file, not in a chat transcript.
 
-## Chan Level 2 — training shadow
+## DT Level 2 — training shadow
 
 **Next stage, still inside the same VPS API (`backend/`). Not built yet.**
 

@@ -123,7 +123,7 @@ function Catalog() {
 
   return (
     <main>
-      <p className="eyebrow">COMP3424 demo · Chan Level 1</p>
+      <p className="eyebrow">COMP3424 demo · DT Level 1</p>
       <h1>TwinAML</h1>
       <p className="lead">
         Pick a synthetic case. The API clones its mirror, applies your choices, and
