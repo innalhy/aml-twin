@@ -1,0 +1,12 @@
+from_id,to_id,rel_type,note
+SYN-CTRL-01,SYN-MU-L1,CONTROLS,Synthetic recruiter control on the rented login. Narrative label only.
+SYN-CTRL-01,SYN-MU-L2,CONTROLS,Synthetic recruiter control on the second-layer account.
+SYN-CTRL-01,SYN-MU-L3,CONTROLS,Synthetic recruiter control on the cash-out account.
+SYN-SM-01,DEV-SMURF-7,USES_DEVICE,Shared handset on the smurf senders.
+SYN-SM-02,DEV-SMURF-7,USES_DEVICE,Shared handset on the smurf senders.
+SYN-SM-03,DEV-SMURF-7,USES_DEVICE,Shared handset on the smurf senders.
+SYN-SM-04,DEV-SMURF-7,USES_DEVICE,Shared handset on the smurf senders.
+SYN-SM-05,DEV-SMURF-7,USES_DEVICE,Shared handset on the smurf senders.
+SYN-SM-06,DEV-SMURF-7,USES_DEVICE,Shared handset on the smurf senders.
+SYN-SM-07,DEV-SMURF-7,USES_DEVICE,Shared handset on the smurf senders.
+SYN-SM-08,DEV-SMURF-7,USES_DEVICE,Shared handset on the smurf senders.
