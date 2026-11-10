@@ -14,43 +14,43 @@ A trainee picks a script by `case_id` and decides inside it. Rules in the script
 
 ## Cases and themes
 
-[`data/cases/index.json`](data/cases/index.json) names **13** synthetic scripts. The Phase 1 library in the phase plan is the first **11**: `deepfake-hk-001` plus the ten `public_record_inspired` scripts. The Learning Center can also start `hk-starlight-onboard-001` (`synthetic_course`) and `alert-triage-shift-001` (`course_example`). Every customer, account, and amount in them is synthetic.
+[`data/cases/index.json`](data/cases/index.json) names **13** synthetic scripts. The Phase 1 library in the phase plan is the first **11**: `deepfake-hk-001` plus the ten `public_record_inspired` scripts. The Learning Center can also start `starlight-onboard-001` (`synthetic_course`) and `alert-triage-shift-001` (`course_example`). Every customer, account, and amount in them is synthetic.
 
-The id the API accepts is the `case_id` in the index and in the script file. The disclaimer, and the public-reporting notes the scripts were inspired by, are in [`data/cases/README.md`](data/cases/README.md). The page chrome is English. Prompt text in most scripts is Traditional Chinese. `alert-triage-shift-001` is English.
+The tables below leave off a leading `hk-`. `deepfake-hk-001` keeps `hk` in the middle of the id. The disclaimer, and the public-reporting notes the scripts were inspired by, are in [`data/cases/README.md`](data/cases/README.md). The page chrome is English. Prompt text in most scripts is Traditional Chinese. `alert-triage-shift-001` is English.
 
 | case_id | Theme |
 | --- | --- |
 | `deepfake-hk-001` | Original course example: video-KYC deepfake |
-| `hk-daybreak-tbml-001` | TBML / shell / fake jewellery-diamond exports |
-| `hk-mule-rent-001` | Account rental |
-| `hk-wiseword-amlmonth-001` | One mule, several typologies |
-| `hk-justicegate-crypto-001` | Cash + crypto OTC |
-| `hk-greythunder-mule-001` | Mule cluster |
-| `hk-crossborder-tel-001` | Cross-border phone-fraud corridor |
-| `hk-kol-mgmt-001` | KOL / influencer front |
-| `hk-triad-cashflow-001` | Organised-crime cashflow indicators |
-| `hk-ia-fwd-controls-001` | Insurer controls (synthetic insurer) |
-| `hk-hkma-cdd-001` | Bank CDD / monitoring / STR (synthetic bank) |
-| `hk-starlight-onboard-001` | Company onboarding, hidden beneficial owner |
+| `daybreak-tbml-001` | TBML / shell / fake jewellery-diamond exports |
+| `mule-rent-001` | Account rental |
+| `wiseword-amlmonth-001` | One mule, several typologies |
+| `justicegate-crypto-001` | Cash + crypto OTC |
+| `greythunder-mule-001` | Mule cluster |
+| `crossborder-tel-001` | Cross-border phone-fraud corridor |
+| `kol-mgmt-001` | KOL / influencer front |
+| `triad-cashflow-001` | Organised-crime cashflow indicators |
+| `ia-fwd-controls-001` | Insurer controls (synthetic insurer) |
+| `hkma-cdd-001` | Bank CDD / monitoring / STR (synthetic bank) |
+| `starlight-onboard-001` | Company onboarding, hidden beneficial owner |
 | `alert-triage-shift-001` | One monitoring shift, six synthetic alerts |
 
 ## Case flows
 
-English review pages live in [`data/case-flow/`](data/case-flow/). Each page is a Mermaid teaching diagram for human review. The playable scripts stay in [`data/cases/`](data/cases/). `hk-starlight-onboard-001` and `alert-triage-shift-001` are playable and have no case-flow page.
+English review pages live in [`data/case-flow/`](data/case-flow/). Each page is a Mermaid teaching diagram for human review. The playable scripts stay in [`data/cases/`](data/cases/). `starlight-onboard-001` and `alert-triage-shift-001` are playable and have no case-flow page.
 
 | Case | English flow | Playable script |
 | --- | --- | --- |
 | Deepfake executive impersonation | [English](data/case-flow/01-deepfake-executive-impersonation.en.md) | `deepfake-hk-001` |
-| Mule accounts and a crypto mixer | [English](data/case-flow/02-crypto-mixers-mule-accounts.en.md) | `hk-mule-rent-001`, `hk-wiseword-amlmonth-001`, `hk-greythunder-mule-001`, `hk-justicegate-crypto-001` |
+| Mule accounts and a crypto mixer | [English](data/case-flow/02-crypto-mixers-mule-accounts.en.md) | `mule-rent-001`, `wiseword-amlmonth-001`, `greythunder-mule-001`, `justicegate-crypto-001` |
 | Synthetic identity fraud | [English](data/case-flow/03-synthetic-identity-fraud.en.md) | No playable script in the library. |
-| Trade-based money laundering | [English](data/case-flow/04-trade-based-money-laundering.en.md) | `hk-daybreak-tbml-001` |
-| Cross-border phone-fraud corridor | [English](data/case-flow/05-crossborder-phone-fraud.en.md) | `hk-crossborder-tel-001` |
-| Account rental and mule clusters | [English](data/case-flow/06-account-rental-mule-clusters.en.md) | `hk-mule-rent-001`, `hk-greythunder-mule-001` |
-| Cash and crypto OTC cashing-out | [English](data/case-flow/07-cash-crypto-otc.en.md) | `hk-justicegate-crypto-001` |
-| KOL management front company | [English](data/case-flow/08-kol-management-front.en.md) | `hk-kol-mgmt-001` |
-| Multi-typology mule account | [English](data/case-flow/09-multi-typology-mule.en.md) | `hk-wiseword-amlmonth-001` |
-| Organised-crime cashflow | [English](data/case-flow/10-organised-crime-cashflow.en.md) | `hk-triad-cashflow-001` |
-| Insurer and bank control gaps | [English](data/case-flow/11-control-gaps.en.md) | `hk-ia-fwd-controls-001`, `hk-hkma-cdd-001` |
+| Trade-based money laundering | [English](data/case-flow/04-trade-based-money-laundering.en.md) | `daybreak-tbml-001` |
+| Cross-border phone-fraud corridor | [English](data/case-flow/05-crossborder-phone-fraud.en.md) | `crossborder-tel-001` |
+| Account rental and mule clusters | [English](data/case-flow/06-account-rental-mule-clusters.en.md) | `mule-rent-001`, `greythunder-mule-001` |
+| Cash and crypto OTC cashing-out | [English](data/case-flow/07-cash-crypto-otc.en.md) | `justicegate-crypto-001` |
+| KOL management front company | [English](data/case-flow/08-kol-management-front.en.md) | `kol-mgmt-001` |
+| Multi-typology mule account | [English](data/case-flow/09-multi-typology-mule.en.md) | `wiseword-amlmonth-001` |
+| Organised-crime cashflow | [English](data/case-flow/10-organised-crime-cashflow.en.md) | `triad-cashflow-001` |
+| Insurer and bank control gaps | [English](data/case-flow/11-control-gaps.en.md) | `ia-fwd-controls-001`, `hkma-cdd-001` |
 
 The mixer page names those four scripts as nearby playable scripts. The page is a teaching diagram. It is not a line-by-line map of those scripts. The synthetic-identity page has no matching file under `data/cases/`.
 
@@ -100,7 +100,7 @@ The same demo is a **behavioral / transactional twin**. The sandbox holds virtua
 
 This twin is not a 3D office, a geometric twin, or a spatial facility twin. There is no floor plan and no production line. FlexSim stays out of scope. The mapping note says the same for discrete-event factory simulation.
 
-DT Level 2 in that note is a training session that shadows the trainee and keeps a replayable thread. DT Level 3 is product vision. Those levels are the later phase plans below. The ordered events on a Learning Center session are the Phase 1 log. Mirroring is what the case library and the ledger do now.
+The Learning Center session log is the DT Level 1 record. The Streamlit / Neo4j sandbox is the DT Level 2 and DT Level 3 piece of this demo: the ledger follows the amount line, and Bloom is the graph. Mirroring is what the case library and the ledger do now.
 
 ## Tech stack
 
@@ -239,7 +239,7 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
 
-`http://127.0.0.1:8000/health` returns `{"status":"ok","service":"twinaml-api"}`. `GET /cases` lists the scripts. `POST /sessions` with `{"case_id":"deepfake-hk-001"}` opens a training run. Use the `case_id` from [`data/cases/index.json`](data/cases/index.json), for example `hk-daybreak-tbml-001`. Runs are stored in `data/local/sessions.sqlite` and survive a restart of the API. Details: [`backend/README.md`](backend/README.md).
+`http://127.0.0.1:8000/health` returns `{"status":"ok","service":"twinaml-api"}`. `GET /cases` lists the scripts. `POST /sessions` with `{"case_id":"deepfake-hk-001"}` opens a training run. Runs are stored in `data/local/sessions.sqlite` and survive a restart of the API. Details: [`backend/README.md`](backend/README.md).
 
 Web, from `frontend/`:
 
@@ -354,25 +354,25 @@ If Bloom is not open, the Streamlit Network tab is the picture of the same ledge
 
 ## Implementation plan
 
-Plans for coding agents are in [`docs/phases/`](docs/phases/README.md). Do not implement from that folder until the owner names a phase and a slice. The phase files are the source of truth for slice scope. This section follows those slices and states where the classroom demo is now.
+Phase 1 is the Learning Center. For this course demo, Phase 2 and Phase 3 are the Streamlit / Neo4j sandbox in [`demo/neo4j/`](demo/neo4j/README.md). The older slice lists stay in [`docs/phases/`](docs/phases/README.md) as notes. They are not the next build.
 
-DT Levels follow the course: Level 1 is a scripted mirror, Level 2 is a near-realtime session that writes back to the twin, Level 3 is product vision. Course terms are mapped in [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md).
+DT Levels follow the course. Level 1 is the scripted mirror. Level 2 is a twin that follows a change and can be read as a graph. Level 3 is the later classroom face of that twin. Course terms are mapped in [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md).
 
-| Doc | DT Level | Goal |
+| Doc | DT Level | Where it is now |
 | --- | --- | --- |
-| [Phase 1](docs/phases/PHASE1.md) | Level 1 (scripted mirror) | All 11 synthetic cases end-to-end on a Linux VPS (static web + API) |
-| [Phase 2](docs/phases/PHASE2.md) | Level 2 (near-realtime bidirectional) | Versioned rules, realtime twin updates, case families beyond the 11, audit export |
-| [Phase 3](docs/phases/PHASE3.md) | Level 3 (vision) | ML assist and live connectors. Not the COMP3424 demo |
+| [Phase 1](docs/phases/PHASE1.md) | Level 1 (scripted mirror) | Done. The 11 synthetic cases run on the Learning Center (static web + API). |
+| [Phase 2](docs/phases/PHASE2.md) | Level 2 | Replaced by the sandbox. The amount line stress-tests the rule. Bloom shows the same payments as a graph. |
+| [Phase 3](docs/phases/PHASE3.md) | Level 3 | Replaced by the same sandbox. This demo does not add an ML judge, a live bank connector, or a Unity client. |
 
-**Phase 1 — MVP (DT Level 1).** Done for the Learning Center. A trainee starts a session with a `case_id`. The VPS API loads that script, applies the rules and the state machine, and stores events. The web app shows the scenario player and a simple dashboard of the same twin. The player lists every script in `data/cases/index.json`, including `hk-starlight-onboard-001` and `alert-triage-shift-001`.
+**Phase 1 — MVP (DT Level 1).** Done for the Learning Center. A trainee starts a session with a `case_id`. The VPS API loads that script, applies the rules and the state machine, and stores events. The web app shows the scenario player and a simple dashboard of the same twin. The player lists every script in `data/cases/index.json`, including `starlight-onboard-001` and `alert-triage-shift-001`.
 
-The behavioral sandbox (Streamlit plus Neo4j Bloom) is part of the classroom demo now. It sits beside Phase 1. It is not one of the P1 slices, and it does not replace the Learning Center. Neo4j is in that sandbox. It is not a Phase 1 exclusion.
+The sandbox does not replace the Learning Center. It replaces Phase 2 and Phase 3. Neo4j is in that sandbox. It is not a Phase 1 exclusion.
 
 In scope for the Learning Center slices: load the library against `packages/schemas/script.schema.json`; session routes that take `case_id`; deterministic `twin_patch` and choice effects as in [`docs/effects.md`](docs/effects.md); English UI chrome (case prompts may stay Traditional Chinese); a missing `media_ref` file shows a missing-media state.
 
-Out of scope for those Phase 1 slices: Docker, Kubernetes, Kafka, FlexSim, a microservice split, a live language model that sets disposition, a real bank connection, multi-tenant billing, and session-time video synthesis. New mixer / peel-chain and synthetic-identity families beyond this library wait for Phase 2. An Editor client wired to the live session API is P3-S4. That slice is not built, and it is not the current demo path.
+Out of scope for those Phase 1 slices: Docker, Kubernetes, Kafka, FlexSim, a microservice split, a live language model that sets disposition, a real bank connection, multi-tenant billing, and session-time video synthesis. An Editor client on the session API is not the demo path.
 
-Current status: P1-S1 through P1-S8 are done. Phase 2 has not started. Phase 3 has not started.
+Current status: P1-S1 through P1-S8 are done. Phase 2 and Phase 3 are the sandbox that already runs.
 
 | Slice | Done when |
 | --- | --- |
@@ -387,38 +387,15 @@ Current status: P1-S1 through P1-S8 are done. Phase 2 has not started. Phase 3 h
 
 Slice detail: [`docs/phases/PHASE1.md`](docs/phases/PHASE1.md).
 
-**Phase 2 — DT Level 2.** Same VPS API, after Phase 1. A training session shadows the trainee: a choice becomes an event, the event updates twin state promptly, and the dashboard reads that state. Rules move into versioned packs. The case library can grow with new families beyond the 11 (mixer / peel-chain, synthetic identity). Two paths through a case must show different dispositions, and the ordered events must be replayable. There is still no live core bank. None of these slices are done.
+**Phase 2 and Phase 3 — the sandbox.** [`demo/neo4j/`](demo/neo4j/README.md) is what this demo runs instead of the old Phase 2 and Phase 3 build.
 
-The sandbox does not finish a Phase 2 slice. The synthetic-identity flow still has no playable script, so P2-S5 is open. Bloom shows the sandbox ledger. P2-S6 is a graph of hops inside the web client for a training session. That explorer is not built. A graph database, if a later slice chooses one, must not make Docker required for the demo.
+Phase 2 asked for a twin that moves when a control changes, and for a graph of the hops. The sandbox does that on a synthetic ledger. Dragging the amount line changes the alert count. The network tab and Neo4j Bloom show the same payments. Rules still decide the alerts. Docker is not required. Bloom stays on the presenter's machine.
 
-| Slice | Done when |
-| --- | --- |
-| P2-S1 — Event sourcing hardening | Replay from events equals the live twin for a Phase 1 case. |
-| P2-S2 — Rules engine v1 | Versioned rule packs evaluate named predicates. R1/R2 and the new pack tests pass without a language model. |
-| P2-S3 — Realtime gateway | Two browser tabs on the same session stay in sync when a decision is submitted. |
-| P2-S4 — Mixer / peel-chain case | A new case beyond the 11 plays one teaching path to an STR- or EDD-style outcome, with mule-account hops in twin state. |
-| P2-S5 — Synthetic identity case | The new script validates against the schema, and one full playthrough works. |
-| P2-S6 — Graph explorer (optional) | Hops for the mixer case are visible in the web client. A graph database is optional and must not make Docker required for the demo. |
-| P2-S7 — Audit export | `GET /sessions/:id/export` includes script id, rule-pack version, events, and the final twin. |
-| P2-S8 — Org isolation + RAG authoring | A second org cannot read the first org’s sessions. An authored script still passes the schema and a human review before publish. The model does not set disposition at runtime. |
+Phase 3 asked for a later face: model assist, live connectors, and an immersive client on the session API. The sandbox is that later face for the classroom. It does not call a language model, it does not connect to a bank, and it does not use the Editor project on branch `unity`.
 
-Slice detail: [`docs/phases/PHASE2.md`](docs/phases/PHASE2.md).
+The checklists in [`docs/phases/PHASE2.md`](docs/phases/PHASE2.md) and [`docs/phases/PHASE3.md`](docs/phases/PHASE3.md) are the earlier engineering notes: versioned rule packs, two browser tabs in sync, a new synthetic-identity script, an export zip, and ML suggestions. Those slices are not open work for this demo. The sandbox stands in their place. Synthetic identity still has no playable script in `data/cases/`.
 
-**Phase 3 — vision (DT Level 3).** Planning only. This is not a COMP3424 commitment. After Phases 1 and 2, a model may assist once rules have fired, and optional connectors may seed a twin from fixtures. Models do not become the system of record. There is no second twin, and training data stays labeled synthetic.
-
-P3-S4 is a later vision item: an immersive client on the same session routes. It is not built, and it is not the current demo path. The Editor project on branch `unity` is outside that path.
-
-| Slice | Done when |
-| --- | --- |
-| P3-S1 — ML assist shadow mode | The UI shows a suggestion separately from the rule decision. The model does not write disposition alone. |
-| P3-S2 — Connector adapter | Training can optionally seed the twin from adapter fixtures. The default data stays synthetic. |
-| P3-S3 — Retention and legal hold | Org policy for event retention and export hold is documented, and delete/export gates enforce it. |
-| P3-S4 — Immersive client (Unity) | One Phase 1 path is playable in Unity against the VPS API, on the same session routes. |
-| P3-S5 — Multi-jurisdiction packs | Switching a rule pack is an audited event. Closed sessions keep the pack id they ran under. |
-
-Slice detail: [`docs/phases/PHASE3.md`](docs/phases/PHASE3.md).
-
-Mirroring is the case library played through the API, and the sandbox ledger. Shadowing and threading, as DT Level 2 defines them, are not built. `GET /sessions/{id}/evidence` is a short card on top of the same session.
+Mirroring is the case library played through the API, and the sandbox ledger. `GET /sessions/{id}/evidence` is a short card on top of the same Learning Center session.
 
 ## Agent rules
 
