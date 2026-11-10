@@ -10,21 +10,21 @@ Play the Phase 1 case library end-to-end on a self-hosted Linux VPS. The library
 
 case script → training session → trainee decision → rules + state machine → twin update → event log → web player + simple dashboard.
 
-A session starts with a `case_id`. The VPS API, the scenario player, and the dashboard load whichever of the 11 that id names. `deepfake-hk-001` is the original course example (video-KYC deepfake). The ten `hk-*` scripts are `public_record_inspired`. Names, amounts, and parties are synthetic. The index and disclaimer are in [`data/cases/README.md`](../../data/cases/README.md).
+A session starts with a `case_id`. The VPS API, the scenario player, and the dashboard load whichever of the 11 that id names. `deepfake-hk-001` is the original course example (video-KYC deepfake). The other ten are `public_record_inspired`. Names, amounts, and parties are synthetic. The index and disclaimer are in [`data/cases/README.md`](../../data/cases/README.md).
 
 | case_id | Theme |
 | --- | --- |
 | `deepfake-hk-001` | Original course example: video-KYC deepfake |
-| `hk-daybreak-tbml-001` | TBML / shell / fake jewellery-diamond exports |
-| `hk-mule-rent-001` | Account rental |
-| `hk-wiseword-amlmonth-001` | One mule, several typologies |
-| `hk-justicegate-crypto-001` | Cash + crypto OTC |
-| `hk-greythunder-mule-001` | Mule cluster |
-| `hk-crossborder-tel-001` | Cross-border phone-fraud corridor |
-| `hk-kol-mgmt-001` | KOL / influencer front |
-| `hk-triad-cashflow-001` | Organised-crime cashflow indicators |
-| `hk-ia-fwd-controls-001` | Insurer controls (synthetic insurer) |
-| `hk-hkma-cdd-001` | Bank CDD / monitoring / STR (synthetic bank) |
+| `daybreak-tbml-001` | TBML / shell / fake jewellery-diamond exports |
+| `mule-rent-001` | Account rental |
+| `wiseword-amlmonth-001` | One mule, several typologies |
+| `justicegate-crypto-001` | Cash + crypto OTC |
+| `greythunder-mule-001` | Mule cluster |
+| `crossborder-tel-001` | Cross-border phone-fraud corridor |
+| `kol-mgmt-001` | KOL / influencer front |
+| `triad-cashflow-001` | Organised-crime cashflow indicators |
+| `ia-fwd-controls-001` | Insurer controls (synthetic insurer) |
+| `hkma-cdd-001` | Bank CDD / monitoring / STR (synthetic bank) |
 
 Deploy path: **Linux VPS**. Static Vite build (`frontend/`) plus FastAPI (`backend/`) behind nginx or Caddy with HTTPS. See [`docs/deploy-vps.md`](../deploy-vps.md). A Node/Hono process may serve the same API routes later. `workers/api` may remain as a legacy scaffold and is not this deploy path. FlexSim is out of scope. The Unity Editor room is on branch [`unity`](https://github.com/innalhy/aml-twin/tree/unity) (`git fetch && git checkout unity`). It is in scope and is not a site on the VPS.
 
@@ -63,7 +63,7 @@ Deploy path: **Linux VPS**. Static Vite build (`frontend/`) plus FastAPI (`backe
 - Confirm schema + the 11 example cases stay valid.
 - Document effect key conventions in `docs/architecture.md` or a short `docs/effects.md`.
 - **Done when:** agent can list every effect key used across the 11 scripts and how the future machine should apply them.
-- **Done:** [`docs/effects.md`](../effects.md) lists every effect key in `deepfake-hk-001` and the ten `hk-*.example.json` scripts, and the apply order (clone `initial_twin_state`, apply `twin_patch`, then apply choice `effects`). `node scripts/validate-cases.mjs` checks the files and plays the eight `deepfake-hk-001` terminal paths in [`scripts/deepfake-paths.test.mjs`](../../scripts/deepfake-paths.test.mjs).
+- **Done:** [`docs/effects.md`](../effects.md) lists every effect key in `deepfake-hk-001` and the ten public_record_inspired scripts, and the apply order (clone `initial_twin_state`, apply `twin_patch`, then apply choice `effects`). `node scripts/validate-cases.mjs` checks the files and plays the eight `deepfake-hk-001` terminal paths in [`scripts/deepfake-paths.test.mjs`](../../scripts/deepfake-paths.test.mjs).
 
 ### P1-S2 — Twin state machine (library)
 - Pure library that: clone initial state → apply node patch → apply choice effects → advance node.
@@ -126,4 +126,4 @@ Deploy path: **Linux VPS**. Static Vite build (`frontend/`) plus FastAPI (`backe
 - [x] P1-S7 — [`docs/deploy-vps.md`](../deploy-vps.md) proxies `/health`, `/cases`, and `/sessions`
 - [x] P1-S8 — [`docs/audit-evidence.md`](../audit-evidence.md) and the README run steps
 
-`GET /sessions/{id}/evidence` is a short audit card for one run. It is the same session, not a second store. The player also offers `hk-starlight-onboard-001` and `alert-triage-shift-001`, the Editor-room scripts already in `data/cases/`.
+`GET /sessions/{id}/evidence` is a short audit card for one run. It is the same session, not a second store. The player also offers `starlight-onboard-001` and `alert-triage-shift-001`, the Editor-room scripts already in `data/cases/`.

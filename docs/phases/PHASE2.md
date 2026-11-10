@@ -1,6 +1,6 @@
 # Phase 2 — Near-realtime twin (DT Level 2)
 
-**Status:** plan only. Start only after Phase 1 success criteria are met.  
+**Status:** For this course demo, the Streamlit / Neo4j sandbox in [`demo/neo4j/`](../../demo/neo4j/README.md) stands in for this phase. The slices below are earlier engineering notes, not the next build.  
 **DT Level:** Level 2 — near-realtime bidirectional session↔twin updates; configurable rules; still no live core bank.
 
 ## Goal
