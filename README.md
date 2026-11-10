@@ -414,6 +414,6 @@ Read next: [`docs/architecture.md`](docs/architecture.md), [`docs/effects.md`](d
 
 ## License
 
-The TwinAML platform idea and the contents of this repository are proprietary. All rights reserved.
+The TwinAML platform idea by [@innalhy](https://github.com/innalhy), technical support by [@SpectrumTantrum] (https://github.com/SpectrumTantrum) and the contents of this repository are proprietary. All rights reserved.
 
 This repository is a COMP3424 course demo. It does not include an OSI license. Do not redistribute it as an open-source project or turn it into a commercial product. Use and modification follow the owner's permission.
