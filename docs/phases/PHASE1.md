@@ -1,8 +1,8 @@
-# Phase 1 — MVP (Chan Level 1)
+# Phase 1 — MVP (DT Level 1)
 
 **Status:** P1-S1 through P1-S8 are done. The web player lists every script in `data/cases/`, including the two Editor-room scripts.  
 **Audience:** coding agents.  
-**Chan level:** Level 1 — scripted cases, offline-style mirror of `initial_twin_state`, not a live bank.
+**DT Level:** Level 1 — scripted cases, offline-style mirror of `initial_twin_state`, not a live bank.
 
 ## Goal
 

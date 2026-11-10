@@ -82,7 +82,7 @@ flowchart LR
 | Graph view | Presenter's machine | Neo4j Desktop or a local Neo4j 5, opened in Bloom. Same ledger as the CSV. This is not a process on the VPS. |
 | Legacy scaffold | `workers/api` | Cloudflare Worker (Hono) plus Wrangler config. `GET /health` only. Left in the tree. Not the COMP3424 demo deploy. |
 
-The web app does not keep a private copy of the case world. Compliance outcomes in a script come from the rules and from the state machine that applies `twin_patch` and `choices[].effects`. How those patches apply is in [`docs/effects.md`](docs/effects.md). The session routes are `GET /cases`, `POST /sessions`, `GET /sessions`, `GET /sessions/{id}`, `POST /sessions/{id}/decisions`, and `GET /sessions/{id}/evidence`. `GET /health` stays. A longer note on that run is in [`docs/architecture.md`](docs/architecture.md). The course terms — mirroring, shadowing, threading, Chan Level 1, Chan Level 2, rules-before-AI — are mapped in [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md).
+The web app does not keep a private copy of the case world. Compliance outcomes in a script come from the rules and from the state machine that applies `twin_patch` and `choices[].effects`. How those patches apply is in [`docs/effects.md`](docs/effects.md). The session routes are `GET /cases`, `POST /sessions`, `GET /sessions`, `GET /sessions/{id}`, `POST /sessions/{id}/decisions`, and `GET /sessions/{id}/evidence`. `GET /health` stays. A longer note on that run is in [`docs/architecture.md`](docs/architecture.md). The course terms — mirroring, shadowing, threading, DT Level 1, DT Level 2, rules-before-AI — are mapped in [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md).
 
 `workers/api` can answer the same health check only. `GET /sessions/{id}/evidence` summarises one Learning Center run for [`docs/audit-evidence.md`](docs/audit-evidence.md).
 
@@ -94,13 +94,13 @@ The sandbox does not write the Learning Center session store. Its own note is [`
 
 TwinAML is a digital twin for AML simulation training. The course reading of that claim is [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md). The subject is Digital Twins: Simulation and Case Studies. This demo uses a synthetic AML investigation as the case.
 
-The mapping note places this repository at **Chan Level 1**, a scripted mirror. Level 1 is the digital model of one case. The world in the model is a synthetic investigation: a customer, KYC signals, an account, transactions, and risk flags. For a playable script, that mirror is `initial_twin_state` plus `nodes`. The Learning Center loads the script named by `case_id`, applies the script's rules and the state machine, and stores the events. The branches are the written script. The trainee's decision is the input event. There is no sensor feed.
+The mapping note places this repository at **DT Level 1**, a scripted mirror. Level 1 is the digital model of one case. The world in the model is a synthetic investigation: a customer, KYC signals, an account, transactions, and risk flags. For a playable script, that mirror is `initial_twin_state` plus `nodes`. The Learning Center loads the script named by `case_id`, applies the script's rules and the state machine, and stores the events. The branches are the written script. The trainee's decision is the input event. There is no sensor feed.
 
 The same demo is a **behavioral / transactional twin**. The sandbox holds virtual behavioral replicas of customer transactions: one synthetic ledger for the week in the bundled CSV. It is a controlled sandbox to test detection logic and stress-test rules. One reading judges each payment against an amount line. The other reads the same payments as a network. Moving the line changes how many payments the amount rule lists. Bloom is the graph view of that ledger. The amount line is a classroom dial. The detectors do not ask a language model for a score. A disposition for a trainee still comes from a case script.
 
 This twin is not a 3D office, a geometric twin, or a spatial facility twin. There is no floor plan and no production line. FlexSim stays out of scope. The mapping note says the same for discrete-event factory simulation.
 
-Chan Level 2 in that note is a training session that shadows the trainee and keeps a replayable thread. Chan Level 3 is product vision. Those levels are the later phase plans below. The ordered events on a Learning Center session are the Phase 1 log. Mirroring is what the case library and the ledger do now.
+DT Level 2 in that note is a training session that shadows the trainee and keeps a replayable thread. DT Level 3 is product vision. Those levels are the later phase plans below. The ordered events on a Learning Center session are the Phase 1 log. Mirroring is what the case library and the ledger do now.
 
 ## Tech stack
 
@@ -142,11 +142,11 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Kafka, F
 │   ├── audit-evidence.md        # one Learning Center run, for the course note
 │   ├── deploy-vps.md            # Linux VPS: static site, API, HTTPS
 │   ├── cloudflare.md            # pointer only; legacy scaffold is not the demo
-│   ├── comp3424-mapping.md      # Chan Level 1/2, mirroring, shadowing, threading
+│   ├── comp3424-mapping.md      # DT Level 1/2, mirroring, shadowing, threading
 │   └── phases/
 │       ├── README.md            # how agents use the phase plans
-│       ├── PHASE1.md            # Chan Level 1 MVP slices
-│       ├── PHASE2.md            # Chan Level 2 slices
+│       ├── PHASE1.md            # DT Level 1 MVP slices
+│       ├── PHASE2.md            # DT Level 2 slices
 │       └── PHASE3.md            # vision only; not the course demo
 ├── demo/
 │   └── neo4j/                   # behavioral sandbox (first-class classroom piece)
@@ -356,15 +356,15 @@ If Bloom is not open, the Streamlit Network tab is the picture of the same ledge
 
 Plans for coding agents are in [`docs/phases/`](docs/phases/README.md). Do not implement from that folder until the owner names a phase and a slice. The phase files are the source of truth for slice scope. This section follows those slices and states where the classroom demo is now.
 
-Chan levels follow the course: Level 1 is a scripted mirror, Level 2 is a near-realtime session that writes back to the twin, Level 3 is product vision. Course terms are mapped in [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md).
+DT Levels follow the course: Level 1 is a scripted mirror, Level 2 is a near-realtime session that writes back to the twin, Level 3 is product vision. Course terms are mapped in [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md).
 
-| Doc | Chan level | Goal |
+| Doc | DT Level | Goal |
 | --- | --- | --- |
 | [Phase 1](docs/phases/PHASE1.md) | Level 1 (scripted mirror) | All 11 synthetic cases end-to-end on a Linux VPS (static web + API) |
 | [Phase 2](docs/phases/PHASE2.md) | Level 2 (near-realtime bidirectional) | Versioned rules, realtime twin updates, case families beyond the 11, audit export |
 | [Phase 3](docs/phases/PHASE3.md) | Level 3 (vision) | ML assist and live connectors. Not the COMP3424 demo |
 
-**Phase 1 — MVP (Chan Level 1).** Done for the Learning Center. A trainee starts a session with a `case_id`. The VPS API loads that script, applies the rules and the state machine, and stores events. The web app shows the scenario player and a simple dashboard of the same twin. The player lists every script in `data/cases/index.json`, including `hk-starlight-onboard-001` and `alert-triage-shift-001`.
+**Phase 1 — MVP (DT Level 1).** Done for the Learning Center. A trainee starts a session with a `case_id`. The VPS API loads that script, applies the rules and the state machine, and stores events. The web app shows the scenario player and a simple dashboard of the same twin. The player lists every script in `data/cases/index.json`, including `hk-starlight-onboard-001` and `alert-triage-shift-001`.
 
 The behavioral sandbox (Streamlit plus Neo4j Bloom) is part of the classroom demo now. It sits beside Phase 1. It is not one of the P1 slices, and it does not replace the Learning Center. Neo4j is in that sandbox. It is not a Phase 1 exclusion.
 
@@ -387,7 +387,7 @@ Current status: P1-S1 through P1-S8 are done. Phase 2 has not started. Phase 3 h
 
 Slice detail: [`docs/phases/PHASE1.md`](docs/phases/PHASE1.md).
 
-**Phase 2 — Chan Level 2.** Same VPS API, after Phase 1. A training session shadows the trainee: a choice becomes an event, the event updates twin state promptly, and the dashboard reads that state. Rules move into versioned packs. The case library can grow with new families beyond the 11 (mixer / peel-chain, synthetic identity). Two paths through a case must show different dispositions, and the ordered events must be replayable. There is still no live core bank. None of these slices are done.
+**Phase 2 — DT Level 2.** Same VPS API, after Phase 1. A training session shadows the trainee: a choice becomes an event, the event updates twin state promptly, and the dashboard reads that state. Rules move into versioned packs. The case library can grow with new families beyond the 11 (mixer / peel-chain, synthetic identity). Two paths through a case must show different dispositions, and the ordered events must be replayable. There is still no live core bank. None of these slices are done.
 
 The sandbox does not finish a Phase 2 slice. The synthetic-identity flow still has no playable script, so P2-S5 is open. Bloom shows the sandbox ledger. P2-S6 is a graph of hops inside the web client for a training session. That explorer is not built. A graph database, if a later slice chooses one, must not make Docker required for the demo.
 
@@ -404,7 +404,7 @@ The sandbox does not finish a Phase 2 slice. The synthetic-identity flow still h
 
 Slice detail: [`docs/phases/PHASE2.md`](docs/phases/PHASE2.md).
 
-**Phase 3 — vision (Chan Level 3).** Planning only. This is not a COMP3424 commitment. After Phases 1 and 2, a model may assist once rules have fired, and optional connectors may seed a twin from fixtures. Models do not become the system of record. There is no second twin, and training data stays labeled synthetic.
+**Phase 3 — vision (DT Level 3).** Planning only. This is not a COMP3424 commitment. After Phases 1 and 2, a model may assist once rules have fired, and optional connectors may seed a twin from fixtures. Models do not become the system of record. There is no second twin, and training data stays labeled synthetic.
 
 P3-S4 is a later vision item: an immersive client on the same session routes. It is not built, and it is not the current demo path. The Editor project on branch `unity` is outside that path.
 
@@ -418,7 +418,7 @@ P3-S4 is a later vision item: an immersive client on the same session routes. It
 
 Slice detail: [`docs/phases/PHASE3.md`](docs/phases/PHASE3.md).
 
-Mirroring is the case library played through the API, and the sandbox ledger. Shadowing and threading, as Chan Level 2 defines them, are not built. `GET /sessions/{id}/evidence` is a short card on top of the same session.
+Mirroring is the case library played through the API, and the sandbox ledger. Shadowing and threading, as DT Level 2 defines them, are not built. `GET /sessions/{id}/evidence` is a short card on top of the same session.
 
 ## Agent rules
 
@@ -427,7 +427,7 @@ Short rules for classmates and coding agents. The full agreement is [`AGENTS.md`
 1. Change one small slice at a time. After it, say what a trainee or reviewer can now see or run.
 2. Keep one web client (`frontend/`) and one VPS API (FastAPI in `backend/`, or later a Node/Hono process with the same routes). The behavioral sandbox in `demo/neo4j/` is the other classroom piece: Streamlit, the CSV ledger, Cypher load scripts, and Bloom notes. `workers/` may stay as a legacy scaffold. Case scripts live in `data/cases/`. Notes live in `docs/`.
 3. Leave Docker, Kubernetes, Kafka, FlexSim, and a service split out unless the owner asks in that session. Neo4j in `demo/neo4j/` is part of the classroom demo. FlexSim stays out of scope. The Unity Editor project lives only on branch `unity` and is outside the current demo path.
-4. English is the primary language for docs and UI copy. Keep course terms in English: mirroring, shadowing, threading, Chan Level 1, Chan Level 2, rules-before-AI.
+4. English is the primary language for docs and UI copy. Keep course terms in English: mirroring, shadowing, threading, DT Level 1, DT Level 2, rules-before-AI.
 5. The twin for a Learning Center run is backend state plus events. The web app renders that state. The sandbox ledger is the twin for the detection exercise. It does not write the session store.
 6. Rules decide compliance outcomes. A model may explain only after rules have fired. A human override is an event.
 7. Do not commit secrets, API keys, `.env` files, TLS private keys, or large media.
