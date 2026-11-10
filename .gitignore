@@ -12,6 +12,7 @@ Desktop.ini
 *.swp
 *.swo
 *~
+.cursor
 
 # --- Env & secrets ---
 .env
