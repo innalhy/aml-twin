@@ -48,6 +48,22 @@ class ApiTest(unittest.TestCase):
         self.assertIn("hk-hkma-cdd-001", ids)
         self.assertGreaterEqual(len(ids), 11)
 
+    def test_case_and_session_publish_rule_flags(self) -> None:
+        detail = self.client.get("/cases/deepfake-hk-001")
+        self.assertEqual(detail.status_code, 200, detail.text)
+        rule = next(item for item in detail.json()["rules"] if item["id"] == "R1_LIVENESS_TWICE")
+        self.assertEqual(rule["flags"], ["R1_BLOCK", "R1_OVERRIDDEN"])
+        rule["flags"].append("INJECTED")
+
+        again = self.client.get("/cases/deepfake-hk-001").json()
+        rule_again = next(item for item in again["rules"] if item["id"] == "R1_LIVENESS_TWICE")
+        self.assertEqual(rule_again["flags"], ["R1_BLOCK", "R1_OVERRIDDEN"])
+
+        opened = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"})
+        self.assertEqual(opened.status_code, 201, opened.text)
+        session_rule = next(item for item in opened.json()["rules"] if item["id"] == "R1_LIVENESS_TWICE")
+        self.assertEqual(session_rule["flags"], ["R1_BLOCK", "R1_OVERRIDDEN"])
+
     def test_deepfake_reject_path_and_dashboard_read_the_same_session(self) -> None:
         opened = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"})
         self.assertEqual(opened.status_code, 201, opened.text)
