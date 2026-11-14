@@ -6,8 +6,8 @@ import json
 import unittest
 from pathlib import Path
 
-from app.effects import apply_patch
-from app.machine import play, teaching_mark
+from app.effects import ScriptError, apply_patch
+from app.machine import ChoiceError, SessionClosed, play, start_session, submit_choice, teaching_mark
 
 ROOT = Path(__file__).resolve().parents[2]
 CASES = ROOT / "data" / "cases"
@@ -144,6 +144,35 @@ class EffectsTest(unittest.TestCase):
         self.assertEqual(twin["risk"]["score"], 45)
         self.assertEqual(twin["account"]["holds"], ["outbound"])
 
+    def test_rejected_patches_leave_the_twin_unchanged(self) -> None:
+        twin = {"risk": {"score": 20, "flags": ["R1_BLOCK"]}}
+        checks = [
+            ("nope", "patch is not an object"),
+            ({".": 1}, "empty path segment"),
+            ({"risk..score": 1}, "empty path segment"),
+            ({"risk.flags_add": "R1_BLOCK"}, "must be an array of strings"),
+            ({"risk.flags_add": ["R1_BLOCK", 2]}, "must be an array of strings"),
+            ({"account.flags_add": ["X"]}, "needs an existing array"),
+            ({"risk.score_delta": True}, "must be a finite number"),
+            ({"account.score_delta": 1}, "needs an existing number"),
+            ({"risk.flags_delta": ["X"]}, "undefined suffix"),
+            ({"missing.value": 1}, "has no parent object"),
+        ]
+        for patch, message in checks:
+            with self.subTest(message=message):
+                before = json.dumps(twin)
+                with self.assertRaisesRegex(ScriptError, message):
+                    apply_patch(twin, patch)
+                self.assertEqual(json.dumps(twin), before)
+
+    def test_empty_patch_adds_nothing_and_assigned_lists_are_copied(self) -> None:
+        twin = {"account": {"holds": []}}
+        self.assertEqual(apply_patch(twin, None), [])
+        source = ["outbound"]
+        apply_patch(twin, {"account.holds": source})
+        source.append("inbound")
+        self.assertEqual(twin["account"]["holds"], ["outbound"])
+
 
 class DeepfakeTest(unittest.TestCase):
     def test_eight_endings(self) -> None:
@@ -207,6 +236,71 @@ class LibraryTest(unittest.TestCase):
                 mark = teaching_mark(script, disposition)
                 self.assertEqual(mark["disposition"], disposition)
                 self.assertEqual(state["events"][-1]["type"], "session_closed")
+
+
+class MachineEdgeTest(unittest.TestCase):
+    def test_unknown_choice_does_not_append_an_event(self) -> None:
+        script = _script(
+            "n_decide",
+            [
+                {
+                    "id": "n_decide",
+                    "type": "decision",
+                    "choices": [{"id": "hold", "label": "Hold", "next": "n_out"}],
+                },
+                {"id": "n_out", "type": "outcome"},
+            ],
+        )
+        state = start_session(script)
+        before = json.dumps(state)
+        with self.assertRaisesRegex(ChoiceError, "unknown choice nope"):
+            submit_choice(state, script, "nope")
+        self.assertEqual(json.dumps(state), before)
+
+    def test_choice_after_outcome_is_refused(self) -> None:
+        script = _script("n_out", [{"id": "n_out", "type": "outcome"}])
+        state = start_session(script)
+        self.assertEqual(state["status"], "closed")
+        with self.assertRaises(SessionClosed):
+            submit_choice(state, script, "hold")
+
+    def test_unlisted_disposition_is_not_rule_follow(self) -> None:
+        script = _script(
+            "n_out",
+            [{"id": "n_out", "type": "outcome"}],
+            teaching={"acceptable_dispositions": ["held"], "poor_dispositions": ["missed"]},
+        )
+        self.assertEqual(teaching_mark(script, None)["bucket"], "open")
+        self.assertIsNone(teaching_mark(script, None)["rule_follow"])
+        self.assertTrue(teaching_mark(script, "held")["rule_follow"])
+        unlisted = teaching_mark(script, "mystery")
+        self.assertEqual(unlisted["bucket"], "unlisted")
+        self.assertFalse(unlisted["rule_follow"])
+        self.assertFalse(unlisted["poor_path"])
+
+    def test_broken_graphs_fail_instead_of_walking_forever(self) -> None:
+        unknown = _script("n1", [{"id": "n1", "type": "puzzle"}])
+        with self.assertRaisesRegex(ScriptError, "unknown node type puzzle"):
+            start_session(unknown)
+
+        loop = _script("n1", [{"id": "n1", "type": "scene", "next": "n1"}])
+        with self.assertRaisesRegex(ScriptError, "play exceeded the node step limit"):
+            start_session(loop)
+
+        dangling = _script("n1", [{"id": "n1", "type": "scene", "next": "n_missing"}])
+        with self.assertRaisesRegex(ScriptError, "scene next n_missing is missing"):
+            start_session(dangling)
+
+
+def _script(start: str, nodes: list[dict], teaching: dict | None = None) -> dict:
+    return {
+        "case_id": "synthetic-machine-edge",
+        "title": "Synthetic",
+        "start_node_id": start,
+        "initial_twin_state": {"disposition": None},
+        "teaching": teaching or {},
+        "nodes": nodes,
+    }
 
 
 if __name__ == "__main__":

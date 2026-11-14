@@ -211,6 +211,17 @@ class ApiTest(unittest.TestCase):
         listed = [row["session_id"] for row in self.client.get("/sessions").json()["sessions"]]
         self.assertEqual(listed, [opened["session_id"]])
 
+    def test_media_refs_cannot_leave_the_repo(self) -> None:
+        self.assertIsNone(_media(None))
+        self.assertIsNone(_media(""))
+        escapes = ("/etc/passwd", "../README.md", "data/../../README.md")
+        for ref in escapes:
+            with self.subTest(ref=ref):
+                self.assertEqual(_media(ref), {"media_ref": ref, "media_missing": True})
+        self.assertEqual(_media("README.md"), {"media_ref": "README.md", "media_missing": False})
+        missing = "data/media/no-such-clip.bin"
+        self.assertEqual(_media(missing), {"media_ref": missing, "media_missing": True})
+
 
 if __name__ == "__main__":
     unittest.main()
