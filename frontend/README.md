@@ -1,8 +1,10 @@
 # TwinAML web
 
-React + Vite + TypeScript. The page is a case list, a scenario player, and a simple dashboard. All three read twin state from the demo API (`backend/`).
+React 19 + Vite + TypeScript. In this tree the page is a case list, a scenario player, and a simple dashboard. All three read twin state from the demo API (`backend/`). `package.json` depends on React and Vite only. There is no `three` package, and `src/` does not contain `SceneViewport` or `TwinPlatform`.
 
-Deploy target: a **self-hosted Linux VPS**. nginx or Caddy serves the static build and proxies `/health`, `/cases`, and `/sessions`. See [`docs/deploy-vps.md`](../docs/deploy-vps.md). This package is not run in Docker.
+The live Learning Center on the rented Linux VPS is ahead of this folder. Its bundle lazy-loads a Three.js Simulation Center (`SceneViewport`) and an AML Process Twin client (`TwinPlatform`). That gap is in the root [README](../README.md).
+
+Deploy target: a **rented Linux VPS**. nginx or Caddy serves the static build and proxies `/health`, `/cases`, and `/sessions`. See [`docs/deploy-vps.md`](../docs/deploy-vps.md). This package is not run in Docker.
 
 `wrangler.jsonc` may remain in this folder. It is a legacy scaffold file, not the course deploy.
 
