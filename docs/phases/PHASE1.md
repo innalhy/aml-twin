@@ -1,16 +1,16 @@
 # Phase 1 — MVP (DT Level 1)
 
-**Status:** P1-S1 through P1-S8 are done. The web player lists every script in `data/cases/`, including the two Editor-room scripts.  
+**Status:** P1-S1 through P1-S8 are done. The web player lists every script in `data/cases/` (13 files). The official script count is 13. The Unity Editor project is outside the current demo path.  
 **Audience:** coding agents.  
 **DT Level:** Level 1 — scripted cases, offline-style mirror of `initial_twin_state`, not a live bank.
 
 ## Goal
 
-Play the Phase 1 case library end-to-end on a self-hosted Linux VPS. The library is the **11** synthetic scripts in [`data/cases/`](../../data/cases/README.md):
+Play the Phase 1 case library end-to-end on a rented Linux VPS. The official library in [`data/cases/`](../../data/cases/README.md) is **13** synthetic scripts. The Phase 1 set below is the first **11**:
 
 case script → training session → trainee decision → rules + state machine → twin update → event log → web player + simple dashboard.
 
-A session starts with a `case_id`. The VPS API, the scenario player, and the dashboard load whichever of the 11 that id names. `deepfake-hk-001` is the original course example (video-KYC deepfake). The other ten are `public_record_inspired`. Names, amounts, and parties are synthetic. The index and disclaimer are in [`data/cases/README.md`](../../data/cases/README.md).
+A session starts with a `case_id`. The VPS API, the scenario player, and the dashboard load whichever script that id names. `deepfake-hk-001` is the original course example (video-KYC deepfake). The next ten are `public_record_inspired`. The index also names `starlight-onboard-001` and `alert-triage-shift-001`. Names, amounts, and parties are synthetic. The index and disclaimer are in [`data/cases/README.md`](../../data/cases/README.md).
 
 | case_id | Theme |
 | --- | --- |
@@ -26,24 +26,24 @@ A session starts with a `case_id`. The VPS API, the scenario player, and the das
 | `ia-fwd-controls-001` | Insurer controls (synthetic insurer) |
 | `hkma-cdd-001` | Bank CDD / monitoring / STR (synthetic bank) |
 
-Deploy path: **Linux VPS**. Static Vite build (`frontend/`) plus FastAPI (`backend/`) behind nginx or Caddy with HTTPS. See [`docs/deploy-vps.md`](../deploy-vps.md). A Node/Hono process may serve the same API routes later. `workers/api` may remain as a legacy scaffold and is not this deploy path. FlexSim is out of scope. The Unity Editor room is on branch [`unity`](https://github.com/innalhy/aml-twin/tree/unity) (`git fetch && git checkout unity`). It is in scope and is not a site on the VPS.
+Deploy path: **rented Linux VPS**. Static Vite build (`frontend/`) plus FastAPI (`backend/`) behind nginx or Caddy with HTTPS. See [`docs/deploy-vps.md`](../deploy-vps.md). `workers/` may remain as a legacy scaffold and is not this deploy path. FlexSim is out of scope. The Unity Editor project is on branch [`unity`](https://github.com/innalhy/aml-twin/tree/unity) only. It is outside the current demo path and is not a site on the VPS. The live in-browser 3D is Three.js inside the Learning Center, and that client is not in this tree.
 
 ## In scope
 
-- Load any of the 11 `data/cases/*.example.json` scripts (or a non-`.example` copy of the same `case_id`) against `packages/schemas/script.schema.json`.
+- Load every script named by `data/cases/index.json` (13 files; the table above is the first 11) against `packages/schemas/script.schema.json`.
 - Session API on the VPS process: start a session with `case_id`, get the current node, submit a decision, get twin + events. `case_id` selects one script from the library above.
-- Deterministic twin state machine applying `twin_patch` and `choices[].effects` (including `risk.flags_add`, `risk.score_delta`, dotted keys as agreed in [`docs/effects.md`](../effects.md)). P1-S1 already inventories those keys across all 11 scripts.
+- Deterministic twin state machine applying `twin_patch` and `choices[].effects` (including `risk.flags_add`, `risk.score_delta`, dotted keys as agreed in [`docs/effects.md`](../effects.md)). P1-S1 already inventories those keys across the first 11 scripts.
 - Soft rule checks for each script’s teaching rules (human-readable `when` may stay non-executable; outcomes must still match that script’s teaching dispositions). The original example uses `R1_LIVENESS_TWICE` and `R2_SIGNALS_PLUS_BURST`. The other scripts use their own R1/R2 ids.
-- React scenario player + minimal compliance dashboard reading the same twin/events. The case list offers all 11 ids.
+- React scenario player + minimal compliance dashboard reading the same twin/events. The case list offers every id in `data/cases/index.json`.
 - Persist session + events in `data/local/sessions.sqlite` on the API machine (one local file for this process).
 - English UI chrome; case content may stay Traditional Chinese.
 - Missing `media_ref` file → show missing-media state, do not crash the case.
 
 ## Out of scope (Phase 1)
 
-- Docker, Kubernetes, Neo4j, Kafka, microservices.
-- Wiring the Editor room to the live session API. The room on branch [`unity`](https://github.com/innalhy/aml-twin/tree/unity) (`git fetch && git checkout unity`) already plays two scripts locally and stays in the demo. That room is not one of the slices below, and it does not implement P1-S2.
-- New case families beyond the 11 scripts. Phase 2 adds mixer / peel-chain and synthetic-ID cases.
+- Docker, Kubernetes, Kafka, microservices. The Behavioral Sandbox in `demo/neo4j/` is a separate classroom piece. It is not a database for this API.
+- The Unity Editor project on branch [`unity`](https://github.com/innalhy/aml-twin/tree/unity). It is outside the current demo path. It is not the in-browser 3D Simulation Center, and it is not one of the slices below.
+- Case files beyond the 13 scripts in `data/cases/`.
 - Live LLM judging disposition.
 - Real bank / HKMA / STR filing integration.
 - Multi-tenant billing.
@@ -51,7 +51,7 @@ Deploy path: **Linux VPS**. Static Vite build (`frontend/`) plus FastAPI (`backe
 
 ## Success criteria (phase done)
 
-1. Trainee can open the web app, start any of the 11 by `case_id`, walk the branches of that script, and see its terminal dispositions.
+1. Trainee can open the web app, start any script in `data/cases/index.json` by `case_id`, walk the branches of that script, and see its terminal dispositions.
 2. Every decision appends an event; override paths store an override event.
 3. Dashboard shows the session: `case_id`, disposition, flags, and whether a teaching poor path was taken.
 4. `GET /health` still works on the VPS API; the frontend builds.

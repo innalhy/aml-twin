@@ -5,7 +5,7 @@
 
 ## Goal
 
-Extend TwinAML so training decisions write back promptly to twin state (WebSocket or equivalent), rules are versioned and configurable, and the case library grows beyond deepfake onboarding (mixer / peel-chain + mule accounts, synthetic identity). The deploy home is the self-hosted Linux VPS in [`docs/deploy-vps.md`](../deploy-vps.md).
+Extend TwinAML so training decisions write back promptly to twin state (WebSocket or equivalent), rules are versioned and configurable, and the case library grows beyond deepfake onboarding (mixer / peel-chain + mule accounts, synthetic identity). The deploy home is the rented Linux VPS in [`docs/deploy-vps.md`](../deploy-vps.md).
 
 ## In scope
 

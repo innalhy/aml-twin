@@ -1,21 +1,24 @@
 # Deploy the COMP3424 demo on a Linux VPS
 
-The course demo runs on a **self-hosted Linux VPS**. One reverse proxy, nginx or Caddy, terminates HTTPS, serves the static React build, and forwards API paths to one process on localhost.
+The course demo runs on a **rented Linux VPS**. One reverse proxy, nginx or Caddy, terminates HTTPS, serves the static React build, and forwards API paths to one process on localhost.
 
 Hostnames, certificates, and private keys stay on that machine. This repository does not store them.
 
-## What runs on the VPS
+The development Learning Center is [https://dev-amltwin.spectrumvps.tech/](https://dev-amltwin.spectrumvps.tech/) (release `20261109T064146Z`). That deploy is ahead of this tree. The gap is in the root [README](../README.md) under Linux VPS Platform (Learning Center). This page is how to serve the files in this tree.
 
-| Piece | In this repo | On the VPS |
+## Linux VPS Platform (Learning Center)
+
+| Piece | In this repo | On the current VPS |
 | --- | --- | --- |
-| Web | `frontend/` (Vite). `npm run build` writes `dist/`. | Static files. The proxy serves them. |
-| API | `backend/` FastAPI. Health, cases, sessions, decisions. | `uvicorn` bound to `127.0.0.1:8000`. |
-| Unity | Branch [`unity`](https://github.com/innalhy/aml-twin/tree/unity). `git fetch && git checkout unity`, then `unity/TwinAML`. | Editor training room on a workstation. In scope for the demo. It is not a site on the VPS, and it does not call this API yet. |
-| Legacy scaffold | `workers/api`, `workers/api/wrangler.jsonc`, `frontend/wrangler.jsonc` | Left in the tree. Not the COMP3424 demo target. |
+| Web | `frontend/` (React 19 + Vite). `npm run build` writes `dist/`. No `three` dependency. | Static files. The proxy serves them. The live bundle also lazy-loads `SceneViewport` and `TwinPlatform`, which are not in this tree. |
+| API | `backend/` FastAPI. `GET /health`, `/cases`, `/sessions`, decisions, evidence. | `uvicorn` bound to `127.0.0.1:8000`. `GET /health` returns `{"status":"ok","service":"twinaml-api"}`. The live client also calls `/api/cases`, `/api/sessions`, `/api/case-sessions`, `POST /api/aml-simulations`, `/api/aml-sessions/{id}` (and `/actions`), and `GET /api/twin`. Those `/api/` handlers are not in `backend/app/` on this branch. |
+| Session store | `backend/app/sessions.py`, Python stdlib `sqlite3`. Default `data/local/sessions.sqlite`. Override `TWINAML_SESSIONS_DB`. | Same store. Not PostgreSQL, Redis, or MySQL. |
+| 3D | Not in this tree. | In-browser Three.js Simulation Center at `/simulations`. Not a Unity WebGL build. |
+| Behavioral Sandbox | `demo/neo4j/`. | Streamlit may run on this VPS or on the presenter's laptop. This repo does not publish a Streamlit hostname. Bloom stays on the presenter's machine. |
+| Unity Editor project | Not on this branch. Branch [`unity`](https://github.com/innalhy/aml-twin/tree/unity) only. | Outside the current demo path. Not a site on the VPS. |
+| Legacy scaffold | `workers/` | Left in the tree. Not the demo path. |
 
-A Node/Hono process may be the API instead of FastAPI when it serves the same routes. This repo does not ship a Node server entrypoint. `workers/api` is Hono for the Workers runtime (`wrangler dev` / `wrangler deploy`). Use the FastAPI app for the VPS until a later slice adds a Node listener.
-
-FlexSim is out of scope. Docker, Docker Compose, and Kubernetes are not the run path and not the deploy path.
+FlexSim is out of scope. Docker, Docker Compose, and Kubernetes are not the run path and not the deploy path. Unity, Unreal, and Omniverse are not the current 3D path.
 
 ## Build the static site
 

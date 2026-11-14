@@ -74,4 +74,4 @@ Paste the Cypher from `stories.cypher`. Bloom can store a search phrase as Cyphe
 
 ## What to say if someone asks whether this is the bank
 
-This graph is the classroom twin: a controlled ledger for testing detection logic. It is not a live core-banking feed, and it is not a 3D office. The Unity room in this repository is a separate face and is not required for this week.
+This graph is the classroom twin: a controlled ledger for testing detection logic. It is not a live core-banking feed, and it is not the in-browser 3D Simulation Center. The Unity Editor project is only on branch `unity` and is outside the current demo path.
