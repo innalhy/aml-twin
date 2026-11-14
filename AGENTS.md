@@ -14,19 +14,20 @@ This file is the working agreement for AI agents in **TwinAML**, a COMP3424 demo
 
 1. Change one small slice at a time. A session should leave the tree clearer than it found it.
 2. Keep the simplified architecture:
-   - one demo API for the Linux VPS: FastAPI in `backend/` (cases, sessions, decisions, twin state machine). A Node/Hono process may serve the same routes in a later slice. Do not add a second API.
-   - one React + Vite + TypeScript client in `frontend/`, built to static files and served on that VPS (scenario player + simple dashboard)
-   - `workers/api` and the Wrangler config files may remain as a legacy Cloudflare scaffold. They are not the COMP3424 demo target.
-   - case scripts in `data/cases/`
+   - one demo API for the rented Linux VPS: FastAPI in `backend/` (cases, sessions, decisions, twin state machine, SQLite session store). Do not add a second API.
+   - one React + Vite + TypeScript client in `frontend/`, built to static files and served on that VPS (scenario player + simple dashboard). The live Learning Center also has an in-browser Three.js Simulation Center (`SceneViewport`) and a `TwinPlatform` client. Those sources are not in `frontend/src/` on this branch. Do not pretend they are.
+   - `workers/` may remain as a legacy scaffold. It is not the COMP3424 demo path.
+   - case scripts in `data/cases/` (13 synthetic scripts on this branch)
+   - the Behavioral Sandbox in `demo/neo4j/` (Streamlit, bundled CSV, Cypher, Bloom notes). It does not write the Learning Center session store.
    - notes in `docs/`
-   - one Unity Editor room on long-lived branch `unity` (`git fetch && git checkout unity`), in `unity/TwinAML` (see `unity/UNITY.md` on that branch). Open it with Unity 6000.6.8f1. It is in scope. It plays pre-authored scripts locally. It is not a second API. Leave that tree on branch `unity`.
-3. Do not add Docker, Kubernetes, Neo4j, Kafka, FlexSim, a microservice split, a second Unity project, or other enterprise pieces unless the owner explicitly asks in that session. Docker is not a supported way to run or deploy this demo. Do not reintroduce `docker-compose.yml` or a container cluster as a requirement. FlexSim is out of scope for the demo.
-4. Prefer the web client for the VPS demo. The Editor room is the immersive face and stays in the demo on branch `unity` (`git fetch && git checkout unity`). It is not a second platform and it does not replace the API.
-5. English is the primary language for docs and UI copy. Keep course terms in English when they are the lecture vocabulary: mirroring, shadowing, threading, DT Level 1, DT Level 2, rules-before-AI. Do not switch docs or the placeholder UI back to Traditional Chinese.
+   - the Unity Editor project stays on branch `unity` only. It is outside the current demo path. Do not check that branch out to extend this demo, and do not describe Unity, Unreal, Omniverse, or FlexSim as the current 3D or simulation path.
+3. Do not add Docker, Kubernetes, Kafka, FlexSim, PostgreSQL, Redis, MySQL, a microservice split, or a second Unity project unless the owner explicitly asks in that session. Docker is not a supported way to run or deploy this demo. Do not reintroduce `docker-compose.yml` or a container cluster as a requirement. FlexSim is out of scope for the demo. Neo4j in `demo/neo4j/` is the Behavioral Sandbox graph view on the presenter's machine. Do not add a second graph database to the Learning Center API.
+4. Prefer the web client for the VPS demo. The live 3D is Three.js inside that client, on the current VPS deploy, and it is not in `frontend/src/` on this branch. The Unity Editor project is not the immersive face of the current demo.
+5. English is the primary language for docs and UI copy. Keep course terms in English when they are the lecture vocabulary: mirroring, shadowing, threading, DT Level 1, DT Level 2, rules-before-AI. Do not switch docs or the placeholder UI back to Traditional Chinese. The product name is Behavioral Sandbox.
 6. Never commit secrets, API keys, `.env` files, TLS private keys, or large media. `data/media/` stays empty aside from `.gitkeep`. Scripts may reference media paths; the binaries stay local. Do not commit Cloudflare account identifiers into the legacy scaffold.
-7. Do not invent a second state model. The twin is backend state plus events. The web app renders that state. It does not own a private copy of the case world. The Editor room applies the same schema 0.1 mirror locally. It does not call the session API (that wiring is P3-S4). It does not invent another script format.
-8. Rules decide compliance outcomes. Do not let a language model become the system of record. Any later model may explain a decision only after rules have fired, and a human override must be stored as an event.
-9. Deploy docs stay on a self-hosted Linux VPS: static `frontend/` plus the API behind nginx or Caddy, with HTTPS. See `docs/deploy-vps.md`. `docs/cloudflare.md` only points at that page.
+7. Do not invent a second state model. The twin for a Learning Center run is backend state plus events. The web app renders that state. It does not own a private copy of the case world. The Behavioral Sandbox ledger is a separate twin and does not write the session store. Do not invent another script format.
+8. Rules decide compliance outcomes. Do not let a language model become the system of record. An LLM must not set the case outcome at runtime. A human override must be stored as an event.
+9. Deploy docs stay on a rented Linux VPS: static `frontend/` plus the API behind nginx or Caddy, with HTTPS. See `docs/deploy-vps.md`. Do not call that host self-hosted. `docs/cloudflare.md` only points at that page. Do not describe Workers as the demo path.
 
 ## Where to read first
 
@@ -35,10 +36,10 @@ This file is the working agreement for AI agents in **TwinAML**, a COMP3424 demo
 - `docs/effects.md` — how `twin_patch` and `choices[].effects` apply (schema 0.1).
 - `docs/comp3424-mapping.md` — DT Level 1/2, mirroring / shadowing / threading, rules-before-AI.
 - `docs/deploy-vps.md` — Linux VPS: static site, API, nginx or Caddy, HTTPS.
-- `docs/cloudflare.md` — pointer only. The Worker scaffold is not the demo target.
+- `docs/cloudflare.md` — pointer only. The legacy scaffold is not the demo path.
 - `data/cases/01-deepfake-hk-001.example.json` — the Level 1 example script.
 - `packages/schemas/script.schema.json` — the minimal script contract.
-- Branch `unity` (`git fetch && git checkout unity`), then `unity/UNITY.md` — Editor training room: `Scn_Boot`, Topic 1, Topic 2. https://github.com/innalhy/aml-twin/tree/unity
+- `demo/neo4j/README.md` — Behavioral Sandbox. Branch `unity` is outside the current demo path. Do not treat it as the 3D client.
 
 ## Cursor Cloud specific instructions
 
@@ -47,7 +48,7 @@ Node 22 matches CI. Do not add Docker. The default image needs `python3-venv` be
 After boot, these are already up when healthy:
 
 - `http://127.0.0.1:8000/health` — demo API (FastAPI), `{"status":"ok","service":"twinaml-api"}`
-- `http://127.0.0.1:5173` — Vite placeholder
+- `http://127.0.0.1:5173` — Vite dev server for the web client in this tree
 - `http://127.0.0.1:8787/health` — legacy Worker scaffold, same JSON, when that process is started. Not the demo deploy.
 
 How to run them by hand is in `README.md`. Case check: `node scripts/validate-cases.mjs` (first run installs `ajv@8` in the OS temp directory).

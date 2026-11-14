@@ -48,6 +48,22 @@ class ApiTest(unittest.TestCase):
         self.assertIn("hk-hkma-cdd-001", ids)
         self.assertGreaterEqual(len(ids), 11)
 
+    def test_case_and_session_publish_rule_flags(self) -> None:
+        detail = self.client.get("/cases/deepfake-hk-001")
+        self.assertEqual(detail.status_code, 200, detail.text)
+        rule = next(item for item in detail.json()["rules"] if item["id"] == "R1_LIVENESS_TWICE")
+        self.assertEqual(rule["flags"], ["R1_BLOCK", "R1_OVERRIDDEN"])
+        rule["flags"].append("INJECTED")
+
+        again = self.client.get("/cases/deepfake-hk-001").json()
+        rule_again = next(item for item in again["rules"] if item["id"] == "R1_LIVENESS_TWICE")
+        self.assertEqual(rule_again["flags"], ["R1_BLOCK", "R1_OVERRIDDEN"])
+
+        opened = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"})
+        self.assertEqual(opened.status_code, 201, opened.text)
+        session_rule = next(item for item in opened.json()["rules"] if item["id"] == "R1_LIVENESS_TWICE")
+        self.assertEqual(session_rule["flags"], ["R1_BLOCK", "R1_OVERRIDDEN"])
+
     def test_deepfake_reject_path_and_dashboard_read_the_same_session(self) -> None:
         opened = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"})
         self.assertEqual(opened.status_code, 201, opened.text)
@@ -194,6 +210,17 @@ class ApiTest(unittest.TestCase):
         self.assertEqual(self.client.get(f"/sessions/{opened['session_id']}").status_code, 200)
         listed = [row["session_id"] for row in self.client.get("/sessions").json()["sessions"]]
         self.assertEqual(listed, [opened["session_id"]])
+
+    def test_media_refs_cannot_leave_the_repo(self) -> None:
+        self.assertIsNone(_media(None))
+        self.assertIsNone(_media(""))
+        escapes = ("/etc/passwd", "../README.md", "data/../../README.md")
+        for ref in escapes:
+            with self.subTest(ref=ref):
+                self.assertEqual(_media(ref), {"media_ref": ref, "media_missing": True})
+        self.assertEqual(_media("README.md"), {"media_ref": "README.md", "media_missing": False})
+        missing = "data/media/no-such-clip.bin"
+        self.assertEqual(_media(missing), {"media_ref": missing, "media_missing": True})
 
 
 if __name__ == "__main__":

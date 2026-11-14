@@ -20,7 +20,11 @@ Override the file, the cap, or the closed-session lifetime with `TWINAML_SESSION
 
 Each request loads its own copy of a row. The player route (`GET /sessions/{id}` and the decision response) builds the node, the passed scenes, and the media check. The dashboard list and the evidence card read the twin, the teaching mark, and the event types from that copy. They do not stat media files.
 
-A Node/Hono process may serve those same routes in a later slice. `workers/api` is a legacy Cloudflare Worker scaffold, not that process, and not the demo deploy.
+`workers/` is a legacy scaffold, not this process, and not the demo deploy.
+
+The current VPS Learning Center also answers routes this process does not declare: `POST /api/aml-simulations`, `/api/aml-sessions/{id}` (and `/actions`), and `GET /api/twin`. Those handlers are not in `backend/app/` on this branch. This page does not name source files for them. The live case list is `GET /api/cases`. The routes in the table below are the ones this process declares, without an `/api` prefix.
+
+The session store is SQLite through Python stdlib `sqlite3`. It is not PostgreSQL, Redis, or MySQL. `requirements.txt` has no driver for those.
 
 ## Routes
 
