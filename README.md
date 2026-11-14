@@ -4,17 +4,23 @@
 
 TwinAML is a COMP3424 course demo of a digital twin for AML simulation training. The platform idea is proprietary. This tree is a classroom demo. It is not a bank production system, and it is not an open-source release.
 
-The classroom demo on this branch (`main`) consists of two parts.
+The public project repository is [https://github.com/innalhy/aml-twin](https://github.com/innalhy/aml-twin). It is also where the project is managed.
 
-- The **Learning Center** is the web training shell. FastAPI in `backend/` loads a case script, opens a session, applies a choice, and stores the twin and the events. The Vite app in `frontend/` is the case list, the scenario player, and the dashboard. The player and the dashboard both read that session. The page title in the app is TwinAML. This README uses “Learning Center” for that shell.
+The classroom demo has two parts. They do not share a store.
 
-- The **Behavioral Sandbox** in [`demo/neo4j/`](demo/neo4j/README.md) is the other classroom piece. It loads a synthetic ledger, moves an amount line, and draws the same payments as a network. Neo4j Bloom is the graph view of that ledger.
+- The **Learning Center** is the web training shell on a rented Linux VPS. The development site is [https://dev-amltwin.spectrumvps.tech/](https://dev-amltwin.spectrumvps.tech/) (page `/simulations`). The HTML sets `twinaml-environment` to `development`, `twinaml-release` to `20261109T064146Z`, and `robots` to noindex. FastAPI loads a case script, opens a session, applies a choice, and stores the twin and the events. The web client is a React 19 + Vite single-page app, built to static files. On that site the same client includes an in-browser 3D Simulation Center. This branch’s `frontend/` is the case list, the scenario player, and the dashboard. It does not contain that 3D client. The page title in this tree’s app is TwinAML. This README uses “Learning Center” for that shell.
 
-A trainee picks a script by `case_id` and decides inside it. Rules in the script decide compliance outcomes (rules-before-AI). A language model, if one is added later, may explain a decision only after those rules have fired. A human override must be stored as an event.
+- The **Behavioral Sandbox** in [`demo/neo4j/`](demo/neo4j/README.md) is the other classroom piece. It loads a synthetic ledger, moves an amount line, and draws the same payments as a network. Neo4j Bloom is the graph view of that ledger on the presenter’s machine.
+
+Release `20261109T064146Z` on the VPS is ahead of this `main` tree. The gap is under [Linux VPS Platform (Learning Center)](#linux-vps-platform-learning-center).
+
+A trainee picks a script by `case_id` and decides inside it. Explicit rules and the state machine set the disposition (rules-before-AI). An LLM must not set the case outcome at runtime. A human override must be stored as an event.
 
 ## Cases and themes
 
-[`data/cases/index.json`](data/cases/index.json) names **13** synthetic scripts. The Phase 1 library in the phase plan is the first **11**: `deepfake-hk-001` plus the ten `public_record_inspired` scripts. The Learning Center can also start `starlight-onboard-001` (`synthetic_course`) and `alert-triage-shift-001` (`course_example`). Every customer, account, and amount in them is synthetic.
+[`data/cases/index.json`](data/cases/index.json) names **13** synthetic scripts. That is the official script count in this tree. The Phase 1 library in the phase plan is the first **11**: `deepfake-hk-001` plus the ten `public_record_inspired` scripts. The Learning Center in this tree can also start `starlight-onboard-001` (`synthetic_course`) and `alert-triage-shift-001` (`course_example`). Every customer, account, and amount in them is synthetic.
+
+The live Learning Center `GET /api/cases` lists **13** cases across **11** workflows. That live list is not this index. In workflow order the live case ids are `project-meridian-001`, `deepfake-001`, `mule-mixer-001`, `daybreak-tbml-001`, `crossborder-tel-001`, `mule-rent-001`, `greythunder-mule-001`, `justicegate-crypto-001`, `kol-mgmt-001`, `wiseword-amlmonth-001`, `triad-cashflow-001`, `insurer-controls-001`, and `bank-cdd-001`. Workflow 3, synthetic identity, has no case on that list and no script in this tree. The 3D scenes open `bank-cdd-001` and `mule-rent-001`. `bank-cdd-001` is not a file under `data/cases/` on this branch.
 
 The tables below leave off a leading `hk-`. `deepfake-hk-001` keeps `hk` in the middle of the id. The disclaimer, and the public-reporting notes the scripts were inspired by, are in [`data/cases/README.md`](data/cases/README.md). The page chrome is English. Prompt text in most scripts is Traditional Chinese. `alert-triage-shift-001` is English.
 
@@ -56,7 +62,7 @@ The mixer page names those four scripts as nearby playable scripts. The page is 
 
 ## Architecture
 
-One Learning Center API and one web client, plus the behavioral sandbox. The Learning Center deploys on a Linux VPS. The sandbox can run on the same machine or on a presenter's laptop. Bloom stays on the presenter's machine.
+One Learning Center on a rented Linux VPS, plus the Behavioral Sandbox. The sandbox can run on that VPS or on a presenter's laptop. This repo does not publish a Streamlit hostname. Bloom stays on the presenter's machine. The two parts are not connected.
 
 ```mermaid
 flowchart LR
@@ -67,8 +73,12 @@ flowchart LR
     rules --> twin["Twin state and events"]
     twin --> player["Scenario player"]
     twin --> dash["Dashboard"]
+    sim["In-browser 3D Simulation Center"]
+    twin --> guided["Guided 3D scenes"]
+    sim --> guided
+    sim --> timed["Timed monitoring scene"]
   end
-  subgraph sandbox [Behavioral sandbox]
+  subgraph sandbox [Behavioral Sandbox]
     ledger["Synthetic CSV ledger"] --> stream["Streamlit rules and network"]
     ledger --> bloom["Neo4j Bloom on the presenter machine"]
   end
@@ -76,19 +86,50 @@ flowchart LR
 
 | Piece | Where | Role |
 | --- | --- | --- |
-| Learning Center API | `backend/` | FastAPI. Health, case list, sessions, decisions, the twin state machine, events, and the evidence card. A Node/Hono process may serve the same routes later. |
-| Learning Center web | `frontend/` | React + Vite + TypeScript. Static files on the VPS. Case list, scenario player, and dashboard. Both read the same twin. |
-| Behavioral sandbox | `demo/neo4j/` | Streamlit app, bundled CSV ledger, Cypher load scripts, and Bloom notes. Amount-line alerts and a network reading of the same payments. |
-| Graph view | Presenter's machine | Neo4j Desktop or a local Neo4j 5, opened in Bloom. Same ledger as the CSV. This is not a process on the VPS. |
-| Legacy scaffold | `workers/api` | Cloudflare Worker (Hono) plus Wrangler config. `GET /health` only. Left in the tree. Not the COMP3424 demo deploy. |
+| Learning Center API | `backend/` on this branch. FastAPI on the VPS. | Health, case list, sessions, decisions, the twin state machine, events, and the evidence card. Session rows are SQLite. |
+| Learning Center web | React 19 + Vite, static files on the VPS. `frontend/` in this tree. | Case list, scenario player, and dashboard. Both read the same twin. The live bundle also lazy-loads the 3D client and an AML Process Twin client. Those two chunks are not in this tree. |
+| 3D Simulation Center | Live page `/simulations`. Three.js in the browser. | Three Interactive 3D scenes. Guided scenes use the Learning Center case and session APIs. The timed scene uses other live routes. See below. |
+| Behavioral Sandbox | `demo/neo4j/` | Streamlit app (`demo/neo4j/app.py`), bundled CSV ledger, and Cypher (`load_twin.cypher`, `stories.cypher`). Amount-line alerts and a network reading of the same payments. It does not write the Learning Center session store. |
+| Graph view | Presenter's machine | Neo4j Desktop or a local Neo4j 5, opened in Bloom. Same ledger as the CSV. Bloom is not a process on the VPS and not a cloud Bloom plugin. |
+| Legacy scaffold | `workers/` | Left in the tree. Not the demo path. |
 
-The web app does not keep a private copy of the case world. Compliance outcomes in a script come from the rules and from the state machine that applies `twin_patch` and `choices[].effects`. How those patches apply is in [`docs/effects.md`](docs/effects.md). The session routes are `GET /cases`, `POST /sessions`, `GET /sessions`, `GET /sessions/{id}`, `POST /sessions/{id}/decisions`, and `GET /sessions/{id}/evidence`. `GET /health` stays. A longer note on that run is in [`docs/architecture.md`](docs/architecture.md). The course terms — mirroring, shadowing, threading, DT Level 1, DT Level 2, rules-before-AI — are mapped in [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md).
+The web app does not keep a private copy of the case world. Compliance outcomes in a script come from the rules and from the state machine that applies `twin_patch` and `choices[].effects`. How those patches apply is in [`docs/effects.md`](docs/effects.md). An LLM must not set the case outcome at runtime.
 
-`workers/api` can answer the same health check only. `GET /sessions/{id}/evidence` summarises one Learning Center run for [`docs/audit-evidence.md`](docs/audit-evidence.md).
+Routes declared on this branch: `GET /cases`, `POST /sessions`, `GET /sessions`, `GET /sessions/{id}`, `POST /sessions/{id}/decisions`, and `GET /sessions/{id}/evidence`. `GET /health` returns `{"status":"ok","service":"twinaml-api"}`. `GET /sessions/{id}/evidence` summarises one Learning Center run for [`docs/audit-evidence.md`](docs/audit-evidence.md). A longer note is in [`docs/architecture.md`](docs/architecture.md). The course terms — mirroring, shadowing, threading, DT Level 1, DT Level 2, rules-before-AI — are mapped in [`docs/comp3424-mapping.md`](docs/comp3424-mapping.md).
 
-An Editor project lives only on branch [`unity`](https://github.com/innalhy/aml-twin/tree/unity). This branch does not contain `unity/`. That project is outside the current COMP3424 demo path.
+The Unity Editor project lives only on branch [`unity`](https://github.com/innalhy/aml-twin/tree/unity). This branch does not contain `unity/`. That project is outside the current demo path. Unity, Unreal, Omniverse, and FlexSim are not the 3D path and not the simulation path.
 
-The sandbox does not write the Learning Center session store. Its own note is [`demo/neo4j/README.md`](demo/neo4j/README.md).
+The Behavioral Sandbox does not write the Learning Center session store. There is no live bank connection. Its own note is [`demo/neo4j/README.md`](demo/neo4j/README.md).
+
+## Linux VPS Platform (Learning Center)
+
+The Learning Center runs on a rented Linux VPS. A reverse proxy, nginx or Caddy, terminates HTTPS, serves the static React build, and forwards API paths to FastAPI on localhost. Steps for this tree are in [`docs/deploy-vps.md`](docs/deploy-vps.md).
+
+The development site is [https://dev-amltwin.spectrumvps.tech/](https://dev-amltwin.spectrumvps.tech/). Release `20261109T064146Z` is ahead of this `main` tree.
+
+| Piece | Current VPS deploy | This `main` tree |
+| --- | --- | --- |
+| Web | React 19 + Vite SPA. The bundle lazy-loads `SceneViewport` and `TwinPlatform`. | `frontend/package.json` depends on React and Vite only. There is no `three` package. `frontend/src/` is the case list, the player, and the dashboard. It does not contain `SceneViewport` or `TwinPlatform`. |
+| Session API | `GET /health` returns `{"status":"ok","service":"twinaml-api"}`. The live client calls `/api/cases`, `/api/sessions`, and `/api/case-sessions`. | `backend/app/main.py` declares the unprefixed routes listed above. It does not declare `POST /api/aml-simulations`, `/api/aml-sessions`, or `GET /api/twin`. |
+| Session store | SQLite, via Python stdlib `sqlite3`. | `backend/app/sessions.py`. Default path `data/local/sessions.sqlite` (gitignored). Override with `TWINAML_SESSIONS_DB`. `backend/requirements.txt` has no PostgreSQL, Redis, or MySQL driver. |
+| AML Process Twin | `GET /api/twin` returns `{"enabled":true}`. The bundle includes `TwinPlatform` on `/twin` and `/operations`. | Not in this tree. This repo does not show a runtime data connection from that client to Streamlit or Neo4j. |
+| Account | Clerk appears in the live JS bundle. `GET /api/account` returns `{"enabled":false,"configured":false,"user":null}`. | Clerk is not an enabled auth stack. This tree has no auth module. |
+
+`workers/` may stay in the tree as a legacy scaffold. It is not the demo path.
+
+### In-browser 3D Simulation Center
+
+The live page `/simulations` keeps three Interactive 3D scenes. They run in the browser. The canvas is Three.js. The React component is `SceneViewport` (chunk `assets/SceneViewport-*.js`). Rooms and furniture are built from Three.js primitives (`BoxGeometry`, `PlaneGeometry`, and others). There are no `.glb` or `.gltf` model files. A Unity loader under `/Build/*.loader.js` returns 404. `/webgl/` and `/unity/Build/` are not a Unity player.
+
+| Scene | Room | How it runs |
+| --- | --- | --- |
+| Client onboarding & due diligence | Private banking office | Guided case `bank-cdd-001`. Uses the Learning Center case and session APIs. |
+| Branch suspicious activity review | Retail branch | Guided case `mule-rent-001`. Uses the Learning Center case and session APIs. |
+| Transaction monitoring & investigation | Transaction monitoring operations | Timed simulation. `caseId` is null. The live client calls `POST /api/aml-simulations` and `/api/aml-sessions/{id}` (and `/actions`). Those routes exist on the current VPS deploy. They are not in `backend/app/` on this branch. This page does not name source files for them. |
+
+Drag inside the scene to look around. Pinch or use the zoom controls. The arrow keys move the view. Numbered hotspot pins open the related station. If WebGL is unavailable, the canvas says: “3D view is unavailable here. Use the stations below to continue.”
+
+That view is a browser scene inside the Learning Center web client. It is not a 3D office digital twin of a workplace. It does not replace the Behavioral Sandbox. It is not a Unity WebGL build.
 
 ## What kind of digital twin this is?
 
@@ -98,21 +139,22 @@ The mapping note places this repository at **DT Level 1**, a scripted mirror. Le
 
 The same demo is a **behavioral / transactional twin**. The sandbox holds virtual behavioral replicas of customer transactions: one synthetic ledger for the week in the bundled CSV. It is a controlled sandbox to test detection logic and stress-test rules. One reading judges each payment against an amount line. The other reads the same payments as a network. Moving the line changes how many payments the amount rule lists. Bloom is the graph view of that ledger. The amount line is a classroom dial. The detectors do not ask a language model for a score. A disposition for a trainee still comes from a case script.
 
-This twin is not a 3D office, a geometric twin, or a spatial facility twin. There is no floor plan and no production line. FlexSim stays out of scope. The mapping note says the same for discrete-event factory simulation.
+The live Learning Center also has the in-browser 3D Simulation Center described above. Those rooms are training scenes built from Three.js primitives. They are not a geometric twin of a workplace, and there is no production line. FlexSim stays out of scope. The mapping note says the same for discrete-event factory simulation. Unity, Unreal, and Omniverse are not this 3D path.
 
-The Learning Center session log is the DT Level 1 record. The Streamlit / Neo4j sandbox is the DT Level 2 and DT Level 3 piece of this demo: the ledger follows the amount line, and Bloom is the graph. Mirroring is what the case library and the ledger do now.
+The Learning Center session log is the DT Level 1 record. The Behavioral Sandbox is the DT Level 2 and DT Level 3 piece of this demo: the ledger follows the amount line, and Bloom is the graph. Mirroring is what the case library and the ledger do now.
 
 ## Tech Stack
 
-Classroom demo. One Learning Center API, one web client, and the behavioral sandbox.
+Classroom demo. One Learning Center API, one web client, and the Behavioral Sandbox.
 
 | Layer | Current | Role |
 | --- | --- | --- |
-| Learning Center API | FastAPI (`backend/`). Health, cases, sessions, decisions, twin, events, evidence card. | A Node/Hono process may serve those same routes later. This repo does not ship that process. |
-| Learning Center web | React + Vite + TypeScript (`frontend/`). Case list, player, and dashboard, built to `dist/`. | Static files on the VPS. The dev server proxies `/health`, `/cases`, and `/sessions` to port 8000. |
-| Behavioral sandbox | Streamlit (`demo/neo4j/app.py`) with pandas, networkx, and pyvis. | Runs the bundled CSV. Python package `neo4j` is installed with the app. A database is only required for Bloom. |
+| Learning Center API | FastAPI (`backend/`). Health, cases, sessions, decisions, twin, events, evidence card. | Session store is SQLite through Python stdlib `sqlite3` in `backend/app/sessions.py`. Default file `data/local/sessions.sqlite`. Override with `TWINAML_SESSIONS_DB`. Not PostgreSQL, Redis, or MySQL. |
+| Learning Center web | React 19 + Vite + TypeScript (`frontend/`). Case list, player, and dashboard, built to `dist/`. | Static files on the rented Linux VPS. The dev server proxies `/health`, `/cases`, and `/sessions` to port 8000. `package.json` has no `three` dependency. |
+| 3D Simulation Center | Three.js on the live VPS. React component `SceneViewport`. | Not in this tree. Three scenes on `/simulations`. See [Linux VPS Platform (Learning Center)](#linux-vps-platform-learning-center). |
+| Behavioral Sandbox | Streamlit (`demo/neo4j/app.py`) with pandas, networkx, and pyvis. | Runs the bundled CSV. Python package `neo4j` is installed with the app. A database is only required for Bloom. |
 | Graph view | Neo4j 5 on the presenter's machine, Bloom for the picture. | Load scripts: `demo/neo4j/cypher/load_twin.cypher`, `stories.cypher`, and `bloom_perspective.md`. |
-| Legacy scaffold | Hono on a Cloudflare Worker (`workers/api`). `GET /health` only. Wrangler files may remain. | Not the demo path. See [`docs/cloudflare.md`](docs/cloudflare.md). |
+| Legacy scaffold | `workers/` remains in the tree. | Not the demo path. |
 | Cases | Every `data/cases/*.example.json` script named by `index.json`. | Stay on `packages/schemas/script.schema.json`. A rule's `when` text stays human-readable. The machine applies patches and does not parse `when`. |
 | Alert dossiers | `data/cases/alert-triage-shift-001.alerts.json`. | Checked against `packages/schemas/alerts.schema.json`. The web API does not serve that file. |
 | Media | `data/media/.gitkeep` only. Large video is gitignored. | Scripts may set `media_ref` to a local path. Binaries stay out of git. |
@@ -120,7 +162,7 @@ Classroom demo. One Learning Center API, one web client, and the behavioral sand
 | Docs | `docs/architecture.md`, `docs/effects.md`, `docs/comp3424-mapping.md`, `docs/deploy-vps.md`, `docs/audit-evidence.md`, [`docs/phases/`](docs/phases/README.md). | Slice checklists live in the phase docs. |
 | Deploy | Linux VPS. nginx or Caddy, HTTPS, static `frontend/dist`, API on localhost. | Learning Center steps: [`docs/deploy-vps.md`](docs/deploy-vps.md). Streamlit is a separate long-running Python process. |
 
-Out of scope unless the owner asks in that session: Docker, Kubernetes, Kafka, FlexSim, a microservice split, and a live bank connection. Neo4j belongs to the behavioral sandbox. Cloudflare Pages and Workers are not the demo deploy, and they cannot host the Streamlit app.
+Out of scope unless the owner asks in that session: Docker, Kubernetes, Kafka, FlexSim, a microservice split, PostgreSQL, Redis, MySQL, and a live bank connection. Neo4j belongs to the Behavioral Sandbox. `workers/` remains a legacy scaffold and is not the demo path.
 
 ## Repo Layout
 
@@ -149,7 +191,7 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Kafka, F
 │       ├── PHASE2.md            # DT Level 2 slices
 │       └── PHASE3.md            # vision only; not the course demo
 ├── demo/
-│   └── neo4j/                   # behavioral sandbox (first-class classroom piece)
+│   └── neo4j/                   # Behavioral Sandbox (first-class classroom piece)
 │       ├── README.md            # presenter script for the bundled week
 │       ├── app.py               # Streamlit UI
 │       ├── requirements.txt
@@ -174,12 +216,12 @@ Out of scope unless the owner asks in that session: Docker, Kubernetes, Kafka, F
 │       ├── src/index.ts         # GET /health
 │       ├── tsconfig.json
 │       └── wrangler.jsonc
-├── frontend/                    # Learning Center web (static files on the VPS)
+├── frontend/                    # Learning Center web in this tree
 │   ├── README.md
 │   ├── index.html
-│   ├── package.json
+│   ├── package.json             # React and Vite only; no three package
 │   ├── public/_redirects        # SPA fallback for a static host that reads it
-│   ├── src/                     # case list, player, dashboard
+│   ├── src/                     # case list, player, dashboard. No SceneViewport here.
 │   ├── tsconfig.json
 │   ├── vite.config.ts
 │   └── wrangler.jsonc           # legacy scaffold file
@@ -316,15 +358,15 @@ Classmates open `http://<that-machine>:8501`. The local default remains `127.0.0
 
 ### Learning Center on a public URL
 
-The public web shell is a Linux VPS. nginx or Caddy serves the Vite build and reverse-proxies `/health`, `/cases`, and `/sessions` to uvicorn on `127.0.0.1:8000`. HTTPS terminates at the proxy. Node 22 matches CI.
+The classroom site is a rented Linux VPS. The development Learning Center is [https://dev-amltwin.spectrumvps.tech/](https://dev-amltwin.spectrumvps.tech/). nginx or Caddy serves the Vite build and reverse-proxies this tree's API paths (`/health`, `/cases`, and `/sessions`) to uvicorn on `127.0.0.1:8000`. HTTPS terminates at the proxy. Node 22 matches CI.
 
-The steps, including the build, the bind address, and example proxy blocks, are in [`docs/deploy-vps.md`](docs/deploy-vps.md). The name `training.example.com` in that page is a placeholder for a DNS name you choose on the server. This repo does not publish a live hostname.
+The current VPS deploy also serves the `/api/` routes named under [Linux VPS Platform (Learning Center)](#linux-vps-platform-learning-center). Those extra routes are not in `backend/app/` on this branch.
 
-[`docs/cloudflare.md`](docs/cloudflare.md) records that the Worker scaffold is not this path.
+The steps for this tree, including the build, the bind address, and example proxy blocks, are in [`docs/deploy-vps.md`](docs/deploy-vps.md). The name `training.example.com` in that page is a placeholder for a DNS name you choose on the server. This repo publishes the development Learning Center URL above. It does not publish a Streamlit URL.
 
 ### Streamlit on a public URL
 
-A public Streamlit page needs a long-running Python process and a reverse proxy to `127.0.0.1:8501`, or a tunnel that forwards to that same port. Cloudflare Pages and Workers cannot host this app. They do not run the long-lived Python process Streamlit needs.
+Streamlit needs a long-running Python process. A reverse proxy can forward to `127.0.0.1:8501`, or a tunnel can forward to that same port. This repo does not publish a public Streamlit URL. Streamlit may run on the VPS or on the presenter's laptop.
 
 On the VPS, from `demo/neo4j/` with the venv active, bind localhost and leave the process running under the supervisor that machine already uses. This repo does not ship a systemd unit or a proxy file for port 8501.
 
@@ -360,7 +402,7 @@ DT Levels follow the course. Level 1 is the scripted mirror. Level 2 is a twin t
 
 | Doc | DT Level | Where it is now |
 | --- | --- | --- |
-| [Phase 1](docs/phases/PHASE1.md) | Level 1 (scripted mirror) | Done. The 11 synthetic cases run on the Learning Center (static web + API). |
+| [Phase 1](docs/phases/PHASE1.md) | Level 1 (scripted mirror) | Done. `data/cases/` holds 13 synthetic scripts, and the player in this tree lists every one. |
 | [Phase 2](docs/phases/PHASE2.md) | Level 2 | Replaced by the sandbox. The amount line stress-tests the rule. Bloom shows the same payments as a graph. |
 | [Phase 3](docs/phases/PHASE3.md) | Level 3 | Replaced by the same sandbox. This demo does not add an ML judge, a live bank connector, or a Unity client. |
 
@@ -402,8 +444,8 @@ Mirroring is the case library played through the API, and the sandbox ledger. `G
 Short rules for classmates and coding agents. The full agreement is [`AGENTS.md`](AGENTS.md).
 
 1. Change one small slice at a time. After it, say what a trainee or reviewer can now see or run.
-2. Keep one web client (`frontend/`) and one VPS API (FastAPI in `backend/`, or later a Node/Hono process with the same routes). The behavioral sandbox in `demo/neo4j/` is the other classroom piece: Streamlit, the CSV ledger, Cypher load scripts, and Bloom notes. `workers/` may stay as a legacy scaffold. Case scripts live in `data/cases/`. Notes live in `docs/`.
-3. Leave Docker, Kubernetes, Kafka, FlexSim, and a service split out unless the owner asks in that session. Neo4j in `demo/neo4j/` is part of the classroom demo. FlexSim stays out of scope. The Unity Editor project lives only on branch `unity` and is outside the current demo path.
+2. Keep one web client (`frontend/`) and one VPS API (FastAPI in `backend/`). The live Learning Center also serves an in-browser Three.js Simulation Center. That client is not in `frontend/src/` on this branch. The Behavioral Sandbox in `demo/neo4j/` is the other classroom piece: Streamlit, the CSV ledger, Cypher load scripts, and Bloom notes. `workers/` may stay as a legacy scaffold. Case scripts live in `data/cases/`. Notes live in `docs/`.
+3. Leave Docker, Kubernetes, Kafka, FlexSim, PostgreSQL, Redis, MySQL, and a service split out unless the owner asks in that session. Neo4j in `demo/neo4j/` is the Behavioral Sandbox. FlexSim stays out of scope. The Unity Editor project lives only on branch `unity` and is outside the current demo path. Do not treat Unity, Unreal, Omniverse, or FlexSim as the current 3D path.
 4. English is the primary language for docs and UI copy. Keep course terms in English: mirroring, shadowing, threading, DT Level 1, DT Level 2, rules-before-AI.
 5. The twin for a Learning Center run is backend state plus events. The web app renders that state. The sandbox ledger is the twin for the detection exercise. It does not write the session store.
 6. Rules decide compliance outcomes. A model may explain only after rules have fired. A human override is an event.

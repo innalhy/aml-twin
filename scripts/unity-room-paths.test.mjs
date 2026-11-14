@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 /**
- * The Unity room plays these choice lists through the frozen schema 0.1 applier.
+ * These choice lists are the ones the Editor project on branch unity walked.
+ * That project is outside the current demo path.
+ * This file still applies the frozen schema 0.1 applier to those lists.
  * From the repo root:
  *   node scripts/unity-room-paths.test.mjs
  *
- * Keep the lists aligned with RoomPaths.cs on branch unity
- * (git fetch && git checkout unity):
+ * Keep the lists aligned with RoomPaths.cs on branch unity.
+ * That branch is outside the current demo path:
  *   unity/TwinAML/Assets/Scripts/Flow/RoomPaths.cs
  */
 import { readFileSync } from "node:fs";
