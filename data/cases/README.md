@@ -16,7 +16,7 @@ These files are synthetic training scenarios. The ten `public_record_inspired` s
 
 ## Index
 
-Titles below are short English labels. Files are numbered `01`–`13`. The JSON `title` and prompts in `01`–`11` are Traditional Chinese. `12-starlight-onboard-001.example.json` is the Topic 3 onboarding script. `13-alert-triage-shift-001.example.json` is English. It is the script for the Unity investigation room (Topic 4).
+Titles below are short English labels. Files are numbered `01`–`13`. The JSON `title` and prompts in `01`–`11` are Traditional Chinese. `12-starlight-onboard-001.example.json` is an onboarding script. `13-alert-triage-shift-001.example.json` is English. An Editor project on branch `unity` used file 12 as Topic 3 and file 13 as Topic 4. That project is outside the current demo path. The live 3D scenes use other case ids.
 
 | File | case_id | Themes | case_kind |
 | --- | --- | --- | --- |
@@ -34,11 +34,11 @@ Titles below are short English labels. Files are numbered `01`–`13`. The JSON 
 | [12-starlight-onboard-001.example.json](12-starlight-onboard-001.example.json) | `starlight-onboard-001` | Company onboarding, hidden beneficial owner, source of funds | `synthetic_course` |
 | [13-alert-triage-shift-001.example.json](13-alert-triage-shift-001.example.json) | `alert-triage-shift-001` | One monitoring shift, six synthetic alerts, four triage paths | `course_example` |
 
-`starlight-onboard-001` is the Editor room's Topic 3. It is a fictional company account-opening lesson, not a public-record case. The company, the people, and jurisdiction code HR-7 are synthetic. The walkable branch teaches that lesson in English.
+`starlight-onboard-001` is a fictional company account-opening lesson, not a public-record case. The company, the people, and jurisdiction code HR-7 are synthetic. The walkable branch teaches that lesson in English. An Editor project on branch `unity` used this file as Topic 3. That project is outside the current demo path.
 
-`alert-triage-shift-001` is the Editor room's Topic 4. Six fictional alerts, one shift, English on screen. Customers, places, and the sanctions sheet are training props. The playable choices stay in [`13-alert-triage-shift-001.example.json`](13-alert-triage-shift-001.example.json). The dossiers, including the room grade (`correct`, `why`, `script_choice`), stay in [`alert-triage-shift-001.alerts.json`](alert-triage-shift-001.alerts.json). The web API does not serve that file. `shift_reviewed` means the six choices were written down. The room grades them. Closing any alert fails the shift. Drafting an STR on the similar-name hit, only because the names match, also fails it.
+`alert-triage-shift-001` is six fictional alerts, one shift, English on screen. Customers, places, and the sanctions sheet are training props. The playable choices stay in [`13-alert-triage-shift-001.example.json`](13-alert-triage-shift-001.example.json). The dossiers, including the grade fields (`correct`, `why`, `script_choice`), stay in [`alert-triage-shift-001.alerts.json`](alert-triage-shift-001.alerts.json). The web API does not serve that file. `shift_reviewed` means the six choices were written down. Closing any alert fails the shift. Drafting an STR on the similar-name hit, only because the names match, also fails it. The Editor project on branch `unity` used this file as Topic 4. That project is outside the current demo path.
 
-`data/cases/index.json` is the library both the API and the Editor room load. `node scripts/validate-cases.mjs` rewrites it after the scripts pass schema 0.1, the 24 KiB script limit, and the alert dossier schema. A script the index does not name is not in the library.
+`data/cases/index.json` is the library this branch's API loads. `node scripts/validate-cases.mjs` rewrites it after the scripts pass schema 0.1, the 24 KiB script limit, and the alert dossier schema. A script the index does not name is not in the library. The live Learning Center `GET /api/cases` is a different list of 13 cases. See the root README.
 
 Each rule has `flags`. Those strings are the mirror flags a `flags_add` in that same file already writes. `when` stays a sentence. The machine records `rule_flagged` when one of those flags is added. It does not parse `when`.
 

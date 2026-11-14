@@ -4,7 +4,7 @@ These documents are **plans for coding agents**. They define scope, slices, acce
 
 | Doc | DT Level | Goal |
 | --- | --- | --- |
-| [PHASE1.md](./PHASE1.md) | Level 1 (scripted mirror) | All 11 synthetic cases end-to-end on a Linux VPS (static web + API) |
+| [PHASE1.md](./PHASE1.md) | Level 1 (scripted mirror) | 13 synthetic scripts in `data/cases/` on a rented Linux VPS (static web + API). The Phase 1 set was the first 11. |
 | [PHASE2.md](./PHASE2.md) | Level 2 | Replaced for this demo by the Streamlit / Neo4j sandbox |
 | [PHASE3.md](./PHASE3.md) | Level 3 | Replaced for this demo by the same sandbox |
 

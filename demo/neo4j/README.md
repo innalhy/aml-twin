@@ -4,7 +4,7 @@ One-week COMP3424 demo. The digital twin in this folder is a **controlled simula
 
 The week of 2–6 March 2026 is fictional. Every customer, account, and amount was written for the classroom. The amount line is a dial in this app. It is not a statutory reporting threshold, and this page does not file a suspicious transaction report. The playable scripts under [`data/cases/`](../../data/cases/README.md) are where a trainee chooses a disposition.
 
-Streamlit and the bundled CSV are enough. Neo4j Bloom is an optional second view of the same ledger. The Unity room is a separate face and is not used this week.
+Streamlit and the bundled CSV are enough. Neo4j Bloom is an optional second view of the same ledger, on the presenter's machine. The Unity Editor project is only on branch `unity` and is outside this sandbox and outside the current demo path. The in-browser 3D Simulation Center belongs to the Learning Center, not to this folder.
 
 ## Run it
 
