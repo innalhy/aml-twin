@@ -173,6 +173,18 @@ class EffectsTest(unittest.TestCase):
         source.append("inbound")
         self.assertEqual(twin["account"]["holds"], ["outbound"])
 
+    def test_fractional_score_delta_applies_and_a_non_object_parent_is_refused(self) -> None:
+        twin = {"risk": {"score": 1, "flags": []}}
+        self.assertEqual(apply_patch(twin, {"risk.score_delta": 0.5, "risk.flags_add": []}), [])
+        self.assertEqual(twin["risk"]["score"], 1.5)
+        self.assertEqual(twin["risk"]["flags"], [])
+
+        blocked = {"risk": ["not-an-object"]}
+        before = json.dumps(blocked)
+        with self.assertRaisesRegex(ScriptError, "needs an existing number"):
+            apply_patch(blocked, {"risk.score_delta": 1})
+        self.assertEqual(json.dumps(blocked), before)
+
 
 class DeepfakeTest(unittest.TestCase):
     def test_eight_endings(self) -> None:
@@ -290,6 +302,37 @@ class MachineEdgeTest(unittest.TestCase):
         dangling = _script("n1", [{"id": "n1", "type": "scene", "next": "n_missing"}])
         with self.assertRaisesRegex(ScriptError, "scene next n_missing is missing"):
             start_session(dangling)
+
+    def test_incomplete_disposition_is_not_rule_follow(self) -> None:
+        script = _script(
+            "n_out",
+            [
+                {
+                    "id": "n_out",
+                    "type": "outcome",
+                    "twin_patch": {"disposition": "str_drafted"},
+                }
+            ],
+            teaching={
+                "acceptable_dispositions": ["freeze_recommended"],
+                "poor_dispositions": ["missed"],
+                "incomplete_dispositions": ["str_drafted", "missed"],
+            },
+        )
+        state = start_session(script)
+        self.assertEqual(state["status"], "closed")
+        mark = state["events"][-1]
+        self.assertEqual(mark["type"], "session_closed")
+        self.assertEqual(mark["payload"]["bucket"], "incomplete")
+        self.assertTrue(mark["payload"]["incomplete"])
+        self.assertFalse(mark["payload"]["poor_path"])
+        self.assertFalse(mark["payload"]["rule_follow"])
+
+        overlap = teaching_mark(script, "missed")
+        self.assertEqual(overlap["bucket"], "poor")
+        self.assertTrue(overlap["poor_path"])
+        self.assertTrue(overlap["incomplete"])
+        self.assertFalse(overlap["rule_follow"])
 
 
 def _script(start: str, nodes: list[dict], teaching: dict | None = None) -> dict:

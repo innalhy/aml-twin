@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 import pandas as pd
 
-from twinaml_sandbox.constants import MAX_ACCOUNTS, SANDBOX_TAG
+from twinaml_sandbox.constants import MAX_ACCOUNTS, MAX_TRANSACTIONS, SANDBOX_TAG
 from twinaml_sandbox.graph_story import graph_cases
 from twinaml_sandbox.ledger import (
     ACCOUNT_COLUMNS,
@@ -173,6 +173,33 @@ class LedgerValidationTest(unittest.TestCase):
                 ),
                 f"up to {MAX_ACCOUNTS} accounts",
             ),
+            (
+                lambda: _bundle(pair, [_payment("T1", "A", "B"), _payment("T1", "B", "A")]),
+                "Duplicate txn_id",
+            ),
+            (
+                lambda: _bundle(pair, [_payment("T1", "A", "GHOST")]),
+                "Missing: GHOST",
+            ),
+            (
+                lambda: _bundle(pair, [_payment("T1", "A", "B", booked_at="")]),
+                "blank or unreadable",
+            ),
+            (
+                lambda: _bundle(
+                    [_account("MIX", kind="wallet"), _account("B")],
+                    [_payment("T1", "B", "MIX")],
+                    wallets=pd.DataFrame([_wallet("NOPE")], columns=WALLET_COLUMNS),
+                ),
+                "Watchlist account_id values must exist",
+            ),
+            (
+                lambda: _bundle(
+                    pair,
+                    [_payment(f"T{index}", "A", "B") for index in range(MAX_TRANSACTIONS + 1)],
+                ),
+                f"up to {MAX_TRANSACTIONS} payments",
+            ),
         ]
         for call, message in checks:
             with self.subTest(message=message):
@@ -298,6 +325,70 @@ class DetectorBoundaryTest(unittest.TestCase):
                 self.assertEqual(len(cases), 1)
                 self.assertEqual(cases[0].txn_ids, ("T-OUT",))
                 self.assertNotIn("SRC", cases[0].account_ids)
+
+    def test_cycle_stops_at_four_accounts(self) -> None:
+        four = graph_cases(self._ring("ABCD"))
+        self.assertEqual(len(four), 1)
+        self.assertEqual(four[0].typology, "circular_flow")
+        self.assertEqual(four[0].txn_ids, ("T1", "T2", "T3", "T4"))
+        self.assertEqual(four[0].amount_hkd, 20000)
+        self.assertEqual(graph_cases(self._ring("ABCDE")), ())
+
+    def test_smurf_keeps_the_larger_window_and_ignores_a_repeated_payer(self) -> None:
+        accounts = [_account(f"P{index}") for index in range(1, 11)]
+        accounts.append(_account("HUB"))
+        payments = [
+            _payment(f"S{index}", f"P{index}", "HUB", 6000, f"2026-03-03T10:0{index - 1}:00")
+            for index in range(1, 6)
+        ]
+        payments.extend(
+            _payment(f"B{index}", f"P{index + 5}", "HUB", 8000, f"2026-03-07T10:0{index - 1}:00")
+            for index in range(1, 6)
+        )
+        kept = graph_cases(_bundle(accounts, payments, source_name="two-windows"))
+        self.assertEqual(len(kept), 1)
+        self.assertEqual(kept[0].txn_ids, ("B1", "B2", "B3", "B4", "B5"))
+        self.assertEqual(kept[0].amount_hkd, 40000)
+
+        repeat_accounts = [_account(f"P{index}") for index in range(1, 5)]
+        repeat_accounts.append(_account("HUB"))
+        repeat_payments = [
+            _payment(f"R{index}", f"P{index}", "HUB", 6000, f"2026-03-03T10:0{index}:00")
+            for index in range(1, 5)
+        ]
+        repeat_payments.append(_payment("R5", "P1", "HUB", 6000, "2026-03-03T10:05:00"))
+        self.assertEqual(graph_cases(_bundle(repeat_accounts, repeat_payments, source_name="repeat")), ())
+
+    def test_mule_path_stops_at_four_hops(self) -> None:
+        names = ("A", "B", "C", "D", "E", "MIX")
+        accounts = [_account(name) for name in names[:-1]]
+        accounts.append(_account("MIX", kind="wallet", segment="wallet"))
+        payments = [
+            _payment(f"H{index}", names[index], names[index + 1], 20000, f"2026-03-03T1{index}:00:00")
+            for index in range(len(names) - 1)
+        ]
+        wallets = pd.DataFrame([_wallet("MIX")], columns=WALLET_COLUMNS)
+        cases = graph_cases(_bundle(accounts, payments, wallets=wallets, source_name="five-hops"))
+        self.assertEqual(len(cases), 1)
+        self.assertEqual(cases[0].account_ids, ("B", "C", "D", "E", "MIX"))
+        self.assertEqual(cases[0].txn_ids, ("H1", "H2", "H3", "H4"))
+        self.assertEqual(cases[0].amount_hkd, 80000)
+        self.assertNotIn("A", cases[0].account_ids)
+        self.assertNotIn("H0", cases[0].txn_ids)
+
+    def _ring(self, names: str):
+        accounts = [_account(name) for name in names]
+        payments = [
+            _payment(
+                f"T{index + 1}",
+                names[index],
+                names[(index + 1) % len(names)],
+                5000,
+                f"2026-03-03T1{index}:00:00",
+            )
+            for index in range(len(names))
+        ]
+        return _bundle(accounts, payments, source_name=f"ring-{names}")
 
     def _smurf(
         self,
