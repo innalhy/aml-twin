@@ -12,7 +12,7 @@ from unittest.mock import patch
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.sessions import _media, reset_sessions, store_path, use_store
+from app.sessions import _media, open_session, reset_sessions, store_path, use_store
 
 
 class ApiTest(unittest.TestCase):
@@ -33,6 +33,19 @@ class ApiTest(unittest.TestCase):
                 (updated_at, session_id),
             )
             conn.commit()
+        finally:
+            conn.close()
+
+    def _stored(self, session_id: str):
+        conn = sqlite3.connect(store_path())
+        try:
+            return conn.execute(
+                """
+                SELECT case_id, status, created_at, updated_at, body
+                FROM sessions WHERE session_id = ?
+                """,
+                (session_id,),
+            ).fetchone()
         finally:
             conn.close()
 
@@ -113,6 +126,58 @@ class ApiTest(unittest.TestCase):
             json={"choice_id": "not-a-choice"},
         )
         self.assertEqual(bad.status_code, 400)
+
+    def test_rejected_choice_does_not_rewrite_the_row(self) -> None:
+        opened = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        before = self._stored(opened["session_id"])
+        bad = self.client.post(
+            f"/sessions/{opened['session_id']}/decisions",
+            json={"choice_id": "not-a-choice"},
+        )
+        self.assertEqual(bad.status_code, 400)
+        self.assertEqual(self._stored(opened["session_id"]), before)
+
+    def test_session_id_collision_retries_then_stops(self) -> None:
+        taken = "a" * 12
+        conn = sqlite3.connect(store_path())
+        try:
+            conn.execute(
+                """
+                INSERT INTO sessions (session_id, case_id, status, created_at, updated_at, body)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    taken,
+                    "deepfake-hk-001",
+                    "open",
+                    "2026-01-01T00:00:00Z",
+                    "2026-01-01T00:00:00Z",
+                    "{}",
+                ),
+            )
+            conn.commit()
+        finally:
+            conn.close()
+
+        class _Hex:
+            def __init__(self, value: str) -> None:
+                self.hex = value
+
+        with patch("app.sessions.uuid.uuid4", side_effect=[_Hex("a" * 32), _Hex("b" * 32)]):
+            view = open_session("deepfake-hk-001")
+        self.assertEqual(view["session_id"], "b" * 12)
+        self.assertEqual(self._stored(taken)[4], "{}")
+
+        with patch("app.sessions.uuid.uuid4", side_effect=[_Hex("a" * 32)] * 5):
+            with self.assertRaisesRegex(RuntimeError, "could not allocate a session id"):
+                open_session("deepfake-hk-001")
+        conn = sqlite3.connect(store_path())
+        try:
+            count = int(conn.execute("SELECT COUNT(*) FROM sessions").fetchone()[0])
+        finally:
+            conn.close()
+        self.assertEqual(count, 2)
+        self.assertIsNotNone(self._stored("b" * 12))
 
     def test_second_branch_stays_on_the_server(self) -> None:
         opened = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
