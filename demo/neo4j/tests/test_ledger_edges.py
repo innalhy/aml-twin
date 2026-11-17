@@ -17,7 +17,14 @@ from twinaml_sandbox.ledger import (
     WALLET_COLUMNS,
 )
 from twinaml_sandbox.load import LedgerError, assemble, empty_relationships, empty_wallets
-from twinaml_sandbox.neo4j_link import Neo4jConfigError, assert_write_confirmed, settings_from_env
+from twinaml_sandbox.neo4j_link import (
+    Neo4jConfigError,
+    Neo4jSettings,
+    assert_write_confirmed,
+    build_write_plan,
+    settings_from_env,
+    write_bundle,
+)
 from twinaml_sandbox.rules import amount_alerts
 
 _ENV_KEYS = (
@@ -231,6 +238,29 @@ class DetectorBoundaryTest(unittest.TestCase):
         )
         self.assertEqual(graph_cases(self._smurf(5, 8000, times=spread)), ())
 
+    def test_smurf_keeps_an_exact_window_and_refuses_a_wallet_hub(self) -> None:
+        exact = (
+            "2026-03-03T10:00:00",
+            "2026-03-04T10:00:00",
+            "2026-03-05T10:00:00",
+            "2026-03-06T09:00:00",
+            "2026-03-06T10:00:00",
+        )
+        kept = graph_cases(self._smurf(5, 6000, times=exact))
+        self.assertEqual(len(kept), 1)
+        self.assertEqual(kept[0].amount_hkd, 30000)
+        self.assertEqual(kept[0].txn_ids, ("T1", "T2", "T3", "T4", "T5"))
+
+        one_second_over = exact[:-1] + ("2026-03-06T10:00:01",)
+        self.assertEqual(graph_cases(self._smurf(5, 6000, times=one_second_over)), ())
+
+        floor = graph_cases(self._smurf(6, 5000))
+        self.assertEqual(len(floor), 1)
+        self.assertEqual(floor[0].amount_hkd, 30000)
+        self.assertEqual(floor[0].txn_ids, ("T1", "T2", "T3", "T4", "T5", "T6"))
+
+        self.assertEqual(graph_cases(self._smurf(5, 6000, hub_kind="wallet")), ())
+
     def test_cycle_cutoffs(self) -> None:
         closed = graph_cases(
             self._cycle(
@@ -305,11 +335,12 @@ class DetectorBoundaryTest(unittest.TestCase):
         amount: int,
         times: tuple[str, ...] | None = None,
         hub_segment: str = "retail",
+        hub_kind: str = "bank_account",
     ):
         if times is None:
             times = tuple(f"2026-03-03T10:{index:02d}:00" for index in range(payers))
         accounts = [_account(f"P{index}") for index in range(1, payers + 1)]
-        accounts.append(_account("HUB", segment=hub_segment))
+        accounts.append(_account("HUB", segment=hub_segment, kind=hub_kind))
         payments = [
             _payment(f"T{index}", f"P{index}", "HUB", amount, times[index - 1])
             for index in range(1, payers + 1)
@@ -395,6 +426,104 @@ class Neo4jGuardTest(unittest.TestCase):
         os.environ["NEO4J_SANDBOX_CONFIRM"] = "  " + SANDBOX_TAG + "  "
         assert_write_confirmed()
         self.driver.assert_not_called()
+
+    def test_blank_database_name_stays_on_the_default(self) -> None:
+        os.environ["NEO4J_URI"] = "bolt://127.0.0.1:7687"
+        os.environ["NEO4J_USERNAME"] = "reader"
+        os.environ["NEO4J_PASSWORD"] = "secret"
+        os.environ["NEO4J_DATABASE"] = "   "
+        settings = settings_from_env()
+        self.assertIsNotNone(settings)
+        assert settings is not None
+        self.assertEqual(settings.database, "neo4j")
+        self.driver.assert_not_called()
+
+    def test_write_checks_the_confirm_string_before_it_connects(self) -> None:
+        bundle = _bundle([_account("A"), _account("B")], [_payment("T1", "A", "B")])
+        settings = Neo4jSettings("bolt://127.0.0.1:7687", "reader", "secret", "neo4j")
+        with self.assertRaisesRegex(Neo4jConfigError, "Refusing to write"):
+            write_bundle(settings, bundle)
+        self.driver.assert_not_called()
+
+        os.environ["NEO4J_SANDBOX_CONFIRM"] = SANDBOX_TAG
+        session = self.driver.return_value.__enter__.return_value.session.return_value.__enter__.return_value
+        session.run.return_value.single.return_value = {"nodes": 2, "relationships": 1}
+        summary = write_bundle(settings, bundle)
+        self.assertEqual(summary, {"nodes": 2, "relationships": 1})
+        self.driver.assert_called_once_with(
+            settings.uri,
+            auth=(settings.username, settings.password),
+            connection_timeout=8,
+        )
+        self.driver.return_value.__enter__.return_value.verify_connectivity.assert_called_once_with()
+        self.driver.return_value.__enter__.return_value.session.assert_called_once_with(database="neo4j")
+        self.assertGreaterEqual(session.run.call_count, 2)
+        for call in session.run.call_args_list:
+            self.assertEqual(call.args[1]["sandbox"], SANDBOX_TAG)
+
+
+class WritePlanScopeTest(unittest.TestCase):
+    def test_controls_and_devices_are_written_and_knows_is_not(self) -> None:
+        accounts = [
+            _account("A"),
+            _account("B"),
+            _account("DEV", kind="device", segment="device"),
+            _account("BOSS", kind="person", segment="person"),
+        ]
+        mixed = pd.DataFrame(
+            [
+                {"from_id": "BOSS", "to_id": "A", "rel_type": "CONTROLS", "note": "runs"},
+                {"from_id": "A", "to_id": "DEV", "rel_type": "USES_DEVICE", "note": "handset"},
+                {"from_id": "A", "to_id": "B", "rel_type": "KNOWS", "note": "social"},
+            ],
+            columns=RELATIONSHIP_COLUMNS,
+        )
+        plan = build_write_plan(
+            _bundle(accounts, [_payment("T1", "A", "B")], relationships=mixed)
+        )
+        self.assertIn("DETACH DELETE", plan[0][0])
+        self.assertEqual(plan[0][1]["sandbox"], SANDBOX_TAG)
+        controls = [
+            params["rows"]
+            for query, params in plan
+            if "[:CONTROLS" in query and "rows" in params
+        ]
+        devices = [
+            params["rows"]
+            for query, params in plan
+            if "[:USES_DEVICE" in query and "rows" in params
+        ]
+        self.assertEqual(controls, [[{"from_id": "BOSS", "to_id": "A", "note": "runs"}]])
+        self.assertEqual(devices, [[{"from_id": "A", "to_id": "DEV", "note": "handset"}]])
+        payments = next(params["rows"] for query, params in plan if "[:SENT" in query)
+        self.assertEqual(
+            set(payments[0]),
+            {
+                "from_account",
+                "to_account",
+                "txn_id",
+                "amount_hkd",
+                "booked_at",
+                "channel",
+                "memo",
+            },
+        )
+        for _query, params in plan:
+            self.assertEqual(params["sandbox"], SANDBOX_TAG)
+            self.assertNotIn("social", str(params.get("rows", "")))
+            self.assertNotIn("KNOWS", str(params.get("rows", "")))
+
+        knows_only = pd.DataFrame(
+            [{"from_id": "A", "to_id": "B", "rel_type": "KNOWS", "note": "social"}],
+            columns=RELATIONSHIP_COLUMNS,
+        )
+        quiet = build_write_plan(
+            _bundle([_account("A"), _account("B")], [_payment("T1", "A", "B")], relationships=knows_only)
+        )
+        joined = "\n".join(query for query, _params in quiet)
+        self.assertNotIn("[:CONTROLS", joined)
+        self.assertNotIn("[:USES_DEVICE", joined)
+        self.assertNotIn("KNOWS", joined)
 
 
 if __name__ == "__main__":
