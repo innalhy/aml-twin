@@ -10,7 +10,7 @@ The classroom demo has two parts. They do not share a store.
 
 - The **Learning Center** is the web training shell on a rented Linux VPS. The development site is [https://dev-amltwin.spectrumvps.tech/](https://dev-amltwin.spectrumvps.tech/) (page `/simulations`). The HTML sets `twinaml-environment` to `development`, `twinaml-release` to `20261109T064146Z`, and `robots` to noindex. FastAPI loads a case script, opens a session, applies a choice, and stores the twin and the events. The web client is a React 19 + Vite single-page app, built to static files. On that site the same client includes an in-browser 3D Simulation Center. This branch’s `frontend/` is the case list, the scenario player, and the dashboard. It does not contain that 3D client. The page title in this tree’s app is TwinAML. This README uses “Learning Center” for that shell.
 
-- The **Behavioral Sandbox** in [`demo/neo4j/`](demo/neo4j/README.md) is the other classroom piece. It loads a synthetic ledger, moves an amount line, and draws the same payments as a network. Neo4j Bloom is the graph view of that ledger on the presenter’s machine.
+- The **Behavioral Sandbox** in [`demo/neo4j/`](demo/neo4j/README.md) is the other classroom piece. It loads a synthetic ledger, moves an amount line, and draws the same payments as a network. Neo4j Bloom is the graph view of that ledger on the presenter’s machine. The development site is [https://amlsim.spectrumvps.tech](https://amlsim.spectrumvps.tech)
 
 Release `20261109T064146Z` on the VPS is ahead of this `main` tree. The gap is under [Linux VPS Platform (Learning Center)](#linux-vps-platform-learning-center).
 
