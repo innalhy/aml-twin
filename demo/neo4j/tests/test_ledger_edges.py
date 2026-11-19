@@ -12,6 +12,7 @@ import pandas as pd
 
 from twinaml_sandbox.constants import MAX_ACCOUNTS, MAX_TRANSACTIONS, SANDBOX_TAG
 from twinaml_sandbox.graph_story import graph_cases
+from twinaml_sandbox.viz import _story_index
 from twinaml_sandbox.ledger import (
     ACCOUNT_COLUMNS,
     RELATIONSHIP_COLUMNS,
@@ -30,6 +31,8 @@ from twinaml_sandbox.neo4j_link import (
     Neo4jSettings,
     assert_write_confirmed,
     build_write_plan,
+    ping,
+    read_typology_counts,
     settings_from_env,
     write_bundle,
 )
@@ -443,6 +446,48 @@ class DetectorBoundaryTest(unittest.TestCase):
 
         self.assertEqual(graph_cases(self._smurf(5, 6000, hub_kind="wallet")), ())
 
+    def test_offset_timestamps_keep_the_exact_smurf_window(self) -> None:
+        exact = (
+            "2026-03-03T10:00:00Z",
+            "2026-03-04T10:00:00Z",
+            "2026-03-05T10:00:00Z",
+            "2026-03-06T09:00:00Z",
+            "2026-03-06T10:00:00Z",
+        )
+        kept = graph_cases(self._smurf(5, 6000, times=exact))
+        self.assertEqual(len(kept), 1)
+        self.assertEqual(kept[0].txn_ids, ("T1", "T2", "T3", "T4", "T5"))
+        self.assertEqual(kept[0].amount_hkd, 30000)
+
+        one_second_over = exact[:-1] + ("2026-03-06T10:00:01Z",)
+        self.assertEqual(graph_cases(self._smurf(5, 6000, times=one_second_over)), ())
+
+    def test_mule_search_stops_after_the_path_cap(self) -> None:
+        layer_b = [f"B{index}" for index in range(8)]
+        layer_c = [f"C{index}" for index in range(8)]
+        layer_d = [f"D{index}" for index in range(8)]
+        accounts = [_account(name) for name in ("A", *layer_b, *layer_c, *layer_d)]
+        accounts.append(_account("MIX", kind="wallet", segment="wallet"))
+        payments: list[dict[str, object]] = []
+
+        def add(source: str, target: str) -> None:
+            payments.append(_payment(f"T{len(payments) + 1}", source, target, 1000))
+
+        for name in layer_b:
+            add("A", name)
+        for source in layer_b:
+            for target in layer_c:
+                add(source, target)
+        for source in layer_c:
+            for target in layer_d:
+                add(source, target)
+        for name in layer_d:
+            add(name, "MIX")
+        wallets = pd.DataFrame([_wallet("MIX")], columns=WALLET_COLUMNS)
+        bundle = _bundle(accounts, payments, wallets=wallets, source_name="path-cap")
+        with self.assertRaisesRegex(LedgerError, "stopped after 500 paths"):
+            graph_cases(bundle)
+
     def test_cycle_cutoffs(self) -> None:
         closed = graph_cases(
             self._cycle(
@@ -788,6 +833,63 @@ class ReportColumnTest(unittest.TestCase):
         self.assertEqual(by_id.loc["T-BIG", "after_rule"], "Yes")
         self.assertEqual(by_id.loc["T1", "graph_story"], "smurfing")
 
+    def test_shared_payment_keeps_the_stronger_story(self) -> None:
+        smurf_accounts = [_account(f"P{index}") for index in range(1, 6)]
+        smurf_accounts.extend((_account("HUB"), _account("C")))
+        smurf_payments = [
+            _payment(f"S{index}", f"P{index}", "HUB", 6000, f"2026-03-03T10:0{index}:00")
+            for index in range(1, 6)
+        ]
+        smurf_payments.extend(
+            [
+                _payment("C1", "HUB", "C", 6000, "2026-03-03T11:00:00"),
+                _payment("C2", "C", "P1", 6000, "2026-03-03T12:00:00"),
+            ]
+        )
+        smurf_bundle = _bundle(smurf_accounts, smurf_payments, source_name="smurf-and-cycle")
+        smurf_cases = graph_cases(smurf_bundle)
+        by_type = {case.typology: case for case in smurf_cases}
+        self.assertEqual(set(by_type), {"smurfing", "circular_flow"})
+        self.assertIn("S1", by_type["smurfing"].txn_ids)
+        self.assertIn("S1", by_type["circular_flow"].txn_ids)
+        smurf_story = run_report(smurf_bundle, 10_000).comparison.set_index("txn_id")["graph_story"]
+        self.assertEqual(smurf_story["S1"], "circular_flow")
+        self.assertEqual(smurf_story["S2"], "smurfing")
+        smurf_rank = _story_index(smurf_cases)
+        self.assertEqual(smurf_rank["P1"], "circular_flow")
+        self.assertEqual(smurf_rank["HUB"], "circular_flow")
+        self.assertEqual(smurf_rank["P2"], "smurfing")
+
+        mule_accounts = [
+            _account("A"),
+            _account("B"),
+            _account("C"),
+            _account("MIX", kind="wallet", segment="wallet"),
+        ]
+        mule_payments = [
+            _payment("T-AB", "A", "B", 20000, "2026-03-03T10:00:00"),
+            _payment("T-BC", "B", "C", 20000, "2026-03-03T11:00:00"),
+            _payment("T-CA", "C", "A", 20000, "2026-03-03T12:00:00"),
+            _payment("T-CM", "C", "MIX", 16000, "2026-03-03T13:00:00"),
+        ]
+        mule_bundle = _bundle(
+            mule_accounts,
+            mule_payments,
+            wallets=pd.DataFrame([_wallet("MIX")], columns=WALLET_COLUMNS),
+            source_name="cycle-and-mule",
+        )
+        mule_cases = graph_cases(mule_bundle)
+        mule_by_type = {case.typology: case for case in mule_cases}
+        self.assertIn("T-BC", mule_by_type["circular_flow"].txn_ids)
+        self.assertIn("T-BC", mule_by_type["mule_to_mixer"].txn_ids)
+        self.assertNotIn("T-CA", mule_by_type["mule_to_mixer"].txn_ids)
+        mule_story = run_report(mule_bundle, 10_000).comparison.set_index("txn_id")["graph_story"]
+        self.assertEqual(mule_story["T-BC"], "mule_to_mixer")
+        self.assertEqual(mule_story["T-AB"], "mule_to_mixer")
+        self.assertEqual(mule_story["T-CA"], "circular_flow")
+        self.assertEqual(_story_index(mule_cases)["C"], "mule_to_mixer")
+        self.assertEqual(_story_index(mule_cases)["A"], "mule_to_mixer")
+
 
 class Neo4jGuardTest(unittest.TestCase):
     def setUp(self) -> None:
@@ -870,6 +972,37 @@ class Neo4jGuardTest(unittest.TestCase):
         self.assertGreaterEqual(session.run.call_count, 2)
         for call in session.run.call_args_list:
             self.assertEqual(call.args[1]["sandbox"], SANDBOX_TAG)
+
+    def test_ping_refuses_a_missing_row_and_counts_treat_it_as_zero(self) -> None:
+        settings = Neo4jSettings("bolt://127.0.0.1:7687", "reader", "secret", "neo4j")
+        session = self.driver.return_value.__enter__.return_value.session.return_value.__enter__.return_value
+        session.run.return_value.single.return_value = None
+        with self.assertRaisesRegex(Neo4jConfigError, "did not return 1"):
+            ping(settings)
+        self.driver.return_value.__enter__.return_value.verify_connectivity.assert_called()
+        self.driver.assert_called_once_with(
+            settings.uri,
+            auth=(settings.username, settings.password),
+            connection_timeout=8,
+        )
+
+        class _Row:
+            def __init__(self, value: int) -> None:
+                self._value = value
+
+            def __getitem__(self, key: object) -> int:
+                if key in (0, "ok"):
+                    return self._value
+                raise KeyError(key)
+
+        session.run.return_value.single.return_value = _Row(1)
+        self.assertEqual(ping(settings), "Connected to neo4j.")
+
+        session.run.return_value.single.side_effect = [None, _Row(3), _Row(1)]
+        self.assertEqual(
+            read_typology_counts(settings),
+            {"smurf_hubs": 0, "cycle_paths": 3, "mixer_paths": 1},
+        )
 
 
 class WritePlanScopeTest(unittest.TestCase):

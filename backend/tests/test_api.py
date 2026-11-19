@@ -18,6 +18,7 @@ from app.sessions import (
     _media,
     _path_from_env,
     decide,
+    fetch,
     fetch_state,
     open_session,
     reset_sessions,
@@ -148,7 +149,7 @@ class ApiTest(unittest.TestCase):
         self.assertEqual(bad.status_code, 400)
         self.assertEqual(self._stored(opened["session_id"]), before)
 
-    def test_session_id_collision_retries_then_stops(self) -> None:
+    def test_session_id_collision_leaves_the_taken_row_untouched(self) -> None:
         taken = "a" * 12
         conn = sqlite3.connect(store_path())
         try:
@@ -438,6 +439,38 @@ class ApiTest(unittest.TestCase):
         self.assertNotIn(first, listed)
         self.assertEqual(self.client.get(f"/sessions/{first}").status_code, 404)
         self.assertEqual(self.client.get(f"/sessions/{second}").status_code, 200)
+
+    def test_corrupt_body_rolls_back_eviction(self) -> None:
+        use_store(store_path(), ttl_seconds=60)
+        closed = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        done = self.client.post(
+            f"/sessions/{closed['session_id']}/decisions",
+            json={"choice_id": "reject_onboarding"},
+        )
+        self.assertEqual(done.status_code, 200, done.text)
+        valid = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        corrupt = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        self._stamp(closed["session_id"], "2000-01-01T00:00:00Z")
+        conn = sqlite3.connect(store_path())
+        try:
+            conn.execute(
+                "UPDATE sessions SET body = ? WHERE session_id = ?",
+                ("{", corrupt["session_id"]),
+            )
+            conn.commit()
+        finally:
+            conn.close()
+
+        with self.assertRaises(json.JSONDecodeError):
+            fetch(corrupt["session_id"])
+        self.assertIsNotNone(self._stored(closed["session_id"]))
+        self.assertEqual(self._stored(corrupt["session_id"])[4], "{")
+
+        again = self.client.get(f"/sessions/{valid['session_id']}")
+        self.assertEqual(again.status_code, 200)
+        self.assertIsNone(self._stored(closed["session_id"]))
+        self.assertEqual(self._stored(corrupt["session_id"])[4], "{")
+        self.assertIsNotNone(self._stored(valid["session_id"]))
 
     def test_relative_session_path_is_joined_to_the_repo(self) -> None:
         with patch.dict("os.environ", {"TWINAML_SESSIONS_DB": "data/local/other.sqlite"}):
