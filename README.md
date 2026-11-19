@@ -10,9 +10,13 @@ The classroom demo has two parts. They do not share a store.
 
 - The **Learning Center** is the web training shell on a rented Linux VPS. The development site is [https://dev-amltwin.spectrumvps.tech/](https://dev-amltwin.spectrumvps.tech/) (page `/simulations`). The HTML sets `twinaml-environment` to `development`, `twinaml-release` to `20261109T064146Z`, and `robots` to noindex. FastAPI loads a case script, opens a session, applies a choice, and stores the twin and the events. The web client is a React 19 + Vite single-page app, built to static files. On that site the same client includes an in-browser 3D Simulation Center. This branch’s `frontend/` is the case list, the scenario player, and the dashboard. It does not contain that 3D client. The page title in this tree’s app is TwinAML. This README uses “Learning Center” for that shell.
 
+<<<<<<< HEAD
 - The **Behavioral Sandbox** in [`demo/neo4j/`](demo/neo4j/README.md) is the other classroom piece. It loads a synthetic ledger, moves an amount line, and draws the same payments as a network. Neo4j Bloom is the graph view of that ledger on the presenter’s machine.
 
 Release `20261109T064146Z` on the VPS is ahead of this `main` tree. The gap is under [Linux VPS Platform (Learning Center)](#linux-vps-platform-learning-center).
+=======
+- The **Behavioral Sandbox** in [`demo/neo4j/`](demo/neo4j/README.md) is the other classroom piece. It loads a synthetic ledger, moves an amount line, and draws the same payments as a network. Neo4j Bloom is the graph view of that ledger on the presenter’s machine. The development site is [https://amlsim.spectrumvps.tech](https://amlsim.spectrumvps.tech).
+>>>>>>> 0fd2c75028112c8c56c7b7d612dbf338a489c707
 
 A trainee picks a script by `case_id` and decides inside it. Explicit rules and the state machine set the disposition (rules-before-AI). An LLM must not set the case outcome at runtime. A human override must be stored as an event.
 
@@ -27,6 +31,7 @@ The tables below leave off a leading `hk-`. `deepfake-hk-001` keeps `hk` in the 
 | case_id | Theme |
 | --- | --- |
 | `deepfake-hk-001` | Original course example: video-KYC deepfake |
+<<<<<<< HEAD
 | `daybreak-tbml-001` | TBML / shell / fake jewellery-diamond exports |
 | `mule-rent-001` | Account rental |
 | `wiseword-amlmonth-001` | One mule, several typologies |
@@ -39,6 +44,20 @@ The tables below leave off a leading `hk-`. `deepfake-hk-001` keeps `hk` in the 
 | `hkma-cdd-001` | Bank CDD / monitoring / STR (synthetic bank) |
 | `starlight-onboard-001` | Company onboarding, hidden beneficial owner |
 | `alert-triage-shift-001` | One monitoring shift, six synthetic alerts |
+=======
+| `daybreak-tbml-002` | TBML / shell / fake jewellery-diamond exports |
+| `mule-rent-003` | Account rental |
+| `wiseword-amlmonth-004` | One mule, several typologies |
+| `justicegate-crypto-005` | Cash + crypto OTC |
+| `greythunder-mule-006` | Mule cluster |
+| `crossborder-tel-007` | Cross-border phone-fraud corridor |
+| `kol-mgmt-008` | KOL / influencer front |
+| `triad-cashflow-009` | Organised-crime cashflow indicators |
+| `ia-fwd-controls-010` | Insurer controls (synthetic insurer) |
+| `hkma-cdd-011` | Bank CDD / monitoring / STR (synthetic bank) |
+| `starlight-onboard-012` | Company onboarding, hidden beneficial owner |
+| `alert-triage-shift-013` | One monitoring shift, six synthetic alerts |
+>>>>>>> 0fd2c75028112c8c56c7b7d612dbf338a489c707
 
 ## Case Flows
 
