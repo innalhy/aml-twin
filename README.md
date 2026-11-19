@@ -25,18 +25,18 @@ The tables below leave off a leading `hk-`. `deepfake-hk-001` keeps `hk` in the 
 | case_id | Theme |
 | --- | --- |
 | `deepfake-hk-001` | Original course example: video-KYC deepfake |
-| `daybreak-tbml-001` | TBML / shell / fake jewellery-diamond exports |
-| `mule-rent-001` | Account rental |
-| `wiseword-amlmonth-001` | One mule, several typologies |
-| `justicegate-crypto-001` | Cash + crypto OTC |
-| `greythunder-mule-001` | Mule cluster |
-| `crossborder-tel-001` | Cross-border phone-fraud corridor |
-| `kol-mgmt-001` | KOL / influencer front |
-| `triad-cashflow-001` | Organised-crime cashflow indicators |
-| `ia-fwd-controls-001` | Insurer controls (synthetic insurer) |
-| `hkma-cdd-001` | Bank CDD / monitoring / STR (synthetic bank) |
-| `starlight-onboard-001` | Company onboarding, hidden beneficial owner |
-| `alert-triage-shift-001` | One monitoring shift, six synthetic alerts |
+| `daybreak-tbml-002` | TBML / shell / fake jewellery-diamond exports |
+| `mule-rent-003` | Account rental |
+| `wiseword-amlmonth-004` | One mule, several typologies |
+| `justicegate-crypto-005` | Cash + crypto OTC |
+| `greythunder-mule-006` | Mule cluster |
+| `crossborder-tel-007` | Cross-border phone-fraud corridor |
+| `kol-mgmt-008` | KOL / influencer front |
+| `triad-cashflow-009` | Organised-crime cashflow indicators |
+| `ia-fwd-controls-010` | Insurer controls (synthetic insurer) |
+| `hkma-cdd-011` | Bank CDD / monitoring / STR (synthetic bank) |
+| `starlight-onboard-012` | Company onboarding, hidden beneficial owner |
+| `alert-triage-shift-013` | One monitoring shift, six synthetic alerts |
 
 ## Case Flows
 
