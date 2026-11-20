@@ -154,6 +154,7 @@ class EffectsTest(unittest.TestCase):
             ({"risk.flags_add": ["R1_BLOCK", 2]}, "must be an array of strings"),
             ({"account.flags_add": ["X"]}, "needs an existing array"),
             ({"risk.score_delta": True}, "must be a finite number"),
+            ({"risk.score_delta": "1"}, "must be a finite number"),
             ({"account.score_delta": 1}, "needs an existing number"),
             ({"risk.flags_delta": ["X"]}, "undefined suffix"),
             ({"missing.value": 1}, "has no parent object"),
@@ -184,6 +185,21 @@ class EffectsTest(unittest.TestCase):
         with self.assertRaisesRegex(ScriptError, "needs an existing number"):
             apply_patch(blocked, {"risk.score_delta": 1})
         self.assertEqual(json.dumps(blocked), before)
+
+    def test_flags_must_already_be_a_list_and_nested_objects_are_copied(self) -> None:
+        twin = {"risk": {"score": True, "flags": "R1_BLOCK"}}
+        before = json.dumps(twin)
+        with self.assertRaisesRegex(ScriptError, "needs an existing array"):
+            apply_patch(twin, {"risk.flags_add": ["R2"]})
+        with self.assertRaisesRegex(ScriptError, "needs an existing number"):
+            apply_patch(twin, {"risk.score_delta": 1})
+        self.assertEqual(json.dumps(twin), before)
+
+        copied = {"profile": {}}
+        source = {"city": "Kowloon"}
+        apply_patch(copied, {"profile.address": source})
+        source["city"] = "changed"
+        self.assertEqual(copied["profile"]["address"], {"city": "Kowloon"})
 
 
 class DeepfakeTest(unittest.TestCase):

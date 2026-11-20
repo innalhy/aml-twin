@@ -447,6 +447,77 @@ class ApiTest(unittest.TestCase):
         with patch.dict("os.environ", {"TWINAML_SESSIONS_DB": ""}):
             self.assertEqual(_path_from_env(), ROOT / "data" / "local" / "sessions.sqlite")
 
+    def test_closed_session_on_the_ttl_cutoff_is_kept(self) -> None:
+        use_store(store_path(), ttl_seconds=60)
+        on_cutoff = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        closed = self.client.post(
+            f"/sessions/{on_cutoff['session_id']}/decisions",
+            json={"choice_id": "reject_onboarding"},
+        )
+        self.assertEqual(closed.status_code, 200, closed.text)
+        before = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        earlier = self.client.post(
+            f"/sessions/{before['session_id']}/decisions",
+            json={"choice_id": "reject_onboarding"},
+        )
+        self.assertEqual(earlier.status_code, 200, earlier.text)
+        opened = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        self._stamp(on_cutoff["session_id"], "2026-03-03T12:00:00Z")
+        self._stamp(before["session_id"], "2026-03-03T11:59:59Z")
+        self._stamp(opened["session_id"], "2026-03-03T11:59:59Z")
+
+        with patch("app.sessions._cutoff", return_value="2026-03-03T12:00:00Z"):
+            self.assertEqual(self.client.get(f"/sessions/{on_cutoff['session_id']}").status_code, 200)
+            self.assertEqual(self.client.get(f"/sessions/{before['session_id']}").status_code, 404)
+            self.assertEqual(self.client.get(f"/sessions/{opened['session_id']}").status_code, 200)
+            listed = [row["session_id"] for row in self.client.get("/sessions").json()["sessions"]]
+        self.assertEqual(listed, [on_cutoff["session_id"], opened["session_id"]])
+
+    def test_cap_drops_only_the_oldest_closed_row(self) -> None:
+        use_store(store_path(), cap=10)
+        closed_ids = []
+        for _ in range(2):
+            opened = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+            closed = self.client.post(
+                f"/sessions/{opened['session_id']}/decisions",
+                json={"choice_id": "reject_onboarding"},
+            )
+            self.assertEqual(closed.status_code, 200, closed.text)
+            closed_ids.append(opened["session_id"])
+        still_open = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()["session_id"]
+        self._stamp(closed_ids[0], "2026-03-03T10:00:00Z")
+        self._stamp(closed_ids[1], "2026-03-03T11:00:00Z")
+        self._stamp(still_open, "2026-03-03T12:00:00Z")
+        use_store(store_path(), cap=2)
+
+        with patch("app.sessions._cutoff", return_value="2000-01-01T00:00:00Z"):
+            listed = [row["session_id"] for row in self.client.get("/sessions").json()["sessions"]]
+            self.assertEqual(listed, [still_open, closed_ids[1]])
+            self.assertEqual(self.client.get(f"/sessions/{closed_ids[0]}").status_code, 404)
+            self.assertEqual(self.client.get(f"/sessions/{closed_ids[1]}").status_code, 200)
+
+    def test_missing_case_on_decide_does_not_commit_eviction(self) -> None:
+        use_store(store_path(), ttl_seconds=60)
+        expired = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        closed = self.client.post(
+            f"/sessions/{expired['session_id']}/decisions",
+            json={"choice_id": "reject_onboarding"},
+        )
+        self.assertEqual(closed.status_code, 200, closed.text)
+        current = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        self._stamp(expired["session_id"], "2000-01-01T00:00:00Z")
+        before_expired = self._stored(expired["session_id"])
+        before_current = self._stored(current["session_id"])
+
+        with patch("app.sessions.get_script", return_value=None):
+            refused = self.client.post(
+                f"/sessions/{current['session_id']}/decisions",
+                json={"choice_id": "reject_onboarding"},
+            )
+        self.assertEqual(refused.status_code, 404)
+        self.assertEqual(self._stored(expired["session_id"]), before_expired)
+        self.assertEqual(self._stored(current["session_id"]), before_current)
+
 
 if __name__ == "__main__":
     unittest.main()

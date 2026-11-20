@@ -312,6 +312,38 @@ class LedgerValidationTest(unittest.TestCase):
             with self.assertRaisesRegex(LedgerError, "Missing accounts.csv"):
                 load_directory(Path(folder), "empty")
 
+    def test_parsed_times_and_relationship_targets_are_checked(self) -> None:
+        pair = [_account("A"), _account("B")]
+        paid = pd.DataFrame([_payment("T1", "A", "B")], columns=TRANSACTION_COLUMNS)
+        paid["booked_at"] = pd.to_datetime(paid["booked_at"])
+        bundle = _bundle(pair, paid)
+        self.assertEqual(str(bundle.transactions["booked_at"].iloc[0]), "2026-03-03 10:00:00")
+        self.assertEqual(int(bundle.transactions["amount_hkd"].iloc[0]), 1000)
+
+        missing_time = paid.copy()
+        missing_time.loc[0, "booked_at"] = pd.NaT
+        with self.assertRaisesRegex(LedgerError, "blank or unreadable"):
+            _bundle(pair, missing_time)
+
+        blank_target = pd.DataFrame(
+            [{"from_id": "A", "to_id": "  ", "rel_type": "CONTROLS", "note": ""}],
+            columns=RELATIONSHIP_COLUMNS,
+        )
+        with self.assertRaisesRegex(LedgerError, "Relationship endpoints must exist"):
+            _bundle(pair, [_payment("T1", "A", "B")], relationships=blank_target)
+
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            pd.DataFrame(pair, columns=ACCOUNT_COLUMNS).to_csv(root / "accounts.csv", index=False)
+            pd.DataFrame([_payment("T1", "A", "B")], columns=TRANSACTION_COLUMNS).to_csv(
+                root / "transactions.csv", index=False
+            )
+            pd.DataFrame([{"from_id": "A", "to_id": "B", "note": ""}]).to_csv(
+                root / "relationships.csv", index=False
+            )
+            with self.assertRaisesRegex(LedgerError, "relationships.csv is missing column"):
+                load_directory(root, "short relationships")
+
 
 class AmountLineTest(unittest.TestCase):
     def test_line_includes_equals_and_refuses_a_negative_line(self) -> None:
@@ -603,6 +635,149 @@ class DetectorBoundaryTest(unittest.TestCase):
         self.assertNotIn("A", cases[0].account_ids)
         self.assertNotIn("H0", cases[0].txn_ids)
 
+    def test_on_line_payment_stays_out_of_the_smurf(self) -> None:
+        accounts = [_account(f"P{index}") for index in range(1, 7)]
+        accounts.append(_account("HUB"))
+        payments = [
+            _payment(f"T{index}", f"P{index}", "HUB", 6000, f"2026-03-03T10:{index:02d}:00")
+            for index in range(1, 6)
+        ]
+        payments.append(_payment("T6", "P6", "HUB", 10000, "2026-03-03T10:06:00"))
+        cases = graph_cases(_bundle(accounts, payments, source_name="smurf-on-line"))
+        self.assertEqual(len(cases), 1)
+        self.assertEqual(cases[0].amount_hkd, 30000)
+        self.assertEqual(cases[0].txn_ids, ("T1", "T2", "T3", "T4", "T5"))
+        self.assertNotIn("P6", cases[0].account_ids)
+
+    def test_pass_through_keeps_the_exact_floor_and_ratio(self) -> None:
+        kept = graph_cases(self._mule(inbound_amount=15000, outbound_amount=11250))
+        self.assertEqual(len(kept), 1)
+        self.assertEqual(set(kept[0].account_ids), {"SRC", "PT", "MIX"})
+        self.assertEqual(set(kept[0].txn_ids), {"T-IN", "T-OUT"})
+        self.assertEqual(kept[0].amount_hkd, 26250)
+
+        just_over = graph_cases(self._mule(inbound_amount=15001, outbound_amount=11251))
+        self.assertEqual(set(just_over[0].account_ids), {"SRC", "PT", "MIX"})
+        self.assertEqual(just_over[0].amount_hkd, 26252)
+
+        refused = [
+            ("under-floor", self._mule(inbound_amount=14999, outbound_amount=14999), 14999),
+            ("under-ratio", self._mule(inbound_amount=15001, outbound_amount=11250), 11250),
+            ("employer", self._mule(outbound_amount=15000, pt_segment="employer"), 15000),
+        ]
+        for label, bundle, amount in refused:
+            with self.subTest(label=label):
+                cases = graph_cases(bundle)
+                self.assertEqual(len(cases), 1)
+                self.assertNotIn("SRC", cases[0].account_ids)
+                self.assertEqual(cases[0].txn_ids, ("T-OUT",))
+                self.assertEqual(cases[0].amount_hkd, amount)
+
+    def test_wallet_middle_and_idle_watchlist_do_not_widen_the_mule(self) -> None:
+        wallets = pd.DataFrame([_wallet("MIX")], columns=WALLET_COLUMNS)
+        middle = graph_cases(
+            _bundle(
+                [
+                    _account("SRC"),
+                    _account("MID", kind="wallet", segment="wallet"),
+                    _account("MIX", kind="wallet", segment="wallet"),
+                ],
+                [
+                    _payment("T-IN", "SRC", "MID", 20000, "2026-03-03T10:00:00"),
+                    _payment("T-OUT", "MID", "MIX", 20000, "2026-03-03T12:00:00"),
+                ],
+                wallets=wallets,
+                source_name="wallet-middle",
+            )
+        )
+        self.assertEqual(len(middle), 1)
+        self.assertEqual(middle[0].account_ids, ("MID", "MIX"))
+        self.assertEqual(middle[0].txn_ids, ("T-OUT",))
+        self.assertNotIn("SRC", middle[0].account_ids)
+        self.assertEqual(middle[0].amount_hkd, 20000)
+
+        idle_accounts = [
+            _account("A"),
+            _account("B"),
+            _account("MIX", kind="wallet", segment="wallet"),
+        ]
+        idle = graph_cases(
+            _bundle(
+                idle_accounts,
+                [_payment("T1", "A", "B", 20000)],
+                wallets=wallets,
+                source_name="idle-watchlist",
+            )
+        )
+        self.assertEqual(idle, ())
+        sender = graph_cases(
+            _bundle(
+                idle_accounts,
+                [_payment("T1", "MIX", "A", 20000)],
+                wallets=wallets,
+                source_name="watchlist-sends",
+            )
+        )
+        self.assertEqual(sender, ())
+
+    def test_overlapping_mule_paths_count_a_shared_payment_once(self) -> None:
+        cases = graph_cases(
+            _bundle(
+                [
+                    _account("S1"),
+                    _account("S2"),
+                    _account("PT"),
+                    _account("MIX", kind="wallet", segment="wallet"),
+                ],
+                [
+                    _payment("T-IN1", "S1", "PT", 20000, "2026-03-03T10:00:00"),
+                    _payment("T-IN2", "S2", "PT", 20000, "2026-03-03T11:00:00"),
+                    _payment("T-OUT-A", "PT", "MIX", 15000, "2026-03-03T12:00:00"),
+                    _payment("T-OUT-B", "PT", "MIX", 15000, "2026-03-03T13:00:00"),
+                ],
+                wallets=pd.DataFrame([_wallet("MIX")], columns=WALLET_COLUMNS),
+                source_name="shared-hop",
+            )
+        )
+        self.assertEqual(len(cases), 1)
+        self.assertEqual(set(cases[0].account_ids), {"S1", "S2", "PT", "MIX"})
+        self.assertEqual(cases[0].txn_ids, ("T-OUT-A", "T-OUT-B", "T-IN1", "T-IN2"))
+        self.assertEqual(cases[0].amount_hkd, 70000)
+
+    def test_two_cycles_keep_the_rotation_key_and_one_shared_label(self) -> None:
+        cases = graph_cases(
+            _bundle(
+                [
+                    _account("A", case_label="shared-label", kyc_narrative="noted"),
+                    _account("B", case_label="shared-label", kyc_narrative="noted"),
+                    _account("C"),
+                    _account("D"),
+                    _account("E"),
+                    _account("F"),
+                ],
+                [
+                    _payment("T-AB", "A", "B", 5000, "2026-03-03T10:00:00"),
+                    _payment("T-BC", "B", "C", 5000, "2026-03-03T11:00:00"),
+                    _payment("T-CA", "C", "A", 5000, "2026-03-03T12:00:00"),
+                    _payment("T-DE", "D", "E", 5000, "2026-03-03T10:00:00"),
+                    _payment("T-EF", "E", "F", 5000, "2026-03-03T11:00:00"),
+                    _payment("T-FD", "F", "D", 5000, "2026-03-03T12:00:00"),
+                ],
+                source_name="two-cycles",
+            )
+        )
+        self.assertEqual([case.case_id for case in cases], ["G-CYCLE-1", "G-CYCLE-2"])
+        self.assertEqual(cases[0].account_ids, ("A", "B", "C"))
+        self.assertEqual(cases[0].txn_ids, ("T-AB", "T-BC", "T-CA"))
+        self.assertEqual(cases[0].amount_hkd, 15000)
+        self.assertEqual(cases[0].narrative_labels, ("shared-label",))
+        self.assertEqual(cases[0].kyc_notes, ("A: noted", "B: noted"))
+        self.assertIn("The memos are blank.", cases[0].why)
+        self.assertEqual(cases[1].account_ids, ("D", "E", "F"))
+        self.assertEqual(cases[1].txn_ids, ("T-DE", "T-EF", "T-FD"))
+        self.assertEqual(cases[1].amount_hkd, 15000)
+        self.assertEqual(cases[1].narrative_labels, ())
+
     def _ring(self, names: str):
         accounts = [_account(name) for name in names]
         payments = [
@@ -690,6 +865,7 @@ class DetectorBoundaryTest(unittest.TestCase):
         pt_segment: str = "retail",
         watch: bool = True,
         direct_only: bool = False,
+        inbound_amount: int = 20000,
     ):
         accounts = [
             _account("SRC"),
@@ -700,7 +876,7 @@ class DetectorBoundaryTest(unittest.TestCase):
             payments = [_payment("T-OUT", "SRC", "MIX", 1000)]
         else:
             payments = [
-                _payment("T-IN", "SRC", "PT", 20000, "2026-03-03T10:00:00"),
+                _payment("T-IN", "SRC", "PT", inbound_amount, "2026-03-03T10:00:00"),
                 _payment("T-OUT", "PT", "MIX", outbound_amount, outbound_at),
             ]
         wallets = (
@@ -846,6 +1022,17 @@ class Neo4jGuardTest(unittest.TestCase):
         self.assertIsNotNone(settings)
         assert settings is not None
         self.assertEqual(settings.database, "neo4j")
+        self.driver.assert_not_called()
+
+    def test_named_database_is_kept(self) -> None:
+        os.environ["NEO4J_URI"] = "bolt://127.0.0.1:7687"
+        os.environ["NEO4J_USERNAME"] = "reader"
+        os.environ["NEO4J_PASSWORD"] = "secret"
+        os.environ["NEO4J_DATABASE"] = " classroom "
+        settings = settings_from_env()
+        self.assertIsNotNone(settings)
+        assert settings is not None
+        self.assertEqual(settings.database, "classroom")
         self.driver.assert_not_called()
 
     def test_write_checks_the_confirm_string_before_it_connects(self) -> None:
