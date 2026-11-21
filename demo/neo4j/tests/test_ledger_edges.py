@@ -11,7 +11,7 @@ from unittest.mock import patch
 import pandas as pd
 
 from twinaml_sandbox.constants import MAX_ACCOUNTS, MAX_TRANSACTIONS, SANDBOX_TAG
-from twinaml_sandbox.graph_story import graph_cases
+from twinaml_sandbox.graph_story import _PATH_CAP, graph_cases
 from twinaml_sandbox.ledger import (
     ACCOUNT_COLUMNS,
     RELATIONSHIP_COLUMNS,
@@ -30,11 +30,19 @@ from twinaml_sandbox.neo4j_link import (
     Neo4jSettings,
     assert_write_confirmed,
     build_write_plan,
+    ping,
+    read_typology_counts,
     settings_from_env,
     write_bundle,
 )
-from twinaml_sandbox.report import run_report
-from twinaml_sandbox.rules import amount_alerts
+from twinaml_sandbox.report import (
+    alerts_frame,
+    cases_frame,
+    hidden_from_rule,
+    isolated_rule_count,
+    run_report,
+)
+from twinaml_sandbox.rules import amount_alerts, stamp
 
 _ENV_KEYS = (
     "NEO4J_URI",
@@ -312,6 +320,16 @@ class LedgerValidationTest(unittest.TestCase):
             with self.assertRaisesRegex(LedgerError, "Missing accounts.csv"):
                 load_directory(Path(folder), "empty")
 
+    def test_unknown_account_id_is_named_as_itself_and_refused_as_a_row(self) -> None:
+        bundle = _bundle(
+            [_account("A", name="Ada"), _account("B")],
+            [_payment("T1", "A", "B")],
+        )
+        self.assertEqual(bundle.name_of("A"), "Ada")
+        self.assertEqual(bundle.name_of("MISSING"), "MISSING")
+        with self.assertRaisesRegex(LedgerError, "Unknown account id MISSING"):
+            bundle.row_of("MISSING")
+
 
 class AmountLineTest(unittest.TestCase):
     def test_line_includes_equals_and_refuses_a_negative_line(self) -> None:
@@ -586,6 +604,16 @@ class DetectorBoundaryTest(unittest.TestCase):
         self.assertEqual(four[0].amount_hkd, 20000)
         self.assertEqual(graph_cases(self._ring("ABCDE")), ())
 
+    def test_the_same_cycle_listed_from_each_start_is_one_case(self) -> None:
+        bundle = self._ring("ABC")
+        rotations = [["A", "B", "C"], ["B", "C", "A"], ["C", "A", "B"]]
+        with patch("twinaml_sandbox.graph_story.nx.simple_cycles", return_value=rotations):
+            cases = graph_cases(bundle)
+        circular = [case for case in cases if case.typology == "circular_flow"]
+        self.assertEqual(len(circular), 1)
+        self.assertEqual(circular[0].account_ids, ("A", "B", "C"))
+        self.assertEqual(circular[0].txn_ids, ("T1", "T2", "T3"))
+
     def test_mule_path_stops_at_four_hops(self) -> None:
         names = ("A", "B", "C", "D", "E", "MIX")
         accounts = [_account(name) for name in names[:-1]]
@@ -602,6 +630,49 @@ class DetectorBoundaryTest(unittest.TestCase):
         self.assertEqual(cases[0].amount_hkd, 80000)
         self.assertNotIn("A", cases[0].account_ids)
         self.assertNotIn("H0", cases[0].txn_ids)
+
+    def test_watchlist_wallet_outside_the_payment_graph_is_not_a_mule_case(self) -> None:
+        wallets = pd.DataFrame([_wallet("MIX")], columns=WALLET_COLUMNS)
+        bundle = _bundle(
+            [_account("A"), _account("B"), _account("MIX", kind="wallet", segment="wallet")],
+            [_payment("T1", "A", "B", 20000)],
+            wallets=wallets,
+            source_name="wallet-outside-graph",
+        )
+        self.assertNotIn("MIX", set(bundle.transactions["from_account"]) | set(bundle.transactions["to_account"]))
+        self.assertEqual(graph_cases(bundle), ())
+
+    def test_watchlist_wallet_that_only_sends_is_not_a_mule_case(self) -> None:
+        wallets = pd.DataFrame([_wallet("MIX")], columns=WALLET_COLUMNS)
+        bundle = _bundle(
+            [_account("MIX", kind="wallet", segment="wallet"), _account("OTHER")],
+            [_payment("T-OUT", "MIX", "OTHER", 20000)],
+            wallets=wallets,
+            source_name="wallet-sends-only",
+        )
+        self.assertIn("MIX", set(bundle.transactions["from_account"]))
+        self.assertEqual(graph_cases(bundle), ())
+
+    def test_mule_search_stops_after_the_path_cap(self) -> None:
+        width = int(_PATH_CAP**0.5) + 1
+        a_ids = [f"A{index:03d}" for index in range(width)]
+        b_ids = [f"B{index:03d}" for index in range(width)]
+        accounts = [_account(account_id) for account_id in a_ids + b_ids]
+        accounts.append(_account("MIX", kind="wallet", segment="wallet"))
+        payments: list[dict[str, object]] = []
+        sequence = 0
+        for origin in a_ids:
+            for dest in b_ids:
+                sequence += 1
+                payments.append(_payment(f"T{sequence:04d}", origin, dest))
+        for dest in b_ids:
+            sequence += 1
+            payments.append(_payment(f"U{sequence:04d}", dest, "MIX", booked_at="2026-03-03T11:00:00"))
+        wallets = pd.DataFrame([_wallet("MIX")], columns=WALLET_COLUMNS)
+        bundle = _bundle(accounts, payments, wallets=wallets, source_name="path-cap")
+        self.assertLessEqual(len(bundle.accounts), 400)
+        with self.assertRaisesRegex(LedgerError, f"{_PATH_CAP} paths"):
+            graph_cases(bundle)
 
     def _ring(self, names: str):
         accounts = [_account(name) for name in names]
@@ -788,6 +859,76 @@ class ReportColumnTest(unittest.TestCase):
         self.assertEqual(by_id.loc["T-BIG", "after_rule"], "Yes")
         self.assertEqual(by_id.loc["T1", "graph_story"], "smurfing")
 
+    def test_empty_tables_keep_headers_and_a_string_stamp_stays_iso(self) -> None:
+        quiet = _bundle(
+            [_account("A"), _account("B")],
+            [_payment("T-SMALL", "A", "B", 500)],
+        )
+        quiet_report = run_report(quiet, 20_000)
+        self.assertEqual(quiet_report.rule_count, 0)
+        self.assertEqual(quiet_report.baseline_count, 0)
+        self.assertEqual(quiet_report.graph_count, 0)
+        self.assertTrue(quiet_report.comparison.empty)
+        self.assertEqual(isolated_rule_count(quiet_report), 0)
+        self.assertEqual(hidden_from_rule(quiet_report, "smurfing"), 0)
+        self.assertEqual(
+            list(alerts_frame(quiet_report.rule_alerts).columns),
+            [
+                "alert_id",
+                "rule_code",
+                "txn_id",
+                "booked_at",
+                "from_account",
+                "to_account",
+                "amount_hkd",
+                "channel",
+                "memo",
+                "why",
+            ],
+        )
+        self.assertEqual(
+            list(cases_frame(quiet_report.graph_cases).columns),
+            [
+                "case_id",
+                "typology",
+                "title",
+                "accounts",
+                "payments",
+                "amount_hkd",
+                "narrative_labels",
+                "why",
+            ],
+        )
+
+        paid = _bundle(
+            [_account("A"), _account("B")],
+            [_payment("T-BIG", "A", "B", 12_000)],
+        )
+        paid_report = run_report(paid, 10_000)
+        alerts = alerts_frame(paid_report.rule_alerts)
+        self.assertEqual(alerts["txn_id"].tolist(), ["T-BIG"])
+        self.assertEqual(alerts["rule_code"].tolist(), ["R_AMOUNT"])
+        self.assertEqual(alerts["amount_hkd"].tolist(), [12_000])
+        self.assertEqual(isolated_rule_count(paid_report), 1)
+        self.assertTrue(cases_frame(paid_report.graph_cases).empty)
+
+        ring = _bundle(
+            [_account(name) for name in "ABC"],
+            [
+                _payment("T1", "A", "B", 5000, "2026-03-03T10:00:00"),
+                _payment("T2", "B", "C", 5000, "2026-03-03T11:00:00"),
+                _payment("T3", "C", "A", 5000, "2026-03-03T12:00:00"),
+            ],
+        )
+        linked = cases_frame(run_report(ring, 20_000).graph_cases)
+        self.assertEqual(linked["typology"].tolist(), ["circular_flow"])
+        self.assertEqual(linked["payments"].tolist(), [3])
+        self.assertEqual(linked["amount_hkd"].tolist(), [15_000])
+        self.assertEqual(linked["accounts"].tolist(), ["A, B, C"])
+
+        self.assertEqual(stamp("2026-03-03 10:05:00"), "2026-03-03T10:05:00")
+        self.assertEqual(stamp(pd.Timestamp("2026-03-03T10:05:00")), "2026-03-03T10:05:00")
+
 
 class Neo4jGuardTest(unittest.TestCase):
     def setUp(self) -> None:
@@ -870,6 +1011,76 @@ class Neo4jGuardTest(unittest.TestCase):
         self.assertGreaterEqual(session.run.call_count, 2)
         for call in session.run.call_args_list:
             self.assertEqual(call.args[1]["sandbox"], SANDBOX_TAG)
+
+    def test_counts_and_ping_read_without_deleting(self) -> None:
+        settings = Neo4jSettings("bolt://127.0.0.1:7687", "reader", "secret", "neo4j")
+        session = self.driver.return_value.__enter__.return_value.session.return_value.__enter__.return_value
+
+        def record(value: object):
+            result = unittest.mock.Mock()
+            result.single.return_value = value
+            return result
+
+        session.run.side_effect = [record([2]), record(None), record([5])]
+        counts = read_typology_counts(settings)
+        self.assertEqual(counts, {"smurf_hubs": 2, "cycle_paths": 0, "mixer_paths": 5})
+        queries = [call.args[0] for call in session.run.call_args_list]
+        self.assertEqual(len(queries), 3)
+        joined = "\n".join(queries)
+        self.assertNotIn("DETACH DELETE", joined)
+        self.assertNotIn("CREATE", joined)
+        self.assertIn("count(h)", queries[0])
+        self.assertIn("WatchlistWallet", queries[2])
+        for call in session.run.call_args_list:
+            self.assertEqual(call.args[1], {"sandbox": SANDBOX_TAG})
+
+        self.driver.reset_mock()
+        session = self.driver.return_value.__enter__.return_value.session.return_value.__enter__.return_value
+        session.run.side_effect = None
+        session.run.return_value.single.return_value = {"ok": 1}
+        self.assertEqual(ping(settings), "Connected to neo4j.")
+        self.assertIn("RETURN 1", session.run.call_args.args[0])
+        self.assertNotIn("DETACH DELETE", session.run.call_args.args[0])
+
+        session.run.return_value.single.return_value = {"ok": 0}
+        with self.assertRaisesRegex(Neo4jConfigError, "did not return 1"):
+            ping(settings)
+        session.run.return_value.single.return_value = None
+        with self.assertRaisesRegex(Neo4jConfigError, "did not return 1"):
+            ping(settings)
+        self.driver.return_value.__enter__.return_value.verify_connectivity.assert_called()
+
+    def test_cli_refuses_to_connect_without_a_command_or_settings(self) -> None:
+        from twinaml_sandbox.neo4j_link import main
+
+        with patch("sys.argv", ["neo4j_link"]):
+            with self.assertRaises(SystemExit) as caught:
+                main()
+        self.assertEqual(caught.exception.code, 2)
+        self.driver.assert_not_called()
+
+        for flag in ("--write", "--counts"):
+            with self.subTest(flag=flag):
+                with patch("sys.argv", ["neo4j_link", flag]):
+                    with self.assertRaisesRegex(SystemExit, "not configured"):
+                        main()
+                self.driver.assert_not_called()
+
+        os.environ["NEO4J_URI"] = "bolt://127.0.0.1:7687"
+        os.environ["NEO4J_USERNAME"] = "reader"
+        os.environ["NEO4J_PASSWORD"] = "secret"
+        with (
+            patch("sys.argv", ["neo4j_link", "--counts"]),
+            patch(
+                "twinaml_sandbox.neo4j_link.read_typology_counts",
+                return_value={"smurf_hubs": 1, "cycle_paths": 2, "mixer_paths": 3},
+            ) as counts,
+            patch("twinaml_sandbox.neo4j_link.write_bundle") as write,
+        ):
+            main()
+        counts.assert_called_once()
+        write.assert_not_called()
+        self.driver.assert_not_called()
 
 
 class WritePlanScopeTest(unittest.TestCase):

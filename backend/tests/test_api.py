@@ -15,6 +15,7 @@ from app.cases import ROOT
 from app.effects import ScriptError
 from app.main import app
 from app.sessions import (
+    _apply_env_limits,
     _media,
     _path_from_env,
     decide,
@@ -131,6 +132,9 @@ class ApiTest(unittest.TestCase):
     def test_unknown_choice_and_unknown_case(self) -> None:
         missing = self.client.post("/sessions", json={"case_id": "no-such-case"})
         self.assertEqual(missing.status_code, 404)
+        detail = self.client.get("/cases/no-such-case")
+        self.assertEqual(detail.status_code, 404)
+        self.assertEqual(detail.json()["detail"], "unknown case_id")
         opened = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
         bad = self.client.post(
             f"/sessions/{opened['session_id']}/decisions",
@@ -446,6 +450,71 @@ class ApiTest(unittest.TestCase):
             self.assertEqual(_path_from_env(), Path("/tmp/abs-sessions.sqlite"))
         with patch.dict("os.environ", {"TWINAML_SESSIONS_DB": ""}):
             self.assertEqual(_path_from_env(), ROOT / "data" / "local" / "sessions.sqlite")
+
+    def test_environment_cap_and_ttl_are_clamped_before_eviction(self) -> None:
+        from app import sessions as sessions_mod
+
+        with patch.dict(
+            "os.environ",
+            {"TWINAML_SESSION_CAP": "4", "TWINAML_SESSION_TTL_HOURS": "2"},
+        ):
+            _apply_env_limits()
+        self.assertEqual(sessions_mod._CAP, 4)
+        self.assertEqual(sessions_mod._TTL_SECONDS, 2 * 60 * 60)
+
+        with patch.dict(
+            "os.environ",
+            {"TWINAML_SESSION_CAP": "0", "TWINAML_SESSION_TTL_HOURS": "0"},
+        ):
+            _apply_env_limits()
+        self.assertEqual(sessions_mod._CAP, 1)
+        self.assertEqual(sessions_mod._TTL_SECONDS, 0)
+        first = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()["session_id"]
+        second = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()["session_id"]
+        listed = [row["session_id"] for row in self.client.get("/sessions").json()["sessions"]]
+        self.assertEqual(listed, [second])
+        self.assertEqual(self.client.get(f"/sessions/{first}").status_code, 404)
+
+    def test_open_session_that_is_not_waiting_is_not_rewritten(self) -> None:
+        opened = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        session_id = opened["session_id"]
+        scene_id = opened["passed_scenes"][0]["id"]
+        for node_id in ("not-a-node", scene_id):
+            with self.subTest(node_id=node_id):
+                state = fetch_state(session_id)
+                self.assertIsNotNone(state)
+                assert state is not None
+                state["status"] = "open"
+                state["node_id"] = node_id
+                conn = sqlite3.connect(store_path())
+                try:
+                    conn.execute(
+                        "UPDATE sessions SET status = 'open', body = ? WHERE session_id = ?",
+                        (json.dumps(state), session_id),
+                    )
+                    conn.commit()
+                finally:
+                    conn.close()
+                before = self._stored(session_id)
+                refused = self.client.post(
+                    f"/sessions/{session_id}/decisions",
+                    json={"choice_id": "reject_onboarding"},
+                )
+                self.assertEqual(refused.status_code, 409)
+                self.assertIn("not waiting", refused.json()["detail"])
+                self.assertEqual(self._stored(session_id), before)
+
+    def test_decision_refuses_a_session_whose_case_is_gone(self) -> None:
+        opened = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        before = self._stored(opened["session_id"])
+        with patch("app.sessions.get_script", return_value=None):
+            refused = self.client.post(
+                f"/sessions/{opened['session_id']}/decisions",
+                json={"choice_id": "reject_onboarding"},
+            )
+        self.assertEqual(refused.status_code, 404)
+        self.assertEqual(refused.json()["detail"], "unknown session")
+        self.assertEqual(self._stored(opened["session_id"]), before)
 
 
 if __name__ == "__main__":

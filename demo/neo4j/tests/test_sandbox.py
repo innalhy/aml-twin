@@ -219,6 +219,55 @@ class RewriteCsvTest(unittest.TestCase):
             loaded = load_directory(Path(folder), source_name="temp")
         self.assertEqual(len(loaded.transactions), len(transaction_frame()))
 
+    def test_write_csv_refuses_a_dangling_reference_and_writes_nothing(self) -> None:
+        import tempfile
+        from unittest.mock import patch
+
+        broken = (
+            ("account_frame", account_frame().head(1).reset_index(drop=True), "Transaction endpoint missing"),
+            (
+                "relationship_frame",
+                relationship_frame().assign(from_id="NO-SUCH"),
+                "Relationship endpoint missing",
+            ),
+            ("wallet_frame", wallet_frame().assign(account_id="NO-SUCH"), "Watchlist id missing"),
+        )
+        for name, frame, message in broken:
+            with self.subTest(frame=name):
+                with tempfile.TemporaryDirectory() as folder:
+                    with patch(f"twinaml_sandbox.ledger.{name}", return_value=frame):
+                        with self.assertRaisesRegex(ValueError, message):
+                            write_csv(Path(folder))
+                    self.assertEqual(list(Path(folder).iterdir()), [])
+
+    def test_authoring_refuses_a_duplicate_account_id(self) -> None:
+        from unittest.mock import patch
+
+        from twinaml_sandbox import ledger
+
+        duplicated = list(ledger._ACCOUNTS) + [ledger._ACCOUNTS[0]]
+        with patch.object(ledger, "_ACCOUNTS", duplicated):
+            with self.assertRaisesRegex(ValueError, "Duplicate account_id"):
+                ledger.account_frame()
+
+    def test_rewriter_does_nothing_without_write(self) -> None:
+        from unittest.mock import patch
+
+        from twinaml_sandbox import ledger
+
+        with patch("sys.argv", ["ledger"]), patch.object(ledger, "write_csv") as write:
+            with self.assertRaises(SystemExit) as caught:
+                ledger.main()
+        self.assertEqual(caught.exception.code, 2)
+        write.assert_not_called()
+
+        with (
+            patch("sys.argv", ["ledger", "--write"]),
+            patch.object(ledger, "write_csv", return_value=Path("/tmp/twinaml-sandbox-test")) as write,
+        ):
+            ledger.main()
+        write.assert_called_once_with()
+
 
 if __name__ == "__main__":
     unittest.main()
