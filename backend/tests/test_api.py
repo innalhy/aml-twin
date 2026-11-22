@@ -148,6 +148,22 @@ class ApiTest(unittest.TestCase):
         self.assertEqual(bad.status_code, 400)
         self.assertEqual(self._stored(opened["session_id"]), before)
 
+    def test_closed_session_decision_leaves_the_row(self) -> None:
+        opened = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        closed = self.client.post(
+            f"/sessions/{opened['session_id']}/decisions",
+            json={"choice_id": "reject_onboarding"},
+        )
+        self.assertEqual(closed.status_code, 200, closed.text)
+        before = self._stored(opened["session_id"])
+        blocked = self.client.post(
+            f"/sessions/{opened['session_id']}/decisions",
+            json={"choice_id": "reject_onboarding"},
+        )
+        self.assertEqual(blocked.status_code, 409)
+        self.assertIn("already closed", blocked.json()["detail"])
+        self.assertEqual(self._stored(opened["session_id"]), before)
+
     def test_session_id_collision_retries_then_stops(self) -> None:
         taken = "a" * 12
         conn = sqlite3.connect(store_path())

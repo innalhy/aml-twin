@@ -185,6 +185,17 @@ class EffectsTest(unittest.TestCase):
             apply_patch(blocked, {"risk.score_delta": 1})
         self.assertEqual(json.dumps(blocked), before)
 
+    def test_a_later_key_failure_keeps_the_earlier_change(self) -> None:
+        scored = {"risk": {"score": 10, "flags": ["R1_BLOCK"]}}
+        with self.assertRaisesRegex(ScriptError, "must be an array of strings"):
+            apply_patch(scored, {"risk.score_delta": 5, "risk.flags_add": ["R2", 1]})
+        self.assertEqual(scored, {"risk": {"score": 15, "flags": ["R1_BLOCK"]}})
+
+        flagged = {"risk": {"score": 10, "flags": []}}
+        with self.assertRaisesRegex(ScriptError, "needs an existing number"):
+            apply_patch(flagged, {"risk.flags_add": ["R2"], "missing.score_delta": 1})
+        self.assertEqual(flagged, {"risk": {"score": 10, "flags": ["R2"]}})
+
 
 class DeepfakeTest(unittest.TestCase):
     def test_eight_endings(self) -> None:
@@ -302,6 +313,10 @@ class MachineEdgeTest(unittest.TestCase):
         dangling = _script("n1", [{"id": "n1", "type": "scene", "next": "n_missing"}])
         with self.assertRaisesRegex(ScriptError, "scene next n_missing is missing"):
             start_session(dangling)
+
+        missing_start = _script("n_missing", [{"id": "n_out", "type": "outcome"}])
+        with self.assertRaisesRegex(ScriptError, "node n_missing is missing"):
+            start_session(missing_start)
 
     def test_incomplete_disposition_is_not_rule_follow(self) -> None:
         script = _script(

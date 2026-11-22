@@ -556,6 +556,83 @@ class DetectorBoundaryTest(unittest.TestCase):
                 self.assertEqual(cases[0].txn_ids, ("T-OUT",))
                 self.assertNotIn("SRC", cases[0].account_ids)
 
+    def test_pass_through_sums_every_leg_and_uses_the_latest_outbound(self) -> None:
+        wallets = pd.DataFrame([_wallet("MIX")], columns=WALLET_COLUMNS)
+        summed = graph_cases(
+            _bundle(
+                [
+                    _account("SRC"),
+                    _account("PT"),
+                    _account("MIX", kind="wallet", segment="wallet"),
+                ],
+                [
+                    _payment("T-IN1", "SRC", "PT", 8000, "2026-03-03T10:00:00"),
+                    _payment("T-IN2", "SRC", "PT", 7000, "2026-03-03T11:00:00"),
+                    _payment("T-OUT", "PT", "MIX", 11250, "2026-03-04T22:00:00"),
+                ],
+                wallets=wallets,
+                source_name="summed-inbounds",
+            )
+        )
+        self.assertEqual(len(summed), 1)
+        self.assertEqual(set(summed[0].account_ids), {"SRC", "PT", "MIX"})
+        self.assertEqual(set(summed[0].txn_ids), {"T-IN1", "T-IN2", "T-OUT"})
+        self.assertEqual(summed[0].amount_hkd, 26250)
+
+        split = graph_cases(
+            _bundle(
+                [
+                    _account("SRC"),
+                    _account("PT"),
+                    _account("OTHER"),
+                    _account("MIX", kind="wallet", segment="wallet"),
+                ],
+                [
+                    _payment("T-IN", "SRC", "PT", 20000, "2026-03-03T10:00:00"),
+                    _payment("T-SIDE", "PT", "OTHER", 15000, "2026-03-03T12:00:00"),
+                    _payment("T-MIX", "PT", "MIX", 1000, "2026-03-03T13:00:00"),
+                ],
+                wallets=wallets,
+                source_name="split-outbound",
+            )
+        )
+        self.assertEqual(len(split), 1)
+        self.assertEqual(set(split[0].account_ids), {"SRC", "PT", "MIX"})
+        self.assertEqual(set(split[0].txn_ids), {"T-IN", "T-MIX"})
+        self.assertNotIn("OTHER", split[0].account_ids)
+        self.assertNotIn("T-SIDE", split[0].txn_ids)
+        self.assertEqual(split[0].amount_hkd, 21000)
+
+        on_time = [
+            _payment("T-IN", "SRC", "PT", 20000, "2026-03-03T10:00:00"),
+            _payment("T-MIX", "PT", "MIX", 15000, "2026-03-03T12:00:00"),
+        ]
+        accounts = [
+            _account("SRC"),
+            _account("PT"),
+            _account("OTHER"),
+            _account("MIX", kind="wallet", segment="wallet"),
+        ]
+        qualified = graph_cases(_bundle(accounts, on_time, wallets=wallets, source_name="on-time"))
+        self.assertIn("SRC", qualified[0].account_ids)
+        self.assertIn("T-IN", qualified[0].txn_ids)
+
+        late = graph_cases(
+            _bundle(
+                accounts,
+                on_time + [_payment("T-LATE", "PT", "OTHER", 1, "2026-03-04T22:00:01")],
+                wallets=wallets,
+                source_name="late-outbound",
+            )
+        )
+        self.assertEqual(len(late), 1)
+        self.assertEqual(set(late[0].account_ids), {"PT", "MIX"})
+        self.assertEqual(late[0].txn_ids, ("T-MIX",))
+        self.assertEqual(late[0].amount_hkd, 15000)
+        self.assertNotIn("SRC", late[0].account_ids)
+        self.assertNotIn("T-IN", late[0].txn_ids)
+        self.assertNotIn("T-LATE", late[0].txn_ids)
+
     def test_mule_stops_after_four_hops_and_ignores_non_control_links(self) -> None:
         kept = graph_cases(self._mule_chain())
         self.assertEqual(len(kept), 1)
