@@ -420,6 +420,15 @@ class DetectorBoundaryTest(unittest.TestCase):
         self.assertIn("The senders share device PHONE-9.", unnamed[0].why)
         self.assertEqual(unnamed[0].context_ids, ())
 
+    def test_a_blank_device_does_not_make_the_other_payers_a_shared_device(self) -> None:
+        devices = {f"P{index}": "DEV1" for index in range(1, 5)}
+        devices["P5"] = "   "
+        cases = graph_cases(self._smurf(5, 6000, devices=devices, device_accounts=("DEV1",)))
+        self.assertEqual(len(cases), 1)
+        self.assertNotIn("share device", cases[0].why)
+        self.assertIn("The payment pattern is enough for this case.", cases[0].why)
+        self.assertEqual(cases[0].context_ids, ("DEV1",))
+
     def test_smurf_keeps_an_exact_window_and_refuses_a_wallet_hub(self) -> None:
         exact = (
             "2026-03-03T10:00:00",
@@ -481,6 +490,21 @@ class DetectorBoundaryTest(unittest.TestCase):
             ]
         )
         self.assertEqual(graph_cases(late), ())
+
+    def test_cycle_memos_drop_blanks_and_list_each_note_once(self) -> None:
+        payments = [
+            _payment("T1", "A", "B", 5000, "2026-03-03T10:00:00"),
+            _payment("T2", "B", "C", 5000, "2026-03-03T11:00:00"),
+            _payment("T3", "C", "A", 5000, "2026-03-03T12:00:00"),
+        ]
+        payments[0]["memo"] = "rent"
+        payments[1]["memo"] = "  "
+        payments[2]["memo"] = "salary"
+        cases = graph_cases(_bundle([_account(name) for name in "ABC"], payments, source_name="cycle-memos"))
+        self.assertEqual(len(cases), 1)
+        self.assertEqual(cases[0].txn_ids, ("T1", "T2", "T3"))
+        self.assertIn("The memos are rent, salary.", cases[0].why)
+        self.assertNotIn("blank", cases[0].why)
 
     def test_cycle_keeps_four_hops_and_the_earlier_payment(self) -> None:
         four = graph_cases(
@@ -577,6 +601,46 @@ class DetectorBoundaryTest(unittest.TestCase):
         self.assertNotIn("P1", blocked[0].account_ids)
         self.assertEqual(set(blocked[0].txn_ids), {"T-2", "T-3"})
         self.assertEqual(blocked[0].amount_hkd, 32000)
+
+    def test_controls_off_the_mule_path_are_left_out(self) -> None:
+        accounts = [
+            _account("SRC"),
+            _account("PT"),
+            _account("MIX", kind="wallet", segment="wallet"),
+            _account("ADA", kind="person", segment="person"),
+            _account("BOSS", kind="person", segment="person"),
+            _account("OFF", kind="person", segment="person"),
+            _account("BYSTANDER", kind="person", segment="person"),
+        ]
+        payments = [
+            _payment("T-IN", "SRC", "PT", 20000, "2026-03-03T10:00:00"),
+            _payment("T-OUT", "PT", "MIX", 15000, "2026-03-04T22:00:00"),
+        ]
+        relationships = pd.DataFrame(
+            [
+                {"from_id": "BOSS", "to_id": "PT", "rel_type": "CONTROLS", "note": ""},
+                {"from_id": "ADA", "to_id": "MIX", "rel_type": "CONTROLS", "note": ""},
+                {"from_id": "ADA", "to_id": "BYSTANDER", "rel_type": "CONTROLS", "note": ""},
+                {"from_id": "OFF", "to_id": "BYSTANDER", "rel_type": "CONTROLS", "note": ""},
+            ],
+            columns=RELATIONSHIP_COLUMNS,
+        )
+        wallets = pd.DataFrame([_wallet("MIX")], columns=WALLET_COLUMNS)
+        cases = graph_cases(
+            _bundle(
+                accounts,
+                payments,
+                relationships=relationships,
+                wallets=wallets,
+                source_name="controls-scope",
+            )
+        )
+        self.assertEqual(len(cases), 1)
+        self.assertEqual(set(cases[0].account_ids), {"SRC", "PT", "MIX"})
+        self.assertEqual(cases[0].context_ids, ("ADA", "BOSS"))
+        self.assertIn("from ADA (ADA), BOSS (BOSS)", cases[0].why)
+        self.assertNotIn("OFF", cases[0].why)
+        self.assertNotIn("BYSTANDER", cases[0].why)
 
     def test_cycle_stops_at_four_accounts(self) -> None:
         four = graph_cases(self._ring("ABCD"))

@@ -254,6 +254,27 @@ class RuleFlagRecordingTest(unittest.TestCase):
         self.assertEqual(overrides[0]["payload"]["flags"], [])
         self.assertFalse(any(event["type"] == "rule_flagged" for event in state["events"]))
 
+    def test_listed_overridden_flag_records_one_override_without_that_word_in_the_choice(self) -> None:
+        script = self._script()
+        script["rules"] = [
+            {"id": "R1", "when": "x", "then": "y", "flags": ["LISTED_FLAG", "R1_OVERRIDDEN"]},
+        ]
+        script["nodes"][0]["choices"][0]["effects"] = {
+            "risk.flags_add": ["R1_OVERRIDDEN", "LISTED_FLAG", "SOMETHING_OVERRIDDEN"],
+            "disposition": "held",
+        }
+        state = play(script, ["hold"])
+        flagged = [event for event in state["events"] if event["type"] == "rule_flagged"]
+        overrides = [event for event in state["events"] if event["type"] == "override"]
+        self.assertEqual([event["payload"]["flags"] for event in flagged], [["R1_OVERRIDDEN", "LISTED_FLAG"]])
+        self.assertEqual(len(overrides), 1)
+        self.assertEqual(overrides[0]["choice_id"], "hold")
+        self.assertEqual(overrides[0]["payload"]["flags"], ["R1_OVERRIDDEN"])
+        self.assertEqual(
+            state["twin"]["risk"]["flags"],
+            ["R1_OVERRIDDEN", "LISTED_FLAG", "SOMETHING_OVERRIDDEN"],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
