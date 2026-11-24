@@ -9,17 +9,23 @@ import pandas as pd
 from twinaml_sandbox.ledger import ACCOUNT_COLUMNS, RELATIONSHIP_COLUMNS, TRANSACTION_COLUMNS
 from twinaml_sandbox.load import assemble, empty_wallets
 from twinaml_sandbox.models import GraphCase
-from twinaml_sandbox.viz import _story_index, _strip_remote_assets, _visible_ids
+from twinaml_sandbox.viz import _focus_txns, _story_index, _strip_remote_assets, _visible_ids
 
 
-def _case(case_id: str, typology: str, accounts: tuple[str, ...], context: tuple[str, ...] = ()) -> GraphCase:
+def _case(
+    case_id: str,
+    typology: str,
+    accounts: tuple[str, ...],
+    context: tuple[str, ...] = (),
+    txn_ids: tuple[str, ...] = ("T1",),
+) -> GraphCase:
     return GraphCase(
         case_id=case_id,
         typology=typology,
         title=case_id,
         why="",
         account_ids=accounts,
-        txn_ids=("T1",),
+        txn_ids=txn_ids,
         amount_hkd=1000,
         narrative_labels=(),
         kyc_notes=(),
@@ -102,6 +108,15 @@ class VizFocusTest(unittest.TestCase):
         cleaned = _strip_remote_assets(html)
         self.assertNotIn("jsdelivr", cleaned)
         self.assertIn("local()", cleaned)
+
+    def test_focus_lists_only_that_storys_payments(self) -> None:
+        smurf = _case("G-SMURF-HUB", "smurfing", ("HUB",), txn_ids=("T-SMURF",))
+        mule = _case("G-MULE-MIX", "mule_to_mixer", ("MIX",), txn_ids=("T-MULE",))
+        cases = (smurf, mule)
+        self.assertEqual(_focus_txns(cases, None), {"T-SMURF", "T-MULE"})
+        self.assertEqual(_focus_txns(cases, "all"), {"T-SMURF", "T-MULE"})
+        self.assertEqual(_focus_txns(cases, "smurfing"), {"T-SMURF"})
+        self.assertEqual(_focus_txns(cases, "circular_flow"), set())
 
 
 if __name__ == "__main__":

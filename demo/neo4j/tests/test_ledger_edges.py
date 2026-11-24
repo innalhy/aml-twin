@@ -6,7 +6,7 @@ import os
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pandas as pd
 
@@ -25,15 +25,18 @@ from twinaml_sandbox.load import (
     empty_wallets,
     load_directory,
 )
+from twinaml_sandbox.models import GraphCase
 from twinaml_sandbox.neo4j_link import (
     Neo4jConfigError,
     Neo4jSettings,
     assert_write_confirmed,
     build_write_plan,
+    ping,
+    read_typology_counts,
     settings_from_env,
     write_bundle,
 )
-from twinaml_sandbox.report import run_report
+from twinaml_sandbox.report import alerts_frame, cases_frame, run_report
 from twinaml_sandbox.rules import amount_alerts
 
 _ENV_KEYS = (
@@ -603,6 +606,26 @@ class DetectorBoundaryTest(unittest.TestCase):
         self.assertNotIn("A", cases[0].account_ids)
         self.assertNotIn("H0", cases[0].txn_ids)
 
+    def test_mule_search_stops_after_five_hundred_paths(self) -> None:
+        width = 8
+        accounts = [_account(f"{layer}{index}") for layer in ("A", "B", "C") for index in range(width)]
+        accounts.append(_account("MIX", kind="wallet", segment="wallet"))
+        payments: list[dict[str, object]] = []
+
+        def link(source: str, target: str) -> None:
+            payments.append(_payment(f"P{len(payments) + 1}", source, target, 1000))
+
+        for left in range(width):
+            for right in range(width):
+                link(f"A{left}", f"B{right}")
+                link(f"B{left}", f"C{right}")
+        for index in range(width):
+            link(f"C{index}", "MIX")
+        wallets = pd.DataFrame([_wallet("MIX")], columns=WALLET_COLUMNS)
+        bundle = _bundle(accounts, payments, wallets=wallets, source_name="dense-mule")
+        with self.assertRaisesRegex(LedgerError, "500 paths"):
+            run_report(bundle, 10_000)
+
     def _ring(self, names: str):
         accounts = [_account(name) for name in names]
         payments = [
@@ -788,6 +811,93 @@ class ReportColumnTest(unittest.TestCase):
         self.assertEqual(by_id.loc["T-BIG", "after_rule"], "Yes")
         self.assertEqual(by_id.loc["T1", "graph_story"], "smurfing")
 
+    def test_a_shared_payment_keeps_the_later_story(self) -> None:
+        accounts = [_account(f"P{index}") for index in range(1, 5)]
+        accounts.extend((_account("A"), _account("HUB"), _account("B")))
+        payments = [
+            _payment(f"T{index}", f"P{index}", "HUB", 6000, f"2026-03-03T10:0{index}:00")
+            for index in range(1, 5)
+        ]
+        payments.extend(
+            (
+                _payment("T-BOTH", "A", "HUB", 6000, "2026-03-03T10:04:00"),
+                _payment("T-HB", "HUB", "B", 5000, "2026-03-03T11:00:00"),
+                _payment("T-BA", "B", "A", 5000, "2026-03-03T12:00:00"),
+            )
+        )
+        report = run_report(_bundle(accounts, payments, source_name="shared-payment"), 20_000)
+        by_type = {case.typology: case for case in report.graph_cases}
+        self.assertEqual(set(by_type), {"smurfing", "circular_flow"})
+        self.assertIn("T-BOTH", by_type["smurfing"].txn_ids)
+        self.assertIn("T-BOTH", by_type["circular_flow"].txn_ids)
+        by_id = report.comparison.set_index("txn_id")
+        self.assertEqual(by_id.loc["T1", "graph_story"], "smurfing")
+        self.assertEqual(by_id.loc["T-BOTH", "graph_story"], "circular_flow")
+        self.assertEqual(by_id.loc["T-BOTH", "booked_at"], "2026-03-03T10:04:00")
+        self.assertEqual(by_id.loc["T-BOTH", "before_rule"], "No")
+        self.assertEqual(by_id.loc["T-BOTH", "after_rule"], "No")
+
+    def test_empty_and_populated_frames_keep_the_page_columns(self) -> None:
+        empty_alerts = alerts_frame(())
+        self.assertEqual(
+            list(empty_alerts.columns),
+            [
+                "alert_id",
+                "rule_code",
+                "txn_id",
+                "booked_at",
+                "from_account",
+                "to_account",
+                "amount_hkd",
+                "channel",
+                "memo",
+                "why",
+            ],
+        )
+        self.assertTrue(empty_alerts.empty)
+        bundle = _bundle(
+            [_account("A"), _account("B")],
+            [_payment("T1", "A", "B", 1000, "2026-03-03T10:05:00")],
+        )
+        populated = alerts_frame(amount_alerts(bundle, 1000))
+        self.assertEqual(list(populated.columns), list(empty_alerts.columns))
+        self.assertEqual(populated.iloc[0]["txn_id"], "T1")
+        self.assertEqual(populated.iloc[0]["booked_at"], "2026-03-03T10:05:00")
+        self.assertEqual(int(populated.iloc[0]["amount_hkd"]), 1000)
+        self.assertIn("1,000", populated.iloc[0]["why"])
+
+        empty_cases = cases_frame(())
+        self.assertEqual(
+            list(empty_cases.columns),
+            [
+                "case_id",
+                "typology",
+                "title",
+                "accounts",
+                "payments",
+                "amount_hkd",
+                "narrative_labels",
+                "why",
+            ],
+        )
+        case = GraphCase(
+            case_id="G-SMURF-HUB",
+            typology="smurfing",
+            title="Smurfing into HUB",
+            why="many slices",
+            account_ids=("HUB", "P1"),
+            txn_ids=("T1", "T2"),
+            amount_hkd=12000,
+            narrative_labels=("deepfake-hk-001",),
+            kyc_notes=(),
+            context_ids=(),
+        )
+        shown = cases_frame((case,))
+        self.assertEqual(list(shown.columns), list(empty_cases.columns))
+        self.assertEqual(shown.iloc[0]["accounts"], "HUB, P1")
+        self.assertEqual(shown.iloc[0]["payments"], 2)
+        self.assertEqual(shown.iloc[0]["narrative_labels"], "deepfake-hk-001")
+
 
 class Neo4jGuardTest(unittest.TestCase):
     def setUp(self) -> None:
@@ -870,6 +980,45 @@ class Neo4jGuardTest(unittest.TestCase):
         self.assertGreaterEqual(session.run.call_count, 2)
         for call in session.run.call_args_list:
             self.assertEqual(call.args[1]["sandbox"], SANDBOX_TAG)
+
+    def test_reads_count_rows_without_the_write_confirm(self) -> None:
+        self.assertNotIn("NEO4J_SANDBOX_CONFIRM", os.environ)
+        settings = Neo4jSettings("bolt://127.0.0.1:7687", "reader", "secret", "class")
+        session = self.driver.return_value.__enter__.return_value.session.return_value.__enter__.return_value
+
+        def row(value: int) -> MagicMock:
+            record = MagicMock()
+            record.__getitem__.return_value = value
+            return record
+
+        session.run.return_value.single.side_effect = [row(2), None, row(7)]
+        counts = read_typology_counts(settings)
+        self.assertEqual(counts, {"smurf_hubs": 2, "cycle_paths": 0, "mixer_paths": 7})
+        self.driver.assert_called_once_with(
+            settings.uri,
+            auth=(settings.username, settings.password),
+            connection_timeout=8,
+        )
+        self.driver.return_value.__enter__.return_value.verify_connectivity.assert_called_once_with()
+        self.driver.return_value.__enter__.return_value.session.assert_called_once_with(database="class")
+        self.assertEqual(session.run.call_count, 3)
+        for call in session.run.call_args_list:
+            self.assertEqual(call.args[1], {"sandbox": SANDBOX_TAG})
+            self.assertNotIn("DETACH DELETE", call.args[0])
+            self.assertNotIn("CREATE", call.args[0])
+
+        session.run.return_value.single.side_effect = None
+        session.run.return_value.single.return_value = row(1)
+        self.assertEqual(ping(settings), "Connected to class.")
+        self.assertIn("RETURN 1 AS ok", session.run.call_args.args[0])
+
+        session.run.return_value.single.return_value = None
+        with self.assertRaisesRegex(Neo4jConfigError, "did not return 1"):
+            ping(settings)
+        session.run.return_value.single.return_value = row(0)
+        with self.assertRaisesRegex(Neo4jConfigError, "did not return 1"):
+            ping(settings)
+        self.assertNotIn("NEO4J_SANDBOX_CONFIRM", os.environ)
 
 
 class WritePlanScopeTest(unittest.TestCase):
