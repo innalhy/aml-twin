@@ -527,6 +527,25 @@ class DetectorBoundaryTest(unittest.TestCase):
         self.assertNotIn("T-B", tied[0].txn_ids)
         self.assertEqual(tied[0].amount_hkd, 15000)
 
+    def test_cycle_keeps_a_merchant_or_employer_hop(self) -> None:
+        for segment in ("merchant", "employer"):
+            accounts = [
+                _account("A"),
+                _account("B", segment=segment),
+                _account("C"),
+            ]
+            payments = [
+                _payment("T1", "A", "B", 5000, "2026-03-03T10:00:00"),
+                _payment("T2", "B", "C", 5000, "2026-03-03T11:00:00"),
+                _payment("T3", "C", "A", 5000, "2026-03-03T12:00:00"),
+            ]
+            cases = graph_cases(_bundle(accounts, payments, source_name=f"cycle-{segment}"))
+            self.assertEqual(len(cases), 1, segment)
+            self.assertEqual(cases[0].typology, "circular_flow", segment)
+            self.assertEqual(set(cases[0].account_ids), {"A", "B", "C"}, segment)
+            self.assertEqual(set(cases[0].txn_ids), {"T1", "T2", "T3"}, segment)
+            self.assertEqual(cases[0].amount_hkd, 15000, segment)
+
     def test_mule_pass_through_cutoffs(self) -> None:
         kept = graph_cases(self._mule())
         self.assertEqual(len(kept), 1)

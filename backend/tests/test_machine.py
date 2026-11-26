@@ -185,6 +185,15 @@ class EffectsTest(unittest.TestCase):
             apply_patch(blocked, {"risk.score_delta": 1})
         self.assertEqual(json.dumps(blocked), before)
 
+    def test_negative_score_delta_is_not_clamped(self) -> None:
+        twin = {"risk": {"score": 10, "flags": ["R1_BLOCK"]}}
+        added = apply_patch(twin, {"risk.score_delta": -25})
+        self.assertEqual(added, [])
+        self.assertEqual(twin["risk"]["score"], -15)
+        self.assertEqual(twin["risk"]["flags"], ["R1_BLOCK"])
+        apply_patch(twin, {"risk.score_delta": 0})
+        self.assertEqual(twin["risk"]["score"], -15)
+
 
 class DeepfakeTest(unittest.TestCase):
     def test_eight_endings(self) -> None:

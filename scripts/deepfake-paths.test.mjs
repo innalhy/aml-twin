@@ -146,8 +146,20 @@ export function runDeepfakePathTests() {
   });
   assert.deepEqual(grammar.risk.flags, ["A", "B"]);
   assert.equal(grammar.risk.score, 1020);
+  applyPatch(grammar, { "risk.score_delta": -1025 });
+  assert.equal(grammar.risk.score, -5);
+  applyPatch(grammar, { "risk.score_delta": 0 });
+  assert.equal(grammar.risk.score, -5);
   applyPatch(grammar, { "account.holds": [] });
   assert.deepEqual(grammar.account.holds, []);
+  assert.throws(
+    () => applyPatch({ risk: { score: 1, flags: [] } }, { "risk.score_delta": Number.NaN }),
+    /finite number/,
+  );
+  assert.throws(
+    () => applyPatch({ risk: { score: 1, flags: [] } }, { "risk.score_delta": Number.POSITIVE_INFINITY }),
+    /finite number/,
+  );
   assert.throws(
     () => applyPatch({ risk: { score: 1, flags: [] } }, { "risk.total_delta": 1 }),
     /undefined suffix/,

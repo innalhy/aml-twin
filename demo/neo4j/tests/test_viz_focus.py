@@ -93,6 +93,17 @@ class VizFocusTest(unittest.TestCase):
             {"HUB", "P1", "DEV", "MIX", "CTRL", "BYSTANDER"},
         )
 
+    def test_circular_flow_ranks_between_mule_and_smurf(self) -> None:
+        smurf = _case("G-SMURF-HUB", "smurfing", ("SHARED", "ONLY-SMURF"))
+        cycle = _case("G-CYCLE-1", "circular_flow", ("SHARED", "ONLY-CYCLE"))
+        mule = _case("G-MULE-MIX", "mule_to_mixer", ("SHARED",))
+        ranked = _story_index((smurf, cycle, mule))
+        self.assertEqual(ranked["SHARED"], "mule_to_mixer")
+        self.assertEqual(ranked["ONLY-SMURF"], "smurfing")
+        self.assertEqual(ranked["ONLY-CYCLE"], "circular_flow")
+        # Insertion order must not beat the rank. A later smurf stays under the cycle.
+        self.assertEqual(_story_index((cycle, smurf))["SHARED"], "circular_flow")
+
     def test_remote_bootstrap_tags_are_removed_and_inline_script_stays(self) -> None:
         html = (
             '<script src="https://cdn.jsdelivr.net/npm/bootstrap"></script>'
