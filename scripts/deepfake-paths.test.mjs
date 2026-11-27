@@ -152,6 +152,10 @@ export function runDeepfakePathTests() {
     () => applyPatch({ risk: { score: 1, flags: [] } }, { "risk.total_delta": 1 }),
     /undefined suffix/,
   );
+  const scored = { risk: { score: 1, flags: [] } };
+  assert.throws(() => applyPatch(scored, { "risk.score_delta": true }), /finite number/);
+  assert.throws(() => applyPatch(scored, { "risk.score_delta": false }), /finite number/);
+  assert.equal(scored.risk.score, 1);
   assert.throws(() => applyPatch({ account: { opened: false } }, { "missing.leaf": true }), /no parent/);
 
   const sample = play(script, ["pass_video", "file_str"]);

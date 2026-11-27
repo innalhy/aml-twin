@@ -9,7 +9,17 @@ import pandas as pd
 from twinaml_sandbox.ledger import ACCOUNT_COLUMNS, RELATIONSHIP_COLUMNS, TRANSACTION_COLUMNS
 from twinaml_sandbox.load import assemble, empty_wallets
 from twinaml_sandbox.models import GraphCase
-from twinaml_sandbox.viz import _story_index, _strip_remote_assets, _visible_ids
+from twinaml_sandbox.viz import (
+    _CONTEXT_COLOR,
+    _DEVICE_COLOR,
+    _MERCHANT_COLOR,
+    _ORDINARY_COLOR,
+    _STORY_COLOR,
+    _node_color,
+    _story_index,
+    _strip_remote_assets,
+    _visible_ids,
+)
 
 
 def _case(case_id: str, typology: str, accounts: tuple[str, ...], context: tuple[str, ...] = ()) -> GraphCase:
@@ -91,6 +101,55 @@ class VizFocusTest(unittest.TestCase):
         self.assertEqual(
             _visible_ids(bundle, (smurf, mule), story, None),
             {"HUB", "P1", "DEV", "MIX", "CTRL", "BYSTANDER"},
+        )
+
+    def test_focus_color_follows_the_winning_story(self) -> None:
+        smurf = _case("G-SMURF-HUB", "smurfing", ("HUB", "P1"), ("DEV",))
+        mule = _case("G-MULE-MIX", "mule_to_mixer", ("MIX", "P1"), ("CTRL",))
+        cases = (smurf, mule)
+        self.assertEqual(
+            _node_color("bank_account", "retail", "mule_to_mixer", "P1", cases, None),
+            _STORY_COLOR["mule_to_mixer"],
+        )
+        self.assertEqual(
+            _node_color("bank_account", "retail", "mule_to_mixer", "P1", cases, "all"),
+            _STORY_COLOR["mule_to_mixer"],
+        )
+        self.assertEqual(
+            _node_color("bank_account", "retail", "mule_to_mixer", "P1", cases, "smurfing"),
+            _ORDINARY_COLOR,
+        )
+        self.assertEqual(
+            _node_color("person", "person", None, "CTRL", cases, "mule_to_mixer"),
+            _CONTEXT_COLOR,
+        )
+        self.assertEqual(
+            _node_color("person", "person", None, "CTRL", cases, "smurfing"),
+            _ORDINARY_COLOR,
+        )
+        self.assertEqual(
+            _node_color("device", "device", None, "DEV", cases, "smurfing"),
+            _CONTEXT_COLOR,
+        )
+        self.assertEqual(
+            _node_color("device", "device", None, "DEV", cases, "mule_to_mixer"),
+            _DEVICE_COLOR,
+        )
+        self.assertEqual(
+            _node_color("bank_account", "merchant", None, "SHOP", cases, "all"),
+            _MERCHANT_COLOR,
+        )
+        self.assertEqual(
+            _node_color("bank_account", "employer", "circular_flow", "PAY", cases, "all"),
+            _STORY_COLOR["circular_flow"],
+        )
+        self.assertEqual(
+            _node_color("bank_account", "employer", "circular_flow", "PAY", cases, "smurfing"),
+            _MERCHANT_COLOR,
+        )
+        self.assertEqual(
+            _node_color("wallet", "wallet", "mule_to_mixer", "MIX", cases, "smurfing"),
+            _STORY_COLOR["mule_to_mixer"],
         )
 
     def test_remote_bootstrap_tags_are_removed_and_inline_script_stays(self) -> None:

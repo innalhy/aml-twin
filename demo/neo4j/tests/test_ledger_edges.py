@@ -788,6 +788,34 @@ class ReportColumnTest(unittest.TestCase):
         self.assertEqual(by_id.loc["T-BIG", "after_rule"], "Yes")
         self.assertEqual(by_id.loc["T1", "graph_story"], "smurfing")
 
+    def test_a_cycle_hop_into_the_mixer_is_labeled_mule(self) -> None:
+        accounts = [
+            _account("A"),
+            _account("B"),
+            _account("MIX", kind="wallet", segment="wallet"),
+        ]
+        payments = [
+            _payment("T1", "A", "B", 20000, "2026-03-03T10:00:00"),
+            _payment("T2", "B", "MIX", 20000, "2026-03-03T11:00:00"),
+            _payment("T3", "MIX", "A", 20000, "2026-03-03T12:00:00"),
+        ]
+        wallets = pd.DataFrame([_wallet("MIX")], columns=WALLET_COLUMNS)
+        report = run_report(
+            _bundle(accounts, payments, wallets=wallets, source_name="cycle-into-mixer"),
+            20_000,
+        )
+        by_type = {case.typology: case for case in report.graph_cases}
+        self.assertEqual(set(by_type), {"circular_flow", "mule_to_mixer"})
+        self.assertEqual(set(by_type["circular_flow"].txn_ids), {"T1", "T2", "T3"})
+        self.assertEqual(set(by_type["mule_to_mixer"].txn_ids), {"T1", "T2"})
+        self.assertNotIn("T3", by_type["mule_to_mixer"].txn_ids)
+        by_id = report.comparison.set_index("txn_id")
+        self.assertEqual(by_id.loc["T1", "graph_story"], "mule_to_mixer")
+        self.assertEqual(by_id.loc["T2", "graph_story"], "mule_to_mixer")
+        self.assertEqual(by_id.loc["T3", "graph_story"], "circular_flow")
+        self.assertEqual(by_id.loc["T2", "before_rule"], "Yes")
+        self.assertEqual(by_id.loc["T2", "after_rule"], "Yes")
+
 
 class Neo4jGuardTest(unittest.TestCase):
     def setUp(self) -> None:

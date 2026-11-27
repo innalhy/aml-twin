@@ -88,6 +88,39 @@ class ApiTest(unittest.TestCase):
         session_rule = next(item for item in opened.json()["rules"] if item["id"] == "R1_LIVENESS_TWICE")
         self.assertEqual(session_rule["flags"], ["R1_BLOCK", "R1_OVERRIDDEN"])
 
+    def test_case_detail_publishes_teaching_and_hides_the_script(self) -> None:
+        detail = self.client.get("/cases/deepfake-hk-001")
+        self.assertEqual(detail.status_code, 200, detail.text)
+        body = detail.json()
+        self.assertEqual(
+            body["acceptable_dispositions"],
+            ["onboarding_rejected", "blocked_by_rule", "str_drafted", "edd_hold"],
+        )
+        self.assertEqual(body["poor_dispositions"], ["false_positive_cleared"])
+        self.assertEqual(
+            [rule["id"] for rule in body["rules"]],
+            ["R1_LIVENESS_TWICE", "R2_SIGNALS_PLUS_BURST"],
+        )
+        published = json.dumps(body)
+        for hidden in (
+            "nodes",
+            "initial_twin_state",
+            "start_node_id",
+            "incomplete_dispositions",
+            "twin_patch",
+            "flags_add",
+            "score_delta",
+            "n_intake",
+            "reject_onboarding",
+            "pass_video",
+            "clear_alert",
+        ):
+            self.assertNotIn(hidden, published, hidden)
+
+        missing = self.client.get("/cases/no-such-case")
+        self.assertEqual(missing.status_code, 404)
+        self.assertEqual(missing.json()["detail"], "unknown case_id")
+
     def test_deepfake_reject_path_and_dashboard_read_the_same_session(self) -> None:
         opened = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"})
         self.assertEqual(opened.status_code, 201, opened.text)
