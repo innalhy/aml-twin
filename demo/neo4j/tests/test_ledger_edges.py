@@ -586,6 +586,25 @@ class DetectorBoundaryTest(unittest.TestCase):
         self.assertEqual(four[0].amount_hkd, 20000)
         self.assertEqual(graph_cases(self._ring("ABCDE")), ())
 
+    def test_mule_search_stops_above_the_path_cap(self) -> None:
+        def fan(payers: int):
+            accounts = [_account(f"P{index}") for index in range(payers)]
+            accounts.append(_account("MIX", kind="wallet", segment="wallet"))
+            payments = [
+                _payment(f"T{index}", f"P{index}", "MIX", 1000, f"2026-03-03T10:{index:02d}:00")
+                for index in range(payers)
+            ]
+            wallets = pd.DataFrame([_wallet("MIX")], columns=WALLET_COLUMNS)
+            return _bundle(accounts, payments, wallets=wallets, source_name=f"fan-{payers}")
+
+        with patch("twinaml_sandbox.graph_story._PATH_CAP", 2):
+            kept = graph_cases(fan(2))
+            self.assertEqual(len(kept), 1)
+            self.assertEqual(set(kept[0].txn_ids), {"T0", "T1"})
+            self.assertEqual(set(kept[0].account_ids), {"P0", "P1", "MIX"})
+            with self.assertRaisesRegex(LedgerError, "stopped after 2 paths"):
+                graph_cases(fan(3))
+
     def test_mule_path_stops_at_four_hops(self) -> None:
         names = ("A", "B", "C", "D", "E", "MIX")
         accounts = [_account(name) for name in names[:-1]]

@@ -148,7 +148,7 @@ class ApiTest(unittest.TestCase):
         self.assertEqual(bad.status_code, 400)
         self.assertEqual(self._stored(opened["session_id"]), before)
 
-    def test_session_id_collision_retries_then_stops(self) -> None:
+    def test_seeded_collision_keeps_the_placeholder_row(self) -> None:
         taken = "a" * 12
         conn = sqlite3.connect(store_path())
         try:
@@ -255,6 +255,92 @@ class ApiTest(unittest.TestCase):
         listed = [row["session_id"] for row in self.client.get("/sessions").json()["sessions"]]
         self.assertEqual(listed, [ids[2], ids[1]])
         self.assertEqual(self.client.get(f"/sessions/{ids[0]}").status_code, 404)
+
+    def test_cap_drops_a_newer_closed_session_before_an_older_open_one(self) -> None:
+        use_store(store_path(), cap=2)
+        older = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        newer = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        closed = self.client.post(
+            f"/sessions/{newer['session_id']}/decisions",
+            json={"choice_id": "reject_onboarding"},
+        )
+        self.assertEqual(closed.status_code, 200, closed.text)
+        # Dates sit inside the seven-day TTL, so the cap chooses the row.
+        self._stamp(older["session_id"], "2026-11-22T00:00:00Z")
+        self._stamp(newer["session_id"], "2026-11-27T00:00:00Z")
+
+        incoming = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        listed = [row["session_id"] for row in self.client.get("/sessions").json()["sessions"]]
+        self.assertEqual(listed, [incoming["session_id"], older["session_id"]])
+        self.assertEqual(self.client.get(f"/sessions/{newer['session_id']}").status_code, 404)
+        self.assertEqual(self.client.get(f"/sessions/{older['session_id']}").status_code, 200)
+
+    def test_cap_removes_only_the_oldest_closed_row(self) -> None:
+        use_store(store_path(), cap=3)
+        oldest = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        newer = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        for session in (oldest, newer):
+            done = self.client.post(
+                f"/sessions/{session['session_id']}/decisions",
+                json={"choice_id": "reject_onboarding"},
+            )
+            self.assertEqual(done.status_code, 200, done.text)
+        kept_open = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        # Dates sit inside the seven-day TTL, so the cap chooses the row.
+        self._stamp(oldest["session_id"], "2026-11-22T00:00:00Z")
+        self._stamp(newer["session_id"], "2026-11-25T00:00:00Z")
+        self._stamp(kept_open["session_id"], "2026-11-27T00:00:00Z")
+
+        incoming = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        listed = [row["session_id"] for row in self.client.get("/sessions").json()["sessions"]]
+        self.assertEqual(
+            listed,
+            [incoming["session_id"], kept_open["session_id"], newer["session_id"]],
+        )
+        self.assertEqual(self.client.get(f"/sessions/{oldest['session_id']}").status_code, 404)
+        self.assertEqual(self.client.get(f"/sessions/{newer['session_id']}").status_code, 200)
+
+    def test_one_eviction_drops_closed_rows_then_the_oldest_open_row(self) -> None:
+        use_store(store_path(), cap=3)
+        open_oldest = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        closed_row = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        done = self.client.post(
+            f"/sessions/{closed_row['session_id']}/decisions",
+            json={"choice_id": "reject_onboarding"},
+        )
+        self.assertEqual(done.status_code, 200, done.text)
+        open_keep = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        # Dates sit inside the seven-day TTL, so the cap chooses the row.
+        self._stamp(open_oldest["session_id"], "2026-11-22T00:00:00Z")
+        self._stamp(open_keep["session_id"], "2026-11-25T00:00:00Z")
+        self._stamp(closed_row["session_id"], "2026-11-27T00:00:00Z")
+
+        use_store(store_path(), cap=2)
+        incoming = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        listed = [row["session_id"] for row in self.client.get("/sessions").json()["sessions"]]
+        self.assertEqual(listed, [incoming["session_id"], open_keep["session_id"]])
+        self.assertEqual(self.client.get(f"/sessions/{closed_row['session_id']}").status_code, 404)
+        self.assertEqual(self.client.get(f"/sessions/{open_oldest['session_id']}").status_code, 404)
+        self.assertEqual(self.client.get(f"/sessions/{open_keep['session_id']}").status_code, 200)
+
+    def test_a_decision_on_an_expired_session_is_missing(self) -> None:
+        use_store(store_path(), ttl_seconds=60)
+        closed = self.client.post("/sessions", json={"case_id": "deepfake-hk-001"}).json()
+        done = self.client.post(
+            f"/sessions/{closed['session_id']}/decisions",
+            json={"choice_id": "reject_onboarding"},
+        )
+        self.assertEqual(done.status_code, 200, done.text)
+        self._stamp(closed["session_id"], "2000-01-01T00:00:00Z")
+
+        again = self.client.post(
+            f"/sessions/{closed['session_id']}/decisions",
+            json={"choice_id": "reject_onboarding"},
+        )
+        self.assertEqual(again.status_code, 404)
+        follow_up = self.client.get(f"/sessions/{closed['session_id']}")
+        self.assertEqual(follow_up.status_code, 404)
+        self.assertIsNone(self._stored(closed["session_id"]))
 
     def test_cap_drops_a_closed_session_before_an_open_one(self) -> None:
         use_store(store_path(), cap=2)
